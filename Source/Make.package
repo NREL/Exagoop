@@ -1,0 +1,2 @@
+CEXE_sources += main.cpp mpm_particle_container.cpp mpm_init.cpp
+CEXE_headers += mpm_particle_container.H mpm_specs.H mpm_check_pair.H constants.H
