@@ -18,4 +18,15 @@
 #define TINYVAL 1e-20
 #define BIGVAL 1e20
 
+#define NUM_STATES 7
+#define MASS_INDEX 0
+#define VELX_INDEX 1
+#define VELY_INDEX 2
+#define VELZ_INDEX 3
+#define FRCX_INDEX 4
+#define FRCY_INDEX 5
+#define FRCZ_INDEX 6
+
+#define NPOINT 666
+
 #endif

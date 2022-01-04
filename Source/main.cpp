@@ -3,7 +3,7 @@
 #include <AMReX_MultiFab.H>
 #include <mpm_check_pair.H>
 #include <mpm_particle_container.H>
-#include <constants.H>
+#include <AMReX_PlotFileUtil.H>
 
 using namespace amrex;
 
@@ -39,6 +39,19 @@ int main (int argc, char* argv[])
         const int ng_cells = one;
         MPMParticleContainer mpm_pc(geom, dm, ba, ng_cells);
         mpm_pc.InitParticles(specs.particlefilename);
+        mpm_pc.addnodalparticles();
+       
+        mpm_pc.RedistributeLocal();
+        mpm_pc.fillNeighbors();
+        mpm_pc.buildNeighborList(CheckPair());
+       
+        mpm_pc.deposit_onto_nodes();
+        
+
+        const BoxArray& nodeba = amrex::convert(ba, IntVect{1,1,1});
+        MultiFab nodaldata(nodeba, dm, NUM_STATES, 0);
+        nodaldata.setVal(0.0); 
+        mpm_pc.deposit_onto_grid(nodaldata);
 
         int steps=0;
         Real time=zero;
@@ -46,7 +59,19 @@ int main (int argc, char* argv[])
         Real output_time=zero;
         Real output_timePrint=zero;
         int output_it=0;
+
         mpm_pc.writeParticles(steps);
+        amrex::Vector<std::string> nodaldata_names;
+        nodaldata_names.push_back("mass");
+        nodaldata_names.push_back("vel_x");
+        nodaldata_names.push_back("vel_y");
+        nodaldata_names.push_back("vel_z");
+        nodaldata_names.push_back("force_x");
+        nodaldata_names.push_back("force_y");
+        nodaldata_names.push_back("force_z");
+        const std::string& pltfile = amrex::Concatenate("nplt", steps, 5);
+        WriteSingleLevelPlotfile(pltfile, nodaldata, nodaldata_names, geom, time, 0);
+       
         amrex::Print() << "Num particles after init is " << mpm_pc.TotalNumberOfParticles() << "\n";
 
 
@@ -69,6 +94,8 @@ int main (int argc, char* argv[])
 
             BL_PROFILE_VAR("MOVE_PART",movepart);
             mpm_pc.moveParticles(dt,specs.gravity);
+            mpm_pc.deposit_onto_nodes();
+            mpm_pc.deposit_onto_grid(nodaldata);
             BL_PROFILE_VAR_STOP(movepart);
 
             if (output_timePrint > specs.screen_output_time)
@@ -86,6 +113,8 @@ int main (int argc, char* argv[])
                 mpm_pc.buildNeighborList(CheckPair());
                 output_it++;
                 mpm_pc.writeParticles(output_it);
+                const std::string& pltfile = amrex::Concatenate("nplt", output_it, 5);
+                WriteSingleLevelPlotfile(pltfile, nodaldata, nodaldata_names, geom, time, 0);
                 output_time=zero;
                 BL_PROFILE_VAR_STOP(outputs);
             }

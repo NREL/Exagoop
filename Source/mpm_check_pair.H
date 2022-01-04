@@ -12,8 +12,11 @@ struct CheckPair
         amrex::Real d0 = (p1.pos(0) - p2.pos(0));
         amrex::Real d1 = (p1.pos(1) - p2.pos(1));
         amrex::Real d2 = (p1.pos(2) - p2.pos(2));    
-        amrex::Real dsquared = d0*d0 + d1*d1 + d2*d2;   
-        return (dsquared <= 9.0*p1.rdata(realData::radius)*p1.rdata(realData::radius));
+        amrex::Real dsquared = d0*d0 + d1*d1 + d2*d2;
+
+        amrex::Real search_radius=0.5*(p1.rdata(realData::radius)+p2.rdata(realData::radius));
+       
+        return (dsquared <= 9.0*search_radius*search_radius);
     }
 };
 
