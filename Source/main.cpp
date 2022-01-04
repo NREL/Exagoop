@@ -39,12 +39,6 @@ int main (int argc, char* argv[])
         const int ng_cells = one;
         MPMParticleContainer mpm_pc(geom, dm, ba, ng_cells);
         mpm_pc.InitParticles(specs.particlefilename);
-        mpm_pc.addnodalparticles();
-       
-        mpm_pc.RedistributeLocal();
-        mpm_pc.fillNeighbors();
-        mpm_pc.buildNeighborList(CheckPair());
-       
         mpm_pc.deposit_onto_nodes();
         
 
@@ -94,7 +88,7 @@ int main (int argc, char* argv[])
 
             BL_PROFILE_VAR("MOVE_PART",movepart);
             mpm_pc.moveParticles(dt,specs.gravity);
-            mpm_pc.deposit_onto_nodes();
+            nodaldata.setVal(0.0); 
             mpm_pc.deposit_onto_grid(nodaldata);
             BL_PROFILE_VAR_STOP(movepart);
 
