@@ -25,8 +25,6 @@ public:
     void InitParticles (const std::string & filename);
     void moveParticles (const amrex::Real& dt,Array<Real,AMREX_SPACEDIM> gravity);
     void writeParticles (const int n);  
-    void addnodalparticles(); 
-    void deposit_onto_nodes();
     void deposit_onto_grid(MultiFab& nodaldata);
 
 private:

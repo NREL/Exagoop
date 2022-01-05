@@ -2,119 +2,6 @@
 #include <particle_basis.H>
 
 using namespace amrex;
-using namespace std;
-
-void MPMParticleContainer::deposit_onto_nodes() 
-{
-    const int lev = 0;
-    const Geometry& geom = Geom(lev);
-    auto& plev  = GetParticles(lev);
-    const auto dxi = geom.InvCellSizeArray();
-    const auto dx = geom.CellSizeArray();
-    const auto plo = geom.ProbLoArray();
-
-    //zero data
-    for(MFIter mfi = MakeMFIter(lev); mfi.isValid(); ++mfi)
-    {
-        int gid = mfi.index();
-        int tid = mfi.LocalTileIndex();
-        auto index = std::make_pair(gid, tid);
-
-        auto& ptile = plev[index];
-        auto& aos   = ptile.GetArrayOfStructs();
-        const size_t np = aos.numParticles();
-
-        ParticleType* pstruct = aos().dataPtr();
-
-        amrex::ParallelFor(np,[=]
-                AMREX_GPU_DEVICE (int i) noexcept
-        {
-                ParticleType& p = pstruct[i];
-
-                if(p.idata(intData::phase)==NPOINT)
-                {
-                   p.rdata(realData::fx) = zero;
-                   p.rdata(realData::fy) = zero;
-                   p.rdata(realData::fz) = zero;
-
-                   p.rdata(realData::xvel) = zero;
-                   p.rdata(realData::xvel) = zero;
-                   p.rdata(realData::xvel) = zero;
-
-                   p.rdata(realData::mass)    = zero;
-                   p.rdata(realData::volume)  = zero;
-                   p.rdata(realData::density) = zero;
-                }
-        });
-    }
-
-    for(MFIter mfi = MakeMFIter(lev); mfi.isValid(); ++mfi)
-    {
-        int gid = mfi.index();
-        int tid = mfi.LocalTileIndex();
-        auto index = std::make_pair(gid, tid);
-
-        auto& ptile = plev[index];
-        auto& aos   = ptile.GetArrayOfStructs();
-        const size_t np = aos.numParticles();
-
-        auto nbor_data = m_neighbor_list[lev][index].data();
-        ParticleType* pstruct = aos().dataPtr();
-
-        amrex::ParallelFor(np,[=]
-        AMREX_GPU_DEVICE (int i) noexcept
-        {
-            ParticleType& p1 = pstruct[i];
-
-            if(p1.idata(intData::phase)==NPOINT)
-            {
-                for (const auto& p2 : nbor_data.getNeighbors(i))
-                { 
-                    if(p2.idata(intData::phase)!=NPOINT)
-                    {
-                        amrex::Real xi[AMREX_SPACEDIM];
-                        amrex::Real xp[AMREX_SPACEDIM];
-                        amrex::Real hatsize[AMREX_SPACEDIM];
-
-                        xi[XDIR]=p1.pos(XDIR);
-                        xi[YDIR]=p1.pos(YDIR);
-                        xi[ZDIR]=p1.pos(ZDIR);
-
-                        xp[XDIR]=p2.pos(XDIR);
-                        xp[YDIR]=p2.pos(YDIR);
-                        xp[ZDIR]=p2.pos(ZDIR);
-
-                        hatsize[XDIR]=two*p2.rdata(realData::radius);
-                        hatsize[YDIR]=two*p2.rdata(realData::radius);
-                        hatsize[ZDIR]=two*p2.rdata(realData::radius);
-
-                        amrex::Real basisval=hat3d(xi,xp,hatsize);
-                        p1.rdata(realData::mass) += p2.rdata(realData::mass)*basisval*p2.rdata(realData::volume);
-                        p1.rdata(realData::xvel) += p2.rdata(realData::mass)*p2.rdata(realData::xvel)*basisval*p2.rdata(realData::volume);
-                        p1.rdata(realData::yvel) += p2.rdata(realData::mass)*p2.rdata(realData::yvel)*basisval*p2.rdata(realData::volume);
-                        p1.rdata(realData::zvel) += p2.rdata(realData::mass)*p2.rdata(realData::zvel)*basisval*p2.rdata(realData::volume);
-                    }
-                }        
-            }
-        });
-        
-        amrex::ParallelFor(np,[=]
-        AMREX_GPU_DEVICE (int i) noexcept
-        {
-            ParticleType& p = pstruct[i];
-
-            if(p.idata(intData::phase)==NPOINT)
-            {
-                if(p.rdata(realData::mass)!=0)
-                {
-                   p.rdata(realData::xvel)=p.rdata(realData::xvel)/p.rdata(realData::mass);
-                   p.rdata(realData::yvel)=p.rdata(realData::yvel)/p.rdata(realData::mass);
-                   p.rdata(realData::zvel)=p.rdata(realData::zvel)/p.rdata(realData::mass);
-                }
-            }
-        });
-    }
-}
 
 void MPMParticleContainer::deposit_onto_grid(MultiFab& nodaldata) 
 {
@@ -124,8 +11,11 @@ void MPMParticleContainer::deposit_onto_grid(MultiFab& nodaldata)
     const auto dxi = geom.InvCellSizeArray();
     const auto dx = geom.CellSizeArray();
     const auto plo = geom.ProbLoArray();
+    const auto domain = geom.Domain();
+    
+    int ncomp=nodaldata.nComp();
+    nodaldata.setVal(0.0);
 
-    //zero data
     for(MFIter mfi = MakeMFIter(lev); mfi.isValid(); ++mfi)
     {
         const amrex::Box& box = mfi.tilebox();
@@ -136,7 +26,7 @@ void MPMParticleContainer::deposit_onto_grid(MultiFab& nodaldata)
 
         auto& ptile = plev[index];
         auto& aos   = ptile.GetArrayOfStructs();
-        const size_t np = aos.numParticles();
+        const int np = GetParticles(lev)[index].numRealParticles();
 
         Array4<Real> nodal_data_arr=nodaldata.array(mfi);
 
@@ -147,7 +37,6 @@ void MPMParticleContainer::deposit_onto_grid(MultiFab& nodaldata)
                 {
                 ParticleType& p = pstruct[i];
                 int i_mesh,j_mesh,k_mesh;
-                amrex::Real tol=TINYVAL;
 
                 amrex::Real xi[AMREX_SPACEDIM];
                 amrex::Real xp[AMREX_SPACEDIM];
@@ -157,26 +46,23 @@ void MPMParticleContainer::deposit_onto_grid(MultiFab& nodaldata)
                 xp[YDIR]=p.pos(YDIR);
                 xp[ZDIR]=p.pos(ZDIR);
 
-                i_mesh=amrex::Math::floor((p.pos(XDIR)-plo[XDIR]+tol)/dx[XDIR]);
-                j_mesh=amrex::Math::floor((p.pos(YDIR)-plo[YDIR]+tol)/dx[YDIR]);
-                k_mesh=amrex::Math::floor((p.pos(ZDIR)-plo[ZDIR]+tol)/dx[ZDIR]);
+                auto iv = getParticleCell(p, plo, dxi, domain);
 
                 hatsize[XDIR]=two*p.rdata(realData::radius);
                 hatsize[YDIR]=two*p.rdata(realData::radius);
                 hatsize[ZDIR]=two*p.rdata(realData::radius);
-
+               
                 for(int n=0;n<2;n++)
                 {
                     for(int m=0;m<2;m++)
                     {
                         for(int l=0;l<2;l++)
                         {
-                            xi[XDIR]=plo[XDIR]+(i_mesh+l)*dx[XDIR];
-                            xi[YDIR]=plo[YDIR]+(j_mesh+m)*dx[YDIR];
-                            xi[ZDIR]=plo[ZDIR]+(k_mesh+n)*dx[ZDIR];
+                            xi[XDIR]=plo[XDIR]+(iv[0]+l)*dx[XDIR];
+                            xi[YDIR]=plo[YDIR]+(iv[1]+m)*dx[YDIR];
+                            xi[ZDIR]=plo[ZDIR]+(iv[2]+n)*dx[ZDIR];
 
                             amrex::Real basisval=hat3d(xi,xp,hatsize);
-                            basisval=1.0;
                             amrex::Real mass_contrib=p.rdata(realData::mass)*basisval*p.rdata(realData::volume);
 
                             amrex::Real px_contrib = p.rdata(realData::mass)*p.rdata(realData::xvel)*basisval*p.rdata(realData::volume);
@@ -184,21 +70,21 @@ void MPMParticleContainer::deposit_onto_grid(MultiFab& nodaldata)
                             amrex::Real pz_contrib = p.rdata(realData::mass)*p.rdata(realData::zvel)*basisval*p.rdata(realData::volume);
 
                             amrex::Gpu::Atomic::AddNoRet(
-                                    &nodal_data_arr(i_mesh,j_mesh,k_mesh,MASS_INDEX), mass_contrib);
+                                    &nodal_data_arr(iv[0]+l,iv[1]+m,iv[2]+n,MASS_INDEX), mass_contrib);
 
                             amrex::Gpu::Atomic::AddNoRet(
-                                    &nodal_data_arr(i_mesh,j_mesh,k_mesh,VELX_INDEX), px_contrib);
+                                    &nodal_data_arr(iv[0]+l,iv[1]+m,iv[2]+n,VELX_INDEX), px_contrib);
                             amrex::Gpu::Atomic::AddNoRet(
-                                    &nodal_data_arr(i_mesh,j_mesh,k_mesh,VELY_INDEX), py_contrib);
+                                    &nodal_data_arr(iv[0]+l,iv[1]+m,iv[2]+n,VELY_INDEX), py_contrib);
                             amrex::Gpu::Atomic::AddNoRet(
-                                    &nodal_data_arr(i_mesh,j_mesh,k_mesh,VELZ_INDEX), pz_contrib);
+                                    &nodal_data_arr(iv[0]+l,iv[1]+m,iv[2]+n,VELZ_INDEX), pz_contrib);
 
                         }
                     }
                 }
                 });
-
-        amrex::ParallelFor(
+                
+               amrex::ParallelFor(
                 nodalbox, [=] AMREX_GPU_DEVICE(int i, int j, int k) noexcept 
                 {
                 if(nodal_data_arr(i,j,k,MASS_INDEX) > 0.0)
