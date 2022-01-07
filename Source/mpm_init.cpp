@@ -51,9 +51,12 @@ void MPMParticleContainer::InitParticles (const std::string& filename)
             p.rdata(realData::volume)      = fourbythree*PI*pow(p.rdata(realData::radius),three);
             p.rdata(realData::mass)        = p.rdata(realData::density)*p.rdata(realData::volume);
 
-            p.rdata(realData::fx) = zero;
-            p.rdata(realData::fy) = zero;
-            p.rdata(realData::fz) = zero;
+            for(int comp=0;comp<NCOMP_TENSOR;comp++)
+            {
+                p.rdata(realData::strainrate+comp) = zero;
+                p.rdata(realData::strain+comp)     = zero;
+                p.rdata(realData::stress+comp)     = zero;
+            }
 
             // Add everything to the data structure
             particle_tile.push_back(p);

@@ -4,6 +4,7 @@
 #include <mpm_check_pair.H>
 #include <mpm_particle_container.H>
 #include <AMReX_PlotFileUtil.H>
+#include <nodal_update.H>
 
 using namespace amrex;
 
@@ -42,7 +43,7 @@ int main (int argc, char* argv[])
         
         const BoxArray& nodeba = amrex::convert(ba, IntVect{1,1,1});
         MultiFab nodaldata(nodeba, dm, NUM_STATES, 0);
-        mpm_pc.deposit_onto_grid(nodaldata);
+        mpm_pc.deposit_onto_grid(nodaldata,specs.gravity,1,0);
 
         int steps=0;
         Real time=zero;
@@ -84,10 +85,33 @@ int main (int argc, char* argv[])
                 mpm_pc.updateNeighbors();
             }
             
-            mpm_pc.deposit_onto_grid(nodaldata);
-            BL_PROFILE_VAR("MOVE_PART",movepart);
-            mpm_pc.moveParticles(dt,specs.gravity);
-            BL_PROFILE_VAR_STOP(movepart);
+            //find mass/vel at nodes
+            //update_massvel=1, update_stress=0
+            mpm_pc.deposit_onto_grid(nodaldata,specs.gravity,1,0);
+
+            //find strainrate at material points
+            //update_vel=0,update_strainrate=1
+            mpm_pc.interpolate_from_grid(nodaldata,0,1);
+
+            //update stress at material points
+            mpm_pc.apply_constitutive_model(dt,specs.Youngs_modulus,specs.Poissons_ratio); 
+
+            //update forces at nodes
+            //update_massvel=0, update_stress=1
+            mpm_pc.deposit_onto_grid(nodaldata,specs.gravity,0,1);
+
+            //update velocity on nodes
+            nodal_update(nodaldata,dt);
+
+            //impose bcs at nodes
+            nodal_bcs(geom,nodaldata,dt);
+
+            //find velocity at material points
+            //update_vel=1,update_strainrate=0
+            mpm_pc.interpolate_from_grid(nodaldata,1,0);
+
+            //move material points
+            mpm_pc.moveParticles(dt);
 
             if (output_timePrint > specs.screen_output_time)
             {

@@ -12,16 +12,16 @@ struct realData
   enum 
   { // Particle data stored in p.m_data
     radius=0,
-    xvel,
-    yvel,
-    zvel,
-    fx,
-    fy,
-    fz,
-    volume,
-    mass,
-    density,
-    count
+    xvel=1,
+    yvel=2,
+    zvel=3,
+    strainrate=4,
+    strain=10,
+    stress=16,
+    volume=22,
+    mass=23,
+    density=24,
+    count=25
   };
 };
 
@@ -51,6 +51,9 @@ class MPMspecs
         Real screen_output_time;
         int maxsteps=1;
         std::string particlefilename;
+
+        Real Youngs_modulus=1e9;
+        Real Poissons_ratio=0.1;
         
         void read_mpm_specs()
         {
@@ -77,6 +80,9 @@ class MPMspecs
 
             particlefilename="mpm_particles.dat";
             pp.query("particle_file",particlefilename);
+
+            pp.query("Youngs_modulus",Youngs_modulus);
+            pp.query("Poissons_ratio",Poissons_ratio);
         }
 };
 #endif

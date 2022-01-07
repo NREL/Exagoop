@@ -23,9 +23,14 @@ public:
     }
 
     void InitParticles (const std::string & filename);
-    void moveParticles (const amrex::Real& dt,Array<Real,AMREX_SPACEDIM> gravity);
+    void moveParticles (const amrex::Real& dt);
     void writeParticles (const int n);  
-    void deposit_onto_grid(MultiFab& nodaldata);
+    void deposit_onto_grid(MultiFab& nodaldata,amrex::Array<amrex::Real,AMREX_SPACEDIM> gravity,int update_massvel,int update_forces);
+    void interpolate_from_grid(MultiFab& nodaldata,
+            int update_vel,int update_strainrate);
+
+    void apply_constitutive_model(const amrex::Real& dt,
+        amrex::Real E,amrex::Real v);
 
 private:
 

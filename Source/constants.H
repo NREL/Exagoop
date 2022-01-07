@@ -18,6 +18,8 @@
 #define TINYVAL 1e-20
 #define BIGVAL 1e20
 
+#define NCOMP_TENSOR 6
+
 #define NUM_STATES 7
 #define MASS_INDEX 0
 #define VELX_INDEX 1
@@ -27,6 +29,11 @@
 #define FRCY_INDEX 5
 #define FRCZ_INDEX 6
 
-#define NPOINT 666
+#define XX 0
+#define XY 1
+#define XZ 2
+#define YY 3
+#define YZ 4
+#define ZZ 5
 
 #endif
