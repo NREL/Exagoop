@@ -57,7 +57,7 @@ AMREX_GPU_DEVICE AMREX_FORCE_INLINE
     value += (1.0-alpha) * (1-beta) * (1-gama) * nodaldata(i,j,k,comp);
     value += alpha       * (1-beta) * (1-gama) * nodaldata(i+1,j,k,comp);
     value += (1.0-alpha) * beta     * (1-gama) * nodaldata(i,j+1,k,comp);
-    value += alpha       * beta     * (1-gama) * nodaldata(i+1,j,k,comp);
+    value += alpha       * beta     * (1-gama) * nodaldata(i+1,j+1,k,comp);
     
     value += (1.0-alpha) * (1-beta)  * gama  * nodaldata(i,j,k+1,comp);
     value += alpha       * (1-beta)  * gama  * nodaldata(i+1,j,k+1,comp);
@@ -115,7 +115,7 @@ AMREX_GPU_DEVICE AMREX_FORCE_INLINE
     }
     else if(dir==1)
     {
-        mval=(m==0)?dxinv[YDIR]:dxinv[YDIR];
+        mval=(m==0)?-dxinv[YDIR]:dxinv[YDIR];
     }
     else
     {

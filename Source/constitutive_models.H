@@ -5,9 +5,9 @@
 #include <AMReX.H>
 
 AMREX_GPU_DEVICE AMREX_FORCE_INLINE
-void linear_elastic(amrex::Real eps[AMREX_SPACEDIM*2],
-        amrex::Real epsdot[AMREX_SPACEDIM*2],
-        amrex::Real sigma[AMREX_SPACEDIM*2],
+void linear_elastic(amrex::Real eps[NCOMP_TENSOR],
+        amrex::Real epsdot[NCOMP_TENSOR],
+        amrex::Real sigma[NCOMP_TENSOR],
         amrex::Real E, amrex::Real v)
 {
     amrex::Real trace_eps=eps[XX]+eps[YY]+eps[ZZ];

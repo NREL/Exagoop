@@ -80,38 +80,50 @@ int main (int argc, char* argv[])
                 mpm_pc.RedistributeLocal();
                 mpm_pc.fillNeighbors();
                 mpm_pc.buildNeighborList(CheckPair());
-            } 
+            }
+            else 
             {
                 mpm_pc.updateNeighbors();
             }
             
+            nodaldata.setVal(zero);
             //find mass/vel at nodes
-            //update_massvel=1, update_stress=0
+            //update_massvel=1, update_forces=0
             mpm_pc.deposit_onto_grid(nodaldata,specs.gravity,1,0);
+            //amrex::Print()<<"Done with mass/vel deposition\n";
 
             //find strainrate at material points
             //update_vel=0,update_strainrate=1
             mpm_pc.interpolate_from_grid(nodaldata,0,1);
+            //amrex::Print()<<"Done with strain-rate interpolation\n";
 
             //update stress at material points
             mpm_pc.apply_constitutive_model(dt,specs.Youngs_modulus,specs.Poissons_ratio); 
+            //amrex::Print()<<"Done with constitutive model\n";
 
             //update forces at nodes
-            //update_massvel=0, update_stress=1
+            //update_massvel=0, update_forces=1
             mpm_pc.deposit_onto_grid(nodaldata,specs.gravity,0,1);
+            //amrex::Print()<<"Done with force update\n";
 
             //update velocity on nodes
             nodal_update(nodaldata,dt);
+            //amrex::Print()<<"Done with nodal update\n";
 
             //impose bcs at nodes
             nodal_bcs(geom,nodaldata,dt);
+            //amrex::Print()<<"Done with nodal bcs\n";
 
             //find velocity at material points
             //update_vel=1,update_strainrate=0
             mpm_pc.interpolate_from_grid(nodaldata,1,0);
+            //amrex::Print()<<"Done with velocity i->mp\n";
 
             //move material points
             mpm_pc.moveParticles(dt);
+            //amrex::Print()<<"Done with moving material points\n";
+            //amrex::Print()<<"=================================\n";
+
 
             if (output_timePrint > specs.screen_output_time)
             {
