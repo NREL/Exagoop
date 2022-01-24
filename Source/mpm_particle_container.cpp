@@ -72,8 +72,8 @@ void MPMParticleContainer::deposit_onto_grid(MultiFab& nodaldata,
     const auto plo = geom.ProbLoArray();
     const auto domain = geom.Domain();
     Real grav[]={AMREX_D_DECL(gravity[0],gravity[1],gravity[2])};
-
     int ncomp=nodaldata.nComp();
+    
     for (MFIter mfi(nodaldata); mfi.isValid(); ++mfi)
     {
         const Box& bx=mfi.validbox();
@@ -136,8 +136,7 @@ void MPMParticleContainer::deposit_onto_grid(MultiFab& nodaldata,
                 {
                     for(int l=0;l<2;l++)
                     {
-                        amrex::Real basisvalue=basisval(l,m,n,iv[0],iv[1],iv[2],xp,plo,dx);
-
+                        amrex::Real basisvalue=basisval(l,m,n,iv[XDIR],iv[YDIR],iv[ZDIR],xp,plo,dx);
                         amrex::Real mass_contrib=p.rdata(realData::mass)*basisvalue;
 
                         amrex::Real p_contrib[AMREX_SPACEDIM] = 
@@ -148,12 +147,12 @@ void MPMParticleContainer::deposit_onto_grid(MultiFab& nodaldata,
                         if(update_massvel)
                         {
                             amrex::Gpu::Atomic::AddNoRet(
-                                &nodal_data_arr(iv[0]+l,iv[1]+m,iv[2]+n,MASS_INDEX), mass_contrib);
+                               &nodal_data_arr(iv[XDIR]+l,iv[YDIR]+m,iv[ZDIR]+n,MASS_INDEX), mass_contrib);
 
                             for(int dim=0;dim<AMREX_SPACEDIM;dim++)
                             {
                                 amrex::Gpu::Atomic::AddNoRet(
-                                    &nodal_data_arr(iv[0]+l,iv[1]+m,iv[2]+n,VELX_INDEX+dim), 
+                                    &nodal_data_arr(iv[XDIR]+l,iv[YDIR]+m,iv[ZDIR]+n,VELX_INDEX+dim), 
                                     p_contrib[dim]);
                             }
                         }
@@ -167,7 +166,7 @@ void MPMParticleContainer::deposit_onto_grid(MultiFab& nodaldata,
 
                             for(int d=0;d<AMREX_SPACEDIM;d++)
                             {
-                                basisval_grad[d]=basisvalder(d,l,m,n,iv[0],iv[1],iv[2],xp,plo,dx);
+                                basisval_grad[d]=basisvalder(d,l,m,n,iv[XDIR],iv[YDIR],iv[ZDIR],xp,plo,dx);
                             }
                             
                             amrex::Real bforce_contrib[AMREX_SPACEDIM]=
@@ -179,22 +178,15 @@ void MPMParticleContainer::deposit_onto_grid(MultiFab& nodaldata,
                             tensor_vector_pdt(stress_tens,basisval_grad,tensvect);
 
                             amrex::Real intforce_contrib[AMREX_SPACEDIM]=
-                            {p.rdata(realData::volume)*tensvect[XDIR],
-                                p.rdata(realData::volume)*tensvect[YDIR],
-                                p.rdata(realData::volume)*tensvect[ZDIR]};
+                            {-p.rdata(realData::volume)*tensvect[XDIR],
+                             -p.rdata(realData::volume)*tensvect[YDIR],
+                             -p.rdata(realData::volume)*tensvect[ZDIR]};
 
                             for(int dim=0;dim<AMREX_SPACEDIM;dim++)
                             {
                                 amrex::Gpu::Atomic::AddNoRet(
-                                    &nodal_data_arr(iv[0]+l,iv[1]+m,iv[2]+n,VELX_INDEX+dim), 
-                                    p_contrib[dim]);
-
-                                amrex::Gpu::Atomic::AddNoRet(
-                                   &nodal_data_arr(iv[0]+l,iv[1]+m,iv[2]+n,FRCX_INDEX+dim),
+                                   &nodal_data_arr(iv[XDIR]+l,iv[YDIR]+m,iv[ZDIR]+n,FRCX_INDEX+dim),
                                    bforce_contrib[dim]+intforce_contrib[dim]);
-                                //amrex::Gpu::Atomic::AddNoRet(
-                                //    &nodal_data_arr(iv[0]+l,iv[1]+m,iv[2]+n,FRCX_INDEX+dim),
-                                //    bforce_contrib[dim]);
                             }
                         }
 
@@ -253,6 +245,37 @@ void MPMParticleContainer::moveParticles(const amrex::Real& dt)
             p.pos(1) += p.rdata(realData::yvel) * dt;
             p.pos(2) += p.rdata(realData::zvel) * dt;
 
+            if ( p.pos(0) < plo[0])
+            {
+                p.pos(0) = two*plo[0] - p.pos(0);
+                p.rdata(realData::xvel) = -p.rdata(realData::xvel);
+            }
+            if (p.pos(0) > phi[0])
+            {
+                p.pos(0) = two*phi[0] - p.pos(0);
+                p.rdata(realData::xvel) = -p.rdata(realData::xvel);
+            }
+            if (p.pos(1) < plo[1])
+            {
+                p.pos(1) = two*plo[1] - p.pos(1);
+                p.rdata(realData::yvel) = -p.rdata(realData::yvel);
+            }
+            if (p.pos(1) > phi[1])
+            {
+                p.pos(1) = two*phi[1] - p.pos(1);
+                p.rdata(realData::yvel) = -p.rdata(realData::yvel);
+            }
+            if (p.pos(2) < plo[2])
+            {
+                p.pos(2) = two*plo[2] - p.pos(2);
+                p.rdata(realData::zvel) = -p.rdata(realData::zvel);
+            }
+            if (p.pos(2) > phi[2])
+            {
+                p.pos(2) = two*phi[2] - p.pos(2);
+                p.rdata(realData::zvel) = -p.rdata(realData::zvel);
+            }
+
         });
     }
 }
@@ -301,13 +324,13 @@ void MPMParticleContainer::interpolate_from_grid(MultiFab& nodaldata,int update_
             if(update_vel)
             {
                 p.rdata(realData::xvel) = bilin_interp(xp,iv[XDIR],
-                 iv[YDIR],iv[ZDIR],plo,dx,nodal_data_arr,VELX_INDEX);
+                                                       iv[YDIR],iv[ZDIR],plo,dx,nodal_data_arr,VELX_INDEX);
 
                 p.rdata(realData::yvel) = bilin_interp(xp,iv[XDIR],
-                 iv[YDIR],iv[ZDIR],plo,dx,nodal_data_arr,VELY_INDEX);
+                                                       iv[YDIR],iv[ZDIR],plo,dx,nodal_data_arr,VELY_INDEX);
 
                 p.rdata(realData::zvel) = bilin_interp(xp,iv[XDIR],
-                iv[YDIR],iv[ZDIR],plo,dx,nodal_data_arr,VELZ_INDEX);
+                                                       iv[YDIR],iv[ZDIR],plo,dx,nodal_data_arr,VELZ_INDEX);
             }
 
             if(update_strainrate)
@@ -321,7 +344,7 @@ void MPMParticleContainer::interpolate_from_grid(MultiFab& nodaldata,int update_
                             amrex::Real basisval_grad[AMREX_SPACEDIM];
                             for(int d=0;d<AMREX_SPACEDIM;d++)
                             {
-                                basisval_grad[d]=basisvalder(d,l,m,n,iv[0],iv[1],iv[2],xp,plo,dx);
+                                basisval_grad[d]=basisvalder(d,l,m,n,iv[XDIR],iv[YDIR],iv[ZDIR],xp,plo,dx);
                             }
 
                             gradvp[XDIR][XDIR]+=nodal_data_arr(iv[XDIR]+l,iv[YDIR]+m,iv[ZDIR]+n,VELX_INDEX)*basisval_grad[XDIR];

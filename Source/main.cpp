@@ -43,7 +43,9 @@ int main (int argc, char* argv[])
         
         const BoxArray& nodeba = amrex::convert(ba, IntVect{1,1,1});
         MultiFab nodaldata(nodeba, dm, NUM_STATES, 0);
+        nodaldata.setVal(0.0);
         mpm_pc.deposit_onto_grid(nodaldata,specs.gravity,1,0);
+        mpm_pc.interpolate_from_grid(nodaldata,0,1);
 
         int steps=0;
         Real time=zero;
@@ -64,7 +66,7 @@ int main (int argc, char* argv[])
 
         std::string pltfile;
         pltfile = amrex::Concatenate("nplt", steps, 5);
-        WriteSingleLevelPlotfile(pltfile, nodaldata, nodaldata_names, geom, time, 0);
+        write_plot_file(pltfile,nodaldata,nodaldata_names,geom,ba,dm,time);
        
         amrex::Print() << "Num particles after init is " << mpm_pc.TotalNumberOfParticles() << "\n";
 
@@ -143,7 +145,7 @@ int main (int argc, char* argv[])
                 mpm_pc.writeParticles(output_it);
                 
                 pltfile = amrex::Concatenate("nplt", output_it, 5);
-                WriteSingleLevelPlotfile(pltfile, nodaldata, nodaldata_names, geom, time, 0);
+                write_plot_file(pltfile,nodaldata,nodaldata_names,geom,ba,dm,time);
                 
                 output_time=zero;
                 BL_PROFILE_VAR_STOP(outputs);
@@ -154,7 +156,7 @@ int main (int argc, char* argv[])
         mpm_pc.Redistribute();
         mpm_pc.writeParticles(output_it+1);
         pltfile = amrex::Concatenate("nplt", output_it+1, 5);
-        WriteSingleLevelPlotfile(pltfile, nodaldata, nodaldata_names, geom, time, 0);
+        write_plot_file(pltfile,nodaldata,nodaldata_names,geom,ba,dm,time);
     }
 
     amrex::Finalize();

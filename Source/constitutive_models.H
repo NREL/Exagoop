@@ -13,7 +13,7 @@ void linear_elastic(amrex::Real eps[NCOMP_TENSOR],
     amrex::Real trace_eps=eps[XX]+eps[YY]+eps[ZZ];
     amrex::Real const1=E/(one+v)/(one-two*v);
     amrex::Real const2=E/(one+v);
-    
+
     sigma[XX]=const1*((1-v)*eps[XX] + v*(eps[YY]+eps[ZZ]));
     sigma[YY]=const1*((1-v)*eps[YY] + v*(eps[XX]+eps[ZZ]));
     sigma[ZZ]=const1*((1-v)*eps[ZZ] + v*(eps[XX]+eps[YY]));
