@@ -1,0 +1,17 @@
+#geometry parameters
+mpm.prob_lo        = 0.0      0.0     0.0  
+mpm.prob_hi        = 1.0      1.0     1.0
+mpm.ncells         = 32 32 32
+mpm.max_grid_size  = 16
+mpm.is_it_periodic = 0  0   0
+ 
+#timestepping
+mpm.final_time=2.0
+mpm.max_steps=1000000
+mpm.write_output_time=0.01
+mpm.num_redist = 1
+mpm.timestep = 0.00025
+
+mpm.gravity = 0.0 -9.8 0.0
+mpm.Youngs_modulus=2e5
+mpm.Poissons_ratio=0.2
