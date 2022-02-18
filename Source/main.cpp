@@ -44,8 +44,26 @@ int main (int argc, char* argv[])
         const BoxArray& nodeba = amrex::convert(ba, IntVect{1,1,1});
         MultiFab nodaldata(nodeba, dm, NUM_STATES, 0);
         nodaldata.setVal(0.0);
+
+        MultiFab dens_field_data;
+        BoxArray dens_ba=ba;
+        Box dom_dens = geom.Domain();
+        dom_dens.refine(specs.dens_field_gridratio);
+        Geometry geom_dens(dom_dens);
+        if(specs.dens_field_output)
+        {
+           dens_ba.refine(specs.dens_field_gridratio);
+           const BoxArray& nodal_dens_ba=amrex::convert(dens_ba,IntVect{1,1,1});
+           dens_field_data.define(nodal_dens_ba,dm,1,0);
+        }
+
+        //amrex::Print()<<"Doing deposition0\n";
         mpm_pc.deposit_onto_grid(nodaldata,specs.gravity,1,0);
         mpm_pc.interpolate_from_grid(nodaldata,0,1);
+        if(specs.dens_field_output)
+        {
+           mpm_pc.update_density_field(dens_field_data,specs.dens_field_gridratio,specs.smoothfactor);
+        }
 
         int steps=0;
         Real time=zero;
@@ -67,8 +85,12 @@ int main (int argc, char* argv[])
         std::string pltfile;
         pltfile = amrex::Concatenate("nplt", steps, 5);
         write_plot_file(pltfile,nodaldata,nodaldata_names,geom,ba,dm,time);
+        
+        pltfile = amrex::Concatenate("dplt", steps, 5);
+        write_plot_file(pltfile,dens_field_data,{"density"},geom_dens,dens_ba,dm,time);
        
-        amrex::Print() << "Num particles after init is " << mpm_pc.TotalNumberOfParticles() << "\n";
+        amrex::Print() << "Num particles after init is " 
+        << mpm_pc.TotalNumberOfParticles() << "\n";
 
 
         while((steps < specs.maxsteps) and (time < specs.final_time))
@@ -91,6 +113,7 @@ int main (int argc, char* argv[])
             nodaldata.setVal(zero);
             //find mass/vel at nodes
             //update_massvel=1, update_forces=0
+            //amrex::Print()<<"Doing deposition\n";
             mpm_pc.deposit_onto_grid(nodaldata,specs.gravity,1,0);
             //amrex::Print()<<"Done with mass/vel deposition\n";
 
@@ -100,11 +123,23 @@ int main (int argc, char* argv[])
             //amrex::Print()<<"Done with strain-rate interpolation\n";
 
             //update stress at material points
-            mpm_pc.apply_constitutive_model(dt,specs.Youngs_modulus,specs.Poissons_ratio); 
+            if(time<specs.applied_strainrate_time)
+            {
+                mpm_pc.apply_constitutive_model(dt,specs.Youngs_modulus,
+                                                specs.Poissons_ratio,
+                                                specs.applied_strainrate); 
+            }
+            else
+            {
+                mpm_pc.apply_constitutive_model(dt,specs.Youngs_modulus,
+                                                specs.Poissons_ratio,
+                                                0.0); 
+            }
             //amrex::Print()<<"Done with constitutive model\n";
 
             //update forces at nodes
             //update_massvel=0, update_forces=1
+            //amrex::Print()<<"Doing deposition\n";
             mpm_pc.deposit_onto_grid(nodaldata,specs.gravity,0,1);
             //amrex::Print()<<"Done with force update\n";
 
@@ -125,6 +160,10 @@ int main (int argc, char* argv[])
             mpm_pc.moveParticles(dt);
             //amrex::Print()<<"Done with moving material points\n";
             //amrex::Print()<<"=================================\n";
+            if(specs.dens_field_output)
+            {
+                mpm_pc.update_density_field(dens_field_data,specs.dens_field_gridratio,specs.smoothfactor);
+            }
 
 
             if (output_timePrint > specs.screen_output_time)
@@ -140,13 +179,20 @@ int main (int argc, char* argv[])
                 mpm_pc.Redistribute();
                 mpm_pc.fillNeighbors();
                 mpm_pc.buildNeighborList(CheckPair());
-               
+
                 output_it++;
                 mpm_pc.writeParticles(output_it);
-                
+
                 pltfile = amrex::Concatenate("nplt", output_it, 5);
                 write_plot_file(pltfile,nodaldata,nodaldata_names,geom,ba,dm,time);
-                
+            
+                if(specs.dens_field_output)
+                {
+                    pltfile = amrex::Concatenate("dplt", output_it, 5);
+                    write_plot_file(pltfile,dens_field_data,{"density"},geom_dens,dens_ba,
+                                    dm,time);
+                }
+
                 output_time=zero;
                 BL_PROFILE_VAR_STOP(outputs);
             }
@@ -155,8 +201,12 @@ int main (int argc, char* argv[])
 
         mpm_pc.Redistribute();
         mpm_pc.writeParticles(output_it+1);
+        
         pltfile = amrex::Concatenate("nplt", output_it+1, 5);
         write_plot_file(pltfile,nodaldata,nodaldata_names,geom,ba,dm,time);
+        
+        pltfile = amrex::Concatenate("dplt", output_it+1, 5);
+        write_plot_file(pltfile,dens_field_data,{"density"},geom_dens,dens_ba,dm,time);
     }
 
     amrex::Finalize();

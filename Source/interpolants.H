@@ -6,6 +6,18 @@
 #include<mpm_particle_container.H>
 
 AMREX_GPU_DEVICE AMREX_FORCE_INLINE
+amrex::Real spherical_gaussian(amrex::Real xi[3],amrex::Real xp[3],amrex::Real r0)
+{
+  amrex::Real f;
+  amrex::Real r2;
+
+  r2=(xi[0]-xp[0])*(xi[0]-xp[0])+(xi[1]-xp[1])*(xi[1]-xp[1])+(xi[2]-xp[2])*(xi[2]-xp[2]);
+  f=std::exp(-r2/(r0*r0))*std::pow(PI,-1.5)*std::pow(r0,-3.0);
+
+  return(f);
+}
+
+AMREX_GPU_DEVICE AMREX_FORCE_INLINE
         amrex::Real hat1d(amrex::Real xi,amrex::Real xp,amrex::Real hatsize)
 {
     amrex::Real zeta=xi-xp;

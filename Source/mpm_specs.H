@@ -54,6 +54,11 @@ class MPMspecs
 
         Real Youngs_modulus=1e9;
         Real Poissons_ratio=0.1;
+        Real applied_strainrate=0.0;
+        Real applied_strainrate_time=0.0;
+        int dens_field_output=0;
+        int dens_field_gridratio=1;
+        Real smoothfactor=1.0;
         
         void read_mpm_specs()
         {
@@ -83,6 +88,17 @@ class MPMspecs
 
             pp.query("Youngs_modulus",Youngs_modulus);
             pp.query("Poissons_ratio",Poissons_ratio);
+
+            pp.query("applied_strainrate",applied_strainrate);
+            applied_strainrate_time=final_time;
+            pp.query("applied_strainrate_time",applied_strainrate_time);
+
+            pp.query("dens_field_output",dens_field_output);
+            pp.query("smoothfactor",smoothfactor);
+            if(dens_field_output==1)
+            {
+                pp.get("dens_field_gridratio",dens_field_gridratio);
+            }
         }
 };
 #endif
