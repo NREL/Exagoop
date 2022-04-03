@@ -44,6 +44,10 @@ void nodal_bcs(const amrex::Geometry geom,
     
     const int* domloarr = geom.Domain().loVect();
     const int* domhiarr = geom.Domain().hiVect();
+    
+    int periodic[AMREX_SPACEDIM]={geom.isPeriodic(XDIR),
+                                  geom.isPeriodic(YDIR),
+                                  geom.isPeriodic(ZDIR)};
 
     GpuArray<int,AMREX_SPACEDIM> domlo={domloarr[0],domloarr[1],domloarr[2]};
     GpuArray<int,AMREX_SPACEDIM> domhi={domhiarr[0],domhiarr[1],domhiarr[2]};
@@ -59,10 +63,22 @@ void nodal_bcs(const amrex::Geometry geom,
         AMREX_GPU_DEVICE (int i,int j,int k) noexcept
         {
             IntVect nodeid(i,j,k);
+            bool impose_wall_x=false;
+            bool impose_wall_y=false;
+            bool impose_wall_z=false;
 
-            if(   nodeid[XDIR]==domlo[XDIR] || nodeid[XDIR]==(domhi[XDIR]+1)
-              ||  nodeid[YDIR]==domlo[YDIR] || nodeid[YDIR]==(domhi[YDIR]+1)
-              ||  nodeid[ZDIR]==domlo[ZDIR] || nodeid[ZDIR]==(domhi[ZDIR]+1) )
+            impose_wall_x=!periodic[XDIR] && 
+                        (nodeid[XDIR]==domlo[XDIR] || nodeid[XDIR]==(domhi[XDIR]+1))?true:false;
+            
+            impose_wall_y=!periodic[YDIR] && 
+                        (nodeid[YDIR]==domlo[YDIR] || nodeid[YDIR]==(domhi[YDIR]+1))?true:false;
+
+            impose_wall_z=!periodic[ZDIR] && 
+                        (nodeid[ZDIR]==domlo[ZDIR] || nodeid[ZDIR]==(domhi[ZDIR]+1))?true:false;
+
+            //Print()<<"impose wall:"<<impose_wall_x<<"\t"<<impose_wall_y<<"\t"<<impose_wall_z<<"\n";
+
+            if(impose_wall_x || impose_wall_y || impose_wall_z)
             {
                 for(int d=0;d<AMREX_SPACEDIM;d++)
                 {

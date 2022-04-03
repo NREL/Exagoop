@@ -58,11 +58,17 @@ int main (int argc, char* argv[])
            dens_field_data.setVal(0.0);
         }
 
-        mpm_pc.deposit_onto_grid(nodaldata,specs.gravity,1,0);
+        mpm_pc.deposit_onto_grid(nodaldata,specs.gravity,
+                                 specs.external_loads_present,
+                                 specs.force_slab_lo,
+                                 specs.force_slab_hi,
+                                 specs.extforce,1,0);
+
         mpm_pc.interpolate_from_grid(nodaldata,0,1);
         if(specs.dens_field_output)
         {
-           mpm_pc.update_density_field(dens_field_data,specs.dens_field_gridratio,specs.smoothfactor);
+           mpm_pc.update_density_field(dens_field_data,
+               specs.dens_field_gridratio,specs.smoothfactor);
         }
 
         int steps=0;
@@ -112,7 +118,11 @@ int main (int argc, char* argv[])
             nodaldata.setVal(zero);
             //find mass/vel at nodes
             //update_massvel=1, update_forces=0
-            mpm_pc.deposit_onto_grid(nodaldata,specs.gravity,1,0);
+            mpm_pc.deposit_onto_grid(nodaldata,specs.gravity,
+                                 specs.external_loads_present,
+                                 specs.force_slab_lo,
+                                 specs.force_slab_hi,
+                                 specs.extforce,1,0);
 
             //find strainrate at material points
             //update_vel=0,update_strainrate=1
@@ -135,7 +145,11 @@ int main (int argc, char* argv[])
 
             //update forces at nodes
             //update_massvel=0, update_forces=1
-            mpm_pc.deposit_onto_grid(nodaldata,specs.gravity,0,1);
+            mpm_pc.deposit_onto_grid(nodaldata,specs.gravity,
+                                 specs.external_loads_present,
+                                 specs.force_slab_lo,
+                                 specs.force_slab_hi,
+                                 specs.extforce,0,1);
 
             //update velocity on nodes
             nodal_update(nodaldata,dt);

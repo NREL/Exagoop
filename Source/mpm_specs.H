@@ -43,6 +43,11 @@ class MPMspecs
         Array<int,AMREX_SPACEDIM> ncells{AMREX_D_DECL(0, 0, 0)};
         Array<int,AMREX_SPACEDIM> periodic{AMREX_D_DECL(0, 0, 0)};
         Array<Real,AMREX_SPACEDIM> gravity{AMREX_D_DECL(0.0, -9.81, 0.0)};
+        
+        Array<Real,AMREX_SPACEDIM> force_slab_lo{AMREX_D_DECL(0.0, 0.0, 0.0)};
+        Array<Real,AMREX_SPACEDIM> force_slab_hi{AMREX_D_DECL(0.0, 0.0, 0.0)};
+        Array<Real,AMREX_SPACEDIM> extforce{AMREX_D_DECL(0.0, 0.0, 0.0)};
+        
         Real timestep=0.0;
         int num_redist=10;
         int max_grid_size=8;
@@ -59,6 +64,7 @@ class MPMspecs
         int dens_field_output=0;
         int dens_field_gridratio=1;
         Real smoothfactor=1.0;
+        int external_loads_present=0.0;
         
         void read_mpm_specs()
         {
@@ -98,6 +104,14 @@ class MPMspecs
             if(dens_field_output==1)
             {
                 pp.get("dens_field_gridratio",dens_field_gridratio);
+            }
+         
+            pp.query("external_loads",external_loads_present); 
+            if(external_loads_present)
+            {  
+                pp.get("force_slab_lo", force_slab_lo);
+                pp.get("force_slab_hi", force_slab_hi);
+                pp.get("extforce", extforce);
             }
         }
 };
