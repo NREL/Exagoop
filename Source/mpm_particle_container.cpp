@@ -152,6 +152,10 @@ void MPMParticleContainer::update_density_field(MultiFab& nodaldata,int refratio
 
 void MPMParticleContainer::deposit_onto_grid(MultiFab& nodaldata,
                                              Array<Real,AMREX_SPACEDIM> gravity,
+                                             int external_loads_present,
+                                             Array<Real,AMREX_SPACEDIM> force_slab_lo,
+                                             Array<Real,AMREX_SPACEDIM> force_slab_hi,
+                                             Array<Real,AMREX_SPACEDIM> extforce,
                                              int update_massvel,int update_forces) 
 {
     const int lev = 0;
@@ -161,7 +165,14 @@ void MPMParticleContainer::deposit_onto_grid(MultiFab& nodaldata,
     const auto dx = geom.CellSizeArray();
     const auto plo = geom.ProbLoArray();
     const auto domain = geom.Domain();
-    Real grav[]={AMREX_D_DECL(gravity[0],gravity[1],gravity[2])};
+    int extloads=external_loads_present;
+
+    Real grav[]={AMREX_D_DECL(gravity[XDIR],gravity[YDIR],gravity[ZDIR])};
+    Real slab_lo[]={AMREX_D_DECL(force_slab_lo[XDIR],force_slab_lo[YDIR],force_slab_lo[ZDIR])};
+    Real slab_hi[]={AMREX_D_DECL(force_slab_hi[XDIR],force_slab_hi[YDIR],force_slab_hi[ZDIR])};
+    Real extpforce[]={AMREX_D_DECL(extforce[XDIR],extforce[YDIR],extforce[ZDIR])};
+
+
 
     for (MFIter mfi(nodaldata); mfi.isValid(); ++mfi)
     {
@@ -185,7 +196,6 @@ void MPMParticleContainer::deposit_onto_grid(MultiFab& nodaldata,
                 nodal_data_arr(i,j,k,FRCX_INDEX)=zero;
                 nodal_data_arr(i,j,k,FRCY_INDEX)=zero;
                 nodal_data_arr(i,j,k,FRCZ_INDEX)=zero;
-
             }
         });
     }
@@ -269,9 +279,19 @@ void MPMParticleContainer::deposit_onto_grid(MultiFab& nodaldata,
                                 }
 
                                 amrex::Real bforce_contrib[AMREX_SPACEDIM]=
-                                {p.rdata(realData::mass)*grav[XDIR]*basisvalue,
+                                {   p.rdata(realData::mass)*grav[XDIR]*basisvalue,
                                     p.rdata(realData::mass)*grav[YDIR]*basisvalue,
-                                    p.rdata(realData::mass)*grav[ZDIR]*basisvalue};
+                                    p.rdata(realData::mass)*grav[ZDIR]*basisvalue   };
+
+                                if( extloads &&
+                                    xp[XDIR]>force_slab_lo[XDIR] && xp[XDIR]<force_slab_hi[XDIR] &&
+                                    xp[YDIR]>force_slab_lo[YDIR] && xp[YDIR]<force_slab_hi[YDIR] &&
+                                    xp[ZDIR]>force_slab_lo[ZDIR] && xp[ZDIR]<force_slab_hi[ZDIR] )
+                                {
+                                    bforce_contrib[XDIR] += extpforce[XDIR]*basisvalue;
+                                    bforce_contrib[YDIR] += extpforce[YDIR]*basisvalue;
+                                    bforce_contrib[ZDIR] += extpforce[ZDIR]*basisvalue;
+                                }
 
                                 amrex::Real tensvect[AMREX_SPACEDIM];
                                 tensor_vector_pdt(stress_tens,basisval_grad,tensvect);
@@ -323,6 +343,10 @@ void MPMParticleContainer::moveParticles(const amrex::Real& dt)
     const auto phi = Geom(lev).ProbHiArray();
     const auto dx = Geom(lev).CellSizeArray();
     auto& plev  = GetParticles(lev);
+    
+    int periodic[AMREX_SPACEDIM]={Geom(lev).isPeriodic(XDIR),
+                                  Geom(lev).isPeriodic(YDIR),
+                                  Geom(lev).isPeriodic(ZDIR)};
 
     for(MFIter mfi = MakeMFIter(lev); mfi.isValid(); ++mfi)
     {
@@ -345,32 +369,32 @@ void MPMParticleContainer::moveParticles(const amrex::Real& dt)
             p.pos(1) += p.rdata(realData::yvel) * dt;
             p.pos(2) += p.rdata(realData::zvel) * dt;
 
-            if ( p.pos(0) < plo[0])
+            if (!periodic[XDIR] && (p.pos(0) < plo[0]))
             {
                 p.pos(0) = two*plo[0] - p.pos(0);
                 p.rdata(realData::xvel) = -p.rdata(realData::xvel);
             }
-            if (p.pos(0) > phi[0])
+            if (!periodic[XDIR] && (p.pos(0) > phi[0]))
             {
                 p.pos(0) = two*phi[0] - p.pos(0);
                 p.rdata(realData::xvel) = -p.rdata(realData::xvel);
             }
-            if (p.pos(1) < plo[1])
+            if (!periodic[YDIR] && (p.pos(1) < plo[1]))
             {
                 p.pos(1) = two*plo[1] - p.pos(1);
                 p.rdata(realData::yvel) = -p.rdata(realData::yvel);
             }
-            if (p.pos(1) > phi[1])
+            if (!periodic[YDIR] && (p.pos(1) > phi[1]))
             {
                 p.pos(1) = two*phi[1] - p.pos(1);
                 p.rdata(realData::yvel) = -p.rdata(realData::yvel);
             }
-            if (p.pos(2) < plo[2])
+            if (!periodic[ZDIR] && (p.pos(2) < plo[2]))
             {
                 p.pos(2) = two*plo[2] - p.pos(2);
                 p.rdata(realData::zvel) = -p.rdata(realData::zvel);
             }
-            if (p.pos(2) > phi[2])
+            if (!periodic[ZDIR] && (p.pos(2) > phi[2]))
             {
                 p.pos(2) = two*phi[2] - p.pos(2);
                 p.rdata(realData::zvel) = -p.rdata(realData::zvel);
