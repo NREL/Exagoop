@@ -1,0 +1,21 @@
+#geometry parameters
+mpm.prob_lo        = 0.0      0.0     0.0  
+mpm.prob_hi        = 1.0      1.0     1.0
+mpm.ncells         = 32 32 32
+mpm.max_grid_size  = 32
+mpm.is_it_periodic = 0  0   0
+ 
+#timestepping
+mpm.final_time=3.5
+mpm.max_steps=100000000
+mpm.write_output_time=2e-1
+mpm.num_redist = 1
+mpm.timestep = 2e-5
+
+mpm.gravity = 0.0 0.0 0.0
+mpm.Youngs_modulus=6e7
+mpm.Poissons_ratio=0.0
+mpm.gravity = 0.0 -10.0 0.0
+
+#mpm.dens_field_output=1
+#mpm.dens_field_gridratio=4

@@ -1,0 +1,20 @@
+cantilever deflection under gravity
+Euler Beam theory solution is
+y(x)=k/24 ( (L-x)**4 + 4*L**3*x -L**4)
+
+k=(rho*g*A)/(E*I)
+
+In this problem,
+
+cross-section is 0.047 x 0.047 m 
+(obtained from paraview)
+
+rho=1000, g=10, A=0.047**2=2.2e-3
+E=6e7 I=wh**3/12 = 4.0664e-7
+L=0.7 m
+
+k=0.90538
+
+Euler Beam theory solution
+
+y(x)=0.0377*((0.7-x)**4+4*0.7**3*x-0.7**4)
