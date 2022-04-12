@@ -15,6 +15,7 @@ USE_CUDA  = FALSE
 USE_EB    = TRUE
 
 TINY_PROFILE = FALSE
+USE_PARTICLES = TRUE
 
 include $(AMREX_HOME)/Tools/GNUMake/Make.defs
 
