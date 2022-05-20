@@ -6,7 +6,10 @@ using namespace amrex;
 
 void MPMParticleContainer::apply_constitutive_model(const amrex::Real& dt,
                                                     amrex::Real E,amrex::Real v,
-                                                    amrex::Real applied_strainrate=0.0)
+													int Constitutive_Model,
+													amrex::Real dyn_visc,
+                                                    amrex::Real applied_strainrate=0.0
+													)
 {
     const int lev = 0;
     const Geometry& geom = Geom(lev);
@@ -57,7 +60,16 @@ void MPMParticleContainer::apply_constitutive_model(const amrex::Real& dt,
                 strain[d]=p.rdata(realData::strain+d);
             }
 
-            linear_elastic(strain,strainrate,stress,E,v);
+
+            if(Constitutive_Model==0)
+            {
+            	linear_elastic(strain,strainrate,stress,E,v);
+            }else if(Constitutive_Model==1)
+            {
+            	//Calculate_Hydrostatic_Pressure();
+            	Newtonian_Fluid(strain,strainrate,stress,0.001,p.rdata(realData::jacobian),2,2e6);
+            }
+
 
             for(int d=0;d<NCOMP_TENSOR;d++)
             {
@@ -249,14 +261,17 @@ void MPMParticleContainer::deposit_onto_grid(MultiFab& nodaldata,
                             {
 
                                 amrex::Real mass_contrib=p.rdata(realData::mass)*basisvalue;
+                                /*if(xp[XDIR]==3.0 && xp[YDIR]==1.666667 && ivlocal[0]==32 && ivlocal[1]==18 &&ivlocal[2]==2)
+                                {
+                                	amrex::Print()<<"\n At midpoint mass contrib = "<<mass_contrib<<" at Y = "<<xp[YDIR]<<" "<<ivlocal;
+                                }*/
 
                                 amrex::Real p_contrib[AMREX_SPACEDIM] = 
                                 {p.rdata(realData::mass)*p.rdata(realData::xvel)*basisvalue,
                                     p.rdata(realData::mass)*p.rdata(realData::yvel)*basisvalue,
                                     p.rdata(realData::mass)*p.rdata(realData::zvel)*basisvalue};
 
-                                amrex::Gpu::Atomic::AddNoRet(
-                                    &nodal_data_arr(ivlocal,MASS_INDEX), mass_contrib);
+                                amrex::Gpu::Atomic::AddNoRet(&nodal_data_arr(ivlocal,MASS_INDEX), mass_contrib);
 
                                 for(int dim=0;dim<AMREX_SPACEDIM;dim++)
                                 {
@@ -265,6 +280,8 @@ void MPMParticleContainer::deposit_onto_grid(MultiFab& nodaldata,
                                         p_contrib[dim]);
                                 }
                             }
+
+                            //amrex::Print()<<"\nMass at nodes = "<<nodal_data_arr(ivlocal,MASS_INDEX);
 
                             if(update_forces)
                             {
@@ -314,6 +331,7 @@ void MPMParticleContainer::deposit_onto_grid(MultiFab& nodaldata,
                 }
             }
         });
+
 
         amrex::ParallelFor(
             nodalbox, [=] AMREX_GPU_DEVICE(int i, int j, int k) noexcept 
@@ -368,6 +386,9 @@ void MPMParticleContainer::moveParticles(const amrex::Real& dt)
             p.pos(0) += p.rdata(realData::xvel) * dt;
             p.pos(1) += p.rdata(realData::yvel) * dt;
             p.pos(2) += p.rdata(realData::zvel) * dt;
+
+
+            p.rdata(realData::jacobian) += (p.rdata(realData::strainrate+XX)+p.rdata(realData::strainrate+YY)+p.rdata(realData::strainrate+ZZ)) * dt * p.rdata(realData::jacobian);
 
             if (!periodic[XDIR] && (p.pos(0) < plo[0]))
             {

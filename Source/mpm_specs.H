@@ -21,6 +21,7 @@ struct realData
     volume=22,
     mass=23,
     density=24,
+	jacobian=26,
     count=25
   };
 };
@@ -57,6 +58,9 @@ class MPMspecs
         int maxsteps=1;
         std::string particlefilename;
 
+        int Constitutive_Model = 1;		//0-->linear elastic, 1-->NEwtonian fluid
+        Real Dynamic_Viscosity=0.001;	//In case fluid simulations are involved
+        Real Bulk_Modulous = 2e6;		//In case fluid simulations are involved
         Real Youngs_modulus=1e9;
         Real Poissons_ratio=0.1;
         Real applied_strainrate=0.0;
@@ -84,8 +88,8 @@ class MPMspecs
             write_output_time=final_time/10.0;
             pp.query("write_output_time", write_output_time);
 
-	    screen_output_time=write_output_time/10.0;
-	    pp.query("screen_output_time", screen_output_time);
+            screen_output_time=write_output_time/10.0;
+            pp.query("screen_output_time", screen_output_time);
 
             pp.query("num_redist", num_redist);
 
@@ -94,6 +98,11 @@ class MPMspecs
 
             pp.query("Youngs_modulus",Youngs_modulus);
             pp.query("Poissons_ratio",Poissons_ratio);
+            pp.query("Constitutive_Model",Constitutive_Model);
+            amrex::Print()<<"\nCons model = "<<Constitutive_Model;
+
+            pp.query("Dynamic_Viscosity",Dynamic_Viscosity);
+            pp.query("Bulk_Modulous",Bulk_Modulous);
 
             pp.query("applied_strainrate",applied_strainrate);
             applied_strainrate_time=final_time;

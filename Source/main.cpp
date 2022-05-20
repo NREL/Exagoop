@@ -67,8 +67,7 @@ int main (int argc, char* argv[])
         mpm_pc.interpolate_from_grid(nodaldata,0,1);
         if(specs.dens_field_output)
         {
-           mpm_pc.update_density_field(dens_field_data,
-               specs.dens_field_gridratio,specs.smoothfactor);
+           mpm_pc.update_density_field(dens_field_data,specs.dens_field_gridratio,specs.smoothfactor);
         }
 
         int steps=0;
@@ -134,13 +133,19 @@ int main (int argc, char* argv[])
             {
                 mpm_pc.apply_constitutive_model(dt,specs.Youngs_modulus,
                                                 specs.Poissons_ratio,
-                                                specs.applied_strainrate); 
+												specs.Constitutive_Model,
+												specs.Dynamic_Viscosity,
+                                                specs.applied_strainrate
+												);
             }
             else
             {
                 mpm_pc.apply_constitutive_model(dt,specs.Youngs_modulus,
                                                 specs.Poissons_ratio,
-                                                0.0); 
+												specs.Constitutive_Model,
+												specs.Dynamic_Viscosity,
+												0.0
+												);
             }
 
             //update forces at nodes

@@ -36,7 +36,12 @@ public:
                                int update_vel,int update_strainrate);
 
     void apply_constitutive_model(const amrex::Real& dt,
-                                  amrex::Real E,amrex::Real v,amrex::Real applied_strainrate);
+                                  amrex::Real E,
+								  amrex::Real v,
+								  int Constitutive_Model,
+								  amrex::Real dyn_visc,
+								  amrex::Real applied_strainrate
+								  );
 
     void update_density_field(MultiFab& nodaldata,int refratio,amrex::Real smoothfactor);
 

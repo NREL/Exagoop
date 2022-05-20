@@ -50,6 +50,8 @@ void MPMParticleContainer::InitParticles (const std::string& filename)
             // Set other particle properties
             p.rdata(realData::volume)      = fourbythree*PI*pow(p.rdata(realData::radius),three);
             p.rdata(realData::mass)        = p.rdata(realData::density)*p.rdata(realData::volume);
+            //amrex::Print()<<"\n Mass = "<<p.rdata(realData::mass);
+            p.rdata(realData::jacobian)	   = 1.0;
 
             for(int comp=0;comp<NCOMP_TENSOR;comp++)
             {
