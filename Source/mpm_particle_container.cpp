@@ -66,8 +66,7 @@ void MPMParticleContainer::apply_constitutive_model(const amrex::Real& dt,
             	linear_elastic(strain,strainrate,stress,E,v);
             }else if(Constitutive_Model==1)
             {
-            	//Calculate_Hydrostatic_Pressure();
-            	Newtonian_Fluid(strain,strainrate,stress,0.001,p.rdata(realData::jacobian),2,2e6);
+            	Newtonian_Fluid(strain,strainrate,stress,dyn_visc,p.rdata(realData::jacobian),7,1e4);
             }
 
 
@@ -388,7 +387,10 @@ void MPMParticleContainer::moveParticles(const amrex::Real& dt)
             p.pos(2) += p.rdata(realData::zvel) * dt;
 
 
+            //Calculate Jacobian and pressure. This needs to be done only when constitutive equation=1 (fluid). Will do that before the pull request.
+
             p.rdata(realData::jacobian) += (p.rdata(realData::strainrate+XX)+p.rdata(realData::strainrate+YY)+p.rdata(realData::strainrate+ZZ)) * dt * p.rdata(realData::jacobian);
+            p.rdata(realData::pressure) = 2e6*(pow(1/p.rdata(realData::jacobian),2.0)-1.0);
 
             if (!periodic[XDIR] && (p.pos(0) < plo[0]))
             {
@@ -552,6 +554,8 @@ void MPMParticleContainer::writeParticles(const int n)
     real_data_names.push_back("volume");
     real_data_names.push_back("mass");
     real_data_names.push_back("density");
+    real_data_names.push_back("jacobian");
+    real_data_names.push_back("pressure");
 
     int_data_names.push_back("phase");
 
@@ -562,6 +566,8 @@ void MPMParticleContainer::writeParticles(const int n)
     writeflags_real[realData::yvel]=1;
     writeflags_real[realData::zvel]=1;
     writeflags_real[realData::mass]=1;
+    writeflags_real[realData::jacobian]=1;
+    writeflags_real[realData::pressure]=1;
 
     WritePlotFile(pltfile, "particles",writeflags_real, 
                   writeflags_int, real_data_names, int_data_names);

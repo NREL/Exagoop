@@ -129,9 +129,12 @@ int main (int argc, char* argv[])
             mpm_pc.updateNeighbors();
             
             //update stress at material points
+
             if(time<specs.applied_strainrate_time)
             {
-                mpm_pc.apply_constitutive_model(dt,specs.Youngs_modulus,
+
+                mpm_pc.apply_constitutive_model(dt,
+                								specs.Youngs_modulus,
                                                 specs.Poissons_ratio,
 												specs.Constitutive_Model,
 												specs.Dynamic_Viscosity,
@@ -140,7 +143,8 @@ int main (int argc, char* argv[])
             }
             else
             {
-                mpm_pc.apply_constitutive_model(dt,specs.Youngs_modulus,
+                mpm_pc.apply_constitutive_model(dt,
+                								specs.Youngs_modulus,
                                                 specs.Poissons_ratio,
 												specs.Constitutive_Model,
 												specs.Dynamic_Viscosity,

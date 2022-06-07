@@ -76,7 +76,6 @@ void nodal_bcs(const amrex::Geometry geom,
             impose_wall_z=!periodic[ZDIR] && 
                         (nodeid[ZDIR]==domlo[ZDIR] || nodeid[ZDIR]==(domhi[ZDIR]+1))?true:false;
 
-            //Print()<<"impose wall:"<<impose_wall_x<<"\t"<<impose_wall_y<<"\t"<<impose_wall_z<<"\n";
 
             if(impose_wall_x)
             {
@@ -87,7 +86,9 @@ void nodal_bcs(const amrex::Geometry geom,
 
             if(impose_wall_y)
             {
+            	nodal_data_arr(i,j,k,VELX_INDEX+0)=zero;
             	nodal_data_arr(i,j,k,VELX_INDEX+1)=zero;
+            	nodal_data_arr(i,j,k,VELX_INDEX+2)=zero;
             }
 
             if(impose_wall_z)

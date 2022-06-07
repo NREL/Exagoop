@@ -45,12 +45,5 @@ void Newtonian_Fluid(amrex::Real eps[NCOMP_TENSOR],
     sigma[XZ]=2.0*dyn_visc*(epsdot[XZ]);
     sigma[YZ]=2.0*dyn_visc*(epsdot[YZ]);
 
-    /*sigma[XX]=0.0;
-    sigma[YY]=0.0;
-    sigma[ZZ]=0.0;
-
-    sigma[XY]=0.0;
-    sigma[XZ]=0.0;
-    sigma[YZ]=0.0;*/
 }
 #endif
