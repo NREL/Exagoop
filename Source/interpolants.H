@@ -83,7 +83,8 @@ AMREX_GPU_DEVICE AMREX_FORCE_INLINE
         amrex::Real basisval(int l,int m,int n, int i, int j, int k,
                amrex::Real xp[AMREX_SPACEDIM], 
                 const amrex::GpuArray<amrex::Real, AMREX_SPACEDIM> plo, 
-                const amrex::GpuArray<amrex::Real, AMREX_SPACEDIM> dx)
+                const amrex::GpuArray<amrex::Real, AMREX_SPACEDIM> dx,
+				int order_scheme)
 {
     amrex::Real lval,mval,nval;
     amrex::Real alpha,beta,gama;
@@ -92,9 +93,101 @@ AMREX_GPU_DEVICE AMREX_FORCE_INLINE
     beta  = (xp[YDIR]-(plo[YDIR]+j*dx[YDIR]))/dx[YDIR];
     gama  = (xp[ZDIR]-(plo[ZDIR]+k*dx[ZDIR]))/dx[ZDIR];
 
-    lval=(l==0)?(one-alpha):alpha;
-    mval=(m==0)?(one-beta):beta;
-    nval=(n==0)?(one-gama):gama;
+    if(order_scheme==1)
+    {
+    	lval=(l==0)?(one-alpha):alpha;
+    	mval=(m==0)?(one-beta):beta;
+    	nval=(n==0)?(one-gama):gama;
+    }
+    else if(order_scheme==3)
+    {
+    	if(l==0)
+    	{
+    		lval=1.0/2.0*alpha*alpha*alpha-alpha*alpha+2.0/3.0;
+    	}
+    	else if(l==-1)
+    	{
+    		alpha=1+alpha;
+    		lval=-1.0/6.0*alpha*alpha*alpha+alpha*alpha-2.0*alpha+4.0/3.0;
+    	}
+    	else if(l==-2)
+    	{
+    		//Do nothing. l=-2 does not contribute
+    	}
+    	else if(l==1)
+    	{
+    		alpha=-alpha;
+    		lval=-1.0/2.0*alpha*alpha*alpha-alpha*alpha+2.0/3.0;
+    	}
+    	else if(l==2)
+    	{
+    		alpha=-(1+alpha);
+    		lval=1.0/6.0*alpha*alpha*alpha+alpha*alpha+2.0*alpha+4.0/3.0;
+    	}
+    	else
+    	{
+    		amrex::Abort("\nError. Lvalue in interpolation out of bounds. Bug in the code!");
+    	}
+
+
+    	if(m==0)
+    	{
+    		mval=1.0/2.0*beta*beta*beta-beta*beta+2.0/3.0;
+    	}
+    	else if(m==-1)
+    	{
+    		beta=1+beta;
+    		mval=-1.0/6.0*beta*beta*beta+beta*beta-2.0*beta+4.0/3.0;
+    	}
+    	else if(m==-2)
+    	{
+    		//Do nothing. l=-2 does not contribute
+    	}
+    	else if(m==1)
+    	{
+    		beta=-beta;
+    		mval=-1.0/2.0*beta*beta*beta-beta*beta+2.0/3.0;
+    	}
+    	else if(m==2)
+    	{
+    		beta=-(1+beta);
+    		mval=1.0/6.0*beta*beta*beta+beta*beta+2.0*beta+4.0/3.0;
+    	}
+    	else
+    	{
+    		amrex::Abort("\nError. Mvalue in interpolation out of bounds. Bug in the code!");
+    	}
+
+
+    	if(n==0)
+    	{
+    		nval=1.0/2.0*gama*gama*gama-gama*gama+2.0/3.0;
+    	}
+    	else if(n==-1)
+    	{
+    		gama=1+gama;
+    		nval=-1.0/6.0*gama*gama*gama+gama*gama-2.0*gama+4.0/3.0;
+    	}
+    	else if(n==-2)
+    	{
+    		//Do nothing. l=-2 does not contribute
+    	}
+    	else if(n==1)
+    	{
+    		gama=-gama;
+    		nval=-1.0/2.0*gama*gama*gama-gama*gama+2.0/3.0;
+    	}
+    	else if(n==2)
+    	{
+    		gama=-(1+gama);
+    		nval=1.0/6.0*gama*gama*gama+gama*gama+2.0*gama+4.0/3.0;
+    	}
+    	else
+    	{
+    		amrex::Abort("\nError. Nvalue in interpolation out of bounds. Bug in the code!");
+    	}
+
+    }
 
     return(lval*mval*nval);
 }
@@ -103,7 +196,8 @@ AMREX_GPU_DEVICE AMREX_FORCE_INLINE
         amrex::Real basisvalder(int dir, int l,int m,int n, int i, int j, int k, 
                 amrex::Real xp[AMREX_SPACEDIM], 
                 const amrex::GpuArray<amrex::Real, AMREX_SPACEDIM> plo, 
-                const amrex::GpuArray<amrex::Real, AMREX_SPACEDIM> dx)
+                const amrex::GpuArray<amrex::Real, AMREX_SPACEDIM> dx,
+				int order_scheme)
 {
     amrex::Real lval,mval,nval;
     amrex::Real alpha,beta,gama;
@@ -112,28 +206,122 @@ AMREX_GPU_DEVICE AMREX_FORCE_INLINE
     dxinv[XDIR]=one/dx[XDIR];
     dxinv[YDIR]=one/dx[YDIR];
     dxinv[ZDIR]=one/dx[ZDIR];
-    
+
     alpha = (xp[XDIR]-(plo[XDIR]+i*dx[XDIR]))/dx[XDIR];
     beta  = (xp[YDIR]-(plo[YDIR]+j*dx[YDIR]))/dx[YDIR];
     gama  = (xp[ZDIR]-(plo[ZDIR]+k*dx[ZDIR]))/dx[ZDIR];
 
-    lval=(l==0)?(one-alpha):alpha;
-    mval=(m==0)?(one-beta):beta;
-    nval=(n==0)?(one-gama):gama;
 
-    if(dir==0)
+    if(order_scheme==1)
     {
-        lval=(l==0)?-dxinv[XDIR]:dxinv[XDIR];
-    }
-    else if(dir==1)
-    {
-        mval=(m==0)?-dxinv[YDIR]:dxinv[YDIR];
-    }
-    else
-    {
-        nval=(n==0)?-dxinv[ZDIR]:dxinv[ZDIR];
-    }
+    	if(dir==0)
+    	{
+    		lval=(l==0)?-dxinv[XDIR]:dxinv[XDIR];
+    	}
 
+    	else if(dir==1)
+    	{
+    		mval=(m==0)?-dxinv[YDIR]:dxinv[YDIR];
+    	}
+    	else
+    	{
+    		nval=(n==0)?-dxinv[ZDIR]:dxinv[ZDIR];
+    	}
+    }
+    else if(order_scheme==3)
+    {
+    	if(dir==0)
+    	{
+    		if(l==0)
+    		{
+    			lval=(3.0/2.0*alpha*alpha-2.0*alpha)*dxinv[XDIR];
+    		}
+    		else if(l==-1)
+    		{
+    			alpha=1+alpha;
+    			lval=(-1.0/2.0*alpha*alpha+2.0*alpha-2.0)*dxinv[XDIR];
+    		}
+    		else if(l==-2)
+    		{
+    			//Do nothing. l=-2 does not contribute
+    		}
+    		else if(l==1)
+    		{
+    			alpha=-alpha;
+    			lval=(-3.0/2.0*alpha*alpha-2.0*alpha)*dxinv[XDIR];;
+    		}
+    		else if(l==2)
+    		{
+    			alpha=-(1+alpha);
+    			lval=(1.0/2.0*alpha*alpha+2.0*alpha+2.0)*dxinv[XDIR];
+    		}
+    		else
+    		{
+    			amrex::Abort("\nError. Lvalue in interpolation out of bounds. Bug in the code!");
+    		}
+    	}
+    	if(dir==1)
+    	{
+    		if(m==0)
+    		{
+    			mval=(3.0/2.0*beta*beta-2.0*beta)*dxinv[YDIR];
+    		}
+    		else if(m==-1)
+    		{
+    			beta=1+beta;
+    			mval=(-1.0/2.0*beta*beta+2.0*beta-2.0)*dxinv[YDIR];
+    		}
+    		else if(m==-2)
+    		{
+    			//Do nothing. l=-2 does not contribute
+    		}
+    		else if(m==1)
+    		{
+    			beta=-beta;
+    			mval=(-3.0/2.0*beta*beta-2.0*beta)*dxinv[YDIR];
+    		}
+    		else if(m==2)
+    		{
+    			beta=-(1+beta);
+    			mval=(1.0/2.0*beta*beta+2.0*beta+2.0)*dxinv[YDIR];
+    		}
+    		else
+    		{
+    			amrex::Abort("\nError. Lvalue in interpolation out of bounds. Bug in the code!");
+    		}
+    	}
+    	if(dir==2)
+    	{
+    		if(n==0)
+    		{
+    			nval=(3.0/2.0*gama*gama-2.0*gama)*dxinv[ZDIR];
+    		}
+    		else if(n==-1)
+    		{
+    			gama=1+gama;
+    			nval=(-1.0/2.0*gama*gama+2.0*gama-2.0)*dxinv[ZDIR];
+    		}
+    		else if(n==-2)
+    		{
+    			//Do nothing. l=-2 does not contribute
+    		}
+    		else if(n==1)
+    		{
+    			gama=-gama;
+    			nval=(-3.0/2.0*gama*gama-2.0*gama)*dxinv[ZDIR];
+    		}
+    		else if(n==2)
+    		{
+    			gama=-(1+gama);
+    			nval=(1.0/2.0*gama*gama+2.0*gama+2.0)*dxinv[ZDIR];
+    		}
+    		else
+    		{
+    			amrex::Abort("\nError. Lvalue in interpolation out of bounds. Bug in the code!");
+    		}
+    	}
+
+    }
     return(lval*mval*nval);
 }
 

@@ -260,11 +260,6 @@ void MPMParticleContainer::deposit_onto_grid(MultiFab& nodaldata,
                             {
 
                                 amrex::Real mass_contrib=p.rdata(realData::mass)*basisvalue;
-                                /*if(xp[XDIR]==3.0 && xp[YDIR]==1.666667 && ivlocal[0]==32 && ivlocal[1]==18 &&ivlocal[2]==2)
-                                {
-                                	amrex::Print()<<"\n At midpoint mass contrib = "<<mass_contrib<<" at Y = "<<xp[YDIR]<<" "<<ivlocal;
-                                }*/
-
                                 amrex::Real p_contrib[AMREX_SPACEDIM] = 
                                 {p.rdata(realData::mass)*p.rdata(realData::xvel)*basisvalue,
                                     p.rdata(realData::mass)*p.rdata(realData::yvel)*basisvalue,

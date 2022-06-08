@@ -60,6 +60,7 @@ class MPMspecs
         std::string particlefilename;
 
         int Constitutive_Model = 1;		//0-->linear elastic, 1-->NEwtonian fluid
+        int order_scheme=3;				//1-->tent function, 3--> cubic spline shape function
         Real Dynamic_Viscosity=0.001;	//In case fluid simulations are involved
         Real Bulk_Modulous = 2e6;		//In case fluid simulations are involved
         Real Youngs_modulus=1e9;
@@ -108,6 +109,8 @@ class MPMspecs
             pp.query("applied_strainrate",applied_strainrate);
             applied_strainrate_time=final_time;
             pp.query("applied_strainrate_time",applied_strainrate_time);
+
+            pp.query("order_scheme",order_scheme);
 
             pp.query("dens_field_output",dens_field_output);
             pp.query("smoothfactor",smoothfactor);
