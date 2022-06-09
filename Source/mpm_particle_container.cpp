@@ -66,7 +66,7 @@ void MPMParticleContainer::apply_constitutive_model(const amrex::Real& dt,
             	linear_elastic(strain,strainrate,stress,E,v);
             }else if(Constitutive_Model==1)
             {
-            	Newtonian_Fluid(strain,strainrate,stress,dyn_visc,p.rdata(realData::jacobian),7,1e4);
+            	Newtonian_Fluid(strain,strainrate,stress,dyn_visc,p.rdata(realData::jacobian),2,2e4);
             }
 
 
@@ -254,7 +254,7 @@ void MPMParticleContainer::deposit_onto_grid(MultiFab& nodaldata,
                         if(nodalbox.contains(ivlocal))
                         {
 
-                            amrex::Real basisvalue=basisval(l,m,n,iv[XDIR],iv[YDIR],iv[ZDIR],xp,plo,dx);
+                            amrex::Real basisvalue=basisval(l,m,n,iv[XDIR],iv[YDIR],iv[ZDIR],xp,plo,dx,1);
 
                             if(update_massvel)
                             {
@@ -286,7 +286,7 @@ void MPMParticleContainer::deposit_onto_grid(MultiFab& nodaldata,
 
                                 for(int d=0;d<AMREX_SPACEDIM;d++)
                                 {
-                                    basisval_grad[d]=basisvalder(d,l,m,n,iv[XDIR],iv[YDIR],iv[ZDIR],xp,plo,dx);
+                                    basisval_grad[d]=basisvalder(d,l,m,n,iv[XDIR],iv[YDIR],iv[ZDIR],xp,plo,dx,1);
                                 }
 
                                 amrex::Real bforce_contrib[AMREX_SPACEDIM]=
@@ -385,7 +385,8 @@ void MPMParticleContainer::moveParticles(const amrex::Real& dt)
             //Calculate Jacobian and pressure. This needs to be done only when constitutive equation=1 (fluid). Will do that before the pull request.
 
             p.rdata(realData::jacobian) += (p.rdata(realData::strainrate+XX)+p.rdata(realData::strainrate+YY)+p.rdata(realData::strainrate+ZZ)) * dt * p.rdata(realData::jacobian);
-            p.rdata(realData::pressure) = 2e6*(pow(1/p.rdata(realData::jacobian),2.0)-1.0);
+            p.rdata(realData::pressure) = 2e4*(pow(1/p.rdata(realData::jacobian),2.0)-1.0);
+            //p.rdata(realData::volume)	= p.rdata(realData::vol_init)*p.rdata(realData::jacobian);
 
             if (!periodic[XDIR] && (p.pos(0) < plo[0]))
             {
@@ -422,7 +423,59 @@ void MPMParticleContainer::moveParticles(const amrex::Real& dt)
     }
 }
 
-void MPMParticleContainer::interpolate_from_grid(MultiFab& nodaldata,int update_vel,int update_strainrate)
+
+void MPMParticleContainer::interpolate_mass_from_grid(MultiFab& nodaldata,int order_scheme)
+{
+    const int lev = 0;
+    const Geometry& geom = Geom(lev);
+    auto& plev  = GetParticles(lev);
+    const auto dxi = geom.InvCellSizeArray();
+    const auto dx = geom.CellSizeArray();
+    const auto plo = geom.ProbLoArray();
+    const auto domain = geom.Domain();
+
+    int ncomp=nodaldata.nComp();
+
+    for(MFIter mfi = MakeMFIter(lev); mfi.isValid(); ++mfi)
+    {
+        const amrex::Box& box = mfi.tilebox();
+        int gid = mfi.index();
+        int tid = mfi.LocalTileIndex();
+        auto index = std::make_pair(gid, tid);
+
+        auto& ptile = plev[index];
+        auto& aos   = ptile.GetArrayOfStructs();
+        const int np = aos.numRealParticles();
+
+        Array4<Real> nodal_data_arr=nodaldata.array(mfi);
+
+        ParticleType* pstruct = aos().dataPtr();
+
+        amrex::ParallelFor(np,[=]
+        AMREX_GPU_DEVICE (int i) noexcept
+        {
+            ParticleType& p = pstruct[i];
+
+            amrex::Real xp[AMREX_SPACEDIM];
+            amrex::Real gradvp[AMREX_SPACEDIM][AMREX_SPACEDIM]={0.0};
+
+            xp[XDIR]=p.pos(XDIR);
+            xp[YDIR]=p.pos(YDIR);
+            xp[ZDIR]=p.pos(ZDIR);
+
+            auto iv = getParticleCell(p, plo, dxi, domain);
+
+            if(order_scheme==1)
+            {
+            	//p.rdata(realData::vol_init) = bilin_interp(xp,iv[XDIR],iv[YDIR],iv[ZDIR],plo,dx,nodal_data_arr,MASS_INDEX);
+            	//p.rdata(realData::vol_init) = p.rdata(realData::vol_init)/(dx[XDIR]*dx[YDIR]*dx[ZDIR]);//Actually the density. Dont get confused by the variable name.
+            	//p.rdata(realData::vol_init) = p.rdata(realData::mass)/p.rdata(realData::vol_init);	//INitial volume
+            }
+        });
+    }
+}
+
+void MPMParticleContainer::interpolate_from_grid(MultiFab& nodaldata,int update_vel,int update_strainrate,int order_scheme)
 {
     const int lev = 0;
     const Geometry& geom = Geom(lev);
@@ -465,14 +518,18 @@ void MPMParticleContainer::interpolate_from_grid(MultiFab& nodaldata,int update_
 
             if(update_vel)
             {
-                p.rdata(realData::xvel) = bilin_interp(xp,iv[XDIR],
-                             iv[YDIR],iv[ZDIR],plo,dx,nodal_data_arr,VELX_INDEX);
-
-                p.rdata(realData::yvel) = bilin_interp(xp,iv[XDIR],
-                             iv[YDIR],iv[ZDIR],plo,dx,nodal_data_arr,VELY_INDEX);
-
-                p.rdata(realData::zvel) = bilin_interp(xp,iv[XDIR],
-                             iv[YDIR],iv[ZDIR],plo,dx,nodal_data_arr,VELZ_INDEX);
+            	if(order_scheme==1)
+            	{
+            		p.rdata(realData::xvel) = bilin_interp(xp,iv[XDIR],iv[YDIR],iv[ZDIR],plo,dx,nodal_data_arr,VELX_INDEX);
+            		p.rdata(realData::yvel) = bilin_interp(xp,iv[XDIR],iv[YDIR],iv[ZDIR],plo,dx,nodal_data_arr,VELY_INDEX);
+            		p.rdata(realData::zvel) = bilin_interp(xp,iv[XDIR],iv[YDIR],iv[ZDIR],plo,dx,nodal_data_arr,VELZ_INDEX);
+            	}
+            	if(order_scheme==3)
+            	{
+            		p.rdata(realData::xvel) = cubic_interp(xp,iv[XDIR],iv[YDIR],iv[ZDIR],plo,dx,nodal_data_arr,VELX_INDEX);
+            		p.rdata(realData::yvel) = cubic_interp(xp,iv[XDIR],iv[YDIR],iv[ZDIR],plo,dx,nodal_data_arr,VELY_INDEX);
+            		p.rdata(realData::zvel) = cubic_interp(xp,iv[XDIR],iv[YDIR],iv[ZDIR],plo,dx,nodal_data_arr,VELZ_INDEX);
+            	}
             }
 
             if(update_strainrate)
@@ -486,7 +543,7 @@ void MPMParticleContainer::interpolate_from_grid(MultiFab& nodaldata,int update_
                             amrex::Real basisval_grad[AMREX_SPACEDIM];
                             for(int d=0;d<AMREX_SPACEDIM;d++)
                             {
-                                basisval_grad[d]=basisvalder(d,l,m,n,iv[XDIR],iv[YDIR],iv[ZDIR],xp,plo,dx);
+                                basisval_grad[d]=basisvalder(d,l,m,n,iv[XDIR],iv[YDIR],iv[ZDIR],xp,plo,dx,1);
                             }
 
                             gradvp[XDIR][XDIR]+=nodal_data_arr(iv[XDIR]+l,iv[YDIR]+m,iv[ZDIR]+n,VELX_INDEX)*basisval_grad[XDIR];
@@ -551,6 +608,7 @@ void MPMParticleContainer::writeParticles(const int n)
     real_data_names.push_back("density");
     real_data_names.push_back("jacobian");
     real_data_names.push_back("pressure");
+    //real_data_names.push_back("vol_init");
 
     int_data_names.push_back("phase");
 
@@ -563,6 +621,7 @@ void MPMParticleContainer::writeParticles(const int n)
     writeflags_real[realData::mass]=1;
     writeflags_real[realData::jacobian]=1;
     writeflags_real[realData::pressure]=1;
+    //writeflags_real[realData::vol_init]=1;
 
     WritePlotFile(pltfile, "particles",writeflags_real, 
                   writeflags_int, real_data_names, int_data_names);

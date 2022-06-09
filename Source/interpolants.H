@@ -56,7 +56,8 @@ AMREX_GPU_DEVICE AMREX_FORCE_INLINE
         amrex::Real bilin_interp(amrex::Real xp[AMREX_SPACEDIM], int i, int j, int k, 
                 const amrex::GpuArray<amrex::Real, AMREX_SPACEDIM> plo, 
                 const amrex::GpuArray<amrex::Real, AMREX_SPACEDIM> dx,
-                amrex::Array4<amrex::Real> nodaldata, int comp) 
+                amrex::Array4<amrex::Real> nodaldata,
+				int comp)
 {
 
     amrex::Real alpha,beta,gama;
@@ -76,6 +77,26 @@ AMREX_GPU_DEVICE AMREX_FORCE_INLINE
     value += (1.0-alpha) * beta      * gama  * nodaldata(i,j+1,k+1,comp);
     value += alpha       * beta      * gama  * nodaldata(i+1,j+1,k+1,comp);
     
+    return(value);
+}
+
+AMREX_GPU_DEVICE AMREX_FORCE_INLINE
+        amrex::Real cubic_interp(amrex::Real xp[AMREX_SPACEDIM], int i, int j, int k,
+                const amrex::GpuArray<amrex::Real, AMREX_SPACEDIM> plo,
+                const amrex::GpuArray<amrex::Real, AMREX_SPACEDIM> dx,
+                amrex::Array4<amrex::Real> nodaldata,
+				int comp)
+{
+
+    amrex::Real alpha,beta,gama;
+    amrex::Real value=zero;
+
+    alpha = (xp[XDIR]-(plo[XDIR]+i*dx[XDIR]))/dx[XDIR];
+    beta  = (xp[YDIR]-(plo[YDIR]+j*dx[YDIR]))/dx[YDIR];
+    gama  = (xp[ZDIR]-(plo[ZDIR]+k*dx[ZDIR]))/dx[ZDIR];
+
+    //Need to be implemented
+
     return(value);
 }
 
@@ -227,6 +248,7 @@ AMREX_GPU_DEVICE AMREX_FORCE_INLINE
     	{
     		nval=(n==0)?-dxinv[ZDIR]:dxinv[ZDIR];
     	}
+    	//amrex::Print()<<"\nEntered basisvalder"<<lval<<" "<<mval<<" "<<nval;
     }
     else if(order_scheme==3)
     {

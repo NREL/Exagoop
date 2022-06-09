@@ -37,7 +37,12 @@ int main (int argc, char* argv[])
         ba.maxSize(specs.max_grid_size);
         DistributionMapping dm(ba);
 
-        const int ng_cells = 1;
+        int ng_cells = 1;
+        if(specs.order_scheme==3)
+        {
+        	ng_cells = 2;
+        }
+
         MPMParticleContainer mpm_pc(geom, dm, ba, ng_cells);
         mpm_pc.InitParticles(specs.particlefilename);
         
@@ -64,7 +69,8 @@ int main (int argc, char* argv[])
                                  specs.force_slab_hi,
                                  specs.extforce,1,0);
 
-        mpm_pc.interpolate_from_grid(nodaldata,0,1);
+        mpm_pc.interpolate_from_grid(nodaldata,0,1,1);
+        //mpm_pc.interpolate_mass_from_grid(nodaldata,1);
         if(specs.dens_field_output)
         {
            mpm_pc.update_density_field(dens_field_data,specs.dens_field_gridratio,specs.smoothfactor);
@@ -125,7 +131,7 @@ int main (int argc, char* argv[])
 
             //find strainrate at material points
             //update_vel=0,update_strainrate=1
-            mpm_pc.interpolate_from_grid(nodaldata,0,1);
+            mpm_pc.interpolate_from_grid(nodaldata,0,1,1);
             mpm_pc.updateNeighbors();
             
             //update stress at material points
@@ -168,7 +174,7 @@ int main (int argc, char* argv[])
 
             //find velocity at material points
             //update_vel=1,update_strainrate=0
-            mpm_pc.interpolate_from_grid(nodaldata,1,0);
+            mpm_pc.interpolate_from_grid(nodaldata,1,0,1);
             mpm_pc.updateNeighbors();
 
             //move material points

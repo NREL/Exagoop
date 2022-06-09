@@ -2,7 +2,7 @@
 mpm.prob_lo        = 0.0      0.0     0.0  
 mpm.prob_hi        = 1.0      1.0     1.0
 mpm.ncells         = 32 32 32
-mpm.max_grid_size  = 32
+mpm.max_grid_size  = 8
 mpm.is_it_periodic = 0  0   0
  
 #timestepping
@@ -16,6 +16,7 @@ mpm.gravity = 0.0 0.0 0.0
 mpm.Youngs_modulus=6e7
 mpm.Poissons_ratio=0.0
 mpm.gravity = 0.0 -10.0 0.0
+mpm.Constitutive_Model=0
 
 #mpm.dens_field_output=1
 #mpm.dens_field_gridratio=4

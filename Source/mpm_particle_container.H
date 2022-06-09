@@ -33,7 +33,7 @@ public:
                            Array<Real,AMREX_SPACEDIM> extforce,
                            int update_massvel,int update_forces); 
     void interpolate_from_grid(MultiFab& nodaldata,
-                               int update_vel,int update_strainrate);
+                               int update_vel,int update_strainrate,int order);
 
     void apply_constitutive_model(const amrex::Real& dt,
                                   amrex::Real E,
@@ -42,6 +42,7 @@ public:
 								  amrex::Real dyn_visc,
 								  amrex::Real applied_strainrate
 								  );
+    void interpolate_mass_from_grid(MultiFab& nodaldata,int order_scheme);
 
     void update_density_field(MultiFab& nodaldata,int refratio,amrex::Real smoothfactor);
 
