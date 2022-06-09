@@ -61,7 +61,7 @@ class MPMspecs
         std::string particlefilename;
 
         int Constitutive_Model = 1;		//0-->linear elastic, 1-->NEwtonian fluid
-        int order_scheme=3;				//1-->tent function, 3--> cubic spline shape function
+        int order_scheme=1;				//1-->tent function, 3--> cubic spline shape function
         Real Dynamic_Viscosity=0.001;	//In case fluid simulations are involved
         Real Bulk_Modulous = 2e6;		//In case fluid simulations are involved
         Real Youngs_modulus=1e9;

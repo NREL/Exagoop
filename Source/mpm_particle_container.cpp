@@ -558,6 +558,8 @@ void MPMParticleContainer::interpolate_from_grid(MultiFab& nodaldata,int update_
                             gradvp[ZDIR][YDIR]+=nodal_data_arr(iv[XDIR]+l,iv[YDIR]+m,iv[ZDIR]+n,VELZ_INDEX)*basisval_grad[YDIR];
                             gradvp[ZDIR][ZDIR]+=nodal_data_arr(iv[XDIR]+l,iv[YDIR]+m,iv[ZDIR]+n,VELZ_INDEX)*basisval_grad[ZDIR];
 
+                            amrex::Print()<<"\n "<<gradvp[XDIR][XDIR]<<" "<<gradvp[XDIR][YDIR]<<" "<<gradvp[XDIR][ZDIR]<<" "<<gradvp[YDIR][XDIR]<<" "<<gradvp[YDIR][YDIR]<<" "<<gradvp[YDIR][ZDIR]<<" "<<gradvp[ZDIR][XDIR]<<" "<<gradvp[ZDIR][YDIR]<<" "<<gradvp[ZDIR][ZDIR]<<" ";
+
                         }
                     }
                 }
