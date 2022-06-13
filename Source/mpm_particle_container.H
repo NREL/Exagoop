@@ -24,7 +24,7 @@ public:
 
     void InitParticles (const std::string & filename,Real *total_mass, Real *total_vol);
     void moveParticles (const amrex::Real& dt);
-    void updatevolume (const amrex::Real& dt, const amrex::Real& K, const amrex::Real& G );
+    void updatevolume (const amrex::Real& dt);
     void writeParticles (const int n);  
     void deposit_onto_grid(MultiFab& nodaldata,
                            Array<Real,AMREX_SPACEDIM> gravity,
@@ -38,18 +38,12 @@ public:
     void move_particles_from_nodevel(MultiFab& nodaldata,const amrex::Real& dt,int order_scheme);
 
     void apply_constitutive_model(const amrex::Real& dt,
-                                  amrex::Real E,
-								  amrex::Real v,
-								  int Constitutive_Model,
-								  amrex::Real K,
-								  amrex::Real G,
-								  amrex::Real dyn_visc,
 								  amrex::Real applied_strainrate
 								  );
     void interpolate_mass_from_grid(MultiFab& nodaldata,int order_scheme);
 
     void update_density_field(MultiFab& nodaldata,int refratio,amrex::Real smoothfactor);
-    amrex::Real Calculate_time_step(amrex::Real K);
+    amrex::Real Calculate_time_step();
 
 private:
 

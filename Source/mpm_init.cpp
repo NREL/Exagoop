@@ -49,16 +49,39 @@ void MPMParticleContainer::InitParticles (const std::string& filename,Real *tota
             ifs >> p.rdata(realData::xvel);
             ifs >> p.rdata(realData::yvel);
             ifs >> p.rdata(realData::zvel);
+            ifs >> p.idata(intData::constitutive_model);
+
+            if(p.idata(intData::constitutive_model)==0)	//Elastic solid
+            {
+            	ifs >> p.rdata(realData::E);
+            	ifs >> p.rdata(realData::nu);
+            	p.rdata(realData::Bulk_modulous)=0.0;
+            	p.rdata(realData::Gama_pressure)=0.0;
+            	p.rdata(realData::Dynamic_viscosity)=0.0;
+            }
+            else if(p.idata(intData::constitutive_model)==1)
+            {
+            	p.rdata(realData::E)=0.0;
+            	p.rdata(realData::nu)=0.0;
+            	ifs >> p.rdata(realData::Bulk_modulous);
+            	ifs >> p.rdata(realData::Gama_pressure);
+            	ifs >> p.rdata(realData::Dynamic_viscosity);
+            	p.rdata(realData::pressure)	   = (2-p.pos(1))*p.rdata(realData::density)*9.81;
+            }
+            else
+            {
+            	amrex::Abort("\nIncorrect constitutive model. Please check your particle file");
+            }
 
             // Set other particle properties
             p.rdata(realData::volume)      = fourbythree*PI*pow(p.rdata(realData::radius),three);	//This is a dummy initialisation. We will correct this value later
             p.rdata(realData::mass)        = p.rdata(realData::density)*p.rdata(realData::volume);
-            //amrex::Print()<<"\n Mass = "<<p.rdata(realData::mass);
+
             *total_mass +=p.rdata(realData::mass);
             *total_vol +=p.rdata(realData::volume);
             p.rdata(realData::jacobian)	   = 1.0;
             p.rdata(realData::vol_init)	   = 0.0;
-            p.rdata(realData::pressure)	   = (2-p.pos(1))*p.rdata(realData::density)*9.81;
+
 
             for(int comp=0;comp<NCOMP_TENSOR;comp++)
             {

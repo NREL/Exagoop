@@ -5,11 +5,6 @@
 using namespace amrex;
 
 void MPMParticleContainer::apply_constitutive_model(const amrex::Real& dt,
-                                                    amrex::Real E,amrex::Real v,
-													int Constitutive_Model,
-													amrex::Real K,
-													amrex::Real G,
-													amrex::Real dyn_visc,
                                                     amrex::Real applied_strainrate=0.0
 													)
 {
@@ -63,15 +58,14 @@ void MPMParticleContainer::apply_constitutive_model(const amrex::Real& dt,
             }
 
 
-            if(Constitutive_Model==0)		//Elastic solid
+            if(p.idata(intData::constitutive_model)==0)		//Elastic solid
             {
-            	linear_elastic(strain,strainrate,stress,E,v);
+            	linear_elastic(strain,strainrate,stress,p.rdata(realData::E),p.rdata(realData::nu));
             }
-            else if(Constitutive_Model==1)		//Viscous fluid with approximate EoS
+            else if(p.idata(intData::constitutive_model==1))		//Viscous fluid with approximate EoS
             {
-            	Newtonian_Fluid(strainrate,stress,dyn_visc,p.rdata(realData::jacobian),G,K);
+            	Newtonian_Fluid(strainrate,stress,p.rdata(realData::Dynamic_viscosity),p.rdata(realData::jacobian),p.rdata(realData::Gama_pressure),p.rdata(realData::Bulk_modulous));
             }
-
 
             for(int d=0;d<NCOMP_TENSOR;d++)
             {
@@ -165,7 +159,7 @@ void MPMParticleContainer::update_density_field(MultiFab& nodaldata,int refratio
 }
 
 
-amrex::Real MPMParticleContainer::Calculate_time_step(amrex::Real K)
+amrex::Real MPMParticleContainer::Calculate_time_step()
 {
 	const int lev = 0;
 	const Geometry& geom = Geom(lev);
@@ -192,7 +186,20 @@ amrex::Real MPMParticleContainer::Calculate_time_step(amrex::Real K)
 	        {
 			ParticleType& p = pstruct[i];
 			amrex::Real Cs;
-			Cs = sqrt(K/p.rdata(realData::density));
+			amrex::Real lambda;
+			amrex::Real mu;
+
+
+			if(p.idata(intData::constitutive_model)==1)
+			{
+				Cs = sqrt(p.rdata(realData::Bulk_modulous)/p.rdata(realData::density));
+			}
+			else if(p.idata(intData::constitutive_model)==0)
+			{
+				lambda=p.rdata(realData::E)*p.rdata(realData::nu)/((1+p.rdata(realData::nu))*(1-2.0*p.rdata(realData::nu)));
+				mu=p.rdata(realData::E)/(2.0*(1+p.rdata(realData::nu)));
+				Cs = sqrt((lambda+2.0*mu)/p.rdata(realData::density));
+			}
 
 			AMREX_D_TERM(const amrex::Real dt1 = dx[0] / (Cs + amrex::Math::abs(p.rdata(realData::xvel)));
 			                   dt = amrex::min<amrex::Real>(dt, dt1);,
@@ -398,7 +405,7 @@ void MPMParticleContainer::deposit_onto_grid(MultiFab& nodaldata,
     }
 }
 
-void MPMParticleContainer::updatevolume(const amrex::Real& dt, const amrex::Real& K, const amrex::Real& G)
+void MPMParticleContainer::updatevolume(const amrex::Real& dt)
 {
     BL_PROFILE("MPMParticleContainer::moveParticles");
 
@@ -431,7 +438,12 @@ void MPMParticleContainer::updatevolume(const amrex::Real& dt, const amrex::Real
             ParticleType& p = pstruct[i];
 
             p.rdata(realData::jacobian) += (p.rdata(realData::strainrate+XX)+p.rdata(realData::strainrate+YY)+p.rdata(realData::strainrate+ZZ)) * dt * p.rdata(realData::jacobian);
-            p.rdata(realData::pressure) = K*(pow(1/p.rdata(realData::jacobian),G)-1.0);
+            if(p.idata(intData::constitutive_model==1))
+            {
+            	p.rdata(realData::pressure) = p.rdata(realData::Bulk_modulous)*(pow(1/p.rdata(realData::jacobian),p.rdata(realData::Gama_pressure))-1.0);
+            }
+
+
             p.rdata(realData::volume)	= p.rdata(realData::vol_init)*p.rdata(realData::jacobian);
             p.rdata(realData::density)	= p.rdata(realData::mass)/p.rdata(realData::volume);
 
@@ -792,10 +804,18 @@ void MPMParticleContainer::writeParticles(const int n)
     real_data_names.push_back("jacobian");
     real_data_names.push_back("pressure");
     real_data_names.push_back("vol_init");
+    real_data_names.push_back("E");
+    real_data_names.push_back("nu");
+    real_data_names.push_back("Bulk_modulous");
+    real_data_names.push_back("Gama_pressure");
+    real_data_names.push_back("Dynamic_viscosity");
 
     int_data_names.push_back("phase");
+    int_data_names.push_back("constitutive_model");
+
 
     writeflags_int[intData::phase]=1;
+    writeflags_int[intData::constitutive_model]=1;
 
     writeflags_real[realData::radius]=1;
     writeflags_real[realData::xvel]=1;
@@ -805,6 +825,11 @@ void MPMParticleContainer::writeParticles(const int n)
     writeflags_real[realData::jacobian]=1;
     writeflags_real[realData::pressure]=1;
     writeflags_real[realData::vol_init]=1;
+    writeflags_real[realData::E]=0;
+    writeflags_real[realData::nu]=0;
+    writeflags_real[realData::Bulk_modulous]=0;
+    writeflags_real[realData::Gama_pressure]=0;
+    writeflags_real[realData::Dynamic_viscosity]=0;
 
     WritePlotFile(pltfile, "particles",writeflags_real, 
                   writeflags_int, real_data_names, int_data_names);

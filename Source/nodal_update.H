@@ -26,6 +26,7 @@ void backup_current_velocity(MultiFab &nodaldata)
         {
            if(nodal_data_arr(i,j,k,MASS_INDEX) > zero)
            {
+        	   	nodal_data_arr(i,j,k,MASS_OLD_INDEX) = nodal_data_arr(i,j,k,MASS_INDEX);
                 for(int d=0;d<AMREX_SPACEDIM;d++)
                 {
                 	//Storing V(t) values at these memory locations. This is to be followed by a call to store_delta_velocity
