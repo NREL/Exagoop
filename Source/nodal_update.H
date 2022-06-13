@@ -12,7 +12,56 @@ void write_plot_file(std::string fname, MultiFab &nodaldata, Vector<std::string>
   WriteSingleLevelPlotfile(fname, plotmf, fieldnames, geom, time, 0);
 }
 
-void nodal_update(MultiFab &nodaldata,const amrex::Real& dt)
+void backup_current_velocity(MultiFab &nodaldata)
+{
+  for (MFIter mfi(nodaldata); mfi.isValid(); ++mfi)
+  {
+        const Box& bx=mfi.validbox();
+        Box nodalbox = convert(bx, {1, 1, 1});
+
+        Array4<Real> nodal_data_arr=nodaldata.array(mfi);
+
+        amrex::ParallelFor(nodalbox,[=]
+                AMREX_GPU_DEVICE (int i,int j,int k) noexcept
+        {
+           if(nodal_data_arr(i,j,k,MASS_INDEX) > zero)
+           {
+                for(int d=0;d<AMREX_SPACEDIM;d++)
+                {
+                	//Storing V(t) values at these memory locations. This is to be followed by a call to store_delta_velocity
+                    nodal_data_arr(i,j,k,DELTA_VELX_INDEX+d) = nodal_data_arr(i,j,k,VELX_INDEX+d);
+                }
+           }
+
+        });
+  }
+}
+
+void store_delta_velocity(MultiFab &nodaldata)
+{
+  for (MFIter mfi(nodaldata); mfi.isValid(); ++mfi)
+  {
+        const Box& bx=mfi.validbox();
+        Box nodalbox = convert(bx, {1, 1, 1});
+
+        Array4<Real> nodal_data_arr=nodaldata.array(mfi);
+
+        amrex::ParallelFor(nodalbox,[=]
+                AMREX_GPU_DEVICE (int i,int j,int k) noexcept
+        {
+           if(nodal_data_arr(i,j,k,MASS_INDEX) > zero)
+           {
+                for(int d=0;d<AMREX_SPACEDIM;d++)
+                {
+                    nodal_data_arr(i,j,k,DELTA_VELX_INDEX+d) = nodal_data_arr(i,j,k,VELX_INDEX+d)-nodal_data_arr(i,j,k,DELTA_VELX_INDEX+d);
+                }
+           }
+
+        });
+  }
+}
+
+void nodal_update(MultiFab &nodaldata,const amrex::Real& dt, const amrex::Real& mass_tolerance)
 {
   for (MFIter mfi(nodaldata); mfi.isValid(); ++mfi)
   {
@@ -28,10 +77,17 @@ void nodal_update(MultiFab &nodaldata,const amrex::Real& dt)
            {
                 for(int d=0;d<AMREX_SPACEDIM;d++)
                 {
-                    nodal_data_arr(i,j,k,VELX_INDEX+d) 
-                    += nodal_data_arr(i,j,k,FRCX_INDEX+d)/nodal_data_arr(i,j,k,MASS_INDEX)*dt;
+                	if(nodal_data_arr(i,j,k,MASS_INDEX)>=mass_tolerance)
+                	{
+                		nodal_data_arr(i,j,k,VELX_INDEX+d) += nodal_data_arr(i,j,k,FRCX_INDEX+d)/nodal_data_arr(i,j,k,MASS_INDEX)*dt;
+                	}
+                	else
+                	{
+                		nodal_data_arr(i,j,k,VELX_INDEX+d) = 0.0;
+                	}
+
                 }
-           }  
+           }
         
         });
   }
@@ -86,9 +142,9 @@ void nodal_bcs(const amrex::Geometry geom,
 
             if(impose_wall_y)
             {
-            	nodal_data_arr(i,j,k,VELX_INDEX+0)=zero;
+            	//nodal_data_arr(i,j,k,VELX_INDEX+0)=zero;
             	nodal_data_arr(i,j,k,VELX_INDEX+1)=zero;
-            	nodal_data_arr(i,j,k,VELX_INDEX+2)=zero;
+            	//nodal_data_arr(i,j,k,VELX_INDEX+2)=zero;
             }
 
             if(impose_wall_z)

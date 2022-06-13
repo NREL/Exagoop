@@ -232,6 +232,10 @@ AMREX_GPU_DEVICE AMREX_FORCE_INLINE
     beta  = (xp[YDIR]-(plo[YDIR]+j*dx[YDIR]))/dx[YDIR];
     gama  = (xp[ZDIR]-(plo[ZDIR]+k*dx[ZDIR]))/dx[ZDIR];
 
+    lval=(l==0)?(one-alpha):alpha;
+    mval=(m==0)?(one-beta):beta;
+    nval=(n==0)?(one-gama):gama;
+
 
     if(order_scheme==1)
     {

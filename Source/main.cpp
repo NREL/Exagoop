@@ -6,6 +6,7 @@
 #include <AMReX_PlotFileUtil.H>
 #include <nodal_update.H>
 
+
 using namespace amrex;
 
 int main (int argc, char* argv[])
@@ -14,7 +15,7 @@ int main (int argc, char* argv[])
 
     {
         MPMspecs specs;
-        specs.read_mpm_specs();
+        specs.read_mpm_specs();	//Read input file
 
         RealBox real_box;
         for (int n = 0; n < AMREX_SPACEDIM; n++)
@@ -25,7 +26,7 @@ int main (int argc, char* argv[])
 
         IntVect domain_lo(AMREX_D_DECL(0,0,0));
         IntVect domain_hi(AMREX_D_DECL(specs.ncells[XDIR]-1,
-                    specs.ncells[YDIR]-1,
+        			specs.ncells[YDIR]-1,
                     specs.ncells[ZDIR]-1));
 
         const Box domain(domain_lo, domain_hi);
@@ -44,7 +45,8 @@ int main (int argc, char* argv[])
         }
 
         MPMParticleContainer mpm_pc(geom, dm, ba, ng_cells);
-        mpm_pc.InitParticles(specs.particlefilename);
+        mpm_pc.InitParticles(specs.particlefilename,&specs.total_mass,&specs.total_vol);
+        amrex::Print()<<"\n Total volume = "<<specs.total_vol<<" Total mass = "<<specs.total_mass;
         
         const BoxArray& nodeba = amrex::convert(ba, IntVect{1,1,1});
         MultiFab nodaldata(nodeba, dm, NUM_STATES, 0);
@@ -67,10 +69,10 @@ int main (int argc, char* argv[])
                                  specs.external_loads_present,
                                  specs.force_slab_lo,
                                  specs.force_slab_hi,
-                                 specs.extforce,1,0);
+                                 specs.extforce,1,0,specs.mass_tolerance);
 
-        mpm_pc.interpolate_from_grid(nodaldata,0,1,1);
-        //mpm_pc.interpolate_mass_from_grid(nodaldata,1);
+        mpm_pc.interpolate_from_grid(nodaldata,0,1,1,specs.alpha_pic_flip);
+        mpm_pc.interpolate_mass_from_grid(nodaldata,1);
         if(specs.dens_field_output)
         {
            mpm_pc.update_density_field(dens_field_data,specs.dens_field_gridratio,specs.smoothfactor);
@@ -103,11 +105,22 @@ int main (int argc, char* argv[])
             write_plot_file(pltfile,dens_field_data,{"density"},geom_dens,dens_ba,dm,time);
         }
 
+
         while((steps < specs.maxsteps) and (time < specs.final_time))
         {
+        	dt = mpm_pc.Calculate_time_step(specs.Bulk_Modulous);	//Argument is the bulk modulous
+        	dt=specs.CFL*dt;
+
+        	dt=min(dt,specs.dtmin);
             time += dt;
             output_time += dt;
             output_timePrint += dt;
+
+            if (output_timePrint > specs.screen_output_time)
+            {
+            	Print()<<"step:"<<steps<<"\t"<<"time:"<<time<<" dt = "<<dt<<"\n";
+                output_timePrint=zero;
+            }
 
             if (steps % specs.num_redist == 0)
             {
@@ -127,11 +140,13 @@ int main (int argc, char* argv[])
                                  specs.external_loads_present,
                                  specs.force_slab_lo,
                                  specs.force_slab_hi,
-                                 specs.extforce,1,0);
+                                 specs.extforce,1,0,specs.mass_tolerance); 		//Update mass and velocity only
+
+            backup_current_velocity(nodaldata);
 
             //find strainrate at material points
             //update_vel=0,update_strainrate=1
-            mpm_pc.interpolate_from_grid(nodaldata,0,1,1);
+            mpm_pc.interpolate_from_grid(nodaldata,0,1,1,specs.alpha_pic_flip);
             mpm_pc.updateNeighbors();
             
             //update stress at material points
@@ -143,6 +158,8 @@ int main (int argc, char* argv[])
                 								specs.Youngs_modulus,
                                                 specs.Poissons_ratio,
 												specs.Constitutive_Model,
+												specs.Bulk_Modulous,
+												specs.Gama_pressure,
 												specs.Dynamic_Viscosity,
                                                 specs.applied_strainrate
 												);
@@ -153,6 +170,8 @@ int main (int argc, char* argv[])
                 								specs.Youngs_modulus,
                                                 specs.Poissons_ratio,
 												specs.Constitutive_Model,
+												specs.Bulk_Modulous,
+												specs.Gama_pressure,
 												specs.Dynamic_Viscosity,
 												0.0
 												);
@@ -164,32 +183,29 @@ int main (int argc, char* argv[])
                                  specs.external_loads_present,
                                  specs.force_slab_lo,
                                  specs.force_slab_hi,
-                                 specs.extforce,0,1);
+                                 specs.extforce,0,1,specs.mass_tolerance);
 
             //update velocity on nodes
-            nodal_update(nodaldata,dt);
+            nodal_update(nodaldata,dt,specs.mass_tolerance);
+            store_delta_velocity(nodaldata);
 
             //impose bcs at nodes
             nodal_bcs(geom,nodaldata,dt);
 
             //find velocity at material points
             //update_vel=1,update_strainrate=0
-            mpm_pc.interpolate_from_grid(nodaldata,1,0,1);
+            mpm_pc.interpolate_from_grid(nodaldata,1,0,1,specs.alpha_pic_flip);
             mpm_pc.updateNeighbors();
 
             //move material points
             mpm_pc.moveParticles(dt);
+            //mpm_pc.move_particles_from_nodevel(nodaldata,dt,1);
+            mpm_pc.updatevolume(dt,specs.Bulk_Modulous,specs.Gama_pressure);
             if(specs.dens_field_output)
             {
                 mpm_pc.update_density_field(dens_field_data,specs.dens_field_gridratio,specs.smoothfactor);
             }
 
-
-            if (output_timePrint > specs.screen_output_time)
-            {
-                Print()<<"step:"<<steps<<"\t"<<"time:"<<time<<"\n";
-                output_timePrint=zero;
-            }
 
             if (output_time > specs.write_output_time) 
             {

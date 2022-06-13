@@ -1,7 +1,7 @@
 #include <mpm_particle_container.H>
 #include <constants.H>
 
-void MPMParticleContainer::InitParticles (const std::string& filename)
+void MPMParticleContainer::InitParticles (const std::string& filename,Real *total_mass,Real *total_vol)
 {
 
     // only read the file on the IO proc
@@ -27,6 +27,9 @@ void MPMParticleContainer::InitParticles (const std::string& filename)
         const int grid = 0;
         const int tile = 0;
 
+        *total_mass=0.0;
+        *total_vol=0.0;
+
         auto& particle_tile = DefineAndReturnParticleTile(lev,grid,tile);
         ParticleType p;
 
@@ -48,11 +51,14 @@ void MPMParticleContainer::InitParticles (const std::string& filename)
             ifs >> p.rdata(realData::zvel);
 
             // Set other particle properties
-            p.rdata(realData::volume)      = fourbythree*PI*pow(p.rdata(realData::radius),three);
+            p.rdata(realData::volume)      = fourbythree*PI*pow(p.rdata(realData::radius),three);	//This is a dummy initialisation. We will correct this value later
             p.rdata(realData::mass)        = p.rdata(realData::density)*p.rdata(realData::volume);
             //amrex::Print()<<"\n Mass = "<<p.rdata(realData::mass);
+            *total_mass +=p.rdata(realData::mass);
+            *total_vol +=p.rdata(realData::volume);
             p.rdata(realData::jacobian)	   = 1.0;
-            //p.rdata(realData::vol_init)	   = 0.0;
+            p.rdata(realData::vol_init)	   = 0.0;
+            p.rdata(realData::pressure)	   = (2-p.pos(1))*p.rdata(realData::density)*9.81;
 
             for(int comp=0;comp<NCOMP_TENSOR;comp++)
             {

@@ -24,8 +24,7 @@ void linear_elastic(amrex::Real eps[NCOMP_TENSOR],
 }
 
 AMREX_GPU_DEVICE AMREX_FORCE_INLINE
-void Newtonian_Fluid(amrex::Real eps[NCOMP_TENSOR],
-        amrex::Real epsdot[NCOMP_TENSOR],
+void Newtonian_Fluid(amrex::Real epsdot[NCOMP_TENSOR],
         amrex::Real sigma[NCOMP_TENSOR],
         amrex::Real dyn_visc,
 		amrex::Real Jacob,

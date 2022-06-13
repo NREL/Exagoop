@@ -23,8 +23,8 @@ struct realData
     density=24,
 	jacobian=25,
 	pressure=26,
-	//vol_init=27,
-    count=27
+	vol_init=27,
+    count=28
   };
 };
 
@@ -63,7 +63,8 @@ class MPMspecs
         int Constitutive_Model = 1;		//0-->linear elastic, 1-->NEwtonian fluid
         int order_scheme=1;				//1-->tent function, 3--> cubic spline shape function
         Real Dynamic_Viscosity=0.001;	//In case fluid simulations are involved
-        Real Bulk_Modulous = 2e6;		//In case fluid simulations are involved
+        Real Bulk_Modulous = 2e4;		//In case fluid simulations are involved
+        Real Gama_pressure = 7.0;		//In case fluid simulations are involved
         Real Youngs_modulus=1e9;
         Real Poissons_ratio=0.1;
         Real applied_strainrate=0.0;
@@ -72,6 +73,13 @@ class MPMspecs
         int dens_field_gridratio=1;
         Real smoothfactor=1.0;
         int external_loads_present=0.0;
+        int fixed_timestep = 1;
+        Real dtmin=1e-5;
+        Real CFL=0.1;
+        Real mass_tolerance = 1e-8;
+        Real alpha_pic_flip = 0.95;
+        Real total_mass = 0.0;
+        Real total_vol = 0.0;
         
         void read_mpm_specs()
         {
@@ -84,7 +92,7 @@ class MPMspecs
          
             pp.get("max_steps", maxsteps);
             pp.get("final_time",final_time);
-            pp.get("timestep", timestep);
+
 
             pp.query("gravity", gravity);
 
@@ -99,19 +107,35 @@ class MPMspecs
             particlefilename="mpm_particles.dat";
             pp.query("particle_file",particlefilename);
 
+            pp.query("fixed_timestep",fixed_timestep);
+            if(fixed_timestep==1)
+            {
+            	pp.get("timestep", timestep);
+            }
+            else
+            {
+            	timestep =0.0;
+            }
             pp.query("Youngs_modulus",Youngs_modulus);
             pp.query("Poissons_ratio",Poissons_ratio);
             pp.query("Constitutive_Model",Constitutive_Model);
-            amrex::Print()<<"\nCons model = "<<Constitutive_Model;
+            pp.query("alpha_pic_flip",alpha_pic_flip);
+            if(Constitutive_Model==1)
+            {
+            	pp.query("Dynamic_Viscosity",Dynamic_Viscosity);
+            	pp.query("Bulk_Modulous",Bulk_Modulous);
+            	pp.query("Gama_pressure",Gama_pressure);
+            	pp.query("dtmin",dtmin);
+            	pp.query("CFL",CFL);
 
-            pp.query("Dynamic_Viscosity",Dynamic_Viscosity);
-            pp.query("Bulk_Modulous",Bulk_Modulous);
+            }
 
             pp.query("applied_strainrate",applied_strainrate);
             applied_strainrate_time=final_time;
             pp.query("applied_strainrate_time",applied_strainrate_time);
 
             pp.query("order_scheme",order_scheme);
+            pp.query("mass_tolerance",mass_tolerance);
 
             pp.query("dens_field_output",dens_field_output);
             pp.query("smoothfactor",smoothfactor);

@@ -20,7 +20,7 @@
 
 #define NCOMP_TENSOR 6
 
-#define NUM_STATES 7
+#define NUM_STATES 10
 #define MASS_INDEX 0
 #define VELX_INDEX 1
 #define VELY_INDEX 2
@@ -28,6 +28,9 @@
 #define FRCX_INDEX 4
 #define FRCY_INDEX 5
 #define FRCZ_INDEX 6
+#define DELTA_VELX_INDEX 7		//Difference in velocity between two successive time steps Vx(t+dt)-Vx(t)
+#define DELTA_VELY_INDEX 8
+#define DELTA_VELZ_INDEX 9
 
 #define XX 0
 #define XY 1
