@@ -3,8 +3,8 @@ from sys import argv
 
 # Use the same parameters as in input file
 blo    = np.array([float(0.0),float(0.0),float(0.0)])
-bhi    = np.array([float(1.4),float(1.4),float(0.07)])
-ncells = np.array([100,100,5])
+bhi    = np.array([float(1.4),float(1.4),float(1.4)])
+ncells = np.array([100,100,100])
 npart  = 0 
 dx = (bhi-blo)/ncells;
 if(dx[0]!=dx[1] or dx[0]!=dx[2] or dx[1]!=dx[2]):
@@ -15,7 +15,7 @@ xmax=1.4
 ymin=0.0
 ymax=1.4
 zmin=0
-zmax=0.07
+zmax=1.4
 
 print(range(nparticle_per_cells_eachdir))
 
@@ -32,7 +32,7 @@ for k in range(ncells[2]):
                             npart=npart+1
 
 print('Number of particles = ',npart)
-outfile=open("mpm_particles_sl.txt","w")
+outfile=open("mpm_particles.dat","w")
 outfile.write("%d\n"%(npart));
 
 dens=997.5
@@ -61,10 +61,9 @@ for k in range(ncells[2]):
                             cell_cx=c_cx+(2*ii+1)*dx[0]/(2.0*nparticle_per_cells_eachdir)
                             cell_cy=c_cy+(2*jj+1)*dx[1]/(2.0*nparticle_per_cells_eachdir)
                             cell_cz=c_cz+(2*kk+1)*dx[2]/(2.0*nparticle_per_cells_eachdir)
-                            print(dx[0],dx[1],dx[2],c_cx,c_cy,c_cz,ii,jj,kk)
                             velx=np.sin(2.0*np.pi/1.4*cell_cx);
                             vely=np.sin(2.0*np.pi/1.4*cell_cy);
-                            velz=0.0;
+                            velz=np.sin(2.0*np.pi/1.4*cell_cz);
     
                             outfile.write("%d\t%e\t%e\t%e\t"%(phase,cell_cx,cell_cy,cell_cz));
                             outfile.write("%e\t%e\t"%(rad,dens));
