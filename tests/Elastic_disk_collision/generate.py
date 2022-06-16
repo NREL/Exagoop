@@ -3,19 +3,19 @@ from sys import argv
 
 # Use the same parameters as in input file
 blo    = np.array([float(0.0),float(0.0),float(0.0)])
-bhi    = np.array([float(3.0),float(3.0),float(0.09375)])
-ncells = np.array([64,64,2])
+bhi    = np.array([float(1.4),float(1.4),float(0.07)])
+ncells = np.array([100,100,5])
 npart  = 0 
 dx = (bhi-blo)/ncells;
 if(dx[0]!=dx[1] or dx[0]!=dx[2] or dx[1]!=dx[2]):
     print("Error! mesh sizes are not same in all directions")
 nparticle_per_cells_eachdir=1
-xmin=1.0
-xmax=2.0
-ymin=2.0
-ymax=2.5
+xmin=0.0
+xmax=1.4
+ymin=0.0
+ymax=1.4
 zmin=0
-zmax=0.09375
+zmax=0.07
 
 print(range(nparticle_per_cells_eachdir))
 
@@ -62,15 +62,14 @@ for k in range(ncells[2]):
                             cell_cy=c_cy+(2*jj+1)*dx[1]/(2.0*nparticle_per_cells_eachdir)
                             cell_cz=c_cz+(2*kk+1)*dx[2]/(2.0*nparticle_per_cells_eachdir)
                             print(dx[0],dx[1],dx[2],c_cx,c_cy,c_cz,ii,jj,kk)
-                            velx=0.0;
-                            vely=0.0;
+                            velx=np.sin(2.0*np.pi/1.4*cell_cx);
+                            vely=np.sin(2.0*np.pi/1.4*cell_cy);
                             velz=0.0;
     
                             outfile.write("%d\t%e\t%e\t%e\t"%(phase,cell_cx,cell_cy,cell_cz));
                             outfile.write("%e\t%e\t"%(rad,dens));
                             outfile.write("%e\t%e\t%e\t"%(velx,vely,velz));
-                            outfile.write("%d\t%e\t%e\t%e\n"%(1,K_BM,Gama_Pressure,Dyn_visc));
-                            #outfile.write("%d\t%e\t%e\n"%(0,E,nu));
+                            outfile.write("%d\t%e\t%e\n"%(0,E,nu));
 
 
 outfile.close()
