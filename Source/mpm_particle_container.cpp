@@ -250,7 +250,6 @@ amrex::Real MPMParticleContainer::Calculate_time_step()
 				lambda=p.rdata(realData::E)*p.rdata(realData::nu)/((1+p.rdata(realData::nu))*(1-2.0*p.rdata(realData::nu)));
 				mu=p.rdata(realData::E)/(2.0*(1+p.rdata(realData::nu)));
 				Cs = sqrt((lambda+2.0*mu)/p.rdata(realData::density));
-				amrex::Print()<<"\n Density = "<<p.rdata(realData::density);
 			}
 
 			//amrex::Print()<<"\n "<<p.rdata(realData::xvel)<<" "<<p.rdata(realData::yvel)<<" "<<p.rdata(realData::zvel)<<" "<<Cs;
@@ -932,6 +931,16 @@ void MPMParticleContainer::interpolate_from_grid(MultiFab& nodaldata,int update_
             	if(order_scheme==3)
             	{
             		p.rdata(realData::xvel) = (alpha_pic_flip)*p.rdata(realData::xvel)
+            								  +(alpha_pic_flip)*bilin_interp(xp,iv[XDIR],iv[YDIR],iv[ZDIR],plo,dx,nodal_data_arr,DELTA_VELX_INDEX)
+											  +(1-alpha_pic_flip)*bilin_interp(xp,iv[XDIR],iv[YDIR],iv[ZDIR],plo,dx,nodal_data_arr,VELX_INDEX);
+            		p.rdata(realData::yvel) = (alpha_pic_flip)*p.rdata(realData::yvel)
+            								  +(alpha_pic_flip)*bilin_interp(xp,iv[XDIR],iv[YDIR],iv[ZDIR],plo,dx,nodal_data_arr,DELTA_VELY_INDEX)
+											  +(1-alpha_pic_flip)*bilin_interp(xp,iv[XDIR],iv[YDIR],iv[ZDIR],plo,dx,nodal_data_arr,VELY_INDEX);
+            		p.rdata(realData::zvel) = (alpha_pic_flip)*p.rdata(realData::zvel)
+            								  +(alpha_pic_flip)*bilin_interp(xp,iv[XDIR],iv[YDIR],iv[ZDIR],plo,dx,nodal_data_arr,DELTA_VELZ_INDEX)
+											  +(1-alpha_pic_flip)*bilin_interp(xp,iv[XDIR],iv[YDIR],iv[ZDIR],plo,dx,nodal_data_arr,VELZ_INDEX);
+            		/*
+            		p.rdata(realData::xvel) = (alpha_pic_flip)*p.rdata(realData::xvel)
 											  +(alpha_pic_flip)*cubic_interp(xp,iv[XDIR],iv[YDIR],iv[ZDIR],lmin,mmin,nmin,lmax,mmax,nmax,plo,dx,nodal_data_arr,DELTA_VELX_INDEX,lo,hi)
 											  +(1-alpha_pic_flip)*cubic_interp(xp,iv[XDIR],iv[YDIR],iv[ZDIR],lmin,mmin,nmin,lmax,mmax,nmax,plo,dx,nodal_data_arr,VELX_INDEX,lo,hi);
             		p.rdata(realData::yvel) = (alpha_pic_flip)*p.rdata(realData::yvel)
@@ -940,6 +949,7 @@ void MPMParticleContainer::interpolate_from_grid(MultiFab& nodaldata,int update_
             		p.rdata(realData::zvel) = (alpha_pic_flip)*p.rdata(realData::zvel)
 											  +(alpha_pic_flip)*cubic_interp(xp,iv[XDIR],iv[YDIR],iv[ZDIR],lmin,mmin,nmin,lmax,mmax,nmax,plo,dx,nodal_data_arr,DELTA_VELZ_INDEX,lo,hi)
 											  +(1-alpha_pic_flip)*cubic_interp(xp,iv[XDIR],iv[YDIR],iv[ZDIR],lmin,mmin,nmin,lmax,mmax,nmax,plo,dx,nodal_data_arr,VELZ_INDEX,lo,hi);
+											  */
             	}
             }
 

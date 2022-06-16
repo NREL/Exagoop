@@ -128,14 +128,11 @@ int main (int argc, char* argv[])
         }
 
 
-        while((steps < specs.maxsteps) and (time < specs.final_time))
+        while((steps < specs.maxsteps) and (time < specs.final_time) and 0)
         {
         	dt = mpm_pc.Calculate_time_step();
         	dt=specs.CFL*dt;
         	dt=min(dt,specs.dtmin);
-
-        	amrex::Print()<<"\nStep = "<<steps;
-
 
             time += dt;
             output_time += dt;
