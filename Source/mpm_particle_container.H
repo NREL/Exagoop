@@ -32,10 +32,11 @@ public:
                            Array<Real,AMREX_SPACEDIM> force_slab_lo,
                            Array<Real,AMREX_SPACEDIM> force_slab_hi,
                            Array<Real,AMREX_SPACEDIM> extforce,
-                           int update_massvel,int update_forces, amrex::Real mass_tolerance);
+                           int update_massvel,int update_forces, amrex::Real mass_tolerance, int order_scheme);
     void interpolate_from_grid(MultiFab& nodaldata,
                                int update_vel,int update_strainrate,int order,amrex::Real alpha_pic_flip);
     void move_particles_from_nodevel(MultiFab& nodaldata,const amrex::Real& dt,int order_scheme);
+    void CalculateEnergies(Real &TKE,Real &TSE);
 
     void apply_constitutive_model(const amrex::Real& dt,
 								  amrex::Real applied_strainrate

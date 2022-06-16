@@ -38,6 +38,8 @@ void backup_current_velocity(MultiFab &nodaldata)
   }
 }
 
+
+
 void store_delta_velocity(MultiFab &nodaldata)
 {
   for (MFIter mfi(nodaldata); mfi.isValid(); ++mfi)
@@ -92,6 +94,100 @@ void nodal_update(MultiFab &nodaldata,const amrex::Real& dt, const amrex::Real& 
         
         });
   }
+}
+
+void initialise_shape_function_indices(iMultiFab &shapefunctionindex,const amrex::Geometry geom)
+{
+	const int* domloarr = geom.Domain().loVect();
+	const int* domhiarr = geom.Domain().hiVect();
+
+    int periodic[AMREX_SPACEDIM]={geom.isPeriodic(XDIR),
+	                                  geom.isPeriodic(YDIR),
+	                                  geom.isPeriodic(ZDIR)};
+
+    GpuArray<int,AMREX_SPACEDIM> domlo={domloarr[0],domloarr[1],domloarr[2]};
+    GpuArray<int,AMREX_SPACEDIM> domhi={domhiarr[0],domhiarr[1],domhiarr[2]};
+
+    const auto domain = geom.Domain();
+    const int* lo = domain.loVect ();
+    const int* hi = domain.hiVect ();
+
+    for (MFIter mfi(shapefunctionindex); mfi.isValid(); ++mfi)
+    {
+        const Box& bx=mfi.validbox();
+        Box nodalbox = convert(bx, {1, 1, 1});
+
+        Array4<int> shapefunctionindex_arr=shapefunctionindex.array(mfi);
+
+	    amrex::ParallelFor(nodalbox,[=]
+	    AMREX_GPU_DEVICE (int i,int j,int k) noexcept
+	    {
+	    	if(i==lo[0])
+    		{
+	    		shapefunctionindex_arr(i,j,k,0)=0;
+    		}
+	    	else if(i==lo[0]+1)
+	    	{
+	    		shapefunctionindex_arr(i,j,k,0)=1;
+	    	}
+	    	else if(i==hi[0])
+	    	{
+	    		shapefunctionindex_arr(i,j,k,0)=4;
+	    	}
+	    	else if(i==hi[0]-1)
+	    	{
+	    		shapefunctionindex_arr(i,j,k,0)=3;
+	    	}
+	    	else
+	    	{
+	    		shapefunctionindex_arr(i,j,k,0)=2;
+	    	}
+
+	    	if(j==lo[1])
+	    	{
+	    		shapefunctionindex_arr(i,j,k,1)=0;
+	    	}
+	    	else if(j==lo[1]+1)
+	    	{
+	    		shapefunctionindex_arr(i,j,k,1)=1;
+	    	}
+	    	else if(j==hi[1])
+	    	{
+	    		shapefunctionindex_arr(i,j,k,1)=4;
+	    	}
+	    	else if(j==hi[1]-1)
+	    	{
+	    		shapefunctionindex_arr(i,j,k,1)=3;
+	    	}
+	    	else
+	    	{
+	    		shapefunctionindex_arr(i,j,k,1)=2;
+	    	}
+
+	    	if(k==lo[2])
+	    	{
+	    		shapefunctionindex_arr(i,j,k,2)=0;
+	    	}
+	    	else if(k==lo[2]+1)
+	    	{
+	    		shapefunctionindex_arr(i,j,k,2)=1;
+	    	}
+	    	else if(k==hi[2])
+	    	{
+	    		shapefunctionindex_arr(i,j,k,2)=4;
+	    	}
+	    	else if(k==hi[2]-1)
+	    	{
+	    		shapefunctionindex_arr(i,j,k,2)=3;
+	    	}
+	    	else
+	    	{
+	    		shapefunctionindex_arr(i,j,k,2)=2;
+	    	}
+
+	    });
+    }
+
 }
 
 void nodal_bcs(const amrex::Geometry geom,

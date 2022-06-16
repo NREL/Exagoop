@@ -27,14 +27,11 @@ AMREX_GPU_DEVICE AMREX_FORCE_INLINE
 void Newtonian_Fluid(amrex::Real epsdot[NCOMP_TENSOR],
         amrex::Real sigma[NCOMP_TENSOR],
         amrex::Real dyn_visc,
-		amrex::Real Jacob,
-		amrex::Real gamma1,
-		amrex::Real Bulk_modulous)
+		amrex::Real pressure)
 {
 
     amrex::Real trace_epsdot=epsdot[XX]+epsdot[YY]+epsdot[ZZ];
     amrex::Real one_by_three=1.0/3.0;
-    amrex::Real pressure= Bulk_modulous*(pow((1.0/Jacob),gamma1)-1);
 
     sigma[XX]=2.0*dyn_visc*(epsdot[XX]-one_by_three*trace_epsdot)-pressure;
     sigma[YY]=2.0*dyn_visc*(epsdot[YY]-one_by_three*trace_epsdot)-pressure;
@@ -43,8 +40,6 @@ void Newtonian_Fluid(amrex::Real epsdot[NCOMP_TENSOR],
     sigma[XY]=2.0*dyn_visc*(epsdot[XY]);
     sigma[XZ]=2.0*dyn_visc*(epsdot[XZ]);
     sigma[YZ]=2.0*dyn_visc*(epsdot[YZ]);
-
-    //amrex::Print()<<"\n "<<sigma[XX]<<" "<<sigma[YY]<<" "<<sigma[ZZ]<<" "<<pressure<<" "<<epsdot[XX]<<" "<<epsdot[YY]<<" "<<epsdot[ZZ];
 
 }
 #endif
