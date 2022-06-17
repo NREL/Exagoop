@@ -73,7 +73,7 @@ int main (int argc, char* argv[])
                                  specs.extforce,1,0,specs.mass_tolerance,specs.order_scheme);	//Deposit mass and velocity on node
 
         mpm_pc.interpolate_mass_from_grid(nodaldata,1);						//Calculate volume of each mp
-        mpm_pc.interpolate_from_grid(nodaldata,0,1,1,specs.alpha_pic_flip);	//Calculate strainrate at each mp
+        mpm_pc.interpolate_from_grid(nodaldata,0,1,specs.order_scheme,specs.alpha_pic_flip);	//Calculate strainrate at each mp
         dt = mpm_pc.Calculate_time_step();
         dt=specs.CFL*dt;
         dt=min(dt,specs.dtmin);

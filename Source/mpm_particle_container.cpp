@@ -374,20 +374,10 @@ void MPMParticleContainer::deposit_onto_grid(MultiFab& nodaldata,
             		lmin=0;
             		lmax=3;
             	}
-            	else if(iv[0]==lo[0]+1)
-            	{
-            		lmin=-1;
-            		lmax=3;
-            	}
-            	else if(iv[0]==hi[0]-1)
+            	else if(iv[0]==hi[0])
             	{
             		lmin=-1;
             		lmax=2;
-            	}
-            	else if(iv[0]==hi[0]-2)
-            	{
-            		lmin=-1;
-            		lmax=3;
             	}
             	else
             	{
@@ -400,12 +390,7 @@ void MPMParticleContainer::deposit_onto_grid(MultiFab& nodaldata,
             		mmin=0;
             		mmax=3;
             	}
-            	else if(iv[1]==lo[1]+1)
-            	{
-            		mmin=-1;
-            		mmax=3;
-            	}
-            	else if(iv[1]==hi[1]-1)
+            	else if(iv[1]==hi[1])
             	{
             		mmin=-1;
             	    mmax=2;
@@ -421,12 +406,7 @@ void MPMParticleContainer::deposit_onto_grid(MultiFab& nodaldata,
             		nmin=0;
             		nmax=3;
             	}
-            	else if(iv[2]==lo[2]+1)
-            	{
-            		nmin=-1;
-            		nmax=3;
-            	}
-            	else if(iv[2]==hi[2]-1)
+            	else if(iv[2]==hi[2])
             	{
             		nmin=-1;
             		nmax=2;
@@ -856,12 +836,7 @@ void MPMParticleContainer::interpolate_from_grid(MultiFab& nodaldata,int update_
             		lmin=0;
             		lmax=3;
             	}
-            	else if(iv[0]==lo[0]+1)
-            	{
-            		lmin=-1;
-            		lmax=3;
-            	}
-            	else if(iv[0]==hi[0]-1)
+            	else if(iv[0]==hi[0])
             	{
             		lmin=-1;
             		lmax=2;
@@ -876,12 +851,7 @@ void MPMParticleContainer::interpolate_from_grid(MultiFab& nodaldata,int update_
             		mmin=0;
             		mmax=3;
             	}
-            	else if(iv[1]==lo[1]+1)
-            	{
-            		mmin=-1;
-            		mmax=3;
-            	}
-            	else if(iv[1]==hi[1]-1)
+            	else if(iv[1]==hi[1])
             	{
             		mmin=-1;
             		mmax=2;
@@ -896,12 +866,7 @@ void MPMParticleContainer::interpolate_from_grid(MultiFab& nodaldata,int update_
             		nmin=0;
             		nmax=3;
             	}
-            	else if(iv[2]==lo[2]+1)
-            	{
-            		nmin=-1;
-            		nmax=3;
-            	}
-            	else if(iv[2]==hi[2]-1)
+            	else if(iv[2]==hi[2])
             	{
             		nmin=-1;
             		nmax=2;
@@ -930,7 +895,7 @@ void MPMParticleContainer::interpolate_from_grid(MultiFab& nodaldata,int update_
             	}
             	if(order_scheme==3)
             	{
-            		p.rdata(realData::xvel) = (alpha_pic_flip)*p.rdata(realData::xvel)
+            		/*p.rdata(realData::xvel) = (alpha_pic_flip)*p.rdata(realData::xvel)
             								  +(alpha_pic_flip)*bilin_interp(xp,iv[XDIR],iv[YDIR],iv[ZDIR],plo,dx,nodal_data_arr,DELTA_VELX_INDEX)
 											  +(1-alpha_pic_flip)*bilin_interp(xp,iv[XDIR],iv[YDIR],iv[ZDIR],plo,dx,nodal_data_arr,VELX_INDEX);
             		p.rdata(realData::yvel) = (alpha_pic_flip)*p.rdata(realData::yvel)
@@ -938,8 +903,9 @@ void MPMParticleContainer::interpolate_from_grid(MultiFab& nodaldata,int update_
 											  +(1-alpha_pic_flip)*bilin_interp(xp,iv[XDIR],iv[YDIR],iv[ZDIR],plo,dx,nodal_data_arr,VELY_INDEX);
             		p.rdata(realData::zvel) = (alpha_pic_flip)*p.rdata(realData::zvel)
             								  +(alpha_pic_flip)*bilin_interp(xp,iv[XDIR],iv[YDIR],iv[ZDIR],plo,dx,nodal_data_arr,DELTA_VELZ_INDEX)
-											  +(1-alpha_pic_flip)*bilin_interp(xp,iv[XDIR],iv[YDIR],iv[ZDIR],plo,dx,nodal_data_arr,VELZ_INDEX);
-            		/*
+											  +(1-alpha_pic_flip)*bilin_interp(xp,iv[XDIR],iv[YDIR],iv[ZDIR],plo,dx,nodal_data_arr,VELZ_INDEX);*/
+
+
             		p.rdata(realData::xvel) = (alpha_pic_flip)*p.rdata(realData::xvel)
 											  +(alpha_pic_flip)*cubic_interp(xp,iv[XDIR],iv[YDIR],iv[ZDIR],lmin,mmin,nmin,lmax,mmax,nmax,plo,dx,nodal_data_arr,DELTA_VELX_INDEX,lo,hi)
 											  +(1-alpha_pic_flip)*cubic_interp(xp,iv[XDIR],iv[YDIR],iv[ZDIR],lmin,mmin,nmin,lmax,mmax,nmax,plo,dx,nodal_data_arr,VELX_INDEX,lo,hi);
@@ -949,7 +915,14 @@ void MPMParticleContainer::interpolate_from_grid(MultiFab& nodaldata,int update_
             		p.rdata(realData::zvel) = (alpha_pic_flip)*p.rdata(realData::zvel)
 											  +(alpha_pic_flip)*cubic_interp(xp,iv[XDIR],iv[YDIR],iv[ZDIR],lmin,mmin,nmin,lmax,mmax,nmax,plo,dx,nodal_data_arr,DELTA_VELZ_INDEX,lo,hi)
 											  +(1-alpha_pic_flip)*cubic_interp(xp,iv[XDIR],iv[YDIR],iv[ZDIR],lmin,mmin,nmin,lmax,mmax,nmax,plo,dx,nodal_data_arr,VELZ_INDEX,lo,hi);
-											  */
+
+
+            		/*
+            		p.rdata(realData::xvel) = cubic_interp(xp,iv[XDIR],iv[YDIR],iv[ZDIR],lmin,mmin,nmin,lmax,mmax,nmax,plo,dx,nodal_data_arr,VELX_INDEX,lo,hi);
+            		p.rdata(realData::yvel) = cubic_interp(xp,iv[XDIR],iv[YDIR],iv[ZDIR],lmin,mmin,nmin,lmax,mmax,nmax,plo,dx,nodal_data_arr,VELY_INDEX,lo,hi);
+            		p.rdata(realData::zvel) = cubic_interp(xp,iv[XDIR],iv[YDIR],iv[ZDIR],lmin,mmin,nmin,lmax,mmax,nmax,plo,dx,nodal_data_arr,VELZ_INDEX,lo,hi);
+            		*/
+
             	}
             }
 
