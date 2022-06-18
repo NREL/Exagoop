@@ -50,9 +50,8 @@ void MPMParticleContainer::InitParticles (const std::string& filename,Real *tota
             ifs >> p.rdata(realData::xvel);
             ifs >> p.rdata(realData::yvel);
             ifs >> p.rdata(realData::zvel);
-            //ifs >> p.idata(intData::constitutive_model);		//Commented only for getting the HPRO inputfile to work
-            ifs >> junk;
-            p.idata(intData::constitutive_model) = 0;
+            ifs >> p.idata(intData::constitutive_model);		//Commented only for getting the HPRO inputfile to work
+
             if(p.idata(intData::constitutive_model)==0)	//Elastic solid
             {
             	ifs >> p.rdata(realData::E);

@@ -126,6 +126,50 @@ void MPMParticleContainer::CalculateEnergies(Real &TKE,Real &TSE)
 
 }
 
+void MPMParticleContainer::CalculateVelocity(Real &Vcm)
+{
+	const int lev = 0;
+	const Geometry& geom = Geom(lev);
+	auto& plev  = GetParticles(lev);
+	const auto dxi = geom.InvCellSizeArray();
+	const auto dx = geom.CellSizeArray();
+	const auto plo = geom.ProbLoArray();
+	const auto domain = geom.Domain();
+
+	Vcm=0.0;
+	Real mass_tot=0.0;
+
+
+
+	for(MFIter mfi = MakeMFIter(lev); mfi.isValid(); ++mfi)
+	{
+		const amrex::Box& box = mfi.tilebox();
+		Box nodalbox = convert(box, {1, 1, 1});
+
+		int gid = mfi.index();
+		int tid = mfi.LocalTileIndex();
+		auto index = std::make_pair(gid, tid);
+
+		auto& ptile = plev[index];
+		auto& aos   = ptile.GetArrayOfStructs();
+		int np = aos.numRealParticles();
+		int ng =aos.numNeighborParticles();
+		int nt = np+ng;
+
+		ParticleType* pstruct = aos().dataPtr();
+		amrex::ParallelFor(nt,[=,&Vcm,&mass_tot]
+			AMREX_GPU_DEVICE (int i) noexcept
+	        {
+	            ParticleType& p = pstruct[i];
+	            Vcm += p.rdata(realData::mass)*p.rdata(realData::yvel);
+	            mass_tot +=p.rdata(realData::mass);
+
+	        });
+	}
+	Vcm=Vcm/mass_tot;
+
+}
+
 void MPMParticleContainer::update_density_field(MultiFab& nodaldata,int refratio,Real smoothfactor)
 {
     nodaldata.setVal(zero);
@@ -294,7 +338,6 @@ void MPMParticleContainer::deposit_onto_grid(MultiFab& nodaldata,
 
     const int* lo = domain.loVect ();
     const int* hi = domain.hiVect ();
-
 
 
     for (MFIter mfi(nodaldata); mfi.isValid(); ++mfi)
@@ -499,6 +542,25 @@ void MPMParticleContainer::deposit_onto_grid(MultiFab& nodaldata,
             }
         });
 
+    }
+    //nodaldata.FillBoundary(geom.periodicity());
+    //nodaldata.SumBoundary(geom.periodicity());
+    for(MFIter mfi = MakeMFIter(lev); mfi.isValid(); ++mfi)
+    {
+    	const amrex::Box& box = mfi.tilebox();
+    	Box nodalbox = convert(box, {1, 1, 1});
+
+    	int gid = mfi.index();
+    	int tid = mfi.LocalTileIndex();
+    	auto index = std::make_pair(gid, tid);
+
+    	auto& ptile = plev[index];
+    	auto& aos   = ptile.GetArrayOfStructs();
+    	int np = aos.numRealParticles();
+    	int ng =aos.numNeighborParticles();
+    	int nt = np+ng;
+
+    	Array4<Real> nodal_data_arr=nodaldata.array(mfi);
 
         amrex::ParallelFor(
             nodalbox, [=] AMREX_GPU_DEVICE(int i, int j, int k) noexcept 
@@ -523,6 +585,7 @@ void MPMParticleContainer::deposit_onto_grid(MultiFab& nodaldata,
             });
 
     }
+
 }
 
 void MPMParticleContainer::updatevolume(const amrex::Real& dt)
@@ -789,6 +852,8 @@ void MPMParticleContainer::interpolate_from_grid(MultiFab& nodaldata,int update_
     int ncomp=nodaldata.nComp();
     const int* lo = domain.loVect ();
     const int* hi = domain.hiVect ();
+
+    nodaldata.FillBoundary(geom.periodicity());
 
     for(MFIter mfi = MakeMFIter(lev); mfi.isValid(); ++mfi)
     {

@@ -908,18 +908,8 @@ AMREX_GPU_DEVICE AMREX_FORCE_INLINE
     		}
     	}
     }
-    if(amrex::Math::abs(lval)>1e5)
-    {
-    	amrex::Print()<<"\nHigh gradients in x direction";
-    }
-    if(amrex::Math::abs(mval)>1e5)
-        {
-        	amrex::Print()<<"\nHigh gradients in y direction";
-        }
-    if(amrex::Math::abs(nval)>1e5)
-        {
-        	amrex::Print()<<"\nHigh gradients in z direction";
-        }
+
+
     return(lval*mval*nval);
 }
 

@@ -37,6 +37,7 @@ public:
                                int update_vel,int update_strainrate,int order,amrex::Real alpha_pic_flip);
     void move_particles_from_nodevel(MultiFab& nodaldata,const amrex::Real& dt,int order_scheme);
     void CalculateEnergies(Real &TKE,Real &TSE);
+    void CalculateVelocity(Real &Vcm);
 
     void apply_constitutive_model(const amrex::Real& dt,
 								  amrex::Real applied_strainrate
