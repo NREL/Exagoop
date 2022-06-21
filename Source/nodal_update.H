@@ -233,8 +233,8 @@ void nodal_bcs(const amrex::Geometry geom,
             if(impose_wall_x)
             {
             	nodal_data_arr(i,j,k,VELX_INDEX+0)=zero;
-            	nodal_data_arr(i,j,k,VELX_INDEX+1)=zero;
-            	nodal_data_arr(i,j,k,VELX_INDEX+2)=zero;
+            	//nodal_data_arr(i,j,k,VELX_INDEX+1)=zero;
+            	//nodal_data_arr(i,j,k,VELX_INDEX+2)=zero;
             }
 
             if(impose_wall_y)

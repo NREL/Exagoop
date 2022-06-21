@@ -35,13 +35,16 @@ void MPMParticleContainer::InitParticles (const std::string& filename,Real *tota
 
         for (int i = 0; i < np; i++) 
         {
-        	amrex::Real junk;
+            int ph;
+       	    amrex::Real junk;
             // Set id and cpu for this particle
             p.id()  = ParticleType::NextID();
             p.cpu() = ParallelDescriptor::MyProc();
 
             // Read from input file
-            ifs >> p.idata(intData::phase);
+            ifs >> junk;
+            //ifs >> p.idata(intData::phase);
+            p.idata(intData::phase) = 0;
             ifs >> p.pos(0);
             ifs >> p.pos(1);
             ifs >> p.pos(2);
@@ -50,8 +53,9 @@ void MPMParticleContainer::InitParticles (const std::string& filename,Real *tota
             ifs >> p.rdata(realData::xvel);
             ifs >> p.rdata(realData::yvel);
             ifs >> p.rdata(realData::zvel);
-            ifs >> p.idata(intData::constitutive_model);		//Commented only for getting the HPRO inputfile to work
-
+            //ifs >> p.idata(intData::constitutive_model);		//Commented only for getting the HPRO inputfile to work
+            ifs>>junk;
+            p.idata(intData::constitutive_model)=0;
             if(p.idata(intData::constitutive_model)==0)	//Elastic solid
             {
             	ifs >> p.rdata(realData::E);

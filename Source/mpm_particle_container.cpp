@@ -161,14 +161,59 @@ void MPMParticleContainer::CalculateVelocity(Real &Vcm)
 			AMREX_GPU_DEVICE (int i) noexcept
 	        {
 	            ParticleType& p = pstruct[i];
-	            Vcm += p.rdata(realData::mass)*p.rdata(realData::yvel);
+	            Vcm += p.rdata(realData::mass)*p.rdata(realData::xvel);
 	            mass_tot +=p.rdata(realData::mass);
-
 	        });
 	}
 	Vcm=Vcm/mass_tot;
 
 }
+
+void MPMParticleContainer::FindWaterFront(Real &Xwf)
+{
+	const int lev = 0;
+	const Geometry& geom = Geom(lev);
+	auto& plev  = GetParticles(lev);
+	const auto dxi = geom.InvCellSizeArray();
+	const auto dx = geom.CellSizeArray();
+	const auto plo = geom.ProbLoArray();
+	const auto domain = geom.Domain();
+
+	Xwf=0.0;
+	Real mass_tot=0.0;
+
+
+
+	for(MFIter mfi = MakeMFIter(lev); mfi.isValid(); ++mfi)
+	{
+		const amrex::Box& box = mfi.tilebox();
+		Box nodalbox = convert(box, {1, 1, 1});
+
+		int gid = mfi.index();
+		int tid = mfi.LocalTileIndex();
+		auto index = std::make_pair(gid, tid);
+
+		auto& ptile = plev[index];
+		auto& aos   = ptile.GetArrayOfStructs();
+		int np = aos.numRealParticles();
+		int ng =aos.numNeighborParticles();
+		int nt = np+ng;
+
+		ParticleType* pstruct = aos().dataPtr();
+		amrex::ParallelFor(nt,[=,&Xwf]
+			AMREX_GPU_DEVICE (int i) noexcept
+	        {
+	            ParticleType& p = pstruct[i];
+	            if(p.pos(XDIR)>Xwf)
+	            	{
+	            	Xwf=p.pos(XDIR);
+	            	}
+
+	        });
+	}
+
+}
+
 
 void MPMParticleContainer::update_density_field(MultiFab& nodaldata,int refratio,Real smoothfactor)
 {
@@ -502,7 +547,7 @@ void MPMParticleContainer::deposit_onto_grid(MultiFab& nodaldata,
 
                                 for(int d=0;d<AMREX_SPACEDIM;d++)
                                 {
-                                    basisval_grad[d]=basisvalder(d,l,m,n,iv[XDIR],iv[YDIR],iv[ZDIR],xp,plo,dx,1,lo,hi);
+                                    basisval_grad[d]=basisvalder(d,l,m,n,iv[XDIR],iv[YDIR],iv[ZDIR],xp,plo,dx,order_scheme,lo,hi);
                                 }
 
                                 amrex::Real bforce_contrib[AMREX_SPACEDIM]=

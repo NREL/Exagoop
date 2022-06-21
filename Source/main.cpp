@@ -78,8 +78,8 @@ int main (int argc, char* argv[])
 
         //mpm_pc.fillNeighbors();
         mpm_pc.RedistributeLocal();
-                        mpm_pc.fillNeighbors();
-                        //mpm_pc.buildNeighborList(CheckPair());
+        mpm_pc.fillNeighbors();
+        //mpm_pc.buildNeighborList(CheckPair());
         Real dt=specs.timestep;
         mpm_pc.deposit_onto_grid(nodaldata,specs.gravity,
                                  specs.external_loads_present,
@@ -88,7 +88,6 @@ int main (int argc, char* argv[])
                                  specs.extforce,1,0,specs.mass_tolerance,specs.order_scheme);	//Deposit mass and velocity on node
 
         mpm_pc.interpolate_mass_from_grid(nodaldata,1);						//Calculate volume of each mp
-
         mpm_pc.interpolate_from_grid(nodaldata,0,1,specs.order_scheme,specs.alpha_pic_flip);	//Calculate strainrate at each mp
         dt = mpm_pc.Calculate_time_step();
         dt=specs.CFL*dt;
@@ -109,18 +108,17 @@ int main (int argc, char* argv[])
 
         Real Vmnum=0.0;
         Real Vmex=0.0;
-        std::ofstream OutFile;
+        std::ofstream OutFileV;
+        std::ofstream OutFileE;
 
-        /*
+
         if(amrex::ParallelDescriptor::IOProcessor())
         {
 
         	std::string FullPathFile = "Energy.out";
-        	OutFile.open(FullPathFile.c_str(), std::ios::out);
-        	OutFile <<time<<"\t"<<TKE<<"\t"<<TSE<<"\t"<<TE;
-        }*/
-
-
+        	OutFileE.open(FullPathFile.c_str(), std::ios::out);
+        	OutFileE <<time<<"\t"<<TKE<<"\t"<<TSE<<"\t"<<TE;
+        }
         //Elastic  collision specific
 
         int steps=0;
@@ -130,17 +128,17 @@ int main (int argc, char* argv[])
         int output_it=0;
 
         if(amrex::ParallelDescriptor::IOProcessor())
-                {
-                	std::string FullPathFile = "AxialBar.out";
-                	OutFile.open(FullPathFile.c_str(), std::ios::out);
-                	mpm_pc.CalculateVelocity(Vmnum);
-                	Real n = 1;
-                	Real beta_n = (2*n-1.0)/2*3.141592/25.0;
-                	Real w_n = 10*beta_n;
-                	Vmex = 0.1/(beta_n*25.0)*cos(w_n*time);
+        {
+        	std::string FullPathFile = "Waterfront.out";
+        	OutFileV.open(FullPathFile.c_str(), std::ios::out);
+        	mpm_pc.FindWaterFront(Vmnum);
+        	Real n = 1;
+        	Real beta_n = (2*n-1.0)/2*3.141592/25.0;
+        	Real w_n = 10*beta_n;
+        	Vmex = 0.1/(beta_n*25.0)*cos(w_n*time);
 
-                	OutFile <<time<<"\t"<<Vmex<<"\t"<<Vmnum;
-                }
+        	OutFileV <<time/sqrt(0.2/9.81)<<"\t"<<Vmnum/0.2;
+        }
 
         mpm_pc.writeParticles(steps);
         amrex::Vector<std::string> nodaldata_names;
@@ -215,6 +213,7 @@ int main (int argc, char* argv[])
             store_delta_velocity(nodaldata);
 
             //Update particle velocity at time t+dt
+            mpm_pc.updateNeighbors();
             mpm_pc.interpolate_from_grid(nodaldata,1,0,specs.order_scheme,specs.alpha_pic_flip);
             mpm_pc.updateNeighbors();
 
@@ -229,7 +228,6 @@ int main (int argc, char* argv[])
             	                                             specs.force_slab_hi,
             	                                             specs.extforce,1,0,specs.mass_tolerance,specs.order_scheme);
             	nodal_bcs(geom,nodaldata,dt);
-
             }
 
             //find strainrate at material points at time t+dt
@@ -259,13 +257,18 @@ int main (int argc, char* argv[])
                 mpm_pc.update_density_field(dens_field_data,specs.dens_field_gridratio,specs.smoothfactor);
             }
 
-            mpm_pc.CalculateVelocity(Vmnum);
-                            	Real n = 1;
-                            	Real beta_n = (2*n-1.0)/2*3.141592/25.0;
-                            	Real w_n = 10*beta_n;
-                            	Vmex = 0.1/(beta_n*25.0)*cos(w_n*time);
+            mpm_pc.FindWaterFront(Vmnum);
+            Real n = 1;
+            Real beta_n = (2*n-1.0)/2*3.141592/25.0;
+            Real w_n = 10*beta_n;
+            Vmex = 0.1/(beta_n*25.0)*cos(w_n*time);
+            OutFileV <<"\n"<<time<<"\t"<<"\t"<<Vmnum;
 
-                            	OutFile <<"\n"<<time<<"\t"<<Vmex<<"\t"<<Vmnum;
+
+            mpm_pc.CalculateEnergies(TKE,TSE);
+            TE=TKE+TSE;
+            OutFileE <<"\n"<<time<<"\t"<<TKE<<"\t"<<TSE<<"\t"<<TE;
+
 
             if (output_time > specs.write_output_time) 
             {
