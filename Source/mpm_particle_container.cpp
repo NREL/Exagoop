@@ -22,6 +22,7 @@ void MPMParticleContainer::apply_constitutive_model(const amrex::Real& dt,
         int gid = mfi.index();
         int tid = mfi.LocalTileIndex();
         auto index = std::make_pair(gid, tid);
+        Real pinf=0.0;
 
         auto& ptile = plev[index];
         auto& aos   = ptile.GetArrayOfStructs();
@@ -35,6 +36,7 @@ void MPMParticleContainer::apply_constitutive_model(const amrex::Real& dt,
         amrex::ParallelFor(nt,[=]
         AMREX_GPU_DEVICE (int i) noexcept
         {
+        	Real p_inf=0.0;
             ParticleType& p = pstruct[i];
 
             amrex::Real xp[AMREX_SPACEDIM];
@@ -64,7 +66,15 @@ void MPMParticleContainer::apply_constitutive_model(const amrex::Real& dt,
             }
             else if(p.idata(intData::constitutive_model==1))		//Viscous fluid with approximate EoS
             {
-            	p.rdata(realData::pressure) = p.rdata(realData::Bulk_modulous)*(pow(1/p.rdata(realData::jacobian),p.rdata(realData::Gama_pressure))-1.0);
+            	if(p.rdata(realData::Gama_pressure)==1.4)
+            	{
+            		p_inf=2e5;
+            	}
+            	else
+            	{
+            		p_inf=1e5;
+            	}
+            	p.rdata(realData::pressure) = p.rdata(realData::Bulk_modulous)*(pow(1/p.rdata(realData::jacobian),p.rdata(realData::Gama_pressure))-1.0)+p_inf;
             	Newtonian_Fluid(strainrate,stress,p.rdata(realData::Dynamic_viscosity),p.rdata(realData::pressure));
             }
 
