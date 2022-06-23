@@ -83,7 +83,6 @@ int main (int argc, char* argv[])
         //mpm_pc.fillNeighbors();
         mpm_pc.RedistributeLocal();
         mpm_pc.fillNeighbors();
-        //mpm_pc.buildNeighborList(CheckPair());
         Real dt=specs.timestep;
         mpm_pc.deposit_onto_grid(nodaldata,specs.gravity,
                                  specs.external_loads_present,
@@ -117,14 +116,8 @@ int main (int argc, char* argv[])
         std::ofstream OutFileE;
 
 
-        if(amrex::ParallelDescriptor::IOProcessor())
-        {
-
-        	std::string FullPathFile = "Energy.out";
-        	OutFileE.open(FullPathFile.c_str(), std::ios::out);
-        	OutFileE <<time<<"\t"<<TKE<<"\t"<<TSE<<"\t"<<TE;
-        }
         //Elastic  collision specific
+        PrintToFile("Energy.out")<<time<<"\t"<<TKE<<"\t"<<TSE<<"\t"<<TE<<"\n";
 
         int steps=0;
         Real time=zero;
@@ -172,9 +165,9 @@ int main (int argc, char* argv[])
 
         while((steps < specs.maxsteps) and (time < specs.final_time))
         {
-        	dt = mpm_pc.Calculate_time_step();
-        	dt=specs.CFL*dt;
-        	dt=min(dt,specs.dtmin);
+            dt = mpm_pc.Calculate_time_step();
+            dt=specs.CFL*dt;
+            dt=min(dt,specs.dtmin);
 
             time += dt;
             output_time += dt;
@@ -182,7 +175,7 @@ int main (int argc, char* argv[])
 
             if (output_timePrint > specs.screen_output_time)
             {
-            	Print()<<"step:"<<steps<<"\t"<<"time:"<<time<<" dt = "<<dt<<"\n";
+                Print()<<"step:"<<steps<<"\t"<<"time:"<<time<<" dt = "<<dt<<"\n";
                 output_timePrint=zero;
             }
 
@@ -200,18 +193,23 @@ int main (int argc, char* argv[])
             nodaldata.setVal(zero,ng_cells_nodaldata);
             //find mass/vel at nodes
             //update_massvel=1, update_forces=0
+            //Update mass and velocity only
             mpm_pc.deposit_onto_grid(nodaldata,specs.gravity,
-                                 specs.external_loads_present,
-                                 specs.force_slab_lo,
-                                 specs.force_slab_hi,
-                                 specs.extforce,1,0,specs.mass_tolerance,specs.order_scheme); 		//Update mass and velocity only
+                                     specs.external_loads_present,
+                                     specs.force_slab_lo,
+                                     specs.force_slab_hi,
+                                     specs.extforce,1,0,specs.mass_tolerance,specs.order_scheme); 		
 
-            backup_current_velocity(nodaldata);									//Store velocity at time level t to calculate Delta_vel later for flip update
-            mpm_pc.deposit_onto_grid(nodaldata,specs.gravity,					// Calculate forces on nodes
-                                             specs.external_loads_present,
-                                             specs.force_slab_lo,
-                                             specs.force_slab_hi,
-                                             specs.extforce,0,1,specs.mass_tolerance,specs.order_scheme);
+            //Store velocity at time level t to calculate Delta_vel later for flip update
+            backup_current_velocity(nodaldata);									
+            
+            // Calculate forces on nodes
+            mpm_pc.deposit_onto_grid(nodaldata,specs.gravity,					
+                                     specs.external_loads_present,
+                                     specs.force_slab_lo,
+                                     specs.force_slab_hi,
+                                     specs.extforce,0,1,specs.mass_tolerance,specs.order_scheme);
+            
             //update velocity on nodes
             nodal_update(nodaldata,dt,specs.mass_tolerance);
 
@@ -229,14 +227,16 @@ int main (int argc, char* argv[])
             //Update particle position at t+dt
             mpm_pc.moveParticles(dt);
 
-            if(specs.stress_update_scheme==1)										//MUSL scheme
+            if(specs.stress_update_scheme==1)										
             {
-            	mpm_pc.deposit_onto_grid(nodaldata,specs.gravity,					// Calculate velocity on nodes
-            	                                             specs.external_loads_present,
-            	                                             specs.force_slab_lo,
-            	                                             specs.force_slab_hi,
-            	                                             specs.extforce,1,0,specs.mass_tolerance,specs.order_scheme);
-            	nodal_bcs(geom,nodaldata,dt);
+                //MUSL scheme
+                // Calculate velocity on nodes
+                mpm_pc.deposit_onto_grid(nodaldata,specs.gravity,					
+                                         specs.external_loads_present,
+                                         specs.force_slab_lo,
+                                         specs.force_slab_hi,
+                                         specs.extforce,1,0,specs.mass_tolerance,specs.order_scheme);
+                nodal_bcs(geom,nodaldata,dt);
             }
 
             //find strainrate at material points at time t+dt
@@ -252,13 +252,13 @@ int main (int argc, char* argv[])
 
                 mpm_pc.apply_constitutive_model(dt,
                                                 specs.applied_strainrate
-												);
+                                               );
             }
             else
             {
                 mpm_pc.apply_constitutive_model(dt,
-												0.0
-												);
+                                                0.0
+                                               );
             }
 
             if(specs.dens_field_output)
@@ -275,9 +275,7 @@ int main (int argc, char* argv[])
 
 
             mpm_pc.CalculateEnergies(TKE,TSE);
-            TE=TKE+TSE;
-            OutFileE <<"\n"<<time<<"\t"<<TKE<<"\t"<<TSE<<"\t"<<TE;
-
+            PrintToFile("Energy.out")<<time<<"\t"<<TKE<<"\t"<<TSE<<"\t"<<(TKE+TSE)<<"\n";
 
             if (output_time > specs.write_output_time) 
             {
@@ -292,7 +290,7 @@ int main (int argc, char* argv[])
 
                 pltfile = amrex::Concatenate("nplt", output_it, 5);
                 write_plot_file(pltfile,nodaldata,nodaldata_names,geom,ba,dm,time);
-            
+
                 if(specs.dens_field_output)
                 {
                     pltfile = amrex::Concatenate("dplt", output_it, 5);
@@ -308,10 +306,10 @@ int main (int argc, char* argv[])
 
         mpm_pc.Redistribute();
         mpm_pc.writeParticles(output_it+1);
-        
+
         pltfile = amrex::Concatenate("nplt", output_it+1, 5);
         write_plot_file(pltfile,nodaldata,nodaldata_names,geom,ba,dm,time);
-        
+
         if(specs.dens_field_output)
         {
             pltfile = amrex::Concatenate("dplt", output_it+1, 5);
