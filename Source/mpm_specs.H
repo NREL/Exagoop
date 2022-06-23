@@ -9,38 +9,38 @@ using namespace amrex;
 
 struct realData
 {
-  enum 
-  { // Particle data stored in p.m_data
-    radius=0,
-    xvel=1,
-    yvel=2,
-    zvel=3,
-    strainrate=4,
-    strain=10,
-    stress=16,
-    volume=22,
-    mass=23,
-    density=24,
-	jacobian=25,
-	pressure=26,
-	vol_init=27,
-	E=28,
-	nu=29,
-	Bulk_modulous=30,
-	Gama_pressure=31,
-	Dynamic_viscosity=32,
-    count=33
-  };
+    enum 
+    { // Particle data stored in p.m_data
+        radius=0,
+        xvel=1,
+        yvel=2,
+        zvel=3,
+        strainrate=4,
+        strain=10,
+        stress=16,
+        volume=22,
+        mass=23,
+        density=24,
+        jacobian=25,
+        pressure=26,
+        vol_init=27,
+        E=28,
+        nu=29,
+        Bulk_modulous=30,
+        Gama_pressure=31,
+        Dynamic_viscosity=32,
+        count=33
+    };
 };
 
 struct intData
 {
-  enum 
-  {
-    phase = 0,
-	constitutive_model,
-    count
-  };
+    enum 
+    {
+        phase = 0,
+        constitutive_model,
+        count
+    };
 };
 
 class MPMspecs
@@ -52,11 +52,11 @@ class MPMspecs
         Array<int,AMREX_SPACEDIM> ncells{AMREX_D_DECL(0, 0, 0)};
         Array<int,AMREX_SPACEDIM> periodic{AMREX_D_DECL(0, 0, 0)};
         Array<Real,AMREX_SPACEDIM> gravity{AMREX_D_DECL(0.0, -9.81, 0.0)};
-        
+
         Array<Real,AMREX_SPACEDIM> force_slab_lo{AMREX_D_DECL(0.0, 0.0, 0.0)};
         Array<Real,AMREX_SPACEDIM> force_slab_hi{AMREX_D_DECL(0.0, 0.0, 0.0)};
         Array<Real,AMREX_SPACEDIM> extforce{AMREX_D_DECL(0.0, 0.0, 0.0)};
-        
+
         Real timestep=0.0;
         int num_redist=10;
         int max_grid_size=8;
@@ -84,7 +84,7 @@ class MPMspecs
         Real total_mass = 0.0;
         Real total_vol = 0.0;
         int stress_update_scheme=1;
-        
+
         void read_mpm_specs()
         {
             ParmParse pp("mpm");
@@ -93,7 +93,7 @@ class MPMspecs
             pp.get("ncells", ncells);
             pp.get("is_it_periodic",periodic);
             pp.get("max_grid_size", max_grid_size);
-         
+
             pp.get("max_steps", maxsteps);
             pp.get("final_time",final_time);
 
@@ -115,11 +115,11 @@ class MPMspecs
             pp.query("stress_update_scheme",stress_update_scheme);
             if(fixed_timestep==1)
             {
-            	pp.get("timestep", timestep);
+                pp.get("timestep", timestep);
             }
             else
             {
-            	timestep =0.0;
+                timestep =0.0;
             }
 
             pp.query("alpha_pic_flip",alpha_pic_flip);
@@ -139,7 +139,7 @@ class MPMspecs
             {
                 pp.get("dens_field_gridratio",dens_field_gridratio);
             }
-         
+
             pp.query("external_loads",external_loads_present); 
             if(external_loads_present)
             {  
