@@ -67,7 +67,7 @@ void MPMParticleContainer::apply_constitutive_model(const amrex::Real& dt,
             {
             	/*if(p.rdata(realData::Gama_pressure)==1.4)
             	{
-            		p_inf=2e5;
+            		//p_inf=2e5;
             	}
             	else
             	{
