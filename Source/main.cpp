@@ -114,8 +114,6 @@ int main (int argc, char* argv[])
         Real Vmnum=0.0;
         Real Vmex=0.0;
 
-        //Elastic  collision specific
-        PrintToFile("Energy.out")<<time<<"\t"<<TKE<<"\t"<<TSE<<"\t"<<TE<<"\n";
         
 
         int steps=0;
@@ -124,14 +122,12 @@ int main (int argc, char* argv[])
         Real output_timePrint=zero;
         int output_it=0;
         
-        if(specs.print_maxx_file)
+        
+        if(specs.print_diagnostics)
         {
-            Real n = 1;
-            Real beta_n = (2*n-1.0)/2*3.141592/25.0;
-            Real w_n = 10*beta_n;
-            Vmex = 0.1/(beta_n*25.0)*cos(w_n*time);
             mpm_pc.FindWaterFront(Vmnum);
             PrintToFile("waterfront.out")<<time<<"\t"<<Vmnum<<"\n";
+            PrintToFile("Energy.out")<<time<<"\t"<<TKE<<"\t"<<TSE<<"\t"<<TE<<"\n";
         }
 
         mpm_pc.writeParticles(steps);
@@ -260,18 +256,14 @@ int main (int argc, char* argv[])
                 mpm_pc.update_density_field(dens_field_data,specs.dens_field_gridratio,specs.smoothfactor);
             }
 
-            if(specs.print_maxx_file)
+            if(specs.print_diagnostics)
             {
-                Real n = 1;
-                Real beta_n = (2*n-1.0)/2*3.141592/25.0;
-                Real w_n = 10*beta_n;
-                Vmex = 0.1/(beta_n*25.0)*cos(w_n*time);
                 mpm_pc.FindWaterFront(Vmnum);
                 PrintToFile("waterfront.out")<<time<<"\t"<<Vmnum<<"\n";
+                mpm_pc.CalculateEnergies(TKE,TSE);
+                PrintToFile("Energy.out")<<time<<"\t"<<TKE<<"\t"<<TSE<<"\t"<<(TKE+TSE)<<"\n";
             }
 
-            mpm_pc.CalculateEnergies(TKE,TSE);
-            PrintToFile("Energy.out")<<time<<"\t"<<TKE<<"\t"<<TSE<<"\t"<<(TKE+TSE)<<"\n";
 
             if (output_time > specs.write_output_time) 
             {

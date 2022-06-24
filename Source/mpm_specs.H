@@ -84,7 +84,7 @@ class MPMspecs
         Real total_mass = 0.0;
         Real total_vol = 0.0;
         int stress_update_scheme=1;
-        int print_maxx_file=0;
+        int print_diagnostics=0;
 
         void read_mpm_specs()
         {
@@ -148,6 +148,7 @@ class MPMspecs
                 pp.get("force_slab_hi", force_slab_hi);
                 pp.get("extforce", extforce);
             }
+            pp.query("print_diagnostics",print_diagnostics);
         }
 };
 #endif

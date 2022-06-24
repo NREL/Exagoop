@@ -31,10 +31,11 @@ void MPMParticleContainer::InitParticles (const std::string& filename,Real *tota
         *total_vol=0.0;
 
         auto& particle_tile = DefineAndReturnParticleTile(lev,grid,tile);
-        ParticleType p;
+        Gpu::HostVector<ParticleType> host_particles;
 
         for (int i = 0; i < np; i++) 
         {
+            ParticleType p;
             int ph;
        	    amrex::Real junk;
             // Set id and cpu for this particle
@@ -93,15 +94,23 @@ void MPMParticleContainer::InitParticles (const std::string& filename,Real *tota
                 p.rdata(realData::strain+comp)     = zero;
                 p.rdata(realData::stress+comp)     = zero;
             }
-
-            // Add everything to the data structure
-            particle_tile.push_back(p);
+            
+            host_particles.push_back(p);
 
             if (!ifs.good())
             {
                 amrex::Abort("Error initializing particles from Ascii file. \n");
             }
         }
+        
+        auto old_size = particle_tile.GetArrayOfStructs().size();
+        auto new_size = old_size + host_particles.size();
+        particle_tile.resize(new_size);
+
+        Gpu::copy(Gpu::hostToDevice,
+                  host_particles.begin(),
+                  host_particles.end(),
+                  particle_tile.GetArrayOfStructs().begin() + old_size);
     }
     Redistribute();
 }
