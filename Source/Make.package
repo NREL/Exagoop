@@ -1,3 +1,5 @@
-CEXE_sources += main.cpp mpm_particle_container.cpp mpm_init.cpp
-CEXE_headers += mpm_particle_container.H mpm_specs.H mpm_check_pair.H 
+CEXE_sources += main.cpp mpm_init.cpp mpm_particle_grid_ops.cpp mpm_particle_timestep.cpp mpm_diagnostics.cpp 
+CEXE_sources += mpm_particle_container.cpp mpm_particle_outputs.cpp nodal_data_ops.cpp
+
+CEXE_headers += mpm_particle_container.H mpm_specs.H mpm_check_pair.H nodal_data_ops.H 
 CEXE_headers += constants.H interpolants.H constitutive_models.H nodal_update.H

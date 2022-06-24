@@ -4,7 +4,7 @@
 #include <mpm_check_pair.H>
 #include <mpm_particle_container.H>
 #include <AMReX_PlotFileUtil.H>
-#include <nodal_update.H>
+#include <nodal_data_ops.H>
 
 
 using namespace amrex;

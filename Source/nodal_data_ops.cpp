@@ -1,6 +1,4 @@
-#include <AMReX.H>
-#include <AMReX_MultiFab.H>
-#include <constants.H>
+#include <nodal_data_ops.H>
 
 using namespace amrex;
 
@@ -8,7 +6,7 @@ void write_plot_file(std::string fname, MultiFab &nodaldata, Vector<std::string>
                            Geometry geom, BoxArray ba, DistributionMapping dm,Real time)
 {
   MultiFab plotmf(ba,dm,nodaldata.nComp(),0);
-  amrex::average_node_to_cellcenter(plotmf, 0, nodaldata, 0, nodaldata.nComp());
+  average_node_to_cellcenter(plotmf, 0, nodaldata, 0, nodaldata.nComp());
   WriteSingleLevelPlotfile(fname, plotmf, fieldnames, geom, time, 0);
 }
 
