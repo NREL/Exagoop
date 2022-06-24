@@ -155,7 +155,9 @@ AMREX_GPU_DEVICE AMREX_FORCE_INLINE
 	}
 	else
 	{
+#ifndef AMREX_USE_GPU
 		amrex::Print()<<"\n Shapefunction = "<<shapefunctiontype;
+#endif
 		amrex::Abort("\n Incorrect shape function type in cubicspline_1d_der");
 	}
 	return value;
@@ -233,13 +235,18 @@ AMREX_GPU_DEVICE AMREX_FORCE_INLINE
 		{
 			value=zi*zi*zi/3.0-zi*zi+2.0/3.0;
 		}
-		else{
+		else
+                {
+#ifndef AMREX_USE_GPU
 			amrex::Print()<<"\n Error in shape func 4: "<<zi;
+#endif
 		}
 	}
 	else
 	{
+#ifndef AMREX_USE_GPU
 		amrex::Print()<<"\n Shapefunction = "<<shapefunctiontype;
+#endif
 		amrex::Abort("\n Incorrect shape function type in cubicspline_1d");
 	}
 	return value;
