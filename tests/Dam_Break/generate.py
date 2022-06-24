@@ -32,7 +32,7 @@ for k in range(ncells[2]):
                             npart=npart+1
 
 print('Number of particles = ',npart)
-outfile=open("mpm_particles_sl.txt","w")
+outfile=open("mpm_particles.dat","w")
 outfile.write("%d\n"%(npart));
 
 dens=997.5
