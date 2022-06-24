@@ -28,7 +28,8 @@ int main (int argc, char* argv[])
         }
 
         IntVect domain_lo(AMREX_D_DECL(0,0,0));
-        IntVect domain_hi(AMREX_D_DECL(specs.ncells[XDIR]-1,specs.ncells[YDIR]-1,specs.ncells[ZDIR]-1));
+        IntVect domain_hi(AMREX_D_DECL(specs.ncells[XDIR]-1,
+                    specs.ncells[YDIR]-1,specs.ncells[ZDIR]-1));
         const Box domain(domain_lo, domain_hi);
 
         Geometry geom(domain, &real_box, coord, specs.periodic.data());
@@ -112,30 +113,25 @@ int main (int argc, char* argv[])
 
         Real Vmnum=0.0;
         Real Vmex=0.0;
-        std::ofstream OutFileV;
-        std::ofstream OutFileE;
-
 
         //Elastic  collision specific
         PrintToFile("Energy.out")<<time<<"\t"<<TKE<<"\t"<<TSE<<"\t"<<TE<<"\n";
+        
 
         int steps=0;
         Real time=zero;
         Real output_time=zero;
         Real output_timePrint=zero;
         int output_it=0;
-
-        if(amrex::ParallelDescriptor::IOProcessor())
+        
+        if(specs.print_maxx_file)
         {
-        	std::string FullPathFile = "Waterfront.out";
-        	OutFileV.open(FullPathFile.c_str(), std::ios::out);
-        	mpm_pc.FindWaterFront(Vmnum);
-        	Real n = 1;
-        	Real beta_n = (2*n-1.0)/2*3.141592/25.0;
-        	Real w_n = 10*beta_n;
-        	Vmex = 0.1/(beta_n*25.0)*cos(w_n*time);
-
-        	OutFileV <<time/sqrt(0.2/9.81)<<"\t"<<Vmnum/0.2;
+            Real n = 1;
+            Real beta_n = (2*n-1.0)/2*3.141592/25.0;
+            Real w_n = 10*beta_n;
+            Vmex = 0.1/(beta_n*25.0)*cos(w_n*time);
+            mpm_pc.FindWaterFront(Vmnum);
+            PrintToFile("waterfront.out")<<time<<"\t"<<Vmnum<<"\n";
         }
 
         mpm_pc.writeParticles(steps);
@@ -162,6 +158,8 @@ int main (int argc, char* argv[])
             write_plot_file(pltfile,dens_field_data,{"density"},geom_dens,dens_ba,dm,time);
         }
 
+
+        amrex::Print()<<"number of particles in the simulation:"<<mpm_pc.TotalNumberOfParticles()<<"\n";
 
         while((steps < specs.maxsteps) and (time < specs.final_time))
         {
@@ -195,21 +193,21 @@ int main (int argc, char* argv[])
             //update_massvel=1, update_forces=0
             //Update mass and velocity only
             mpm_pc.deposit_onto_grid(nodaldata,specs.gravity,
-                                     specs.external_loads_present,
-                                     specs.force_slab_lo,
-                                     specs.force_slab_hi,
-                                     specs.extforce,1,0,specs.mass_tolerance,specs.order_scheme); 		
+                    specs.external_loads_present,
+                    specs.force_slab_lo,
+                    specs.force_slab_hi,
+                    specs.extforce,1,0,specs.mass_tolerance,specs.order_scheme); 		
 
             //Store velocity at time level t to calculate Delta_vel later for flip update
             backup_current_velocity(nodaldata);									
-            
+
             // Calculate forces on nodes
             mpm_pc.deposit_onto_grid(nodaldata,specs.gravity,					
-                                     specs.external_loads_present,
-                                     specs.force_slab_lo,
-                                     specs.force_slab_hi,
-                                     specs.extforce,0,1,specs.mass_tolerance,specs.order_scheme);
-            
+                    specs.external_loads_present,
+                    specs.force_slab_lo,
+                    specs.force_slab_hi,
+                    specs.extforce,0,1,specs.mass_tolerance,specs.order_scheme);
+
             //update velocity on nodes
             nodal_update(nodaldata,dt,specs.mass_tolerance);
 
@@ -250,15 +248,11 @@ int main (int argc, char* argv[])
             if(time<specs.applied_strainrate_time)
             {
 
-                mpm_pc.apply_constitutive_model(dt,
-                                                specs.applied_strainrate
-                                               );
+                mpm_pc.apply_constitutive_model(dt,specs.applied_strainrate);
             }
             else
             {
-                mpm_pc.apply_constitutive_model(dt,
-                                                0.0
-                                               );
+                mpm_pc.apply_constitutive_model(dt,0.0);
             }
 
             if(specs.dens_field_output)
@@ -266,13 +260,15 @@ int main (int argc, char* argv[])
                 mpm_pc.update_density_field(dens_field_data,specs.dens_field_gridratio,specs.smoothfactor);
             }
 
-            mpm_pc.FindWaterFront(Vmnum);
-            Real n = 1;
-            Real beta_n = (2*n-1.0)/2*3.141592/25.0;
-            Real w_n = 10*beta_n;
-            Vmex = 0.1/(beta_n*25.0)*cos(w_n*time);
-            OutFileV <<"\n"<<time<<"\t"<<"\t"<<Vmnum;
-
+            if(specs.print_maxx_file)
+            {
+                Real n = 1;
+                Real beta_n = (2*n-1.0)/2*3.141592/25.0;
+                Real w_n = 10*beta_n;
+                Vmex = 0.1/(beta_n*25.0)*cos(w_n*time);
+                mpm_pc.FindWaterFront(Vmnum);
+                PrintToFile("waterfront.out")<<time<<"\t"<<Vmnum<<"\n";
+            }
 
             mpm_pc.CalculateEnergies(TKE,TSE);
             PrintToFile("Energy.out")<<time<<"\t"<<TKE<<"\t"<<TSE<<"\t"<<(TKE+TSE)<<"\n";
@@ -283,7 +279,6 @@ int main (int argc, char* argv[])
                 Print()<<"writing outputs at step,time:"<<steps<<"\t"<<time<<"\n";
                 mpm_pc.Redistribute();
                 mpm_pc.fillNeighbors();
-                //mpm_pc.buildNeighborList(CheckPair());
 
                 output_it++;
                 mpm_pc.writeParticles(output_it);
@@ -295,7 +290,7 @@ int main (int argc, char* argv[])
                 {
                     pltfile = amrex::Concatenate("dplt", output_it, 5);
                     write_plot_file(pltfile,dens_field_data,{"density"},geom_dens,dens_ba,
-                                    dm,time);
+                            dm,time);
                 }
 
                 output_time=zero;

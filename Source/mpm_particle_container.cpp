@@ -183,7 +183,7 @@ void MPMParticleContainer::FindWaterFront(Real &Xwf)
     });
 
 #ifdef BL_USE_MPI
-    ParallelDescriptor::ReduceRealSum(wf_x);
+    ParallelDescriptor::ReduceRealMax(wf_x);
 #endif
 
     Xwf=wf_x;
@@ -1055,6 +1055,7 @@ void MPMParticleContainer::writeParticles(const int n)
     Vector<int> writeflags_real(realData::count,1);
     Vector<int> writeflags_int(intData::count,0);
 
+
     Vector<std::string> real_data_names;
     Vector<std::string>  int_data_names;
 
@@ -1106,7 +1107,7 @@ void MPMParticleContainer::writeParticles(const int n)
     writeflags_real[realData::Bulk_modulous]=0;
     writeflags_real[realData::Gama_pressure]=0;
     writeflags_real[realData::Dynamic_viscosity]=0;
-
+    
     WritePlotFile(pltfile, "particles",writeflags_real, 
                   writeflags_int, real_data_names, int_data_names);
 }

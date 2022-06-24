@@ -29,7 +29,7 @@ struct realData
         Bulk_modulous=30,
         Gama_pressure=31,
         Dynamic_viscosity=32,
-        count=33
+        count
     };
 };
 
@@ -84,6 +84,7 @@ class MPMspecs
         Real total_mass = 0.0;
         Real total_vol = 0.0;
         int stress_update_scheme=1;
+        int print_maxx_file=0;
 
         void read_mpm_specs()
         {
