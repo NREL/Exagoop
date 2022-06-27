@@ -54,7 +54,8 @@ void store_delta_velocity(MultiFab &nodaldata)
            {
                 for(int d=0;d<AMREX_SPACEDIM;d++)
                 {
-                    nodal_data_arr(i,j,k,DELTA_VELX_INDEX+d) = nodal_data_arr(i,j,k,VELX_INDEX+d)-nodal_data_arr(i,j,k,DELTA_VELX_INDEX+d);
+                    nodal_data_arr(i,j,k,DELTA_VELX_INDEX+d) 
+                    = nodal_data_arr(i,j,k,VELX_INDEX+d)-nodal_data_arr(i,j,k,DELTA_VELX_INDEX+d);
                 }
            }
 
@@ -80,7 +81,8 @@ void nodal_update(MultiFab &nodaldata,const amrex::Real& dt, const amrex::Real& 
                 {
                 	if(nodal_data_arr(i,j,k,MASS_INDEX)>=mass_tolerance)
                 	{
-                		nodal_data_arr(i,j,k,VELX_INDEX+d) += nodal_data_arr(i,j,k,FRCX_INDEX+d)/nodal_data_arr(i,j,k,MASS_INDEX)*dt;
+                		nodal_data_arr(i,j,k,VELX_INDEX+d) += 
+                                nodal_data_arr(i,j,k,FRCX_INDEX+d)/nodal_data_arr(i,j,k,MASS_INDEX)*dt;
                 	}
                 	else
                 	{
@@ -189,10 +191,9 @@ void initialise_shape_function_indices(iMultiFab &shapefunctionindex,const amrex
 }
 
 void nodal_bcs(const amrex::Geometry geom,
-               MultiFab &nodaldata,const amrex::Real& dt)
+               MultiFab &nodaldata,int bclo[AMREX_SPACEDIM],
+               int bchi[AMREX_SPACEDIM],const amrex::Real& dt)
 {
-    //FIXME: This is a hard dirichlet for now
-    
     const int* domloarr = geom.Domain().loVect();
     const int* domhiarr = geom.Domain().hiVect();
     
@@ -214,47 +215,63 @@ void nodal_bcs(const amrex::Geometry geom,
         AMREX_GPU_DEVICE (int i,int j,int k) noexcept
         {
             IntVect nodeid(i,j,k);
-            bool impose_wall_x=false;
-            bool impose_wall_y=false;
-            bool impose_wall_z=false;
 
-            impose_wall_x=!periodic[XDIR] && 
-                        (nodeid[XDIR]==domlo[XDIR] || nodeid[XDIR]==(domhi[XDIR]+1))?true:false;
-            
-            impose_wall_y=!periodic[YDIR] && 
-                        (nodeid[YDIR]==domlo[YDIR] || nodeid[YDIR]==(domhi[YDIR]+1))?true:false;
-
-            impose_wall_z=!periodic[ZDIR] && 
-                        (nodeid[ZDIR]==domlo[ZDIR] || nodeid[ZDIR]==(domhi[ZDIR]+1))?true:false;
-
-
-            if(impose_wall_x)
+            if((nodeid[XDIR]==domlo[XDIR]) && (bclo[XDIR]==BC_SLIPWALL || bclo[XDIR]==BC_NOSLIPWALL))
             {
-            	nodal_data_arr(i,j,k,VELX_INDEX+0)=zero;
-            	//nodal_data_arr(i,j,k,VELX_INDEX+1)=zero;
-            	//nodal_data_arr(i,j,k,VELX_INDEX+2)=zero;
-            }
-
-            if(impose_wall_y)
-            {
-            	//nodal_data_arr(i,j,k,VELX_INDEX+0)=zero;
-            	nodal_data_arr(i,j,k,VELX_INDEX+1)=zero;
-            	//nodal_data_arr(i,j,k,VELX_INDEX+2)=zero;
-            }
-
-            if(impose_wall_z)
-            {
-            	nodal_data_arr(i,j,k,VELX_INDEX+2)=zero;
-            }
-
-            /*
-            if(impose_wall_x || impose_wall_y || impose_wall_z)
-            {
-                for(int d=0;d<AMREX_SPACEDIM;d++)
+            	nodal_data_arr(nodeid,VELX_INDEX+XDIR)=zero;
+                if(bclo[XDIR]==BC_NOSLIPWALL)
                 {
-                    nodal_data_arr(i,j,k,VELX_INDEX+d)=zero;
+            	    nodal_data_arr(nodeid,VELX_INDEX+YDIR)=zero;
+            	    nodal_data_arr(nodeid,VELX_INDEX+ZDIR)=zero;
                 }
-            } */
+            }
+            if((nodeid[XDIR]==(domhi[XDIR]+1)) && (bchi[XDIR]==BC_SLIPWALL || bchi[XDIR]==BC_NOSLIPWALL))
+            {
+            	nodal_data_arr(nodeid,VELX_INDEX+XDIR)=zero;
+                if(bchi[XDIR]==BC_NOSLIPWALL)
+                {
+            	    nodal_data_arr(nodeid,VELX_INDEX+YDIR)=zero;
+            	    nodal_data_arr(nodeid,VELX_INDEX+ZDIR)=zero;
+                }
+            }
+
+            if((nodeid[YDIR]==domlo[YDIR]) && (bclo[YDIR]==BC_SLIPWALL || bclo[YDIR]==BC_NOSLIPWALL))
+            {
+            	nodal_data_arr(nodeid,VELX_INDEX+YDIR)=zero;
+                if(bclo[YDIR]==BC_NOSLIPWALL)
+                {
+            	    nodal_data_arr(nodeid,VELX_INDEX+XDIR)=zero;
+            	    nodal_data_arr(nodeid,VELX_INDEX+ZDIR)=zero;
+                }
+            }
+            if((nodeid[YDIR]==(domhi[YDIR]+1)) && (bchi[YDIR]==BC_SLIPWALL || bchi[YDIR]==BC_NOSLIPWALL))
+            {
+            	nodal_data_arr(nodeid,VELX_INDEX+YDIR)=zero;
+                if(bchi[YDIR]==BC_NOSLIPWALL)
+                {
+            	    nodal_data_arr(nodeid,VELX_INDEX+XDIR)=zero;
+            	    nodal_data_arr(nodeid,VELX_INDEX+ZDIR)=zero;
+                }
+            }
+            
+            if((nodeid[ZDIR]==domlo[ZDIR]) && (bclo[ZDIR]==BC_SLIPWALL || bclo[ZDIR]==BC_NOSLIPWALL))
+            {
+            	nodal_data_arr(nodeid,VELX_INDEX+ZDIR)=zero;
+                if(bclo[ZDIR]==BC_NOSLIPWALL)
+                {
+            	    nodal_data_arr(nodeid,VELX_INDEX+XDIR)=zero;
+            	    nodal_data_arr(nodeid,VELX_INDEX+YDIR)=zero;
+                }
+            }
+            if((nodeid[ZDIR]==(domhi[ZDIR]+1)) && (bchi[ZDIR]==BC_SLIPWALL || bchi[ZDIR]==BC_NOSLIPWALL))
+            {
+            	nodal_data_arr(nodeid,VELX_INDEX+ZDIR)=zero;
+                if(bchi[ZDIR]==BC_NOSLIPWALL)
+                {
+            	    nodal_data_arr(nodeid,VELX_INDEX+XDIR)=zero;
+            	    nodal_data_arr(nodeid,VELX_INDEX+YDIR)=zero;
+                }
+            }
 
         });
     }

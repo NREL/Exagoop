@@ -331,7 +331,7 @@ void MPMParticleContainer::interpolate_mass_from_grid(MultiFab& nodaldata,int or
 }
 
 void MPMParticleContainer::interpolate_from_grid(MultiFab& nodaldata,int update_vel,
-                                                 int update_strainrate,int order_scheme,amrex::Real alpha_pic_flip)
+                    int update_strainrate,int order_scheme,amrex::Real alpha_pic_flip)
 {
     const int lev = 0;
     const Geometry& geom = Geom(lev);

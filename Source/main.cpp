@@ -6,7 +6,6 @@
 #include <AMReX_PlotFileUtil.H>
 #include <nodal_data_ops.H>
 
-
 using namespace amrex;
 
 int main (int argc, char* argv[])
@@ -46,7 +45,8 @@ int main (int argc, char* argv[])
 
         //Initialise particle properties
         MPMParticleContainer mpm_pc(geom, dm, ba, ng_cells);
-        mpm_pc.InitParticles(specs.particlefilename,&specs.total_mass,&specs.total_vol);
+        mpm_pc.InitParticles(specs.particlefilename,
+                &specs.total_mass,&specs.total_vol);
         
         //Set grid properties
         const BoxArray& nodeba = amrex::convert(ba, IntVect{1,1,1});
@@ -202,24 +202,27 @@ int main (int argc, char* argv[])
                     specs.external_loads_present,
                     specs.force_slab_lo,
                     specs.force_slab_hi,
-                    specs.extforce,0,1,specs.mass_tolerance,specs.order_scheme);
+                    specs.extforce,0,1,
+                    specs.mass_tolerance,specs.order_scheme);
 
             //update velocity on nodes
             nodal_update(nodaldata,dt,specs.mass_tolerance);
 
             //impose bcs at nodes
-            nodal_bcs(geom,nodaldata,dt);
+            nodal_bcs(geom,nodaldata,specs.bclo.data(),
+                    specs.bchi.data(),dt);
 
             //Calculate velocity diff
             store_delta_velocity(nodaldata);
 
             //Update particle velocity at time t+dt
             mpm_pc.updateNeighbors();
-            mpm_pc.interpolate_from_grid(nodaldata,1,0,specs.order_scheme,specs.alpha_pic_flip);
+            mpm_pc.interpolate_from_grid(nodaldata,1,0,
+                    specs.order_scheme,specs.alpha_pic_flip);
             mpm_pc.updateNeighbors();
 
             //Update particle position at t+dt
-            mpm_pc.moveParticles(dt);
+            mpm_pc.moveParticles(dt,specs.bclo.data(),specs.bchi.data());
 
             if(specs.stress_update_scheme==1)										
             {
@@ -229,15 +232,16 @@ int main (int argc, char* argv[])
                                          specs.external_loads_present,
                                          specs.force_slab_lo,
                                          specs.force_slab_hi,
-                                         specs.extforce,1,0,specs.mass_tolerance,specs.order_scheme);
-                nodal_bcs(geom,nodaldata,dt);
+                                         specs.extforce,1,0,
+                                         specs.mass_tolerance,specs.order_scheme);
+                nodal_bcs(geom,nodaldata,specs.bclo.data(),specs.bchi.data(),dt);
             }
 
             //find strainrate at material points at time t+dt
             mpm_pc.interpolate_from_grid(nodaldata,0,1,specs.order_scheme,specs.alpha_pic_flip);
             mpm_pc.updateNeighbors();
 
-            //mpm_pc.move_particles_from_nodevel(nodaldata,dt,1);
+            //mpm_pc.move_particles_from_nodevel(nodaldata,dt,specs.bclo.data(),specs.bchi.data(),1);
             mpm_pc.updatevolume(dt);
 
             //update stress at material pointsat time t+dt
@@ -253,7 +257,8 @@ int main (int argc, char* argv[])
 
             if(specs.dens_field_output)
             {
-                mpm_pc.update_density_field(dens_field_data,specs.dens_field_gridratio,specs.smoothfactor);
+                mpm_pc.update_density_field(dens_field_data,
+                        specs.dens_field_gridratio,specs.smoothfactor);
             }
 
             if(specs.print_diagnostics)

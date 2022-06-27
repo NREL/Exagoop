@@ -77,7 +77,7 @@ void MPMParticleContainer::updatevolume(const amrex::Real& dt)
             ParticleType& p = pstruct[i];
 
             p.rdata(realData::jacobian) += (p.rdata(realData::strainrate+XX)
-                                            +p.rdata(realData::strainrate+YY)+p.rdata(realData::strainrate+ZZ)) * dt * p.rdata(realData::jacobian);
+            +p.rdata(realData::strainrate+YY)+p.rdata(realData::strainrate+ZZ)) * dt * p.rdata(realData::jacobian);
             p.rdata(realData::volume)	= p.rdata(realData::vol_init)*p.rdata(realData::jacobian);
             p.rdata(realData::density)	= p.rdata(realData::mass)/p.rdata(realData::volume);
 
@@ -85,7 +85,8 @@ void MPMParticleContainer::updatevolume(const amrex::Real& dt)
     }
 }
 
-void MPMParticleContainer::moveParticles(const amrex::Real& dt)
+void MPMParticleContainer::moveParticles(const amrex::Real& dt,
+        int bclo[AMREX_SPACEDIM],int bchi[AMREX_SPACEDIM])
 {
     BL_PROFILE("MPMParticleContainer::moveParticles");
 
@@ -121,34 +122,34 @@ void MPMParticleContainer::moveParticles(const amrex::Real& dt)
             p.pos(1) += p.rdata(realData::yvel) * dt;
             p.pos(2) += p.rdata(realData::zvel) * dt;
 
-            if (!periodic[XDIR] && (p.pos(0) < plo[0]))
+            if (!periodic[XDIR] && (p.pos(XDIR) < plo[XDIR]) && bclo[XDIR]!=BC_OUTFLOW)
             {
-                p.pos(0) = two*plo[0] - p.pos(0);
+                p.pos(XDIR) = two*plo[XDIR] - p.pos(XDIR);
                 p.rdata(realData::xvel) = -p.rdata(realData::xvel);
             }
-            if (!periodic[XDIR] && (p.pos(0) > phi[0]))
+            if (!periodic[XDIR] && (p.pos(XDIR) > phi[XDIR]) && bchi[XDIR]!=BC_OUTFLOW)
             {
-                p.pos(0) = two*phi[0] - p.pos(0);
+                p.pos(XDIR) = two*phi[XDIR] - p.pos(XDIR);
                 p.rdata(realData::xvel) = -p.rdata(realData::xvel);
             }
-            if (!periodic[YDIR] && (p.pos(1) < plo[1]))
+            if (!periodic[YDIR] && (p.pos(YDIR) < plo[YDIR]) && bclo[YDIR]!=BC_OUTFLOW)
             {
-                p.pos(1) = two*plo[1] - p.pos(1);
+                p.pos(YDIR) = two*plo[YDIR] - p.pos(YDIR);
                 p.rdata(realData::yvel) = -p.rdata(realData::yvel);
             }
-            if (!periodic[YDIR] && (p.pos(1) > phi[1]))
+            if (!periodic[YDIR] && (p.pos(YDIR) > phi[YDIR]) && bchi[YDIR]!=BC_OUTFLOW)
             {
-                p.pos(1) = two*phi[1] - p.pos(1);
+                p.pos(YDIR) = two*phi[YDIR] - p.pos(YDIR);
                 p.rdata(realData::yvel) = -p.rdata(realData::yvel);
             }
-            if (!periodic[ZDIR] && (p.pos(2) < plo[2]))
+            if (!periodic[ZDIR] && (p.pos(ZDIR) < plo[ZDIR]) && bclo[ZDIR]!=BC_OUTFLOW)
             {
-                p.pos(2) = two*plo[2] - p.pos(2);
+                p.pos(ZDIR) = two*plo[ZDIR] - p.pos(ZDIR);
                 p.rdata(realData::zvel) = -p.rdata(realData::zvel);
             }
-            if (!periodic[ZDIR] && (p.pos(2) > phi[2]))
+            if (!periodic[ZDIR] && (p.pos(ZDIR) > phi[ZDIR]) && bchi[ZDIR]!=BC_OUTFLOW)
             {
-                p.pos(2) = two*phi[2] - p.pos(2);
+                p.pos(ZDIR) = two*phi[ZDIR] - p.pos(ZDIR);
                 p.rdata(realData::zvel) = -p.rdata(realData::zvel);
             }
 
@@ -156,7 +157,10 @@ void MPMParticleContainer::moveParticles(const amrex::Real& dt)
     }
 }
 
-void MPMParticleContainer::move_particles_from_nodevel(MultiFab& nodaldata,const amrex::Real& dt,int order_scheme)
+void MPMParticleContainer::move_particles_from_nodevel(MultiFab& nodaldata,
+        const amrex::Real& dt,
+        int bclo[AMREX_SPACEDIM],int bchi[AMREX_SPACEDIM],
+        int order_scheme)
 {
     const int lev = 0;
     const Geometry& geom = Geom(lev);
@@ -206,37 +210,38 @@ void MPMParticleContainer::move_particles_from_nodevel(MultiFab& nodaldata,const
                 p.pos(YDIR) += bilin_interp(xp,iv[XDIR],iv[YDIR],iv[ZDIR],plo,dx,nodal_data_arr,VELY_INDEX)*dt;
                 p.pos(ZDIR) += bilin_interp(xp,iv[XDIR],iv[YDIR],iv[ZDIR],plo,dx,nodal_data_arr,VELZ_INDEX)*dt;
             }
+            
+            if (!periodic[XDIR] && (p.pos(XDIR) < plo[XDIR]) && bclo[XDIR]!=BC_OUTFLOW)
+            {
+                p.pos(XDIR) = two*plo[XDIR] - p.pos(XDIR);
+                p.rdata(realData::xvel) = -p.rdata(realData::xvel);
+            }
+            if (!periodic[XDIR] && (p.pos(XDIR) > phi[XDIR]) && bchi[XDIR]!=BC_OUTFLOW)
+            {
+                p.pos(XDIR) = two*phi[XDIR] - p.pos(XDIR);
+                p.rdata(realData::xvel) = -p.rdata(realData::xvel);
+            }
+            if (!periodic[YDIR] && (p.pos(YDIR) < plo[YDIR]) && bclo[YDIR]!=BC_OUTFLOW)
+            {
+                p.pos(YDIR) = two*plo[YDIR] - p.pos(YDIR);
+                p.rdata(realData::yvel) = -p.rdata(realData::yvel);
+            }
+            if (!periodic[YDIR] && (p.pos(YDIR) > phi[YDIR]) && bchi[YDIR]!=BC_OUTFLOW)
+            {
+                p.pos(YDIR) = two*phi[YDIR] - p.pos(YDIR);
+                p.rdata(realData::yvel) = -p.rdata(realData::yvel);
+            }
+            if (!periodic[ZDIR] && (p.pos(ZDIR) < plo[ZDIR]) && bclo[ZDIR]!=BC_OUTFLOW)
+            {
+                p.pos(ZDIR) = two*plo[ZDIR] - p.pos(ZDIR);
+                p.rdata(realData::zvel) = -p.rdata(realData::zvel);
+            }
+            if (!periodic[ZDIR] && (p.pos(ZDIR) > phi[ZDIR]) && bchi[ZDIR]!=BC_OUTFLOW)
+            {
+                p.pos(ZDIR) = two*phi[ZDIR] - p.pos(ZDIR);
+                p.rdata(realData::zvel) = -p.rdata(realData::zvel);
+            }
 
-            if (!periodic[XDIR] && (p.pos(0) < plo[0]))
-            {
-                p.pos(0) = two*plo[0] - p.pos(0);
-                p.rdata(realData::xvel) = -p.rdata(realData::xvel);
-            }
-            if (!periodic[XDIR] && (p.pos(0) > phi[0]))
-            {
-                p.pos(0) = two*phi[0] - p.pos(0);
-                p.rdata(realData::xvel) = -p.rdata(realData::xvel);
-            }
-            if (!periodic[YDIR] && (p.pos(1) < plo[1]))
-            {
-                p.pos(1) = two*plo[1] - p.pos(1);
-                p.rdata(realData::yvel) = -p.rdata(realData::yvel);
-            }
-            if (!periodic[YDIR] && (p.pos(1) > phi[1]))
-            {
-                p.pos(1) = two*phi[1] - p.pos(1);
-                p.rdata(realData::yvel) = -p.rdata(realData::yvel);
-            }
-            if (!periodic[ZDIR] && (p.pos(2) < plo[2]))
-            {
-                p.pos(2) = two*plo[2] - p.pos(2);
-                p.rdata(realData::zvel) = -p.rdata(realData::zvel);
-            }
-            if (!periodic[ZDIR] && (p.pos(2) > phi[2]))
-            {
-                p.pos(2) = two*phi[2] - p.pos(2);
-                p.rdata(realData::zvel) = -p.rdata(realData::zvel);
-            }
         });
     }
 }

@@ -4,6 +4,7 @@
 #include <AMReX.H>
 #include <AMReX_REAL.H>
 #include <AMReX_ParmParse.H>
+#include <constants.H>
 
 using namespace amrex;
 
@@ -66,9 +67,8 @@ class MPMspecs
         int maxsteps=1;
         std::string particlefilename;
 
-
-        int order_scheme=1;				//1-->tent function, 3--> cubic spline shape function
-
+        //1-->tent function, 3--> cubic spline shape function
+        int order_scheme=1;				
 
         Real applied_strainrate=0.0;
         Real applied_strainrate_time=0.0;
@@ -85,9 +85,16 @@ class MPMspecs
         Real total_vol = 0.0;
         int stress_update_scheme=1;
         int print_diagnostics=0;
+        
+        Vector<int> bclo;
+        Vector<int> bchi;
 
         void read_mpm_specs()
         {
+            bclo.resize(AMREX_SPACEDIM);
+            bchi.resize(AMREX_SPACEDIM);
+            
+
             ParmParse pp("mpm");
             pp.get("prob_lo",plo);
             pp.get("prob_hi",phi);
@@ -97,7 +104,6 @@ class MPMspecs
 
             pp.get("max_steps", maxsteps);
             pp.get("final_time",final_time);
-
 
             pp.query("gravity", gravity);
 
@@ -149,6 +155,18 @@ class MPMspecs
                 pp.get("extforce", extforce);
             }
             pp.query("print_diagnostics",print_diagnostics);
+            
+            //by default it is periodic 
+            bclo[0]=BC_SLIPWALL;
+            bclo[1]=BC_SLIPWALL;
+            bclo[2]=BC_SLIPWALL;
+
+            bchi[0]=BC_SLIPWALL;
+            bchi[1]=BC_SLIPWALL;
+            bchi[2]=BC_SLIPWALL;
+            
+            pp.queryarr("bc_lower",bclo);
+            pp.queryarr("bc_upper",bchi);
         }
 };
 #endif

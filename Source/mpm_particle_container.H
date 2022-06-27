@@ -23,7 +23,7 @@ public:
     }
 
     void InitParticles (const std::string & filename,Real *total_mass, Real *total_vol);
-    void moveParticles (const amrex::Real& dt);
+    void moveParticles (const amrex::Real& dt,int bclo[AMREX_SPACEDIM],int bchi[AMREX_SPACEDIM]);
     void updatevolume (const amrex::Real& dt);
     void writeParticles (const int n);  
     void deposit_onto_grid(MultiFab& nodaldata,
@@ -35,7 +35,9 @@ public:
                            int update_massvel,int update_forces, amrex::Real mass_tolerance, int order_scheme);
     void interpolate_from_grid(MultiFab& nodaldata,
                                int update_vel,int update_strainrate,int order,amrex::Real alpha_pic_flip);
-    void move_particles_from_nodevel(MultiFab& nodaldata,const amrex::Real& dt,int order_scheme);
+    void move_particles_from_nodevel(MultiFab& nodaldata,const amrex::Real& dt,
+            int bclo[AMREX_SPACEDIM],int bchi[AMREX_SPACEDIM],
+            int order_scheme);
     void CalculateEnergies(Real &TKE,Real &TSE);
     void CalculateVelocity(Real &Vcm);
     void FindWaterFront(Real &Xwf);

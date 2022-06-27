@@ -40,4 +40,9 @@
 #define YZ 4
 #define ZZ 5
 
+#define BC_PERIODIC 0
+#define BC_NOSLIPWALL 1
+#define BC_SLIPWALL 2
+#define BC_OUTFLOW 3
+
 #endif

@@ -19,3 +19,12 @@ mpm.order_scheme=1
 mpm.mass_tolerance = 1e-18
 mpm.alpha_pic_flip = 1
 mpm.stress_update_scheme= 0
+
+#periodic 0
+#noslip wall 1
+#slip wall 2
+#outflow 3
+mpm.bc_lower=1 0 0
+mpm.bc_upper=1 0 0
+
+mpm.print_diagnostics=1

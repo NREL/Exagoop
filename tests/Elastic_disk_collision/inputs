@@ -20,3 +20,10 @@ mpm.CFL=0.1
 mpm.order_scheme=3
 mpm.mass_tolerance = 1e-18
 mpm.alpha_pic_flip = 0.990
+
+#periodic 0
+#noslip wall 1
+#slip wall 2
+#outflow 3
+mpm.bc_lower=2 2 2
+mpm.bc_upper=2 2 2
