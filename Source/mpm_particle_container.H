@@ -22,8 +22,9 @@ public:
     
     }
 
-    void InitParticles (const std::string & filename);
-    void moveParticles (const amrex::Real& dt);
+    void InitParticles (const std::string & filename,Real *total_mass, Real *total_vol);
+    void moveParticles (const amrex::Real& dt,int bclo[AMREX_SPACEDIM],int bchi[AMREX_SPACEDIM]);
+    void updatevolume (const amrex::Real& dt);
     void writeParticles (const int n);  
     void deposit_onto_grid(MultiFab& nodaldata,
                            Array<Real,AMREX_SPACEDIM> gravity,
@@ -31,14 +32,23 @@ public:
                            Array<Real,AMREX_SPACEDIM> force_slab_lo,
                            Array<Real,AMREX_SPACEDIM> force_slab_hi,
                            Array<Real,AMREX_SPACEDIM> extforce,
-                           int update_massvel,int update_forces); 
+                           int update_massvel,int update_forces, amrex::Real mass_tolerance, int order_scheme);
     void interpolate_from_grid(MultiFab& nodaldata,
-                               int update_vel,int update_strainrate);
+                               int update_vel,int update_strainrate,int order,amrex::Real alpha_pic_flip);
+    void move_particles_from_nodevel(MultiFab& nodaldata,const amrex::Real& dt,
+            int bclo[AMREX_SPACEDIM],int bchi[AMREX_SPACEDIM],
+            int order_scheme);
+    void CalculateEnergies(Real &TKE,Real &TSE);
+    void CalculateVelocity(Real &Vcm);
+    void FindWaterFront(Real &Xwf);
 
     void apply_constitutive_model(const amrex::Real& dt,
-                                  amrex::Real E,amrex::Real v,amrex::Real applied_strainrate);
+								  amrex::Real applied_strainrate
+								  );
+    void interpolate_mass_from_grid(MultiFab& nodaldata,int order_scheme);
 
     void update_density_field(MultiFab& nodaldata,int refratio,amrex::Real smoothfactor);
+    amrex::Real Calculate_time_step();
 
 private:
 
