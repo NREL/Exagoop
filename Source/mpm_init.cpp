@@ -1,5 +1,6 @@
 #include <mpm_particle_container.H>
 #include <constants.H>
+#include <mpm_eb.H>
 
 void MPMParticleContainer::InitParticles (const std::string& filename,Real *total_mass,Real *total_vol)
 {
@@ -54,7 +55,8 @@ void MPMParticleContainer::InitParticles (const std::string& filename,Real *tota
             ifs >> p.rdata(realData::xvel);
             ifs >> p.rdata(realData::yvel);
             ifs >> p.rdata(realData::zvel);
-            ifs >> p.idata(intData::constitutive_model);		//Commented only for getting the HPRO inputfile to work
+            ifs >> p.idata(intData::constitutive_model);		
+            //Commented only for getting the HPRO inputfile to work
             //ifs>>junk;
             //p.idata(intData::constitutive_model)=0;
             if(p.idata(intData::constitutive_model)==0)	//Elastic solid
@@ -79,7 +81,8 @@ void MPMParticleContainer::InitParticles (const std::string& filename,Real *tota
             }
 
             // Set other particle properties
-            p.rdata(realData::volume)      = fourbythree*PI*pow(p.rdata(realData::radius),three);	//This is a dummy initialisation. We will correct this value later
+            p.rdata(realData::volume)      = fourbythree*PI*pow(p.rdata(realData::radius),three);	
+            //This is a dummy initialisation. We will correct this value later
             p.rdata(realData::mass)        = p.rdata(realData::density)*p.rdata(realData::volume);
 
             *total_mass +=p.rdata(realData::mass);
@@ -111,6 +114,52 @@ void MPMParticleContainer::InitParticles (const std::string& filename,Real *tota
                   host_particles.begin(),
                   host_particles.end(),
                   particle_tile.GetArrayOfStructs().begin() + old_size);
+    }
+    Redistribute();
+}
+
+void MPMParticleContainer::removeParticlesInsideEB()
+{
+    const int lev = 0;
+    const Geometry& geom = Geom(lev);
+    auto& plev  = GetParticles(lev);
+    const auto dxi = geom.InvCellSizeArray();
+    const auto dx = geom.CellSizeArray();
+    const auto plo = geom.ProbLoArray();
+    const auto domain = geom.Domain();
+
+    int lsref=mpm_ebtools::ls_refinement;
+
+    for(MFIter mfi = MakeMFIter(lev); mfi.isValid(); ++mfi)
+    {
+        const amrex::Box& box = mfi.tilebox();
+        int gid = mfi.index();
+        int tid = mfi.LocalTileIndex();
+        auto index = std::make_pair(gid, tid);
+
+        auto& ptile = plev[index];
+        auto& aos   = ptile.GetArrayOfStructs();
+
+        int np = aos.numRealParticles();
+
+        ParticleType* pstruct = aos().dataPtr();
+
+        amrex::Array4<amrex::Real> lsetarr=mpm_ebtools::lsphi->array(mfi);
+
+        amrex::ParallelFor(np,[=]
+        AMREX_GPU_DEVICE (int i) noexcept
+        {
+            ParticleType& p = pstruct[i];
+            amrex::Real xp[AMREX_SPACEDIM]={p.pos(XDIR),p.pos(YDIR),p.pos(ZDIR)};
+
+            amrex::Real lsval=get_levelset_value(lsetarr,plo,dx,xp,lsref);
+
+            if(lsval<TINYVAL)
+            {
+                p.id()=-1;
+            }
+
+        });
     }
     Redistribute();
 }

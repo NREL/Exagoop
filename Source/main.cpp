@@ -5,6 +5,7 @@
 #include <mpm_particle_container.H>
 #include <AMReX_PlotFileUtil.H>
 #include <nodal_data_ops.H>
+#include <mpm_eb.H>
 
 using namespace amrex;
 
@@ -43,10 +44,17 @@ int main (int argc, char* argv[])
         	ng_cells = 3;
         }
 
+        mpm_ebtools::init_eb(geom,ba,dm);
+
         //Initialise particle properties
         MPMParticleContainer mpm_pc(geom, dm, ba, ng_cells);
         mpm_pc.InitParticles(specs.particlefilename,
                 &specs.total_mass,&specs.total_vol);
+
+        if(mpm_ebtools::using_levelset_geometry)
+        {
+            mpm_pc.removeParticlesInsideEB();
+        }
         
         //Set grid properties
         const BoxArray& nodeba = amrex::convert(ba, IntVect{1,1,1});
@@ -212,6 +220,11 @@ int main (int argc, char* argv[])
             nodal_bcs(geom,nodaldata,specs.bclo.data(),
                     specs.bchi.data(),dt);
 
+            if(mpm_ebtools::using_levelset_geometry)
+            {
+                nodal_levelset_bcs(nodaldata,dt);
+            }
+
             //Calculate velocity diff
             store_delta_velocity(nodaldata);
 
@@ -235,6 +248,11 @@ int main (int argc, char* argv[])
                                          specs.extforce,1,0,
                                          specs.mass_tolerance,specs.order_scheme);
                 nodal_bcs(geom,nodaldata,specs.bclo.data(),specs.bchi.data(),dt);
+                
+                if(mpm_ebtools::using_levelset_geometry)
+                {
+                    nodal_levelset_bcs(nodaldata,dt);
+                }
             }
 
             //find strainrate at material points at time t+dt

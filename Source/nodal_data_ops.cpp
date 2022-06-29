@@ -1,4 +1,5 @@
 #include <nodal_data_ops.H>
+#include <mpm_eb.H>
 
 using namespace amrex;
 
@@ -36,6 +37,37 @@ void backup_current_velocity(MultiFab &nodaldata)
   }
 }
 
+void nodal_levelset_bcs(MultiFab &nodaldata,amrex::Real &dt)
+{
+  //need something more sophisticated
+  //but lets get it working!
+  //
+  int lsref=mpm_ebtools::ls_refinement;
+
+  for (MFIter mfi(nodaldata); mfi.isValid(); ++mfi)
+  {
+        const Box& bx=mfi.validbox();
+        Box nodalbox = convert(bx, {1, 1, 1});
+
+        Array4<Real> nodal_data_arr=nodaldata.array(mfi);
+        Array4<Real> lsarr=mpm_ebtools::lsphi->array(mfi);
+
+        amrex::ParallelFor(nodalbox,[=]
+                AMREX_GPU_DEVICE (int i,int j,int k) noexcept
+        {
+            IntVect nodeid(i,j,k);
+            IntVect refined_nodeid(i*lsref,j*lsref,k*lsref);
+
+            if(lsarr(refined_nodeid) < TINYVAL)
+            {
+            	nodal_data_arr(nodeid,VELX_INDEX+XDIR)=zero;
+            	nodal_data_arr(nodeid,VELX_INDEX+YDIR)=zero;
+            	nodal_data_arr(nodeid,VELX_INDEX+ZDIR)=zero;
+            }
+        
+        });
+    }
+}
 
 
 void store_delta_velocity(MultiFab &nodaldata)

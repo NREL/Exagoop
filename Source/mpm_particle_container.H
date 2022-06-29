@@ -49,6 +49,7 @@ public:
 
     void update_density_field(MultiFab& nodaldata,int refratio,amrex::Real smoothfactor);
     amrex::Real Calculate_time_step();
+    void removeParticlesInsideEB();
 
 private:
 
