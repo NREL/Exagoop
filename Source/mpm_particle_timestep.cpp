@@ -17,7 +17,7 @@ amrex::Real MPMParticleContainer::Calculate_time_step()
         amrex::Real Cs;
         if(p.idata(intData::constitutive_model)==1)
         {
-            Cs = sqrt(p.rdata(realData::Bulk_modulous)/p.rdata(realData::density));
+            Cs = sqrt(p.rdata(realData::Bulk_modulus)/p.rdata(realData::density));
         }
         else if(p.idata(intData::constitutive_model)==0)
         {

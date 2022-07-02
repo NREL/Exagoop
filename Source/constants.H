@@ -14,6 +14,7 @@
 #define four 4.0
 #define twobyfive 0.4
 #define fourth 0.25
+#define eighth 0.125
 #define zero 0.0
 #define TINYVAL 1e-20
 #define BIGVAL 1e20

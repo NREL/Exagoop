@@ -27,7 +27,7 @@ struct realData
         vol_init=27,
         E=28,
         nu=29,
-        Bulk_modulous=30,
+        Bulk_modulus=30,
         Gama_pressure=31,
         Dynamic_viscosity=32,
         count
@@ -77,7 +77,7 @@ class MPMspecs
         Real smoothfactor=1.0;
         int external_loads_present=0.0;
         int fixed_timestep = 1;
-        Real dtmin=1e-5;
+        Real dtmax=1e-5;
         Real CFL=0.1;
         Real mass_tolerance = 1e-8;
         Real alpha_pic_flip = 0.95;
@@ -88,11 +88,28 @@ class MPMspecs
         
         Vector<int> bclo;
         Vector<int> bchi;
+       
+        int use_autogen=0; 
+        Vector<Real> autogen_mincoords; 
+        Vector<Real> autogen_maxcoords; 
+        Vector<Real> autogen_vel; 
+        int autogen_multi_part_per_cell=0;
+        Real autogen_dens=1000.0;
+        int autogen_constmodel=1;
+        Real autogen_E=1e9;
+        Real autogen_nu=0.1;
+        Real autogen_bulkmod=0.0;
+        Real autogen_Gama_pres=1.4;
+        Real autogen_visc=0.001;
 
         void read_mpm_specs()
         {
             bclo.resize(AMREX_SPACEDIM);
             bchi.resize(AMREX_SPACEDIM);
+            
+            autogen_mincoords.resize(AMREX_SPACEDIM);
+            autogen_maxcoords.resize(AMREX_SPACEDIM);
+            autogen_vel.resize(AMREX_SPACEDIM);
             
 
             ParmParse pp("mpm");
@@ -115,8 +132,25 @@ class MPMspecs
 
             pp.query("num_redist", num_redist);
 
+            pp.query("use_autogen",use_autogen);
+
+            if(!use_autogen)
+            {
             particlefilename="mpm_particles.dat";
             pp.query("particle_file",particlefilename);
+            }
+            else
+            {
+                pp.getarr("mincoords_autogen",autogen_mincoords);
+                pp.getarr("maxcoords_autogen",autogen_maxcoords);
+                pp.getarr("vel_autogen",autogen_vel);
+                pp.query("constmodel_autogen",autogen_constmodel);
+                pp.query("E_autogen",autogen_constmodel);
+                pp.query("nu_autogen",autogen_constmodel);
+                pp.query("bulkmod_autogen",autogen_bulkmod);
+                pp.query("Gama_pres_autogen",autogen_Gama_pres);
+                pp.query("visc_autogen",autogen_visc);
+            }
 
             pp.query("fixed_timestep",fixed_timestep);
             pp.query("stress_update_scheme",stress_update_scheme);
@@ -130,7 +164,7 @@ class MPMspecs
             }
 
             pp.query("alpha_pic_flip",alpha_pic_flip);
-            pp.query("dtmin",dtmin);
+            pp.query("dtmax",dtmax);
             pp.query("CFL",CFL);
 
             pp.query("applied_strainrate",applied_strainrate);

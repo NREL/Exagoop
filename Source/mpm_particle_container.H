@@ -22,8 +22,16 @@ public:
     
     }
 
-    void InitParticles (const std::string & filename,Real *total_mass, Real *total_vol);
-    void moveParticles (const amrex::Real& dt,int bclo[AMREX_SPACEDIM],int bchi[AMREX_SPACEDIM]);
+    void InitParticles (const std::string & filename,Real &total_mass, Real &total_vol);
+
+    void InitParticles (Real mincoords[AMREX_SPACEDIM],Real maxcoords[AMREX_SPACEDIM], 
+        Real vel[AMREX_SPACEDIM],
+        Real dens, int constmodel, 
+        Real E, Real nu,Real bulkMod, Real Gama_pres,Real visc,
+        int do_multi_part_per_cell,Real &total_mass,Real &total_vol);
+
+    void moveParticles (const amrex::Real& dt,
+                        int bclo[AMREX_SPACEDIM],int bchi[AMREX_SPACEDIM]);
     void updatevolume (const amrex::Real& dt);
     void writeParticles (const int n);  
     void deposit_onto_grid(MultiFab& nodaldata,
@@ -32,19 +40,23 @@ public:
                            Array<Real,AMREX_SPACEDIM> force_slab_lo,
                            Array<Real,AMREX_SPACEDIM> force_slab_hi,
                            Array<Real,AMREX_SPACEDIM> extforce,
-                           int update_massvel,int update_forces, amrex::Real mass_tolerance, int order_scheme);
+                           int update_massvel,int update_forces, 
+                           amrex::Real mass_tolerance, int order_scheme);
+
     void interpolate_from_grid(MultiFab& nodaldata,
-                               int update_vel,int update_strainrate,int order,amrex::Real alpha_pic_flip);
+                               int update_vel,int update_strainrate,
+                               int order,amrex::Real alpha_pic_flip);
+
     void move_particles_from_nodevel(MultiFab& nodaldata,const amrex::Real& dt,
             int bclo[AMREX_SPACEDIM],int bchi[AMREX_SPACEDIM],
             int order_scheme);
+    
     void CalculateEnergies(Real &TKE,Real &TSE);
     void CalculateVelocity(Real &Vcm);
     void FindWaterFront(Real &Xwf);
 
-    void apply_constitutive_model(const amrex::Real& dt,
-								  amrex::Real applied_strainrate
-								  );
+    void apply_constitutive_model(const amrex::Real& dt,amrex::Real applied_strainrate);
+
     void interpolate_mass_from_grid(MultiFab& nodaldata,int order_scheme);
 
     void update_density_field(MultiFab& nodaldata,int refratio,amrex::Real smoothfactor);
@@ -52,6 +64,12 @@ public:
     void removeParticlesInsideEB();
 
 private:
+
+    ParticleType generate_particle
+        (Real x,Real y,Real z,
+        Real vel[AMREX_SPACEDIM],
+        Real dens, Real vol, int constmodel, Real E, Real nu,
+        Real bulkmod, Real Gama_pres,Real visc);
 
 };
 #endif

@@ -48,25 +48,38 @@ int main (int argc, char* argv[])
 
         //Initialise particle properties
         MPMParticleContainer mpm_pc(geom, dm, ba, ng_cells);
-        mpm_pc.InitParticles(specs.particlefilename,
-                &specs.total_mass,&specs.total_vol);
+
+        if(!specs.use_autogen)
+        {
+            mpm_pc.InitParticles(specs.particlefilename,
+                                 specs.total_mass,specs.total_vol);
+        }
+        else
+        {
+            mpm_pc.InitParticles(specs.autogen_mincoords.data(),specs.autogen_maxcoords.data(),
+                                 specs.autogen_vel.data(),specs.autogen_dens,specs.autogen_constmodel,
+                                 specs.autogen_E,specs.autogen_nu,
+                                 specs.autogen_bulkmod,specs.autogen_Gama_pres,specs.autogen_visc,
+                                 1,specs.total_mass,specs.total_vol);
+
+        }
 
         if(mpm_ebtools::using_levelset_geometry)
         {
             mpm_pc.removeParticlesInsideEB();
         }
-        
+
         //Set grid properties
         const BoxArray& nodeba = amrex::convert(ba, IntVect{1,1,1});
 
         int ng_cells_nodaldata=1;
         if(specs.order_scheme==1)
         {
-        	ng_cells_nodaldata=1;
+            ng_cells_nodaldata=1;
         }
         else if(specs.order_scheme==3)
         {
-        	ng_cells_nodaldata=3;
+            ng_cells_nodaldata=3;
         }
         else
         {
@@ -83,10 +96,10 @@ int main (int argc, char* argv[])
         Geometry geom_dens(dom_dens);
         if(specs.dens_field_output)
         {
-           dens_ba.refine(specs.dens_field_gridratio);
-           const BoxArray& nodal_dens_ba=amrex::convert(dens_ba,IntVect{1,1,1});
-           dens_field_data.define(nodal_dens_ba,dm,1,0);
-           dens_field_data.setVal(0.0);
+            dens_ba.refine(specs.dens_field_gridratio);
+            const BoxArray& nodal_dens_ba=amrex::convert(dens_ba,IntVect{1,1,1});
+            dens_field_data.define(nodal_dens_ba,dm,1,0);
+            dens_field_data.setVal(0.0);
         }
 
         //mpm_pc.fillNeighbors();
@@ -104,14 +117,14 @@ int main (int argc, char* argv[])
         mpm_pc.interpolate_from_grid(nodaldata,0,1,specs.order_scheme,specs.alpha_pic_flip);	//Calculate strainrate at each mp
         dt = mpm_pc.Calculate_time_step();
         dt=specs.CFL*dt;
-        dt=min(dt,specs.dtmin);
+        dt=min(dt,specs.dtmax);
 
 
         mpm_pc.apply_constitutive_model(dt,specs.applied_strainrate);
 
         if(specs.dens_field_output)
         {
-           mpm_pc.update_density_field(dens_field_data,specs.dens_field_gridratio,specs.smoothfactor);
+            mpm_pc.update_density_field(dens_field_data,specs.dens_field_gridratio,specs.smoothfactor);
         }
 
         //Quantities for elastic disk collisions
@@ -122,15 +135,15 @@ int main (int argc, char* argv[])
         Real Vmnum=0.0;
         Real Vmex=0.0;
 
-        
+
 
         int steps=0;
         Real time=zero;
         Real output_time=zero;
         Real output_timePrint=zero;
         int output_it=0;
-        
-        
+
+
         if(specs.print_diagnostics)
         {
             mpm_pc.FindWaterFront(Vmnum);
@@ -169,7 +182,7 @@ int main (int argc, char* argv[])
         {
             dt = mpm_pc.Calculate_time_step();
             dt=specs.CFL*dt;
-            dt=min(dt,specs.dtmin);
+            dt=min(dt,specs.dtmax);
 
             time += dt;
             output_time += dt;
