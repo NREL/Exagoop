@@ -64,6 +64,7 @@ void MPMParticleContainer::InitParticles (const std::string& filename,Real *tota
             	p.rdata(realData::Bulk_modulous)=0.0;
             	p.rdata(realData::Gama_pressure)=0.0;
             	p.rdata(realData::Dynamic_viscosity)=0.0;
+                p.rdata(realData::void_ratio)=0.0;
             }
             else if(p.idata(intData::constitutive_model)==1)
             {
@@ -72,6 +73,16 @@ void MPMParticleContainer::InitParticles (const std::string& filename,Real *tota
             	ifs >> p.rdata(realData::Bulk_modulous);
             	ifs >> p.rdata(realData::Gama_pressure);
             	ifs >> p.rdata(realData::Dynamic_viscosity);
+                p.rdata(realData::void_ratio)=0.0;
+            }
+            else if(p.idata(intData::constitutive_model)==2) // Yudong: hypoplastic model
+            {
+            	p.rdata(realData::E)=0.0;
+            	p.rdata(realData::nu)=0.0;
+                p.rdata(realData::Bulk_modulous)=0.0;
+            	p.rdata(realData::Gama_pressure)=0.0;
+            	p.rdata(realData::Dynamic_viscosity)=0.0;
+            	ifs >> p.rdata(realData::void_ratio);
             }
             else
             {

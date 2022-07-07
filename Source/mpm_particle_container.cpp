@@ -77,6 +77,11 @@ void MPMParticleContainer::apply_constitutive_model(const amrex::Real& dt,
                     (pow(1/p.rdata(realData::jacobian),p.rdata(realData::Gama_pressure))-1.0)+p_inf;
             	Newtonian_Fluid(strainrate,stress,p.rdata(realData::Dynamic_viscosity),p.rdata(realData::pressure));
             }
+            else if(p.idata(intData::constitutive_model==2))		//Yudong: GB hypoplastic model for granular flow
+            {
+                //GB hypoplastic model here.
+                GB_hypoplastic(strainrate,stress,p.rdata(realData::void_ratio),dt);
+            }
 
             for(int d=0;d<NCOMP_TENSOR;d++)
             {

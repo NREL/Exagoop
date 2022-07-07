@@ -30,6 +30,7 @@ struct realData
         Bulk_modulous=30,
         Gama_pressure=31,
         Dynamic_viscosity=32,
+        void_ratio=33, // for hypoplastic model
         count
     };
 };

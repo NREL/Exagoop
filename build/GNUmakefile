@@ -7,9 +7,9 @@ DEBUG	= FALSE
 
 DIM	= 3
 
-COMP    = gnu
+COMP    = llvm
 
-USE_MPI   = TRUE 
+USE_MPI   = FALSE
 USE_OMP   = FALSE
 USE_CUDA  = FALSE
 USE_EB    = TRUE

@@ -1,0 +1,28 @@
+#geometry parameters
+mpm.prob_lo = 0.0 0.0 0.0
+mpm.prob_hi = 0.4 0.4 0.012
+mpm.ncells  = 100 100 3
+mpm.max_grid_size = 50
+mpm.is_it_periodic = 0  0  1
+#timestepping
+mpm.fixed_timestep = 1  #1=> fixed time step, 0=> CFL based adaptive time step
+mpm.final_time=5
+mpm.max_steps=1000000
+mpm.write_output_time=0.01
+mpm.num_redist = 1
+mpm.timestep = 0.00005
+mpm.screen_output_time = 0.001
+mpm.gravity = 0.0 -9.81 0.0
+mpm.dtmin=1e-5
+mpm.CFL=0.1
+mpm.order_scheme=1
+mpm.mass_tolerance = 1e-18
+mpm.alpha_pic_flip = 0.99
+mpm.stress_update_scheme= 1
+
+#periodic 0
+#noslip wall 1
+#slip wall 2
+#outflow 3
+mpm.bc_lower=2 2 0
+mpm.bc_upper=2 2 0
