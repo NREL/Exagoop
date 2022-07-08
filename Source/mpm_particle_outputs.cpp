@@ -145,7 +145,7 @@ void MPMParticleContainer::writeParticles(const int n)
     writeflags_real[realData::Bulk_modulous]=0;
     writeflags_real[realData::Gama_pressure]=0;
     writeflags_real[realData::Dynamic_viscosity]=0;
-    writeflags_real[realData::void_ratio]=0;
+    writeflags_real[realData::void_ratio]=1;
     
     WritePlotFile(pltfile, "particles",writeflags_real, 
                   writeflags_int, real_data_names, int_data_names);

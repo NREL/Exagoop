@@ -80,14 +80,16 @@ void MPMParticleContainer::apply_constitutive_model(const amrex::Real& dt,
             else if(p.idata(intData::constitutive_model==2))		//Yudong: GB hypoplastic model for granular flow
             {
                 //GB hypoplastic model here.
-                GB_hypoplastic(strainrate,stress,p.rdata(realData::void_ratio),dt);
+                
+                GB_hypoplastic(strainrate,stress,dt, p.rdata(realData::void_ratio));
             }
 
             for(int d=0;d<NCOMP_TENSOR;d++)
             {
                 p.rdata(realData::stress+d)=stress[d];
             }
-        });
+        });  
     }
+
 } 
 

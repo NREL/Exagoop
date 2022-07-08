@@ -101,9 +101,17 @@ void MPMParticleContainer::InitParticles (const std::string& filename,Real *tota
 
             for(int comp=0;comp<NCOMP_TENSOR;comp++)
             {
-                p.rdata(realData::strainrate+comp) = zero;
-                p.rdata(realData::strain+comp)     = zero;
-                p.rdata(realData::stress+comp)     = zero;
+                if(p.idata(intData::constitutive_model)==2){
+                    p.rdata(realData::strainrate+comp) = TINYVAL;
+                    p.rdata(realData::strain+comp)     = TINYVAL;
+                    p.rdata(realData::stress+comp)     = 5.0;
+                }
+                else{
+                    p.rdata(realData::strainrate+comp) = zero;
+                    p.rdata(realData::strain+comp)     = zero;
+                    p.rdata(realData::stress+comp)     = zero;
+                }
+                
             }
             
             host_particles.push_back(p);

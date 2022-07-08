@@ -55,8 +55,8 @@ void Newtonian_Fluid(amrex::Real epsdot[NCOMP_TENSOR],
 AMREX_GPU_DEVICE AMREX_FORCE_INLINE
 void GB_hypoplastic(amrex::Real eps_dot[NCOMP_TENSOR],
         amrex::Real sigma[NCOMP_TENSOR],
-        amrex::Real e,
-        amrex::Real dt)
+        amrex::Real dt,
+        amrex::Real& e)
 {
     // normalized stress tensor
     amrex::Real sigma_hat[NCOMP_TENSOR]; 
@@ -66,6 +66,8 @@ void GB_hypoplastic(amrex::Real eps_dot[NCOMP_TENSOR],
     amrex::Real sigma_dot[NCOMP_TENSOR];
     // identity matrix upper
     amrex::Real Identity[NCOMP_TENSOR] = {1.0,0,0,1.0,0,1.0};
+    // void ratio
+    //amrex::Real e;
 
     // Linear contribution
     amrex::Real L[NCOMP_TENSOR];
@@ -87,6 +89,9 @@ void GB_hypoplastic(amrex::Real eps_dot[NCOMP_TENSOR],
     amrex::Real modulus_eps_dot = sqrt(pow(trace_eps_dot,2));
 
     amrex::Real trace_sigma = sigma[XX] + sigma[YY] + sigma[ZZ];
+    if(trace_sigma == 0.0){
+        trace_sigma = TINYVAL; //avoid divide by 0
+    }
     //amrex::Real modulus_sigma = sqrt(pow(trace_sigma,2));
 
     for(int i = 0; i < NCOMP_TENSOR; i++) {
@@ -95,6 +100,9 @@ void GB_hypoplastic(amrex::Real eps_dot[NCOMP_TENSOR],
     }
 
     amrex::Real trace_sigma_hat_star = sigma_hat_star[XX]+sigma_hat_star[YY]+sigma_hat_star[ZZ];
+    if(trace_sigma_hat_star == 0.0){
+        trace_sigma_hat_star = TINYVAL;
+    }
     amrex::Real modulus_sigma_hat_star = sqrt(pow(trace_sigma_hat_star,2));
 
     amrex::Real trace_sigma_hat_star_square = pow(sigma_hat_star[XX],2)+pow(sigma_hat_star[YY],2)+pow(sigma_hat_star[ZZ],2)
@@ -114,9 +122,15 @@ void GB_hypoplastic(amrex::Real eps_dot[NCOMP_TENSOR],
     amrex::Real c_2 = (3.0/8.0)*((3+sin(phi_c)/sin(phi_c)));
 
     // update void ratio related variables
-    amrex::Real e_i = e_i0*exp(-pow(-trace_sigma/h_s,n));
-    amrex::Real e_d = e_d0*exp(-pow(-trace_sigma/h_s,n));
-    amrex::Real e_c = e_c0*exp(-pow(-trace_sigma/h_s,n));
+    amrex::Real e_i = e_i0*exp(-pow(-trace_sigma/h_s,n)); // max void ratio
+    amrex::Real e_d = e_d0*exp(-pow(-trace_sigma/h_s,n)); // min void ratio
+    amrex::Real e_c = e_c0*exp(-pow(-trace_sigma/h_s,n)); // critical void ratio
+    if(e>e_i){
+        e = e_i;
+    }
+    else if (e<e_d){
+        e = e_d;
+    }
 
     // update stiffness factor
     amrex::Real h_i = 1/pow(c_1,2) + (1.0/3.0)*pow((e_i0+e_d0)/(e_c0-e_d0),alpha)*(1/(sqrt(3)*c_1));
@@ -126,7 +140,6 @@ void GB_hypoplastic(amrex::Real eps_dot[NCOMP_TENSOR],
     amrex::Real f_e = pow(e_c/e, beta);
     amrex::Real f_b = pow(e_i0/e_c0, beta)*(h_s/(n*h_i));
     amrex::Real f_s = f_b*f_e;
-
 
     // compute lode angle
     amrex::Real cos3theta = -sqrt(6.0)*trace_sigma_hat_star_cube/pow(trace_sigma_hat_star_square,1.5);
