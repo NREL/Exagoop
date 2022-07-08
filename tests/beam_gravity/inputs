@@ -6,16 +6,27 @@ mpm.max_grid_size  = 32
 mpm.is_it_periodic = 0  0   0
  
 #timestepping
+mpm.fixed_timestep = 0
 mpm.final_time=2
 mpm.max_steps=100000000
 mpm.write_output_time=1e-2
 mpm.num_redist = 1
 mpm.timestep = 5e-4
+mpm.CFL=0.1
+mpm.dtmin=1e-2
+mpm.order_scheme=1
+mpm.mass_tolerance = 1e-18
+mpm.alpha_pic_flip = 0.99
+mpm.stress_update_scheme= 1
 
-mpm.gravity = 0.0 0.0 0.0
-mpm.Youngs_modulus=6e5
-mpm.Poissons_ratio=0.1
 mpm.gravity = -9.8 -9.8 0.0
 
 #mpm.dens_field_output=1
 #mpm.dens_field_gridratio=4
+
+#periodic 0
+#noslip wall 1
+#slip wall 2
+#outflow 3
+mpm.bc_lower=1 1 1
+mpm.bc_upper=1 1 1

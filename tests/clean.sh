@@ -1,1 +1,1 @@
-rm -rf plt* nplt* dplt* Backtrace* *.out.0
+rm -rf plt* nplt* dplt* ebplt* Backtrace* *.out.0

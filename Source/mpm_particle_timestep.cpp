@@ -1,5 +1,6 @@
 #include <mpm_particle_container.H>
 #include <interpolants.H>
+#include <mpm_eb.H>
 
 amrex::Real MPMParticleContainer::Calculate_time_step()
 {
@@ -16,7 +17,7 @@ amrex::Real MPMParticleContainer::Calculate_time_step()
         amrex::Real Cs;
         if(p.idata(intData::constitutive_model)==1)
         {
-            Cs = sqrt(p.rdata(realData::Bulk_modulous)/p.rdata(realData::density));
+            Cs = sqrt(p.rdata(realData::Bulk_modulus)/p.rdata(realData::density));
         }
         else if(p.idata(intData::constitutive_model)==0)
         {
@@ -100,6 +101,9 @@ void MPMParticleContainer::moveParticles(const amrex::Real& dt,
     const auto dx = Geom(lev).CellSizeArray();
     auto& plev  = GetParticles(lev);
 
+    bool using_levsets=mpm_ebtools::using_levelset_geometry;
+    int lsref=mpm_ebtools::ls_refinement;
+
     int periodic[AMREX_SPACEDIM]={Geom(lev).isPeriodic(XDIR),
         Geom(lev).isPeriodic(YDIR),
         Geom(lev).isPeriodic(ZDIR)};
@@ -115,15 +119,52 @@ void MPMParticleContainer::moveParticles(const amrex::Real& dt,
         const size_t np = aos.numParticles();
         ParticleType* pstruct = aos().dataPtr();
 
+        amrex::Array4<amrex::Real> lsetarr;
+        if(using_levsets)
+        {
+            lsetarr=mpm_ebtools::lsphi->array(mfi);
+        }
+
         // now we move the particles
         amrex::ParallelFor(np,[=]
         AMREX_GPU_DEVICE (int i) noexcept
         {
             ParticleType& p = pstruct[i];
 
-            p.pos(0) += p.rdata(realData::xvel) * dt;
-            p.pos(1) += p.rdata(realData::yvel) * dt;
-            p.pos(2) += p.rdata(realData::zvel) * dt;
+            p.pos(XDIR) += p.rdata(realData::xvel) * dt;
+            p.pos(YDIR) += p.rdata(realData::yvel) * dt;
+            p.pos(ZDIR) += p.rdata(realData::zvel) * dt;
+
+            if(using_levsets)
+            {
+                amrex::Real xp[AMREX_SPACEDIM]={p.pos(XDIR),p.pos(YDIR),p.pos(ZDIR)}; 
+                amrex::Real dist=get_levelset_value(lsetarr,plo,dx,xp,lsref); 
+
+               if(dist<TINYVAL)
+               {
+                    amrex::Real norm[AMREX_SPACEDIM]={1.0,0.0,0.0};
+                    get_levelset_grad(lsetarr,plo,dx,xp,lsref,norm);
+
+                    amrex::Real gradmag=std::sqrt(norm[XDIR]*norm[XDIR]+norm[YDIR]*norm[YDIR]+norm[ZDIR]*norm[ZDIR]);
+                    amrex::Real velmag=std::sqrt(p.rdata(realData::xvel)*p.rdata(realData::xvel) +
+                                     p.rdata(realData::yvel)*p.rdata(realData::yvel) +
+                                     p.rdata(realData::zvel)*p.rdata(realData::zvel));
+
+                    if(gradmag > TINYVAL)
+                    {
+                        norm[XDIR]=norm[XDIR]/gradmag;
+                        norm[YDIR]=norm[YDIR]/gradmag;
+                        norm[ZDIR]=norm[ZDIR]/gradmag;
+                    }
+                    p.pos(XDIR)+=2.0*amrex::Math::abs(dist)*norm[XDIR];
+                    p.pos(YDIR)+=2.0*amrex::Math::abs(dist)*norm[YDIR];
+                    p.pos(ZDIR)+=2.0*amrex::Math::abs(dist)*norm[ZDIR];
+
+                    p.rdata(realData::xvel)=velmag*norm[XDIR];
+                    p.rdata(realData::yvel)=velmag*norm[YDIR];
+                    p.rdata(realData::zvel)=velmag*norm[ZDIR];
+               }
+            }
 
             if (!periodic[XDIR] && (p.pos(XDIR) < plo[XDIR]) && bclo[XDIR]!=BC_OUTFLOW)
             {
