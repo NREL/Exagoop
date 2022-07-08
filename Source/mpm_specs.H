@@ -93,7 +93,7 @@ class MPMspecs
         Vector<Real> autogen_mincoords; 
         Vector<Real> autogen_maxcoords; 
         Vector<Real> autogen_vel; 
-        int autogen_multi_part_per_cell=0;
+        int autogen_multi_part_per_cell=1;
         Real autogen_dens=1000.0;
         int autogen_constmodel=1;
         Real autogen_E=1e9;
@@ -101,6 +101,8 @@ class MPMspecs
         Real autogen_bulkmod=0.0;
         Real autogen_Gama_pres=1.4;
         Real autogen_visc=0.001;
+
+        int levelset_slip_bc=0;
 
         void read_mpm_specs()
         {
@@ -145,11 +147,13 @@ class MPMspecs
                 pp.getarr("maxcoords_autogen",autogen_maxcoords);
                 pp.getarr("vel_autogen",autogen_vel);
                 pp.query("constmodel_autogen",autogen_constmodel);
+                pp.query("dens_autogen",autogen_dens);
                 pp.query("E_autogen",autogen_constmodel);
                 pp.query("nu_autogen",autogen_constmodel);
                 pp.query("bulkmod_autogen",autogen_bulkmod);
                 pp.query("Gama_pres_autogen",autogen_Gama_pres);
                 pp.query("visc_autogen",autogen_visc);
+                pp.query("multi_part_per_cell_autogen",autogen_multi_part_per_cell);
             }
 
             pp.query("fixed_timestep",fixed_timestep);
@@ -201,6 +205,8 @@ class MPMspecs
             
             pp.queryarr("bc_lower",bclo);
             pp.queryarr("bc_upper",bchi);
+
+            pp.query("levelset_slip_bc",levelset_slip_bc);
         }
 };
 #endif

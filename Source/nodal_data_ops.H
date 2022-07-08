@@ -16,6 +16,6 @@ void nodal_update(amrex::MultiFab &nodaldata,const amrex::Real& dt, const amrex:
 void initialise_shape_function_indices(amrex::iMultiFab &shapefunctionindex,const amrex::Geometry geom);
 void nodal_bcs(const amrex::Geometry geom,amrex::MultiFab &nodaldata,int bclo[AMREX_SPACEDIM],
         int bchi[AMREX_SPACEDIM],const amrex::Real& dt);
-void nodal_levelset_bcs(amrex::MultiFab &nodaldata,amrex::Real& dt);
+void nodal_levelset_bcs(amrex::MultiFab &nodaldata,const amrex::Geometry geom,amrex::Real& dt,int slip);
 
 #endif

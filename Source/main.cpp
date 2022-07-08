@@ -60,7 +60,7 @@ int main (int argc, char* argv[])
                                  specs.autogen_vel.data(),specs.autogen_dens,specs.autogen_constmodel,
                                  specs.autogen_E,specs.autogen_nu,
                                  specs.autogen_bulkmod,specs.autogen_Gama_pres,specs.autogen_visc,
-                                 1,specs.total_mass,specs.total_vol);
+                                 specs.autogen_multi_part_per_cell,specs.total_mass,specs.total_vol);
 
         }
 
@@ -235,7 +235,7 @@ int main (int argc, char* argv[])
 
             if(mpm_ebtools::using_levelset_geometry)
             {
-                nodal_levelset_bcs(nodaldata,dt);
+                nodal_levelset_bcs(nodaldata,geom,dt,specs.levelset_slip_bc);
             }
 
             //Calculate velocity diff
@@ -264,7 +264,7 @@ int main (int argc, char* argv[])
                 
                 if(mpm_ebtools::using_levelset_geometry)
                 {
-                    nodal_levelset_bcs(nodaldata,dt);
+                    nodal_levelset_bcs(nodaldata,geom,dt,specs.levelset_slip_bc);
                 }
             }
 
