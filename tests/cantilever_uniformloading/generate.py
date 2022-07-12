@@ -41,9 +41,6 @@ ncells=ncells*refine
 dx=(prob_hi-prob_lo)/ncells;
 npart=0;
 
-E=6e7
-nu=0.0
-
 outfile=open("mpm_particles.dat","w")
 phase=0
 dens=1000.0
@@ -73,7 +70,6 @@ for k in range(ncells[2]):
                             str+="%d\t%e\t%e\t%e\t"%(phase,partx,party,partz)
                             str+="%e\t%e\t"%(radmpm,dens)
                             str+="%e\t%e\t%e\n"%(0.0,0.0,0.0)
-                            str+="%d\t%e\t%e\n"%(0,E,nu)
 
 
 

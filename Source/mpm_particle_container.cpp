@@ -73,7 +73,7 @@ void MPMParticleContainer::apply_constitutive_model(const amrex::Real& dt,
             	{
             		p_inf=1e5;
             	}*/
-            	p.rdata(realData::pressure) = p.rdata(realData::Bulk_modulus)*
+            	p.rdata(realData::pressure) = p.rdata(realData::Bulk_modulous)*
                     (pow(1/p.rdata(realData::jacobian),p.rdata(realData::Gama_pressure))-1.0)+p_inf;
             	Newtonian_Fluid(strainrate,stress,p.rdata(realData::Dynamic_viscosity),p.rdata(realData::pressure));
             }

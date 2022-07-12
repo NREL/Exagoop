@@ -120,7 +120,7 @@ void MPMParticleContainer::writeParticles(const int n)
     real_data_names.push_back("vol_init");
     real_data_names.push_back("E");
     real_data_names.push_back("nu");
-    real_data_names.push_back("Bulk_modulus");
+    real_data_names.push_back("Bulk_modulous");
     real_data_names.push_back("Gama_pressure");
     real_data_names.push_back("Dynamic_viscosity");
     real_data_names.push_back("void_ratio");
@@ -142,7 +142,7 @@ void MPMParticleContainer::writeParticles(const int n)
     writeflags_real[realData::vol_init]=1;
     writeflags_real[realData::E]=0;
     writeflags_real[realData::nu]=0;
-    writeflags_real[realData::Bulk_modulus]=0;
+    writeflags_real[realData::Bulk_modulous]=0;
     writeflags_real[realData::Gama_pressure]=0;
     writeflags_real[realData::Dynamic_viscosity]=0;
     writeflags_real[realData::void_ratio]=1;
