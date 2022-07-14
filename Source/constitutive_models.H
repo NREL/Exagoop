@@ -181,9 +181,23 @@ void GB_hypoplastic(amrex::Real eps_dot[NCOMP_TENSOR],
             */
         }
     }
+    else{
+         if(e>e_i0){
+            //amrex::Print()<<"\n Void ratio exeeds upper bond: "<<e<<"(e_i0="<<e_i0<<");";
+            e = e_i0;
+        }
+        else if (e<e_d0){
+            //amrex::Print()<<"\n Void ratio exeeds lower bond: "<<e<<"(e_d0="<<e_d0<<");";
+            e = e_d0;
+        }
+    }
+    /*
     else {
         //amrex::Print()<<"\n trace equals "<<trace_sigma;
         amrex::Print()<<"\n trace greater than or equals to zero , then set to : "<<trace_sigma;
+        for(int i=0; i<NCOMP_TENSOR; i++){
+            amrex::Print()<<"\n____sigma_old["<<i<<"] = "<<sigma[i];
+        }
         amrex::Real a_1 = 1.0/c_1;
         if(e>e_i0){
             //amrex::Print()<<"\n Void ratio exeeds upper bond: "<<e<<"(e_i0="<<e_i0<<");";
@@ -194,16 +208,17 @@ void GB_hypoplastic(amrex::Real eps_dot[NCOMP_TENSOR],
             e = e_d0;
         }
         amrex::Real f_e = pow(e_c0/e, beta);// modified e_c to equal to e_c0 when trace_sigma == 0;
-        amrex::Real f_b = pow(e_i0/e_c0, beta)*(h_s/(n*h_i));
+        amrex::Real f_b = pow(e_i0/e_c0, beta)*(h_s/(n*h_i))*((1+e_i0)/e_i0)*pow(-trace_sigma/h_s,1-n);
         amrex::Real f_s = f_b*f_e;
 
         for(int i=0; i<NCOMP_TENSOR; i++){
             L[i] = pow(a_1,2)*eps_dot[i];
             sigma_dot[i] = f_s*L[i];
             sigma[i] = sigma[i]+sigma_dot[i]*dt;
-            //amrex::Print()<<"\nsigma["<<i<<"] = "<<sigma[i];
+            amrex::Print()<<"\nsigma["<<i<<"] = "<<sigma[i];
         }
-    }
+
+    }*/
 
 }
 #endif
