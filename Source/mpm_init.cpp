@@ -61,7 +61,7 @@ void MPMParticleContainer::InitParticles (const std::string& filename,Real *tota
             {
             	ifs >> p.rdata(realData::E);
             	ifs >> p.rdata(realData::nu);
-            	p.rdata(realData::Bulk_modulous)=0.0;
+            	p.rdata(realData::Bulk_modulus)=0.0;
             	p.rdata(realData::Gama_pressure)=0.0;
             	p.rdata(realData::Dynamic_viscosity)=0.0;
                 p.rdata(realData::void_ratio)=0.0;
@@ -70,7 +70,7 @@ void MPMParticleContainer::InitParticles (const std::string& filename,Real *tota
             {
             	p.rdata(realData::E)=0.0;
             	p.rdata(realData::nu)=0.0;
-            	ifs >> p.rdata(realData::Bulk_modulous);
+            	ifs >> p.rdata(realData::Bulk_modulus);
             	ifs >> p.rdata(realData::Gama_pressure);
             	ifs >> p.rdata(realData::Dynamic_viscosity);
                 p.rdata(realData::void_ratio)=0.0;
@@ -79,7 +79,7 @@ void MPMParticleContainer::InitParticles (const std::string& filename,Real *tota
             {
             	p.rdata(realData::E)=0.0;
             	p.rdata(realData::nu)=0.0;
-                p.rdata(realData::Bulk_modulous)=0.0;
+                p.rdata(realData::Bulk_modulus)=0.0;
             	p.rdata(realData::Gama_pressure)=0.0;
             	p.rdata(realData::Dynamic_viscosity)=0.0;
             	ifs >> p.rdata(realData::void_ratio);
@@ -98,23 +98,26 @@ void MPMParticleContainer::InitParticles (const std::string& filename,Real *tota
             p.rdata(realData::jacobian)	   = 1.0;
             p.rdata(realData::vol_init)	   = 0.0;
 
-
+            double initial_strainrate = zero;
+            double initial_strain = zero;
+            double initial_stress = zero;
+            /*
+            if(p.idata(intData::constitutive_model)==2){
+                initial_strainrate = zero;
+                initial_strain = zero;
+                initial_stress = -1e-20;
+            }
+            */
             for(int comp=0;comp<NCOMP_TENSOR;comp++)
             {
-                if(p.idata(intData::constitutive_model)==2){
-                    p.rdata(realData::strainrate+comp) = TINYVAL;
-                    p.rdata(realData::strain+comp)     = TINYVAL;
-                    p.rdata(realData::stress+comp)     = 5.0;
-                }
-                else{
-                    p.rdata(realData::strainrate+comp) = zero;
-                    p.rdata(realData::strain+comp)     = zero;
-                    p.rdata(realData::stress+comp)     = zero;
-                }
-                
+                p.rdata(realData::strainrate+comp) = initial_strainrate;
+                p.rdata(realData::strain+comp)     = initial_strain;
+                p.rdata(realData::stress+comp)     = initial_stress; 
             }
             
             host_particles.push_back(p);
+
+            //amrex::Print()<<"\n constitutive model = "<<p.idata(intData::constitutive_model)<<", init_stress_xx = "<<p.rdata(realData::stress);
 
             if (!ifs.good())
             {

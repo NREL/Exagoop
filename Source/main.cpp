@@ -100,12 +100,12 @@ int main (int argc, char* argv[])
 
 
         mpm_pc.apply_constitutive_model(dt,specs.applied_strainrate);
-
+        //amrex::Print()<<"\n constitutive applied: initial.";
         if(specs.dens_field_output)
         {
            mpm_pc.update_density_field(dens_field_data,specs.dens_field_gridratio,specs.smoothfactor);
         }
-
+        //amrex::Print()<<"\n passed update density field.";
         //Quantities for elastic disk collisions
         Real TKE=0.0;
         Real TSE=0.0;
@@ -166,6 +166,7 @@ int main (int argc, char* argv[])
             time += dt;
             output_time += dt;
             output_timePrint += dt;
+            //amrex::Print()<<"\n step: "<<steps<<", dt = "<< dt <<" . in while loop.";
 
             if (output_timePrint > specs.screen_output_time)
             {
@@ -217,13 +218,15 @@ int main (int argc, char* argv[])
 
             //Update particle velocity at time t+dt
             mpm_pc.updateNeighbors();
+            //amrex::Print()<<"\n before interpolate.";
             mpm_pc.interpolate_from_grid(nodaldata,1,0,
                     specs.order_scheme,specs.alpha_pic_flip);
+            //amrex::Print()<<"\n after interpolate from grid";
             mpm_pc.updateNeighbors();
 
             //Update particle position at t+dt
             mpm_pc.moveParticles(dt,specs.bclo.data(),specs.bchi.data());
-
+            //amrex::Print()<<"\n after update particle position";
             if(specs.stress_update_scheme==1)										
             {
                 //MUSL scheme
@@ -238,7 +241,9 @@ int main (int argc, char* argv[])
             }
 
             //find strainrate at material points at time t+dt
+            //amrex::Print()<<"\n find strainrate at material points at time t+dt";
             mpm_pc.interpolate_from_grid(nodaldata,0,1,specs.order_scheme,specs.alpha_pic_flip);
+            //amrex::Print()<<"\n after interpolate_from_grid";
             mpm_pc.updateNeighbors();
 
             //mpm_pc.move_particles_from_nodevel(nodaldata,dt,specs.bclo.data(),specs.bchi.data(),1);

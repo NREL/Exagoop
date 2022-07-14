@@ -56,6 +56,7 @@ void MPMParticleContainer::apply_constitutive_model(const amrex::Real& dt,
             {
                 strainrate[d]=p.rdata(realData::strainrate+d);
                 strain[d]=p.rdata(realData::strain+d);
+                stress[d]=p.rdata(realData::stress+d);
             }
 
 
@@ -63,7 +64,7 @@ void MPMParticleContainer::apply_constitutive_model(const amrex::Real& dt,
             {
             	linear_elastic(strain,strainrate,stress,p.rdata(realData::E),p.rdata(realData::nu));
             }
-            else if(p.idata(intData::constitutive_model==1))		//Viscous fluid with approximate EoS
+            else if(p.idata(intData::constitutive_model)==1)		//Viscous fluid with approximate EoS
             {
             	/*if(p.rdata(realData::Gama_pressure)==1.4)
             	{
@@ -73,15 +74,22 @@ void MPMParticleContainer::apply_constitutive_model(const amrex::Real& dt,
             	{
             		p_inf=1e5;
             	}*/
-            	p.rdata(realData::pressure) = p.rdata(realData::Bulk_modulous)*
+                //amrex::Print()<<"\n this is newtonian!";
+            	p.rdata(realData::pressure) = p.rdata(realData::Bulk_modulus)*
                     (pow(1/p.rdata(realData::jacobian),p.rdata(realData::Gama_pressure))-1.0)+p_inf;
             	Newtonian_Fluid(strainrate,stress,p.rdata(realData::Dynamic_viscosity),p.rdata(realData::pressure));
             }
-            else if(p.idata(intData::constitutive_model==2))		//Yudong: GB hypoplastic model for granular flow
+            else if(p.idata(intData::constitutive_model)==2)		//Yudong: GB hypoplastic model for granular flow
             {
                 //GB hypoplastic model here.
-                
-                GB_hypoplastic(strainrate,stress,dt, p.rdata(realData::void_ratio));
+                amrex::Real e = p.rdata(realData::void_ratio);
+                amrex::Real e_before = e;
+                //amrex::Print()<<"\n e:" <<e <<", particle trace stress: "<< stress[XX]+stress[YY]+stress[ZZ];
+                GB_hypoplastic(strainrate,stress,dt, e);
+                //if(e != e_before){
+                //    amrex::Print()<<"\n set void ratio to correct range. Original e="<< e_before <<" vs Corrected e=" << e;
+                //}
+                p.rdata(realData::void_ratio) = e;
             }
 
             for(int d=0;d<NCOMP_TENSOR;d++)

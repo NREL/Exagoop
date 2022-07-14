@@ -8,10 +8,10 @@ mpm.is_it_periodic = 0  0  1
 mpm.fixed_timestep = 1  #1=> fixed time step, 0=> CFL based adaptive time step
 mpm.final_time=5
 mpm.max_steps=1000000
-mpm.write_output_time=0.01
+mpm.write_output_time=1e-2
 mpm.num_redist = 1
-mpm.timestep = 0.00005
-mpm.screen_output_time = 0.001
+mpm.timestep = 5e-6
+mpm.screen_output_time = 1e-3
 mpm.gravity = 0.0 -9.81 0.0
 mpm.dtmin=1e-5
 mpm.CFL=0.1

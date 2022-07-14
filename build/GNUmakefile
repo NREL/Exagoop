@@ -7,7 +7,7 @@ DEBUG	= FALSE
 
 DIM	= 3
 
-COMP    = llvm
+COMP    = gnu
 
 USE_MPI   = FALSE
 USE_OMP   = FALSE

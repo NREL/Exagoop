@@ -27,7 +27,7 @@ struct realData
         vol_init=27,
         E=28,
         nu=29,
-        Bulk_modulous=30,
+        Bulk_modulus=30,
         Gama_pressure=31,
         Dynamic_viscosity=32,
         void_ratio=33, // for hypoplastic model

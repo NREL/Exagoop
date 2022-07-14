@@ -16,7 +16,7 @@ amrex::Real MPMParticleContainer::Calculate_time_step()
         amrex::Real Cs;
         if(p.idata(intData::constitutive_model)==1)
         {
-            Cs = sqrt(p.rdata(realData::Bulk_modulous)/p.rdata(realData::density));
+            Cs = sqrt(p.rdata(realData::Bulk_modulus)/p.rdata(realData::density));
         }
         else if(p.idata(intData::constitutive_model)==0)
         {
@@ -82,7 +82,7 @@ void MPMParticleContainer::updatevolume(const amrex::Real& dt)
             p.rdata(realData::density)	= p.rdata(realData::mass)/p.rdata(realData::volume);
             // Yudong: add void ratio evolution for hypoplastic model
             p.rdata(realData::void_ratio) += (p.rdata(realData::strainrate+XX)
-            +p.rdata(realData::strainrate+YY)+p.rdata(realData::strainrate+ZZ))  * (1+p.rdata(realData::void_ratio))* dt;
+            +p.rdata(realData::strainrate+YY)+p.rdata(realData::strainrate+ZZ))  * (1 +p.rdata(realData::void_ratio))* dt;
 
         });
     }

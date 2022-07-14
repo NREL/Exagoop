@@ -1,0 +1,10 @@
+ 0: amrex::BLBackTrace::print_backtrace_info(__sFILE*) (in mpm3d.gnu.ex) (AMReX_BLBackTrace.cpp:175)
+
+ 1: amrex::BLBackTrace::handler(int) (in mpm3d.gnu.ex) (AMReX_BLBackTrace.cpp:85)
+
+ 2: _sigtramp (in libsystem_platform.dylib) + 29
+
+ 4: MPMParticleContainer::deposit_onto_grid(amrex::MultiFab&, std::array<double, 3ul>, int, std::array<double, 3ul>, std::array<double, 3ul>, std::array<double, 3ul>, int, int, double, int) (in mpm3d.gnu.ex) (AMReX_GpuLaunchFunctsC.H:81)
+
+ 5: main (in mpm3d.gnu.ex) (main.cpp:212)
+
