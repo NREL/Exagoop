@@ -99,11 +99,13 @@ void MPMParticleContainer::InitParticles (const std::string& filename,Real *tota
             p.rdata(realData::vol_init)	   = 0.0;
 
             double initial_strainrate = zero;
+            double initial_spinrate = zero;
             double initial_strain = zero;
             double initial_stress = zero;
             
             if(p.idata(intData::constitutive_model)==2){
                 initial_strainrate = zero;
+                initial_spinrate = zero;
                 initial_strain = zero;
                 initial_stress = -10; // initial stress provide by input
             }
@@ -111,6 +113,7 @@ void MPMParticleContainer::InitParticles (const std::string& filename,Real *tota
             for(int comp=0;comp<NCOMP_TENSOR;comp++)
             {
                 p.rdata(realData::strainrate+comp) = initial_strainrate;
+                p.rdata(realData::spinrate+comp) = initial_spinrate;
                 p.rdata(realData::strain+comp)     = initial_strain;
                 p.rdata(realData::stress+comp)     = initial_stress; 
             }

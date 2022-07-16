@@ -3,6 +3,7 @@
 
 #include<constants.H>
 #include <AMReX.H>
+#include<interpolants.H>
 
 AMREX_GPU_DEVICE AMREX_FORCE_INLINE
 void linear_elastic(amrex::Real eps[NCOMP_TENSOR],
@@ -57,20 +58,33 @@ void Newtonian_Fluid(amrex::Real epsdot[NCOMP_TENSOR],
  */
 AMREX_GPU_DEVICE AMREX_FORCE_INLINE
 void GB_hypoplastic(amrex::Real eps_dot[NCOMP_TENSOR],
+        amrex::Real omega_dot[NCOMP_TENSOR],
         amrex::Real sigma[NCOMP_TENSOR],
         amrex::Real dt,
         amrex::Real &e)
 {
+    
     // normalized stress tensor
     amrex::Real sigma_hat[NCOMP_TENSOR]; 
     // normalized deviatoric stress tenstor
     amrex::Real sigma_hat_star[NCOMP_TENSOR];
+    // Jaumann stress rate
+    amrex::Real sigma_o[NCOMP_TENSOR];
     // stress rate tensor
     amrex::Real sigma_dot[NCOMP_TENSOR];
     // identity matrix upper
     amrex::Real Identity[NCOMP_TENSOR] = {1.0,0,0,1.0,0,1.0};
     // void ratio
     //amrex::Real e;
+
+    //get tensors for computation of stress rate
+    amrex::Real tensor_Jaumann[AMREX_SPACEDIM*AMREX_SPACEDIM];
+    amrex::Real tensor_spin[AMREX_SPACEDIM*AMREX_SPACEDIM];
+    amrex::Real tensor_stress[AMREX_SPACEDIM*AMREX_SPACEDIM];
+
+    // intermediate products
+    amrex::Real tensor_omega_dot_sigma[AMREX_SPACEDIM*AMREX_SPACEDIM];
+    amrex::Real tensor_sigma_dot_omega[AMREX_SPACEDIM*AMREX_SPACEDIM];
 
     // Linear contribution
     amrex::Real L[NCOMP_TENSOR];
@@ -171,8 +185,7 @@ void GB_hypoplastic(amrex::Real eps_dot[NCOMP_TENSOR],
             N[i] = a_1*(sigma_hat[i]+sigma_hat_star[i]);
             // linear contribution
             L[i] = pow(a_1,2)*eps_dot[i]+sigma_hat[i]*trace_sigma_hat_dot_eps_dot;
-            sigma_dot[i] = f_s*(L[i]+f_d*N[i]*modulus_eps_dot);
-            sigma[i] = sigma[i]+sigma_dot[i]*dt;
+            sigma_o[i] = f_s*(L[i]+f_d*N[i]*modulus_eps_dot);
             /*
             amrex::Print()<<"\nN["<<i<<"] = "<<N[i];
             amrex::Print()<<"\nL["<<i<<"] = "<<L[i];
@@ -180,6 +193,26 @@ void GB_hypoplastic(amrex::Real eps_dot[NCOMP_TENSOR],
             amrex::Print()<<"\nsigma["<<i<<"] = "<<sigma[i];
             */
         }
+        
+        get_antisymettric_tensor(omega_dot,tensor_spin);
+        get_tensor_from_array(sigma, tensor_stress);
+        get_tensor_from_array(sigma_o, tensor_Jaumann);
+        
+        tensor_tensor_dot_product(tensor_spin,tensor_stress,tensor_omega_dot_sigma);
+        tensor_tensor_dot_product(tensor_stress,tensor_spin,tensor_sigma_dot_omega);
+        
+        int index = 0;
+        for(int i=0; i<AMREX_SPACEDIM; i++){
+            for(int j=i; j<AMREX_SPACEDIM; j++){
+                sigma_dot[index] = tensor_Jaumann[i*AMREX_SPACEDIM+j]
+                                 + tensor_omega_dot_sigma[i*AMREX_SPACEDIM+j]
+                                 - tensor_sigma_dot_omega[i*AMREX_SPACEDIM+j];
+                sigma[index] = sigma[index]+sigma_dot[index]*dt;
+                index++;
+            }   
+        }
+        //sigma_dot[i] = 
+        //sigma[i] = sigma[i]+sigma_dot[i]*dt;
     }
     else{
         if(e>e_i0){

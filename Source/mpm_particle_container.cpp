@@ -40,6 +40,7 @@ void MPMParticleContainer::apply_constitutive_model(const amrex::Real& dt,
 
             amrex::Real xp[AMREX_SPACEDIM];
             amrex::Real strainrate[NCOMP_TENSOR];
+            amrex::Real spinrate[NCOMP_TENSOR];
             amrex::Real strain[NCOMP_TENSOR];
             amrex::Real stress[NCOMP_TENSOR];
 
@@ -55,6 +56,7 @@ void MPMParticleContainer::apply_constitutive_model(const amrex::Real& dt,
             for(int d=0;d<NCOMP_TENSOR;d++)
             {
                 strainrate[d]=p.rdata(realData::strainrate+d);
+                spinrate[d]=p.rdata(realData::spinrate+d);
                 strain[d]=p.rdata(realData::strain+d);
                 stress[d]=p.rdata(realData::stress+d);
             }
@@ -85,7 +87,7 @@ void MPMParticleContainer::apply_constitutive_model(const amrex::Real& dt,
                 amrex::Real e = p.rdata(realData::void_ratio);
                 amrex::Real e_before = e;
                 //amrex::Print()<<"\n e:" <<e <<", particle trace stress: "<< stress[XX]+stress[YY]+stress[ZZ];
-                GB_hypoplastic(strainrate,stress,dt, e);
+                GB_hypoplastic(strainrate,spinrate,stress,dt, e);
                 //if(e != e_before){
                 //    amrex::Print()<<"\n set void ratio to correct range. Original e="<< e_before <<" vs Corrected e=" << e;
                 //}

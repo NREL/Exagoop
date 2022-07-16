@@ -123,6 +123,10 @@ void MPMParticleContainer::writeParticles(const int n)
     real_data_names.push_back("Bulk_modulus");
     real_data_names.push_back("Gama_pressure");
     real_data_names.push_back("Dynamic_viscosity");
+    for(int i=0;i<6;i++)
+    {
+        real_data_names.push_back(amrex::Concatenate("spinrate_", i, 1));
+    }
     real_data_names.push_back("void_ratio");
 
     int_data_names.push_back("phase");

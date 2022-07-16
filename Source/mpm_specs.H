@@ -30,7 +30,8 @@ struct realData
         Bulk_modulus=30,
         Gama_pressure=31,
         Dynamic_viscosity=32,
-        void_ratio=33, // for hypoplastic model
+        spinrate=33, //rate of rotation; this tensor is anti-symmetric, to better utilize existing code, we store the upper half matrix [XX, XY, XZ, YY, YZ, ZZ] (XX YY ZZ === 0)
+        void_ratio=39, // for hypoplastic model
         count
     };
 };
