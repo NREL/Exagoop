@@ -90,6 +90,7 @@ void MPMParticleContainer::InitParticles (const std::string& filename,
             total_vol +=p.rdata(realData::volume);
             p.rdata(realData::jacobian)	   = 1.0;
             p.rdata(realData::vol_init)	   = 0.0;
+            p.rdata(realData::pressure)    = 0.0;
 
 
             for(int comp=0;comp<NCOMP_TENSOR;comp++)
@@ -255,8 +256,10 @@ MPMParticleContainer::ParticleType MPMParticleContainer::generate_particle
     p.rdata(realData::Gama_pressure)=Gama_pres;
     p.rdata(realData::Dynamic_viscosity)=visc;
 
+    p.rdata(realData::volume)=vol;	
     p.rdata(realData::mass)=dens*vol;
     p.rdata(realData::jacobian)=1.0;
+    p.rdata(realData::pressure)=0.0;
     p.rdata(realData::vol_init)=0.0;
     
     for(int comp=0;comp<NCOMP_TENSOR;comp++)

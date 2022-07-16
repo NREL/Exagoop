@@ -212,23 +212,20 @@ void nodal_update(MultiFab &nodaldata,const amrex::Real& dt, const amrex::Real& 
         amrex::ParallelFor(nodalbox,[=]
         AMREX_GPU_DEVICE (int i,int j,int k) noexcept
         {
-            if(nodal_data_arr(i,j,k,MASS_INDEX) > zero)
+            if(nodal_data_arr(i,j,k,MASS_INDEX) >=mass_tolerance)
             {
                 for(int d=0;d<AMREX_SPACEDIM;d++)
                 {
-                    if(nodal_data_arr(i,j,k,MASS_INDEX)>=mass_tolerance)
-                    {
                         nodal_data_arr(i,j,k,VELX_INDEX+d) += 
                         nodal_data_arr(i,j,k,FRCX_INDEX+d)/nodal_data_arr(i,j,k,MASS_INDEX)*dt;
-                    }
-                    else
-                    {
-                        nodal_data_arr(i,j,k,VELX_INDEX+d) = 0.0;
-                    }
-
                 }
             }
-
+            else
+            {
+                nodal_data_arr(i,j,k,VELX_INDEX) = 0.0;
+                nodal_data_arr(i,j,k,VELY_INDEX) = 0.0;
+                nodal_data_arr(i,j,k,VELZ_INDEX) = 0.0;
+            }
         });
     }
 }

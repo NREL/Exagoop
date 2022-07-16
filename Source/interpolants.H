@@ -67,6 +67,7 @@ AMREX_GPU_DEVICE AMREX_FORCE_INLINE
     beta  = (xp[YDIR]-(plo[YDIR]+j*dx[YDIR]))/dx[YDIR];
     gama  = (xp[ZDIR]-(plo[ZDIR]+k*dx[ZDIR]))/dx[ZDIR];
 
+
     value += (1.0-alpha) * (1-beta) * (1-gama) * nodaldata(i,j,k,comp);
     value += alpha       * (1-beta) * (1-gama) * nodaldata(i+1,j,k,comp);
     value += (1.0-alpha) * beta     * (1-gama) * nodaldata(i,j+1,k,comp);
@@ -320,6 +321,10 @@ AMREX_GPU_DEVICE AMREX_FORCE_INLINE
 {
     amrex::Real lval,mval,nval;
     amrex::Real rx,ry,rz;
+
+    lval=0.0;
+    mval=0.0;
+    nval=0.0;
     
     int shapefunctype;
 
@@ -550,6 +555,10 @@ AMREX_GPU_DEVICE AMREX_FORCE_INLINE
 			nval=cubicspline_1d(shapefunctype,rz);
 		}
 
+    }
+    else
+    {
+        amrex::Abort("order scheme not implemented yet\n");
     }
     return(lval*mval*nval);
 }

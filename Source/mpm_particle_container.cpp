@@ -63,7 +63,7 @@ void MPMParticleContainer::apply_constitutive_model(const amrex::Real& dt,
             {
             	linear_elastic(strain,strainrate,stress,p.rdata(realData::E),p.rdata(realData::nu));
             }
-            else if(p.idata(intData::constitutive_model==1))		//Viscous fluid with approximate EoS
+            else if(p.idata(intData::constitutive_model)==1)		//Viscous fluid with approximate EoS
             {
             	/*if(p.rdata(realData::Gama_pressure)==1.4)
             	{
