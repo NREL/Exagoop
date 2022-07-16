@@ -182,7 +182,7 @@ void GB_hypoplastic(amrex::Real eps_dot[NCOMP_TENSOR],
         }
     }
     else{
-         if(e>e_i0){
+        if(e>e_i0){
             //amrex::Print()<<"\n Void ratio exeeds upper bond: "<<e<<"(e_i0="<<e_i0<<");";
             e = e_i0;
         }
