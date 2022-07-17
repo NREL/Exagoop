@@ -61,7 +61,9 @@ void GB_hypoplastic(amrex::Real eps_dot[NCOMP_TENSOR],
         amrex::Real omega_dot[NCOMP_TENSOR],
         amrex::Real sigma[NCOMP_TENSOR],
         amrex::Real dt,
-        amrex::Real &e)
+        amrex::Real &e,
+        MPMspecs specs
+        )
 {
     
     // normalized stress tensor
@@ -91,15 +93,15 @@ void GB_hypoplastic(amrex::Real eps_dot[NCOMP_TENSOR],
     // Nonlinear contribution
     amrex::Real N[NCOMP_TENSOR];
 
-    // hard code GB parameters for now. Should be inited from input files.
-    const double phi_c = 30.0; // critical state internal friction angle
-    const double h_s = 5800.0; // granular hardness
-    const double n = 0.28; // pressure sensitive exponent : G paper says range (0.3, 0.5)
-    const double e_d0 = 0.53; // material constant for minimum void ratio
-    const double e_c0 = 0.84; // material constant for critical void ratio
-    const double e_i0 = 1.0; // material constant for maximum void ratio
-    const double alpha = 0.13; //material constant (0.1, 0.3)  
-    const double beta = 1.0; //material constant (1.0, 1.1)
+    // GH hypoplastic model parameters
+    amrex::Real phi_c = specs.GBparameters.phi_c; // critical state internal friction angle
+    amrex::Real h_s = specs.GBparameters.h_s; // granular hardness
+    amrex::Real n = specs.GBparameters.n; // pressure sensitive exponent : G paper says range (0.3, 0.5)
+    amrex::Real e_d0 = specs.GBparameters.e_d0; // material constant for minimum void ratio
+    amrex::Real e_c0 = specs.GBparameters.e_c0; // material constant for critical void ratio
+    amrex::Real e_i0 = specs.GBparameters.e_i0; // material constant for maximum void ratio
+    amrex::Real alpha = specs.GBparameters.alpha; //material constant (0.1, 0.3)  
+    amrex::Real beta = specs.GBparameters.beta; //material constant (1.0, 1.1)
 
     // compute some varaibles
     amrex::Real trace_eps_dot=eps_dot[XX]+eps_dot[YY]+eps_dot[ZZ];
@@ -194,7 +196,7 @@ void GB_hypoplastic(amrex::Real eps_dot[NCOMP_TENSOR],
             */
         }
         
-        get_antisymettric_tensor(omega_dot,tensor_spin);
+        get_antisymmetric_tensor(omega_dot,tensor_spin);
         get_tensor_from_array(sigma, tensor_stress);
         get_tensor_from_array(sigma_o, tensor_Jaumann);
         

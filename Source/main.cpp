@@ -99,7 +99,7 @@ int main (int argc, char* argv[])
         dt=min(dt,specs.dtmin);
 
 
-        mpm_pc.apply_constitutive_model(dt,specs.applied_strainrate);
+        mpm_pc.apply_constitutive_model(specs,dt,specs.applied_strainrate);
         //amrex::Print()<<"\n constitutive applied: initial.";
         if(specs.dens_field_output)
         {
@@ -253,11 +253,11 @@ int main (int argc, char* argv[])
             if(time<specs.applied_strainrate_time)
             {
 
-                mpm_pc.apply_constitutive_model(dt,specs.applied_strainrate);
+                mpm_pc.apply_constitutive_model(specs,dt,specs.applied_strainrate);
             }
             else
             {
-                mpm_pc.apply_constitutive_model(dt,0.0);
+                mpm_pc.apply_constitutive_model(specs,dt,0.0);
             }
 
             if(specs.dens_field_output)

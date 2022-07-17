@@ -1,11 +1,14 @@
 #include <mpm_particle_container.H>
 #include <interpolants.H>
 #include <constitutive_models.H>
+#include<mpm_specs.H>
 
 using namespace amrex;
 
-void MPMParticleContainer::apply_constitutive_model(const amrex::Real& dt,
-                                                    amrex::Real applied_strainrate=0.0)
+void MPMParticleContainer::apply_constitutive_model(MPMspecs specs,
+                                                    const amrex::Real& dt,
+                                                    amrex::Real applied_strainrate=0.0
+                                                    )
 {
     const int lev = 0;
     const Geometry& geom = Geom(lev);
@@ -86,11 +89,7 @@ void MPMParticleContainer::apply_constitutive_model(const amrex::Real& dt,
                 //GB hypoplastic model here.
                 amrex::Real e = p.rdata(realData::void_ratio);
                 amrex::Real e_before = e;
-                //amrex::Print()<<"\n e:" <<e <<", particle trace stress: "<< stress[XX]+stress[YY]+stress[ZZ];
-                GB_hypoplastic(strainrate,spinrate,stress,dt, e);
-                //if(e != e_before){
-                //    amrex::Print()<<"\n set void ratio to correct range. Original e="<< e_before <<" vs Corrected e=" << e;
-                //}
+                GB_hypoplastic(strainrate,spinrate,stress,dt, e,specs);
                 p.rdata(realData::void_ratio) = e;
             }
 

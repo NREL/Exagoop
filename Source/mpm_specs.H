@@ -46,6 +46,7 @@ struct intData
     };
 };
 
+
 class MPMspecs
 {
     public:
@@ -87,7 +88,20 @@ class MPMspecs
         Real total_vol = 0.0;
         int stress_update_scheme=1;
         int print_diagnostics=0;
+        // material properties for granular material, default to sand.
+        struct GBHypoParameters{
+            Real phi_c = 30.0; // critical state internal friction angle
+            Real h_s = 5800.0; // granular hardness
+            Real n = 0.28; // pressure sensitive exponent : G paper says range (0.3, 0.5)
+            Real e_d0 = 0.53; // material constant for minimum void ratio
+            Real e_c0 = 0.84; // material constant for critical void ratio
+            Real e_i0 = 1.0; // material constant for maximum void ratio
+            Real alpha = 0.13; //material constant (0.1, 0.3)  
+            Real beta = 1.0; //material constant (1.0, 1.1)
+        } GBparameters;
+        int print_GBHypoParameters = 0;
         
+
         Vector<int> bclo;
         Vector<int> bchi;
 
@@ -169,6 +183,28 @@ class MPMspecs
             
             pp.queryarr("bc_lower",bclo);
             pp.queryarr("bc_upper",bchi);
+
+
+            ParmParse gbhp("GBHypoPlastic");
+            gbhp.query("critical_state_internal_friction_angle",GBparameters.phi_c);
+            gbhp.query("granular_hardness",GBparameters.h_s);
+            gbhp.query("n",GBparameters.n);
+            gbhp.query("min_void_ratio_0",GBparameters.e_d0);
+            gbhp.query("critical_void_ratio_0",GBparameters.e_c0);
+            gbhp.query("max_void_ratio_0",GBparameters.e_i0);
+            gbhp.query("alpha",GBparameters.alpha); 
+            gbhp.query("beta",GBparameters.beta);
+            gbhp.query("print_parameters",print_GBHypoParameters);
+            if(print_GBHypoParameters == 1){
+                amrex::Print()<<"\nGBhypoplastic parameters: friction angle = "<<GBparameters.phi_c<<";";
+                amrex::Print()<<"\nGBhypoplastic parameters: h_s = "<<GBparameters.h_s<<";";
+                amrex::Print()<<"\nGBhypoplastic parameters: n = "<<GBparameters.n<<";";
+                amrex::Print()<<"\nGBhypoplastic parameters: e_d0 = "<<GBparameters.e_d0<<";";
+                amrex::Print()<<"\nGBhypoplastic parameters: e_c0 = "<<GBparameters.e_c0<<";";
+                amrex::Print()<<"\nGBhypoplastic parameters: e_i0 = "<<GBparameters.e_i0<<";";
+                amrex::Print()<<"\nGBhypoplastic parameters: alpha = "<<GBparameters.alpha<<";";
+                amrex::Print()<<"\nGBhypoplastic parameters: beta = "<<GBparameters.beta<<";";
+            }    
         }
 };
 #endif

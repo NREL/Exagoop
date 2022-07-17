@@ -955,14 +955,14 @@ AMREX_GPU_DEVICE AMREX_FORCE_INLINE
 }
 
 /**
- * @brief Use for matrix calculation with spin tensor: Get the antisymettric tensor object based on upper diagonal tensor, 
+ * @brief Use for matrix calculation with spin tensor: Get the antisymmetric tensor object based on upper diagonal tensor, 
  * 
  * @param omega_dot : spin tensor
  * @param tens : complete tensor for spin rate
  * @return AMREX_GPU_DEVICE 
  */
 AMREX_GPU_DEVICE AMREX_FORCE_INLINE
-        void get_antisymettric_tensor(amrex::Real omega_dot[NCOMP_TENSOR],
+        void get_antisymmetric_tensor(amrex::Real omega_dot[NCOMP_TENSOR],
                 amrex::Real tens[AMREX_SPACEDIM*AMREX_SPACEDIM])
 {
    int ind=0;
