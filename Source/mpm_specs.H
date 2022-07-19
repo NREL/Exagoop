@@ -30,6 +30,8 @@ struct realData
         Bulk_modulus=30,
         Gama_pressure=31,
         Dynamic_viscosity=32,
+        spinrate=33, //rate of rotation; this tensor is anti-symmetric, to better utilize existing code, we store the upper half matrix [XX, XY, XZ, YY, YZ, ZZ] (XX YY ZZ === 0)
+        void_ratio=39, // for hypoplastic model
         count
     };
 };
@@ -104,6 +106,19 @@ class MPMspecs
 
         int levelset_slip_bc=0;
 
+         // material properties for granular material, default to sand.
+        struct GBHypoParameters{
+            Real phi_c = 30.0; // critical state internal friction angle
+            Real h_s = 5800.0; // granular hardness
+            Real n = 0.28; // pressure sensitive exponent : G paper says range (0.3, 0.5)
+            Real e_d0 = 0.53; // material constant for minimum void ratio
+            Real e_c0 = 0.84; // material constant for critical void ratio
+            Real e_i0 = 1.0; // material constant for maximum void ratio
+            Real alpha = 0.13; //material constant (0.1, 0.3)  
+            Real beta = 1.0; //material constant (1.0, 1.1)
+        } GBparameters;
+        int print_GBHypoParameters = 0;
+
         void read_mpm_specs()
         {
             bclo.resize(AMREX_SPACEDIM);
@@ -136,7 +151,7 @@ class MPMspecs
 
             pp.query("use_autogen",use_autogen);
 
-            if(!use_autogen)
+            if(use_autogen == 0)
             {
             particlefilename="mpm_particles.dat";
             pp.query("particle_file",particlefilename);
@@ -207,6 +222,27 @@ class MPMspecs
             pp.queryarr("bc_upper",bchi);
 
             pp.query("levelset_slip_bc",levelset_slip_bc);
+
+            ParmParse gbhp("GBHypoPlastic");
+            gbhp.query("critical_state_internal_friction_angle",GBparameters.phi_c);
+            gbhp.query("granular_hardness",GBparameters.h_s);
+            gbhp.query("n",GBparameters.n);
+            gbhp.query("min_void_ratio_0",GBparameters.e_d0);
+            gbhp.query("critical_void_ratio_0",GBparameters.e_c0);
+            gbhp.query("max_void_ratio_0",GBparameters.e_i0);
+            gbhp.query("alpha",GBparameters.alpha); 
+            gbhp.query("beta",GBparameters.beta);
+            gbhp.query("print_parameters",print_GBHypoParameters);
+            if(print_GBHypoParameters == 1){
+                amrex::Print()<<"\nGBhypoplastic parameters: friction angle = "<<GBparameters.phi_c<<";";
+                amrex::Print()<<"\nGBhypoplastic parameters: h_s = "<<GBparameters.h_s<<";";
+                amrex::Print()<<"\nGBhypoplastic parameters: n = "<<GBparameters.n<<";";
+                amrex::Print()<<"\nGBhypoplastic parameters: e_d0 = "<<GBparameters.e_d0<<";";
+                amrex::Print()<<"\nGBhypoplastic parameters: e_c0 = "<<GBparameters.e_c0<<";";
+                amrex::Print()<<"\nGBhypoplastic parameters: e_i0 = "<<GBparameters.e_i0<<";";
+                amrex::Print()<<"\nGBhypoplastic parameters: alpha = "<<GBparameters.alpha<<";";
+                amrex::Print()<<"\nGBhypoplastic parameters: beta = "<<GBparameters.beta<<";";
+            }    
         }
 };
 #endif

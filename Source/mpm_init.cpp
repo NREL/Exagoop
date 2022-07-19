@@ -67,6 +67,7 @@ void MPMParticleContainer::InitParticles (const std::string& filename,
             	p.rdata(realData::Bulk_modulus)=0.0;
             	p.rdata(realData::Gama_pressure)=0.0;
             	p.rdata(realData::Dynamic_viscosity)=0.0;
+                p.rdata(realData::void_ratio)=0.0;
             }
             else if(p.idata(intData::constitutive_model)==1)
             {
@@ -75,6 +76,16 @@ void MPMParticleContainer::InitParticles (const std::string& filename,
             	ifs >> p.rdata(realData::Bulk_modulus);
             	ifs >> p.rdata(realData::Gama_pressure);
             	ifs >> p.rdata(realData::Dynamic_viscosity);
+                p.rdata(realData::void_ratio)=0.0;
+            }
+            else if(p.idata(intData::constitutive_model)==2) // Yudong: hypoplastic model
+            {
+            	p.rdata(realData::E)=0.0;
+            	p.rdata(realData::nu)=0.0;
+                p.rdata(realData::Bulk_modulus)=0.0;
+            	p.rdata(realData::Gama_pressure)=0.0;
+            	p.rdata(realData::Dynamic_viscosity)=0.0;
+            	ifs >> p.rdata(realData::void_ratio);
             }
             else
             {
@@ -93,11 +104,24 @@ void MPMParticleContainer::InitParticles (const std::string& filename,
             p.rdata(realData::pressure)    = 0.0;
 
 
+            double initial_strainrate = zero;
+            double initial_spinrate = zero;
+            double initial_strain = zero;
+            double initial_stress = zero;
+            
+            if(p.idata(intData::constitutive_model)==2){
+                initial_strainrate = zero;
+                initial_spinrate = zero;
+                initial_strain = zero;
+                initial_stress = -10; // initial stress provide by input
+            }
+            
             for(int comp=0;comp<NCOMP_TENSOR;comp++)
             {
-                p.rdata(realData::strainrate+comp) = zero;
-                p.rdata(realData::strain+comp)     = zero;
-                p.rdata(realData::stress+comp)     = zero;
+                p.rdata(realData::strainrate+comp) = initial_strainrate;
+                p.rdata(realData::spinrate+comp) = initial_spinrate;
+                p.rdata(realData::strain+comp)     = initial_strain;
+                p.rdata(realData::stress+comp)     = initial_stress; 
             }
             
             host_particles.push_back(p);
