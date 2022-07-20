@@ -148,7 +148,7 @@ void MPMParticleContainer::InitParticles (Real mincoords[AMREX_SPACEDIM],Real ma
         Real vel[AMREX_SPACEDIM],
         Real dens, int constmodel, 
         Real E, Real nu,Real bulkmod, Real Gama_pres,Real visc,
-        int do_multi_part_per_cell,Real &total_mass,Real &total_vol)
+        int do_multi_part_per_cell,Real &total_mass,Real &total_vol, Real initial_void_ratio)
 {
     int lev = 0;
     Real x,y,z,x0,y0,z0;
@@ -188,7 +188,7 @@ void MPMParticleContainer::InitParticles (Real mincoords[AMREX_SPACEDIM],Real ma
                 {
                     ParticleType p = generate_particle(x,y,z,vel,
                             dens,dx*dy*dz,constmodel,
-                            E,nu,bulkmod,Gama_pres,visc);
+                            E,nu,bulkmod,Gama_pres,visc,initial_void_ratio);
 
                     total_mass += p.rdata(realData::mass);
                     total_vol += p.rdata(realData::volume);
@@ -221,7 +221,7 @@ void MPMParticleContainer::InitParticles (Real mincoords[AMREX_SPACEDIM],Real ma
                             {
                                 ParticleType p = generate_particle(x,y,z,vel,
                                                  dens,eighth*dx*dy*dz,constmodel,
-                                                 E,nu,bulkmod,Gama_pres,visc);
+                                                 E,nu,bulkmod,Gama_pres,visc,initial_void_ratio);
                     
                                 total_mass += p.rdata(realData::mass);
                                 total_vol += p.rdata(realData::volume);
@@ -254,7 +254,7 @@ MPMParticleContainer::ParticleType MPMParticleContainer::generate_particle
         (Real x,Real y,Real z,
         Real vel[AMREX_SPACEDIM],
         Real dens, Real vol, int constmodel, Real E, Real nu,
-        Real bulkmod, Real Gama_pres,Real visc)
+        Real bulkmod, Real Gama_pres,Real visc, Real initial_void_ratio)
 {
     ParticleType p;
     p.id()  = ParticleType::NextID();
@@ -285,12 +285,26 @@ MPMParticleContainer::ParticleType MPMParticleContainer::generate_particle
     p.rdata(realData::jacobian)=1.0;
     p.rdata(realData::pressure)=0.0;
     p.rdata(realData::vol_init)=0.0;
+    p.rdata(realData::void_ratio)=initial_void_ratio;
+    
+    double initial_strainrate = zero;
+    double initial_spinrate = zero;
+    double initial_strain = zero;
+    double initial_stress = zero;
+    
+    if(constmodel==2){
+        initial_strainrate = zero;
+        initial_spinrate = zero;
+        initial_strain = zero;
+        initial_stress = -10; // initial stress provide by input
+    }
     
     for(int comp=0;comp<NCOMP_TENSOR;comp++)
     {
-        p.rdata(realData::strainrate+comp) = zero;
-        p.rdata(realData::strain+comp)     = zero;
-        p.rdata(realData::stress+comp)     = zero;
+        p.rdata(realData::strainrate+comp) = initial_strainrate;
+        p.rdata(realData::spinrate+comp) = initial_spinrate;
+        p.rdata(realData::strain+comp)     = initial_strain;
+        p.rdata(realData::stress+comp)     = initial_stress; 
     }
 
     return(p);

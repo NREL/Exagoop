@@ -60,7 +60,7 @@ int main (int argc, char* argv[])
                                  specs.autogen_vel.data(),specs.autogen_dens,specs.autogen_constmodel,
                                  specs.autogen_E,specs.autogen_nu,
                                  specs.autogen_bulkmod,specs.autogen_Gama_pres,specs.autogen_visc,
-                                 specs.autogen_multi_part_per_cell,specs.total_mass,specs.total_vol);
+                                 specs.autogen_multi_part_per_cell,specs.total_mass,specs.total_vol,specs.initial_void_ratio);
 
         }
 

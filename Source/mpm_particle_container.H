@@ -28,7 +28,7 @@ public:
         Real vel[AMREX_SPACEDIM],
         Real dens, int constmodel, 
         Real E, Real nu,Real bulkMod, Real Gama_pres,Real visc,
-        int do_multi_part_per_cell,Real &total_mass,Real &total_vol);
+        int do_multi_part_per_cell,Real &total_mass,Real &total_vol, Real inital_void_ratio);
 
     void moveParticles (const amrex::Real& dt,
                         int bclo[AMREX_SPACEDIM],int bchi[AMREX_SPACEDIM]);
@@ -69,7 +69,7 @@ private:
         (Real x,Real y,Real z,
         Real vel[AMREX_SPACEDIM],
         Real dens, Real vol, int constmodel, Real E, Real nu,
-        Real bulkmod, Real Gama_pres,Real visc);
+        Real bulkmod, Real Gama_pres,Real visc, Real initial_void_ratio);
 
 };
 #endif

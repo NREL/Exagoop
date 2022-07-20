@@ -118,6 +118,7 @@ class MPMspecs
             Real beta = 1.0; //material constant (1.0, 1.1)
         } GBparameters;
         int print_GBHypoParameters = 0;
+        Real initial_void_ratio = 0.55; // initial void ratio for hypoplastic model
 
         void read_mpm_specs()
         {
@@ -233,6 +234,7 @@ class MPMspecs
             gbhp.query("alpha",GBparameters.alpha); 
             gbhp.query("beta",GBparameters.beta);
             gbhp.query("print_parameters",print_GBHypoParameters);
+            gbhp.query("initial_void_ratio",initial_void_ratio);
             if(print_GBHypoParameters == 1){
                 amrex::Print()<<"\nGBhypoplastic parameters: friction angle = "<<GBparameters.phi_c<<";";
                 amrex::Print()<<"\nGBhypoplastic parameters: h_s = "<<GBparameters.h_s<<";";
@@ -242,6 +244,7 @@ class MPMspecs
                 amrex::Print()<<"\nGBhypoplastic parameters: e_i0 = "<<GBparameters.e_i0<<";";
                 amrex::Print()<<"\nGBhypoplastic parameters: alpha = "<<GBparameters.alpha<<";";
                 amrex::Print()<<"\nGBhypoplastic parameters: beta = "<<GBparameters.beta<<";";
+                amrex::Print()<<"\nGBhypoplastic initial void ratio e0 = "<<initial_void_ratio<<";";
             }    
         }
 };
