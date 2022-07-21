@@ -112,46 +112,49 @@ namespace mpm_ebtools
         pp.query("geom_type",geom_type);
         pp.query("ls_refinement",ls_refinement);
 
-        if(geom_type=="wedge_hopper")
+        if(geom_type!="all_regular")
         {
-            using_levelset_geometry=true;
-            make_wedge_hopper_levelset(geom,ba,dm);
-        }
-        else
-        {
-            using_levelset_geometry=true;
-            int required_coarsening_level = 0;
-            int max_coarsening_level=10;
-            if (ls_refinement > 1) 
+            if(geom_type=="wedge_hopper")
             {
-                int tmp = ls_refinement;
-                while (tmp >>= 1) ++required_coarsening_level;
+                using_levelset_geometry=true;
+                make_wedge_hopper_levelset(geom,ba,dm);
             }
-            Box dom_ls = geom.Domain();
-            dom_ls.refine(ls_refinement);
-            Geometry geom_ls(dom_ls);
-            amrex::EB2::Build(geom_ls, required_coarsening_level, max_coarsening_level);
+            else
+            {
+                using_levelset_geometry=true;
+                int required_coarsening_level = 0;
+                int max_coarsening_level=10;
+                if (ls_refinement > 1) 
+                {
+                    int tmp = ls_refinement;
+                    while (tmp >>= 1) ++required_coarsening_level;
+                }
+                Box dom_ls = geom.Domain();
+                dom_ls.refine(ls_refinement);
+                Geometry geom_ls(dom_ls);
+                amrex::EB2::Build(geom_ls, required_coarsening_level, max_coarsening_level);
 
-            const EB2::IndexSpace & ebis   = EB2::IndexSpace::top();
-            const EB2::Level &      eblev  = ebis.getLevel(geom);
-            //create lslev
-            const EB2::Level & lslev = ebis.getLevel(geom_ls);
+                const EB2::IndexSpace & ebis   = EB2::IndexSpace::top();
+                const EB2::Level &      eblev  = ebis.getLevel(geom);
+                //create lslev
+                const EB2::Level & lslev = ebis.getLevel(geom_ls);
 
-            //build factory
-            ebfactory = new EBFArrayBoxFactory(eblev, geom, ba, dm,
-                                               {nghost, nghost,nghost}, 
-                                               EBSupport::full);
+                //build factory
+                ebfactory = new EBFArrayBoxFactory(eblev, geom, ba, dm,
+                                                   {nghost, nghost,nghost}, 
+                                                   EBSupport::full);
 
-            //create nodal multifab with level-set refinement
-            BoxArray ls_ba = amrex::convert(ba, IntVect::TheNodeVector());
-            ls_ba.refine(ls_refinement);
-            lsphi = new MultiFab;
-            lsphi->define(ls_ba, dm, 1, nghost);
+                //create nodal multifab with level-set refinement
+                BoxArray ls_ba = amrex::convert(ba, IntVect::TheNodeVector());
+                ls_ba.refine(ls_refinement);
+                lsphi = new MultiFab;
+                lsphi->define(ls_ba, dm, 1, nghost);
 
-            //call signed distance
-            amrex::FillSignedDistance (*lsphi,lslev,*ebfactory,ls_refinement);
+                //call signed distance
+                amrex::FillSignedDistance (*lsphi,lslev,*ebfactory,ls_refinement);
+            }
         }
-        
+
         if(using_levelset_geometry)
         { 
             const std::string& pltfile = "ebplt";
