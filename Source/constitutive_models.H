@@ -207,6 +207,9 @@ void GB_hypoplastic(amrex::Real eps_dot[NCOMP_TENSOR],
                                  + tensor_omega_dot_sigma[i*AMREX_SPACEDIM+j]
                                  - tensor_sigma_dot_omega[i*AMREX_SPACEDIM+j];
                 sigma[index] = sigma[index]+sigma_dot[index]*dt;
+                sigma[XX] = sigma[XX]<=-10?sigma[XX]:-10;
+                sigma[YY] = sigma[YY]<=-10?sigma[YY]:-10;
+                sigma[ZZ] = sigma[ZZ]<=-10?sigma[ZZ]:-10;
                 index++;
             }   
         }
