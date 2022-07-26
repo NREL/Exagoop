@@ -94,12 +94,12 @@ int main (int argc, char* argv[])
         Box dom_dens = geom.Domain();
         dom_dens.refine(specs.dens_field_gridratio);
         Geometry geom_dens(dom_dens);
+        int ng_dens=3;
         if(specs.dens_field_output)
         {
             dens_ba.refine(specs.dens_field_gridratio);
-            const BoxArray& nodal_dens_ba=amrex::convert(dens_ba,IntVect{1,1,1});
-            dens_field_data.define(nodal_dens_ba,dm,1,0);
-            dens_field_data.setVal(0.0);
+            dens_field_data.define(dens_ba,dm,1,ng_dens);
+            dens_field_data.setVal(0.0,ng_dens);
         }
 
         //mpm_pc.fillNeighbors();
@@ -172,7 +172,7 @@ int main (int argc, char* argv[])
         if(specs.dens_field_output)
         {
             pltfile = amrex::Concatenate("dplt", steps, 5);
-            write_plot_file(pltfile,dens_field_data,{"density"},geom_dens,dens_ba,dm,time);
+            WriteSingleLevelPlotfile(pltfile, dens_field_data, {"density"}, geom_dens, time, 0);
         }
 
 
@@ -317,8 +317,7 @@ int main (int argc, char* argv[])
                 if(specs.dens_field_output)
                 {
                     pltfile = amrex::Concatenate("dplt", output_it, 5);
-                    write_plot_file(pltfile,dens_field_data,{"density"},geom_dens,dens_ba,
-                            dm,time);
+                    WriteSingleLevelPlotfile(pltfile, dens_field_data, {"density"}, geom_dens, time, 0);
                 }
 
                 output_time=zero;
@@ -328,6 +327,7 @@ int main (int argc, char* argv[])
         }
 
         mpm_pc.Redistribute();
+        mpm_pc.fillNeighbors();
         mpm_pc.writeParticles(output_it+1);
 
         pltfile = amrex::Concatenate("nplt", output_it+1, 5);
@@ -336,7 +336,7 @@ int main (int argc, char* argv[])
         if(specs.dens_field_output)
         {
             pltfile = amrex::Concatenate("dplt", output_it+1, 5);
-            write_plot_file(pltfile,dens_field_data,{"density"},geom_dens,dens_ba,dm,time);
+            WriteSingleLevelPlotfile(pltfile, dens_field_data, {"density"}, geom_dens, time, 0);
         }
     }
 

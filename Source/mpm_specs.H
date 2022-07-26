@@ -138,8 +138,8 @@ class MPMspecs
 
             if(!use_autogen)
             {
-            particlefilename="mpm_particles.dat";
-            pp.query("particle_file",particlefilename);
+                particlefilename="mpm_particles.dat";
+                pp.query("particle_file",particlefilename);
             }
             else
             {
@@ -180,10 +180,7 @@ class MPMspecs
 
             pp.query("dens_field_output",dens_field_output);
             pp.query("smoothfactor",smoothfactor);
-            if(dens_field_output==1)
-            {
-                pp.get("dens_field_gridratio",dens_field_gridratio);
-            }
+            pp.query("dens_field_gridratio",dens_field_gridratio);
 
             pp.query("external_loads",external_loads_present); 
             if(external_loads_present)
@@ -193,7 +190,7 @@ class MPMspecs
                 pp.get("extforce", extforce);
             }
             pp.query("print_diagnostics",print_diagnostics);
-            
+
             //by default it is periodic 
             bclo[0]=BC_SLIPWALL;
             bclo[1]=BC_SLIPWALL;
@@ -202,7 +199,7 @@ class MPMspecs
             bchi[0]=BC_SLIPWALL;
             bchi[1]=BC_SLIPWALL;
             bchi[2]=BC_SLIPWALL;
-            
+
             pp.queryarr("bc_lower",bclo);
             pp.queryarr("bc_upper",bchi);
 

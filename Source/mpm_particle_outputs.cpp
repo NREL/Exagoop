@@ -1,9 +1,10 @@
 #include <mpm_particle_container.H>
 #include <interpolants.H>
 
-void MPMParticleContainer::update_density_field(MultiFab& nodaldata,int refratio,Real smoothfactor)
+void MPMParticleContainer::update_density_field(MultiFab& densdata,int refratio,Real smoothfactor)
 {
-    nodaldata.setVal(zero);
+    int ng_dens=3;
+    densdata.setVal(zero,ng_dens);
     const int lev = 0;
     const Geometry& geom = Geom(lev);
     auto& plev  = GetParticles(lev);
@@ -26,7 +27,7 @@ void MPMParticleContainer::update_density_field(MultiFab& nodaldata,int refratio
     {
         amrex::Box box = mfi.tilebox();
         amrex::Box& refbox = box.refine(refratio);
-        Box nodalbox = convert(refbox, {1, 1, 1});
+        const amrex::Box& refboxgrow = amrex::grow(refbox,ng_dens);
         int gid = mfi.index();
         int tid = mfi.LocalTileIndex();
         auto index = std::make_pair(gid, tid);
@@ -34,10 +35,9 @@ void MPMParticleContainer::update_density_field(MultiFab& nodaldata,int refratio
         auto& ptile = plev[index];
         auto& aos   = ptile.GetArrayOfStructs();
         int np = aos.numRealParticles();
-        int ng = aos.numNeighborParticles();
-        int nt = np+ng;
+        int nt = np;
 
-        Array4<Real> nodal_data_arr=nodaldata.array(mfi);
+        Array4<Real> dens_data_arr=densdata.array(mfi);
 
         ParticleType* pstruct = aos().dataPtr();
 
@@ -47,15 +47,15 @@ void MPMParticleContainer::update_density_field(MultiFab& nodaldata,int refratio
             ParticleType& p = pstruct[i];
             auto iv = getParticleCell(p, plo, dxi, domain);
 
-            for(int n=0;n<2;n++)
+            for(int n=-3;n<=3;n++)
             {
-                for(int m=0;m<2;m++)
+                for(int m=-3;m<=3;m++)
                 {
-                    for(int l=0;l<2;l++)
+                    for(int l=-3;l<=3;l++)
                     {
                         IntVect ivlocal(iv[XDIR]+l,iv[YDIR]+m,iv[ZDIR]+n);
 
-                        if(nodalbox.contains(ivlocal))
+                        if(refboxgrow.contains(ivlocal))
                         {
                             amrex::Real xp[AMREX_SPACEDIM];
                             amrex::Real xi[AMREX_SPACEDIM];
@@ -65,16 +65,21 @@ void MPMParticleContainer::update_density_field(MultiFab& nodaldata,int refratio
                             xp[YDIR]=p.pos(YDIR);
                             xp[ZDIR]=p.pos(ZDIR);
 
-                            xi[XDIR]=plo[XDIR]+ivlocal[XDIR]*dx[XDIR];
-                            xi[YDIR]=plo[YDIR]+ivlocal[YDIR]*dx[YDIR];
-                            xi[ZDIR]=plo[ZDIR]+ivlocal[ZDIR]*dx[ZDIR];
+                            xi[XDIR]=plo[XDIR]+(ivlocal[XDIR]+half)*dx[XDIR];
+                            xi[YDIR]=plo[YDIR]+(ivlocal[YDIR]+half)*dx[YDIR];
+                            xi[ZDIR]=plo[ZDIR]+(ivlocal[ZDIR]+half)*dx[ZDIR];
 
-                            weight=p.rdata(realData::mass)*spherical_gaussian(xi,xp,smoothfactor*p.rdata(realData::radius));
+                            weight=p.rdata(realData::mass)*
+                            spherical_gaussian(xi,xp,smoothfactor*p.rdata(realData::radius));
 
                             amrex::Gpu::Atomic::AddNoRet(
-                                &nodal_data_arr(ivlocal),
+                                &dens_data_arr(ivlocal),
                                 weight);
                         }
+                        //else
+                        //{
+                        //   amrex::Print()<<"iv,box,p:"<<iv<<"\t"<<box<<"\t"<<p.pos(0)<<"\t"<<p.pos(1)<<"\t"<<p.pos(2)<<"\n";
+                        //}
                     }
                 }
             }
@@ -82,6 +87,8 @@ void MPMParticleContainer::update_density_field(MultiFab& nodaldata,int refratio
         });
 
     }
+
+    densdata.SumBoundary(geom.periodicity());
 }
 
 void MPMParticleContainer::writeParticles(const int n)
