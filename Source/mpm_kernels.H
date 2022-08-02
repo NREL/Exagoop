@@ -16,18 +16,21 @@ int  applybc(Real relvel_in[AMREX_SPACEDIM],
     //look at section 8
     //Stomakhin et al., "A material point method for snow simulation",
     //ACS Trans. Graphics, 32, 4, 102, 2013
-
-    relvel_out[XDIR]=relvel_in[XDIR];
-    relvel_out[YDIR]=relvel_in[YDIR];
-    relvel_out[ZDIR]=relvel_in[ZDIR];
     int modify_pos=false;
-
-    if(bc==BC_SLIPWALL || bc==BC_NOSLIPWALL || bc==BC_PARTIALSLIPWALL)
+    if(bc==BC_NOSLIPWALL)
+    {
+        modify_pos=true;
+        relvel_out[XDIR]=zero;
+        relvel_out[YDIR]=zero;
+        relvel_out[ZDIR]=zero;
+    }
+    else if(bc==BC_SLIPWALL || bc==BC_PARTIALSLIPWALL)
     {
         Real velt[AMREX_SPACEDIM],velt_hat[AMREX_SPACEDIM];
-        
+
         //normal is into the domain
-        Real veln=relvel_in[XDIR]*normaldir[XDIR]+relvel_in[YDIR]*normaldir[YDIR]
+        Real veln=relvel_in[XDIR]*normaldir[XDIR]
+            +relvel_in[YDIR]*normaldir[YDIR]
             +relvel_in[ZDIR]*normaldir[ZDIR];
 
         velt[XDIR]=relvel_in[XDIR]-veln*normaldir[XDIR];
@@ -35,7 +38,7 @@ int  applybc(Real relvel_in[AMREX_SPACEDIM],
         velt[ZDIR]=relvel_in[ZDIR]-veln*normaldir[ZDIR];
 
         Real veltmag=std::sqrt(velt[XDIR]*velt[XDIR]
-        +velt[YDIR]*velt[YDIR]+velt[ZDIR]*velt[ZDIR]);
+                +velt[YDIR]*velt[YDIR]+velt[ZDIR]*velt[ZDIR]);
 
         velt_hat[XDIR]=velt[XDIR]/(veltmag+TINYVAL);
         velt_hat[YDIR]=velt[YDIR]/(veltmag+TINYVAL);
@@ -50,12 +53,6 @@ int  applybc(Real relvel_in[AMREX_SPACEDIM],
                 relvel_out[XDIR]=velt[XDIR];
                 relvel_out[YDIR]=velt[YDIR];
                 relvel_out[ZDIR]=velt[ZDIR];
-            }
-            else if(bc==BC_NOSLIPWALL)
-            {
-                relvel_out[XDIR]=zero;
-                relvel_out[YDIR]=zero;
-                relvel_out[ZDIR]=zero;
             }
             else if(bc==BC_PARTIALSLIPWALL)
             {
@@ -78,6 +75,9 @@ int  applybc(Real relvel_in[AMREX_SPACEDIM],
             }
         }
     }
+    else //nothing to do if periodic/outflow
+    {}
+    
     return(modify_pos);
 }
 

@@ -232,11 +232,14 @@ int main (int argc, char* argv[])
             //impose bcs at nodes
             nodal_bcs(geom,nodaldata,specs.bclo.data(),
                     specs.bchi.data(),specs.wall_mu_lo.data(),
-                    specs.wall_mu_hi.data(),dt);
+                    specs.wall_mu_hi.data(),
+                    specs.wall_vel_lo.data(),specs.wall_vel_hi.data(),
+                    dt);
 
             if(mpm_ebtools::using_levelset_geometry)
             {
-                nodal_levelset_bcs(nodaldata,geom,dt,specs.levelset_slip_bc);
+                nodal_levelset_bcs(nodaldata,geom,dt,specs.levelset_bc,
+                        specs.levelset_wall_mu);
             }
 
             //Calculate velocity diff
@@ -250,7 +253,10 @@ int main (int argc, char* argv[])
 
             //Update particle position at t+dt
             mpm_pc.moveParticles(dt,specs.bclo.data(),specs.bchi.data(),
-                    specs.wall_mu_lo.data(),specs.wall_mu_hi.data());
+                    specs.levelset_bc,
+                    specs.wall_mu_lo.data(),specs.wall_mu_hi.data(),
+                    specs.wall_vel_lo.data(),specs.wall_vel_hi.data(),
+                    specs.levelset_wall_mu);
 
             if(specs.stress_update_scheme==1)										
             {
@@ -263,11 +269,14 @@ int main (int argc, char* argv[])
                                          specs.extforce,1,0,
                                          specs.mass_tolerance,specs.order_scheme);
                 nodal_bcs(geom,nodaldata,specs.bclo.data(),specs.bchi.data(),
-                        specs.wall_mu_lo.data(),specs.wall_mu_hi.data(),dt);
+                        specs.wall_mu_lo.data(),specs.wall_mu_hi.data(),
+                        specs.wall_vel_lo.data(),specs.wall_vel_hi.data(),
+                        dt);
                 
                 if(mpm_ebtools::using_levelset_geometry)
                 {
-                    nodal_levelset_bcs(nodaldata,geom,dt,specs.levelset_slip_bc);
+                    nodal_levelset_bcs(nodaldata,geom,dt,specs.levelset_bc,
+                            specs.levelset_wall_mu);
                 }
             }
 
