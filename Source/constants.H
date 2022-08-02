@@ -44,6 +44,7 @@
 #define BC_PERIODIC 0
 #define BC_NOSLIPWALL 1
 #define BC_SLIPWALL 2
-#define BC_OUTFLOW 3
+#define BC_PARTIALSLIPWALL 3
+#define BC_OUTFLOW 4
 
 #endif

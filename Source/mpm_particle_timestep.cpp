@@ -1,6 +1,7 @@
 #include <mpm_particle_container.H>
 #include <interpolants.H>
 #include <mpm_eb.H>
+#include <mpm_kernels.H>
 
 amrex::Real MPMParticleContainer::Calculate_time_step()
 {
@@ -45,9 +46,9 @@ amrex::Real MPMParticleContainer::Calculate_time_step()
     return(dt);
 }
 
-void MPMParticleContainer::updatevolume(const amrex::Real& dt)
+void MPMParticleContainer::updateVolume(const amrex::Real& dt)
 {
-    BL_PROFILE("MPMParticleContainer::moveParticles");
+    BL_PROFILE("MPMParticleContainer::updateVolume");
 
     const int lev = 0;
     const Geometry& geom = Geom(lev);
@@ -87,7 +88,8 @@ void MPMParticleContainer::updatevolume(const amrex::Real& dt)
 }
 
 void MPMParticleContainer::moveParticles(const amrex::Real& dt,
-        int bclo[AMREX_SPACEDIM],int bchi[AMREX_SPACEDIM])
+        int bclo[AMREX_SPACEDIM],int bchi[AMREX_SPACEDIM], 
+        amrex::Real wall_mu_lo[AMREX_SPACEDIM],amrex::Real wall_mu_hi[AMREX_SPACEDIM])
 {
     BL_PROFILE("MPMParticleContainer::moveParticles");
 
@@ -162,41 +164,93 @@ void MPMParticleContainer::moveParticles(const amrex::Real& dt,
                     p.rdata(realData::zvel)=velmag*norm[ZDIR];
                }
             }
+            
+            Real relvel_in[AMREX_SPACEDIM]={p.rdata(realData::xvel),p.rdata(realData::yvel),p.rdata(realData::zvel)};
+            Real relvel_out[AMREX_SPACEDIM]={p.rdata(realData::xvel),p.rdata(realData::yvel),p.rdata(realData::zvel)};
 
-            if (!periodic[XDIR] && (p.pos(XDIR) < plo[XDIR]) && bclo[XDIR]!=BC_OUTFLOW)
+            if (p.pos(XDIR) < plo[XDIR])
             {
-                p.pos(XDIR) = two*plo[XDIR] - p.pos(XDIR);
-                p.rdata(realData::xvel) = -p.rdata(realData::xvel);
+                Real normaldir[AMREX_SPACEDIM]={1.0,0.0,0.0};
+                int modify_pos=applybc(relvel_in,relvel_out,wall_mu_lo[XDIR],
+                        normaldir,bclo[XDIR]);
+                if(modify_pos)
+                {
+                    p.pos(XDIR) = two*plo[XDIR] - p.pos(XDIR);
+                }
+                p.rdata(realData::xvel)=relvel_out[XDIR];
+                p.rdata(realData::yvel)=relvel_out[YDIR];
+                p.rdata(realData::zvel)=relvel_out[ZDIR];
             }
-            if (!periodic[XDIR] && (p.pos(XDIR) > phi[XDIR]) && bchi[XDIR]!=BC_OUTFLOW)
+            if (p.pos(XDIR) > phi[XDIR])
             {
-                p.pos(XDIR) = two*phi[XDIR] - p.pos(XDIR);
-                p.rdata(realData::xvel) = -p.rdata(realData::xvel);
+                Real normaldir[AMREX_SPACEDIM]={-1.0,0.0,0.0};
+                int modify_pos=applybc(relvel_in,relvel_out,wall_mu_hi[XDIR],
+                        normaldir,bchi[XDIR]);
+                if(modify_pos)
+                {
+                    p.pos(XDIR) = two*phi[XDIR] - p.pos(XDIR);
+                }
+                p.rdata(realData::xvel)=relvel_out[XDIR];
+                p.rdata(realData::yvel)=relvel_out[YDIR];
+                p.rdata(realData::zvel)=relvel_out[ZDIR];
             }
-            if (!periodic[YDIR] && (p.pos(YDIR) < plo[YDIR]) && bclo[YDIR]!=BC_OUTFLOW)
+            if (p.pos(YDIR) < plo[YDIR])
             {
-                p.pos(YDIR) = two*plo[YDIR] - p.pos(YDIR);
-                p.rdata(realData::yvel) = -p.rdata(realData::yvel);
+                Real normaldir[AMREX_SPACEDIM]={0.0,1.0,0.0};
+                int modify_pos=applybc(relvel_in,relvel_out,wall_mu_lo[YDIR],
+                        normaldir,bclo[YDIR]);
+                if(modify_pos)
+                {
+                    p.pos(YDIR) = two*plo[YDIR] - p.pos(YDIR);
+                }
+                p.rdata(realData::xvel)=relvel_out[XDIR];
+                p.rdata(realData::yvel)=relvel_out[YDIR];
+                p.rdata(realData::zvel)=relvel_out[ZDIR];
             }
-            if (!periodic[YDIR] && (p.pos(YDIR) > phi[YDIR]) && bchi[YDIR]!=BC_OUTFLOW)
+            if (p.pos(YDIR) > phi[YDIR])
             {
-                p.pos(YDIR) = two*phi[YDIR] - p.pos(YDIR);
-                p.rdata(realData::yvel) = -p.rdata(realData::yvel);
+                Real normaldir[AMREX_SPACEDIM]={0.0,-1.0,0.0};
+                int modify_pos=applybc(relvel_in,relvel_out,wall_mu_hi[YDIR],
+                        normaldir,bchi[YDIR]);
+                if(modify_pos)
+                {
+                    p.pos(YDIR) = two*phi[YDIR] - p.pos(YDIR);
+                }
+                p.rdata(realData::xvel)=relvel_out[XDIR];
+                p.rdata(realData::yvel)=relvel_out[YDIR];
+                p.rdata(realData::zvel)=relvel_out[ZDIR];
             }
-            if (!periodic[ZDIR] && (p.pos(ZDIR) < plo[ZDIR]) && bclo[ZDIR]!=BC_OUTFLOW)
+            if (p.pos(ZDIR) < plo[ZDIR])
             {
-                p.pos(ZDIR) = two*plo[ZDIR] - p.pos(ZDIR);
-                p.rdata(realData::zvel) = -p.rdata(realData::zvel);
+                Real normaldir[AMREX_SPACEDIM]={0.0,0.0,1.0};
+                int modify_pos=applybc(relvel_in,relvel_out,wall_mu_lo[ZDIR],
+                        normaldir,bclo[ZDIR]);
+                if(modify_pos)
+                {
+                    p.pos(ZDIR) = two*plo[ZDIR] - p.pos(ZDIR);
+                }
+                p.rdata(realData::xvel)=relvel_out[XDIR];
+                p.rdata(realData::yvel)=relvel_out[YDIR];
+                p.rdata(realData::zvel)=relvel_out[ZDIR];
             }
-            if (!periodic[ZDIR] && (p.pos(ZDIR) > phi[ZDIR]) && bchi[ZDIR]!=BC_OUTFLOW)
+            if (p.pos(ZDIR) > phi[ZDIR])
             {
-                p.pos(ZDIR) = two*phi[ZDIR] - p.pos(ZDIR);
-                p.rdata(realData::zvel) = -p.rdata(realData::zvel);
+                Real normaldir[AMREX_SPACEDIM]={0.0,0.0,-1.0};
+                int modify_pos=applybc(relvel_in,relvel_out,wall_mu_hi[ZDIR],
+                        normaldir,bchi[ZDIR]);
+                if(modify_pos)
+                {
+                    p.pos(ZDIR) = two*phi[ZDIR] - p.pos(ZDIR);
+                }
+                p.rdata(realData::xvel)=relvel_out[XDIR];
+                p.rdata(realData::yvel)=relvel_out[YDIR];
+                p.rdata(realData::zvel)=relvel_out[ZDIR];
             }
 
         });
     }
 }
+
 
 void MPMParticleContainer::move_particles_from_nodevel(MultiFab& nodaldata,
         const amrex::Real& dt,

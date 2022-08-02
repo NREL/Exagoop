@@ -1,5 +1,6 @@
 #include <nodal_data_ops.H>
 #include <mpm_eb.H>
+#include <mpm_kernels.H>
 
 using namespace amrex;
 
@@ -325,9 +326,11 @@ void initialise_shape_function_indices(iMultiFab &shapefunctionindex,const amrex
 }
 
 void nodal_bcs(const amrex::Geometry geom,
-               MultiFab &nodaldata,int bclo[AMREX_SPACEDIM],
-               int bchi[AMREX_SPACEDIM],const amrex::Real& dt)
+        MultiFab &nodaldata,int bclo[AMREX_SPACEDIM],
+        int bchi[AMREX_SPACEDIM],Real wall_mu_lo[AMREX_SPACEDIM],
+        Real wall_mu_hi[AMREX_SPACEDIM],const amrex::Real& dt)
 {
+
     const int* domloarr = geom.Domain().loVect();
     const int* domhiarr = geom.Domain().hiVect();
 
@@ -349,62 +352,54 @@ void nodal_bcs(const amrex::Geometry geom,
         AMREX_GPU_DEVICE (int i,int j,int k) noexcept
         {
             IntVect nodeid(i,j,k);
+            Real relvel_in[AMREX_SPACEDIM],relvel_out[AMREX_SPACEDIM];
 
-            if((nodeid[XDIR]==domlo[XDIR]) && (bclo[XDIR]==BC_SLIPWALL || bclo[XDIR]==BC_NOSLIPWALL))
+            for(int d=0;d<AMREX_SPACEDIM;d++)
             {
-                nodal_data_arr(nodeid,VELX_INDEX+XDIR)=zero;
-                if(bclo[XDIR]==BC_NOSLIPWALL)
-                {
-                    nodal_data_arr(nodeid,VELX_INDEX+YDIR)=zero;
-                    nodal_data_arr(nodeid,VELX_INDEX+ZDIR)=zero;
-                }
-            }
-            if((nodeid[XDIR]==(domhi[XDIR]+1)) && (bchi[XDIR]==BC_SLIPWALL || bchi[XDIR]==BC_NOSLIPWALL))
-            {
-                nodal_data_arr(nodeid,VELX_INDEX+XDIR)=zero;
-                if(bchi[XDIR]==BC_NOSLIPWALL)
-                {
-                    nodal_data_arr(nodeid,VELX_INDEX+YDIR)=zero;
-                    nodal_data_arr(nodeid,VELX_INDEX+ZDIR)=zero;
-                }
+                relvel_in[d]=nodal_data_arr(nodeid,VELX_INDEX+d);
+                relvel_out[d]=relvel_in[d];
             }
 
-            if((nodeid[YDIR]==domlo[YDIR]) && (bclo[YDIR]==BC_SLIPWALL || bclo[YDIR]==BC_NOSLIPWALL))
+            if(nodeid[XDIR]==domlo[XDIR])
             {
-                nodal_data_arr(nodeid,VELX_INDEX+YDIR)=zero;
-                if(bclo[YDIR]==BC_NOSLIPWALL)
-                {
-                    nodal_data_arr(nodeid,VELX_INDEX+XDIR)=zero;
-                    nodal_data_arr(nodeid,VELX_INDEX+ZDIR)=zero;
-                }
+                Real normaldir[AMREX_SPACEDIM]={1.0,0.0,0.0};
+                int tmp=applybc(relvel_in,relvel_out,wall_mu_lo[XDIR],
+                        normaldir,bclo[XDIR]);
             }
-            if((nodeid[YDIR]==(domhi[YDIR]+1)) && (bchi[YDIR]==BC_SLIPWALL || bchi[YDIR]==BC_NOSLIPWALL))
+            if(nodeid[XDIR]==(domhi[XDIR]+1))
             {
-                nodal_data_arr(nodeid,VELX_INDEX+YDIR)=zero;
-                if(bchi[YDIR]==BC_NOSLIPWALL)
-                {
-                    nodal_data_arr(nodeid,VELX_INDEX+XDIR)=zero;
-                    nodal_data_arr(nodeid,VELX_INDEX+ZDIR)=zero;
-                }
+                Real normaldir[AMREX_SPACEDIM]={-1.0,0.0,0.0};
+                int tmp=applybc(relvel_in,relvel_out,wall_mu_hi[XDIR],
+                        normaldir,bchi[XDIR]);
             }
-
-            if((nodeid[ZDIR]==domlo[ZDIR]) && (bclo[ZDIR]==BC_SLIPWALL || bclo[ZDIR]==BC_NOSLIPWALL))
+            if(nodeid[YDIR]==domlo[YDIR])
             {
-                nodal_data_arr(nodeid,VELX_INDEX+ZDIR)=zero;
-                if(bclo[ZDIR]==BC_NOSLIPWALL)
-                {
-                    nodal_data_arr(nodeid,VELX_INDEX+XDIR)=zero;
-                    nodal_data_arr(nodeid,VELX_INDEX+YDIR)=zero;
-                }
+                Real normaldir[AMREX_SPACEDIM]={0.0,1.0,0.0};
+                int tmp=applybc(relvel_in,relvel_out,wall_mu_lo[YDIR],
+                        normaldir,bclo[YDIR]);
             }
-            if((nodeid[ZDIR]==(domhi[ZDIR]+1)) && (bchi[ZDIR]==BC_SLIPWALL || bchi[ZDIR]==BC_NOSLIPWALL))
+            if(nodeid[YDIR]==(domhi[YDIR]+1))
             {
-                nodal_data_arr(nodeid,VELX_INDEX+ZDIR)=zero;
-                if(bchi[ZDIR]==BC_NOSLIPWALL)
-                {
-                    nodal_data_arr(nodeid,VELX_INDEX+XDIR)=zero;
-                    nodal_data_arr(nodeid,VELX_INDEX+YDIR)=zero;
-                }
+                Real normaldir[AMREX_SPACEDIM]={0.0,-1.0,0.0};
+                int tmp=applybc(relvel_in,relvel_out,wall_mu_hi[YDIR],
+                        normaldir,bchi[YDIR]);
+            }
+            if(nodeid[ZDIR]==domlo[ZDIR])
+            {
+                Real normaldir[AMREX_SPACEDIM]={0.0,0.0,1.0};
+                int tmp=applybc(relvel_in,relvel_out,wall_mu_lo[ZDIR],
+                        normaldir,bclo[ZDIR]);
+            }
+            if(nodeid[ZDIR]==(domhi[ZDIR]+1))
+            {
+                Real normaldir[AMREX_SPACEDIM]={0.0,0.0,-1.0};
+                int tmp=applybc(relvel_in,relvel_out,wall_mu_hi[ZDIR],
+                        normaldir,bchi[ZDIR]);
+            }
+            
+            for(int d=0;d<AMREX_SPACEDIM;d++)
+            {
+                nodal_data_arr(nodeid,VELX_INDEX+d)=relvel_out[d];
             }
 
         });

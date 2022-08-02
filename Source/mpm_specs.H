@@ -104,6 +104,10 @@ class MPMspecs
 
         int levelset_slip_bc=0;
 
+        Array<Real,AMREX_SPACEDIM> wall_mu_lo{AMREX_D_DECL(0.1, 0.1, 0.1)};
+        Array<Real,AMREX_SPACEDIM> wall_mu_hi{AMREX_D_DECL(0.1, 0.1, 0.1)};
+        Real levset_mu=0.1;
+
         void read_mpm_specs()
         {
             bclo.resize(AMREX_SPACEDIM);
@@ -204,6 +208,11 @@ class MPMspecs
             pp.queryarr("bc_upper",bchi);
 
             pp.query("levelset_slip_bc",levelset_slip_bc);
+
+
+            pp.query("wall_mu_lo",wall_mu_lo);
+            pp.query("wall_mu_hi",wall_mu_hi);
+            pp.query("levset_mu",levset_mu);
         }
 };
 #endif

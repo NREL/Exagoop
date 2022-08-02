@@ -231,7 +231,8 @@ int main (int argc, char* argv[])
 
             //impose bcs at nodes
             nodal_bcs(geom,nodaldata,specs.bclo.data(),
-                    specs.bchi.data(),dt);
+                    specs.bchi.data(),specs.wall_mu_lo.data(),
+                    specs.wall_mu_hi.data(),dt);
 
             if(mpm_ebtools::using_levelset_geometry)
             {
@@ -248,7 +249,8 @@ int main (int argc, char* argv[])
             mpm_pc.updateNeighbors();
 
             //Update particle position at t+dt
-            mpm_pc.moveParticles(dt,specs.bclo.data(),specs.bchi.data());
+            mpm_pc.moveParticles(dt,specs.bclo.data(),specs.bchi.data(),
+                    specs.wall_mu_lo.data(),specs.wall_mu_hi.data());
 
             if(specs.stress_update_scheme==1)										
             {
@@ -260,7 +262,8 @@ int main (int argc, char* argv[])
                                          specs.force_slab_hi,
                                          specs.extforce,1,0,
                                          specs.mass_tolerance,specs.order_scheme);
-                nodal_bcs(geom,nodaldata,specs.bclo.data(),specs.bchi.data(),dt);
+                nodal_bcs(geom,nodaldata,specs.bclo.data(),specs.bchi.data(),
+                        specs.wall_mu_lo.data(),specs.wall_mu_hi.data(),dt);
                 
                 if(mpm_ebtools::using_levelset_geometry)
                 {
@@ -273,7 +276,7 @@ int main (int argc, char* argv[])
             mpm_pc.updateNeighbors();
 
             //mpm_pc.move_particles_from_nodevel(nodaldata,dt,specs.bclo.data(),specs.bchi.data(),1);
-            mpm_pc.updatevolume(dt);
+            mpm_pc.updateVolume(dt);
 
             //update stress at material pointsat time t+dt
             if(time<specs.applied_strainrate_time)
