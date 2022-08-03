@@ -104,7 +104,16 @@ class MPMspecs
         Real autogen_Gama_pres=1.4;
         Real autogen_visc=0.001;
 
-        int levelset_slip_bc=0;
+        int levelset_bc=1; //no slip wall
+        Real levelset_wall_mu=0.1;
+
+        Array<Real,AMREX_SPACEDIM> wall_mu_lo{AMREX_D_DECL(0.1, 0.1, 0.1)};
+        Array<Real,AMREX_SPACEDIM> wall_mu_hi{AMREX_D_DECL(0.1, 0.1, 0.1)};
+
+        Array<Real,AMREX_SPACEDIM*AMREX_SPACEDIM> wall_vel_lo{0.0};
+        Array<Real,AMREX_SPACEDIM*AMREX_SPACEDIM> wall_vel_hi{0.0};
+        
+        Real levset_mu=0.1;
 
          // material properties for granular material, default to sand.
         struct GBHypoParameters{
@@ -124,6 +133,7 @@ class MPMspecs
         {
             bclo.resize(AMREX_SPACEDIM);
             bchi.resize(AMREX_SPACEDIM);
+
             
             autogen_mincoords.resize(AMREX_SPACEDIM);
             autogen_maxcoords.resize(AMREX_SPACEDIM);
@@ -154,8 +164,8 @@ class MPMspecs
 
             if(use_autogen == 0)
             {
-            particlefilename="mpm_particles.dat";
-            pp.query("particle_file",particlefilename);
+                particlefilename="mpm_particles.dat";
+                pp.query("particle_file",particlefilename);
             }
             else
             {
@@ -196,10 +206,7 @@ class MPMspecs
 
             pp.query("dens_field_output",dens_field_output);
             pp.query("smoothfactor",smoothfactor);
-            if(dens_field_output==1)
-            {
-                pp.get("dens_field_gridratio",dens_field_gridratio);
-            }
+            pp.query("dens_field_gridratio",dens_field_gridratio);
 
             pp.query("external_loads",external_loads_present); 
             if(external_loads_present)
@@ -209,7 +216,7 @@ class MPMspecs
                 pp.get("extforce", extforce);
             }
             pp.query("print_diagnostics",print_diagnostics);
-            
+
             //by default it is periodic 
             bclo[0]=BC_SLIPWALL;
             bclo[1]=BC_SLIPWALL;
@@ -218,11 +225,27 @@ class MPMspecs
             bchi[0]=BC_SLIPWALL;
             bchi[1]=BC_SLIPWALL;
             bchi[2]=BC_SLIPWALL;
-            
+
             pp.queryarr("bc_lower",bclo);
             pp.queryarr("bc_upper",bchi);
 
-            pp.query("levelset_slip_bc",levelset_slip_bc);
+            pp.query("levelset_bc",levelset_bc);
+            pp.query("levelset_wall_mu",levelset_wall_mu);
+
+
+            pp.query("wall_mu_lo",wall_mu_lo);
+            pp.query("wall_mu_hi",wall_mu_hi);
+
+            for(int i=0;i<AMREX_SPACEDIM*AMREX_SPACEDIM;i++)
+            {
+                wall_vel_lo[i]=0.0;
+                wall_vel_hi[i]=0.0;
+            }
+
+            pp.query("wall_vel_lo",wall_vel_lo);
+            pp.query("wall_vel_hi",wall_vel_hi);
+            
+            //pp.query("levelset_slip_bc",levelset_slip_bc);
 
             ParmParse gbhp("GBHypoPlastic");
             gbhp.query("critical_state_internal_friction_angle",GBparameters.phi_c);

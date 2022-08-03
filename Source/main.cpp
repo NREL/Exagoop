@@ -94,12 +94,12 @@ int main (int argc, char* argv[])
         Box dom_dens = geom.Domain();
         dom_dens.refine(specs.dens_field_gridratio);
         Geometry geom_dens(dom_dens);
+        int ng_dens=3;
         if(specs.dens_field_output)
         {
             dens_ba.refine(specs.dens_field_gridratio);
-            const BoxArray& nodal_dens_ba=amrex::convert(dens_ba,IntVect{1,1,1});
-            dens_field_data.define(nodal_dens_ba,dm,1,0);
-            dens_field_data.setVal(0.0);
+            dens_field_data.define(dens_ba,dm,1,ng_dens);
+            dens_field_data.setVal(0.0,ng_dens);
         }
 
         //mpm_pc.fillNeighbors();
@@ -172,7 +172,7 @@ int main (int argc, char* argv[])
         if(specs.dens_field_output)
         {
             pltfile = amrex::Concatenate("dplt", steps, 5);
-            write_plot_file(pltfile,dens_field_data,{"density"},geom_dens,dens_ba,dm,time);
+            WriteSingleLevelPlotfile(pltfile, dens_field_data, {"density"}, geom_dens, time, 0);
         }
 
 
@@ -231,11 +231,15 @@ int main (int argc, char* argv[])
 
             //impose bcs at nodes
             nodal_bcs(geom,nodaldata,specs.bclo.data(),
-                    specs.bchi.data(),dt);
+                    specs.bchi.data(),specs.wall_mu_lo.data(),
+                    specs.wall_mu_hi.data(),
+                    specs.wall_vel_lo.data(),specs.wall_vel_hi.data(),
+                    dt);
 
             if(mpm_ebtools::using_levelset_geometry)
             {
-                nodal_levelset_bcs(nodaldata,geom,dt,specs.levelset_slip_bc);
+                nodal_levelset_bcs(nodaldata,geom,dt,specs.levelset_bc,
+                        specs.levelset_wall_mu);
             }
 
             //Calculate velocity diff
@@ -248,7 +252,11 @@ int main (int argc, char* argv[])
             mpm_pc.updateNeighbors();
 
             //Update particle position at t+dt
-            mpm_pc.moveParticles(dt,specs.bclo.data(),specs.bchi.data());
+            mpm_pc.moveParticles(dt,specs.bclo.data(),specs.bchi.data(),
+                    specs.levelset_bc,
+                    specs.wall_mu_lo.data(),specs.wall_mu_hi.data(),
+                    specs.wall_vel_lo.data(),specs.wall_vel_hi.data(),
+                    specs.levelset_wall_mu);
 
             if(specs.stress_update_scheme==1)										
             {
@@ -260,11 +268,15 @@ int main (int argc, char* argv[])
                                          specs.force_slab_hi,
                                          specs.extforce,1,0,
                                          specs.mass_tolerance,specs.order_scheme);
-                nodal_bcs(geom,nodaldata,specs.bclo.data(),specs.bchi.data(),dt);
+                nodal_bcs(geom,nodaldata,specs.bclo.data(),specs.bchi.data(),
+                        specs.wall_mu_lo.data(),specs.wall_mu_hi.data(),
+                        specs.wall_vel_lo.data(),specs.wall_vel_hi.data(),
+                        dt);
                 
                 if(mpm_ebtools::using_levelset_geometry)
                 {
-                    nodal_levelset_bcs(nodaldata,geom,dt,specs.levelset_slip_bc);
+                    nodal_levelset_bcs(nodaldata,geom,dt,specs.levelset_bc,
+                            specs.levelset_wall_mu);
                 }
             }
 
@@ -273,7 +285,7 @@ int main (int argc, char* argv[])
             mpm_pc.updateNeighbors();
 
             //mpm_pc.move_particles_from_nodevel(nodaldata,dt,specs.bclo.data(),specs.bchi.data(),1);
-            mpm_pc.updatevolume(dt);
+            mpm_pc.updateVolume(dt);
 
             //update stress at material pointsat time t+dt
             if(time<specs.applied_strainrate_time)
@@ -317,8 +329,7 @@ int main (int argc, char* argv[])
                 if(specs.dens_field_output)
                 {
                     pltfile = amrex::Concatenate("dplt", output_it, 5);
-                    write_plot_file(pltfile,dens_field_data,{"density"},geom_dens,dens_ba,
-                            dm,time);
+                    WriteSingleLevelPlotfile(pltfile, dens_field_data, {"density"}, geom_dens, time, 0);
                 }
 
                 output_time=zero;
@@ -328,6 +339,7 @@ int main (int argc, char* argv[])
         }
 
         mpm_pc.Redistribute();
+        mpm_pc.fillNeighbors();
         mpm_pc.writeParticles(output_it+1);
 
         pltfile = amrex::Concatenate("nplt", output_it+1, 5);
@@ -336,7 +348,7 @@ int main (int argc, char* argv[])
         if(specs.dens_field_output)
         {
             pltfile = amrex::Concatenate("dplt", output_it+1, 5);
-            write_plot_file(pltfile,dens_field_data,{"density"},geom_dens,dens_ba,dm,time);
+            WriteSingleLevelPlotfile(pltfile, dens_field_data, {"density"}, geom_dens, time, 0);
         }
     }
 
