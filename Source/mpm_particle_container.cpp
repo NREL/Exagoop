@@ -4,7 +4,8 @@
 
 using namespace amrex;
 
-void MPMParticleContainer::apply_constitutive_model(const amrex::Real& dt,
+void MPMParticleContainer::apply_constitutive_model(MPMspecs specs,
+                                                    const amrex::Real& dt,
                                                     amrex::Real applied_strainrate=0.0)
 {
     const int lev = 0;
@@ -40,6 +41,7 @@ void MPMParticleContainer::apply_constitutive_model(const amrex::Real& dt,
 
             amrex::Real xp[AMREX_SPACEDIM];
             amrex::Real strainrate[NCOMP_TENSOR];
+            amrex::Real spinrate[NCOMP_TENSOR];
             amrex::Real strain[NCOMP_TENSOR];
             amrex::Real stress[NCOMP_TENSOR];
 
@@ -55,7 +57,9 @@ void MPMParticleContainer::apply_constitutive_model(const amrex::Real& dt,
             for(int d=0;d<NCOMP_TENSOR;d++)
             {
                 strainrate[d]=p.rdata(realData::strainrate+d);
+                spinrate[d]=p.rdata(realData::spinrate+d);
                 strain[d]=p.rdata(realData::strain+d);
+                stress[d]=p.rdata(realData::stress+d);
             }
 
 
@@ -76,6 +80,14 @@ void MPMParticleContainer::apply_constitutive_model(const amrex::Real& dt,
             	p.rdata(realData::pressure) = p.rdata(realData::Bulk_modulus)*
                     (pow(1/p.rdata(realData::jacobian),p.rdata(realData::Gama_pressure))-1.0)+p_inf;
             	Newtonian_Fluid(strainrate,stress,p.rdata(realData::Dynamic_viscosity),p.rdata(realData::pressure));
+            }
+            else if(p.idata(intData::constitutive_model)==2)		//Yudong: GB hypoplastic model for granular flow
+            {
+                //GB hypoplastic model here.
+                amrex::Real e = p.rdata(realData::void_ratio);
+                amrex::Real e_before = e;
+                GB_hypoplastic(strainrate,spinrate,stress,dt, e,specs);
+                p.rdata(realData::void_ratio) = e;
             }
 
             for(int d=0;d<NCOMP_TENSOR;d++)
