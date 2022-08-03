@@ -31,8 +31,16 @@ public:
         int do_multi_part_per_cell,Real &total_mass,Real &total_vol);
 
     void moveParticles (const amrex::Real& dt,
-                        int bclo[AMREX_SPACEDIM],int bchi[AMREX_SPACEDIM]);
-    void updatevolume (const amrex::Real& dt);
+                        int bclo[AMREX_SPACEDIM],
+                        int bchi[AMREX_SPACEDIM],
+                        int lsetbc,
+                        amrex::Real wall_mu_lo[AMREX_SPACEDIM],
+                        amrex::Real wall_mu_hi[AMREX_SPACEDIM],
+                        amrex::Real wall_vel_lo[AMREX_SPACEDIM*AMREX_SPACEDIM],
+                        amrex::Real wall_vel_hi[AMREX_SPACEDIM*AMREX_SPACEDIM],
+                        amrex::Real lset_wall_mu);
+
+    void updateVolume (const amrex::Real& dt);
     void writeParticles (const int n);  
     void deposit_onto_grid(MultiFab& nodaldata,
                            Array<Real,AMREX_SPACEDIM> gravity,

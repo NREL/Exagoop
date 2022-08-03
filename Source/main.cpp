@@ -231,11 +231,15 @@ int main (int argc, char* argv[])
 
             //impose bcs at nodes
             nodal_bcs(geom,nodaldata,specs.bclo.data(),
-                    specs.bchi.data(),dt);
+                    specs.bchi.data(),specs.wall_mu_lo.data(),
+                    specs.wall_mu_hi.data(),
+                    specs.wall_vel_lo.data(),specs.wall_vel_hi.data(),
+                    dt);
 
             if(mpm_ebtools::using_levelset_geometry)
             {
-                nodal_levelset_bcs(nodaldata,geom,dt,specs.levelset_slip_bc);
+                nodal_levelset_bcs(nodaldata,geom,dt,specs.levelset_bc,
+                        specs.levelset_wall_mu);
             }
 
             //Calculate velocity diff
@@ -248,7 +252,11 @@ int main (int argc, char* argv[])
             mpm_pc.updateNeighbors();
 
             //Update particle position at t+dt
-            mpm_pc.moveParticles(dt,specs.bclo.data(),specs.bchi.data());
+            mpm_pc.moveParticles(dt,specs.bclo.data(),specs.bchi.data(),
+                    specs.levelset_bc,
+                    specs.wall_mu_lo.data(),specs.wall_mu_hi.data(),
+                    specs.wall_vel_lo.data(),specs.wall_vel_hi.data(),
+                    specs.levelset_wall_mu);
 
             if(specs.stress_update_scheme==1)										
             {
@@ -260,11 +268,15 @@ int main (int argc, char* argv[])
                                          specs.force_slab_hi,
                                          specs.extforce,1,0,
                                          specs.mass_tolerance,specs.order_scheme);
-                nodal_bcs(geom,nodaldata,specs.bclo.data(),specs.bchi.data(),dt);
+                nodal_bcs(geom,nodaldata,specs.bclo.data(),specs.bchi.data(),
+                        specs.wall_mu_lo.data(),specs.wall_mu_hi.data(),
+                        specs.wall_vel_lo.data(),specs.wall_vel_hi.data(),
+                        dt);
                 
                 if(mpm_ebtools::using_levelset_geometry)
                 {
-                    nodal_levelset_bcs(nodaldata,geom,dt,specs.levelset_slip_bc);
+                    nodal_levelset_bcs(nodaldata,geom,dt,specs.levelset_bc,
+                            specs.levelset_wall_mu);
                 }
             }
 
@@ -273,7 +285,7 @@ int main (int argc, char* argv[])
             mpm_pc.updateNeighbors();
 
             //mpm_pc.move_particles_from_nodevel(nodaldata,dt,specs.bclo.data(),specs.bchi.data(),1);
-            mpm_pc.updatevolume(dt);
+            mpm_pc.updateVolume(dt);
 
             //update stress at material pointsat time t+dt
             if(time<specs.applied_strainrate_time)
