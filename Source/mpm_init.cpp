@@ -267,7 +267,7 @@ MPMParticleContainer::ParticleType MPMParticleContainer::generate_particle
     p.idata(intData::phase) = 0;
     p.rdata(realData::radius) = std::pow(three*fourth*vol/PI,0.33333333);
 
-    p.rdata(realData::density) = dens;
+    //p.rdata(realData::density) = dens;
     p.rdata(realData::xvel) = vel[XDIR];
     p.rdata(realData::yvel) = vel[YDIR];
     p.rdata(realData::zvel) = vel[ZDIR];
@@ -280,11 +280,21 @@ MPMParticleContainer::ParticleType MPMParticleContainer::generate_particle
     p.rdata(realData::Gama_pressure)=Gama_pres;
     p.rdata(realData::Dynamic_viscosity)=visc;
 
-    p.rdata(realData::volume)=vol;	
-    p.rdata(realData::mass)=dens*vol;
+    p.rdata(realData::volume)=vol;
+    if(constmodel==2){
+        p.rdata(realData::density) = dens*1.0/(1.0+initial_void_ratio);
+        p.rdata(realData::mass)=dens*vol*1.0/(1.0+initial_void_ratio); // use particle density
+        p.rdata(realData::vol_init)=vol;
+    }
+    else{
+        p.rdata(realData::density) = dens;
+        p.rdata(realData::mass)=dens*vol;
+        p.rdata(realData::vol_init)=0.0; // TODO: why vol_init is set to 0 ?
+    }		
+    //p.rdata(realData::mass)=dens*vol;
     p.rdata(realData::jacobian)=1.0;
     p.rdata(realData::pressure)=0.0;
-    p.rdata(realData::vol_init)=0.0;
+    //p.rdata(realData::vol_init)=0.0;
     p.rdata(realData::void_ratio)=initial_void_ratio;
     
     double initial_strainrate = zero;

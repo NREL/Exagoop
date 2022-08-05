@@ -78,6 +78,26 @@ void MPMParticleContainer::updateVolume(const amrex::Real& dt)
         {
             ParticleType& p = pstruct[i];
 
+            amrex::Real old_void_ratio = 0.0;
+            amrex::Real new_void_ratio = 0.0;
+            // Yudong: add void ratio evolution for hypoplastic model
+            if(p.idata(intData::constitutive_model)==2){
+                old_void_ratio = p.rdata(realData::void_ratio);
+                new_void_ratio = old_void_ratio + (p.rdata(realData::strainrate+XX)
+                                                +p.rdata(realData::strainrate+YY)
+                                                +p.rdata(realData::strainrate+ZZ))
+                                                * (1 +old_void_ratio)* dt;
+                p.rdata(realData::void_ratio) = new_void_ratio;
+                p.rdata(realData::volume)	= (1+new_void_ratio)/(1+old_void_ratio)*p.rdata(realData::vol_init); // use order_of_scheme=1 to update vol_init
+                p.rdata(realData::density)	= p.rdata(realData::mass)/p.rdata(realData::volume);
+            }
+            else{
+                p.rdata(realData::jacobian) += (p.rdata(realData::strainrate+XX)
+                    +p.rdata(realData::strainrate+YY)+p.rdata(realData::strainrate+ZZ)) * dt * p.rdata(realData::jacobian);
+                p.rdata(realData::volume)	= p.rdata(realData::vol_init)*p.rdata(realData::jacobian);
+                p.rdata(realData::density)	= p.rdata(realData::mass)/p.rdata(realData::volume);
+            }
+            /*
             p.rdata(realData::jacobian) += (p.rdata(realData::strainrate+XX)
             +p.rdata(realData::strainrate+YY)+p.rdata(realData::strainrate+ZZ)) * dt * p.rdata(realData::jacobian);
             p.rdata(realData::volume)	= p.rdata(realData::vol_init)*p.rdata(realData::jacobian);
@@ -87,7 +107,7 @@ void MPMParticleContainer::updateVolume(const amrex::Real& dt)
                                              +p.rdata(realData::strainrate+YY)
                                              +p.rdata(realData::strainrate+ZZ))
                                               * (1 +p.rdata(realData::void_ratio))* dt;
-
+            */
         });
     }
 }

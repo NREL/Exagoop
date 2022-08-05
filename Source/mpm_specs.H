@@ -117,14 +117,15 @@ class MPMspecs
 
          // material properties for granular material, default to sand.
         struct GBHypoParameters{
-            Real phi_c = 30.0; // critical state internal friction angle
-            Real h_s = 5800.0; // granular hardness
+            Real phi_c = 0.5236; // critical state internal friction angle, unit: radian
+            Real h_s = 5800000000.0; // granular hardness, unit: Pa
             Real n = 0.28; // pressure sensitive exponent : G paper says range (0.3, 0.5)
             Real e_d0 = 0.53; // material constant for minimum void ratio
             Real e_c0 = 0.84; // material constant for critical void ratio
             Real e_i0 = 1.0; // material constant for maximum void ratio
             Real alpha = 0.13; //material constant (0.1, 0.3)  
             Real beta = 1.0; //material constant (1.0, 1.1)
+            Real stress_cutoff = -10.0; //stress cutoff to ensure compressive stress on material points
         } GBparameters;
         int print_GBHypoParameters = 0;
         Real initial_void_ratio = 0.55; // initial void ratio for hypoplastic model
@@ -256,6 +257,7 @@ class MPMspecs
             gbhp.query("max_void_ratio_0",GBparameters.e_i0);
             gbhp.query("alpha",GBparameters.alpha); 
             gbhp.query("beta",GBparameters.beta);
+            gbhp.query("stress_cutoff",GBparameters.stress_cutoff);
             gbhp.query("print_parameters",print_GBHypoParameters);
             gbhp.query("initial_void_ratio",initial_void_ratio);
             if(print_GBHypoParameters == 1){
@@ -267,6 +269,7 @@ class MPMspecs
                 amrex::Print()<<"\nGBhypoplastic parameters: e_i0 = "<<GBparameters.e_i0<<";";
                 amrex::Print()<<"\nGBhypoplastic parameters: alpha = "<<GBparameters.alpha<<";";
                 amrex::Print()<<"\nGBhypoplastic parameters: beta = "<<GBparameters.beta<<";";
+                amrex::Print()<<"\nGBhypoplastic parameters: stress_cutoff = "<<GBparameters.stress_cutoff<<";";
                 amrex::Print()<<"\nGBhypoplastic initial void ratio e0 = "<<initial_void_ratio<<";";
             }    
         }

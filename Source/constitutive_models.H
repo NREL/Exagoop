@@ -99,49 +99,51 @@ void GB_hypoplastic(amrex::Real eps_dot[NCOMP_TENSOR],
     amrex::Real e_i0 = specs.GBparameters.e_i0; // material constant for maximum void ratio
     amrex::Real alpha = specs.GBparameters.alpha; //material constant (0.1, 0.3)  
     amrex::Real beta = specs.GBparameters.beta; //material constant (1.0, 1.1)
-
-    // compute some varaibles
-    amrex::Real trace_eps_dot=eps_dot[XX]+eps_dot[YY]+eps_dot[ZZ];
-    //if(trace_eps_dot == 0.0){
-    //    trace_eps_dot = TINYVAL; //avoid divide by 0
-    //}
-    amrex::Real modulus_eps_dot = sqrt(pow(trace_eps_dot,2));
+    amrex::Real stress_cutoff = specs.GBparameters.stress_cutoff;
 
     amrex::Real trace_sigma = sigma[XX] + sigma[YY] + sigma[ZZ];
-    for(int i = 0; i < NCOMP_TENSOR; i++) {
-        sigma_hat[i] = sigma[i]/trace_sigma;
-        sigma_hat_star[i] = sigma_hat[i] - (1.0/3.0)*Identity[i];
-    }
-    amrex::Real trace_sigma_hat_star = sigma_hat_star[XX]+sigma_hat_star[YY]+sigma_hat_star[ZZ];
-    //amrex::Real modulus_sigma = sqrt(pow(trace_sigma,2));
-        
-
-    amrex::Real modulus_sigma_hat_star = sqrt(pow(trace_sigma_hat_star,2));
-
-    amrex::Real trace_sigma_hat_star_square = pow(sigma_hat_star[XX],2)+pow(sigma_hat_star[YY],2)+pow(sigma_hat_star[ZZ],2)
-                                                +2*pow(sigma_hat_star[XY],2)+2*pow(sigma_hat_star[YZ],2)+2*pow(sigma_hat_star[XZ],2);
-    amrex::Real det_sigma_hat_star = sigma_hat_star[XX]*sigma_hat_star[YY]*sigma_hat_star[ZZ]
-                                    +2*sigma_hat_star[XY]*sigma_hat_star[YZ]*sigma_hat_star[XZ]
-                                    -sigma_hat_star[XY]*sigma_hat_star[XY]*sigma_hat_star[ZZ]
-                                    -sigma_hat_star[YZ]*sigma_hat_star[YZ]*sigma_hat_star[XX]
-                                    -sigma_hat_star[XZ]*sigma_hat_star[XZ]*sigma_hat_star[YY];
-    amrex::Real trace_sigma_hat_star_cube = 3*det_sigma_hat_star;
-
-    amrex::Real trace_sigma_hat_dot_eps_dot = sigma_hat[XX]*eps_dot[XX] + sigma_hat[YY]*eps_dot[YY] +sigma_hat[ZZ]*eps_dot[ZZ]
-                                        + 2*sigma_hat[XY]*eps_dot[XY] + 2*sigma_hat[YZ]*eps_dot[YZ] + 2*sigma_hat[XZ]*eps_dot[XZ];
     
-    // compute c1 c2
-    amrex::Real c_1 = sqrt(3.0/8.0)*((3-sin(phi_c)/sin(phi_c)));
-    amrex::Real c_2 = (3.0/8.0)*((3+sin(phi_c)/sin(phi_c)));
-
-    // update stiffness factor
-    amrex::Real h_i = 1/pow(c_1,2) + (1.0/3.0)*pow((e_i0+e_d0)/(e_c0-e_d0),alpha)*(1/(sqrt(3)*c_1));
-
     if(trace_sigma>0){
         trace_sigma = 0;
     }
 
     if(trace_sigma != 0.0){
+        // compute some varaibles
+        amrex::Real trace_eps_dot=eps_dot[XX]+eps_dot[YY]+eps_dot[ZZ];
+        //if(trace_eps_dot == 0.0){
+        //    trace_eps_dot = TINYVAL; //avoid divide by 0
+        //}
+        amrex::Real modulus_eps_dot = sqrt(pow(trace_eps_dot,2));
+
+        for(int i = 0; i < NCOMP_TENSOR; i++) {
+            sigma_hat[i] = sigma[i]/trace_sigma;
+            sigma_hat_star[i] = sigma_hat[i] - (1.0/3.0)*Identity[i];
+        }
+        amrex::Real trace_sigma_hat_star = sigma_hat_star[XX]+sigma_hat_star[YY]+sigma_hat_star[ZZ];
+        //amrex::Real modulus_sigma = sqrt(pow(trace_sigma,2));
+            
+
+        amrex::Real modulus_sigma_hat_star = sqrt(pow(trace_sigma_hat_star,2));
+
+        amrex::Real trace_sigma_hat_star_square = pow(sigma_hat_star[XX],2)+pow(sigma_hat_star[YY],2)+pow(sigma_hat_star[ZZ],2)
+                                                    +2*pow(sigma_hat_star[XY],2)+2*pow(sigma_hat_star[YZ],2)+2*pow(sigma_hat_star[XZ],2);
+        amrex::Real det_sigma_hat_star = sigma_hat_star[XX]*sigma_hat_star[YY]*sigma_hat_star[ZZ]
+                                        +2*sigma_hat_star[XY]*sigma_hat_star[YZ]*sigma_hat_star[XZ]
+                                        -sigma_hat_star[XY]*sigma_hat_star[XY]*sigma_hat_star[ZZ]
+                                        -sigma_hat_star[YZ]*sigma_hat_star[YZ]*sigma_hat_star[XX]
+                                        -sigma_hat_star[XZ]*sigma_hat_star[XZ]*sigma_hat_star[YY];
+        amrex::Real trace_sigma_hat_star_cube = 3*det_sigma_hat_star;
+
+        amrex::Real trace_sigma_hat_dot_eps_dot = sigma_hat[XX]*eps_dot[XX] + sigma_hat[YY]*eps_dot[YY] +sigma_hat[ZZ]*eps_dot[ZZ]
+                                            + 2*sigma_hat[XY]*eps_dot[XY] + 2*sigma_hat[YZ]*eps_dot[YZ] + 2*sigma_hat[XZ]*eps_dot[XZ];
+        
+        // compute c1 c2
+        amrex::Real c_1 = sqrt(3.0/8.0)*((3-sin(phi_c)/sin(phi_c)));
+        amrex::Real c_2 = (3.0/8.0)*((3+sin(phi_c)/sin(phi_c)));
+
+        // update stiffness factor
+        amrex::Real h_i = 1/pow(c_1,2) + (1.0/3.0)*pow((e_i0+e_d0)/(e_c0-e_d0),alpha)*(1/(sqrt(3)*c_1));
+
         // update void ratio related variables
         amrex::Real e_i = e_i0*exp(-pow(-trace_sigma/h_s,n)); // max void ratio
         amrex::Real e_d = e_d0*exp(-pow(-trace_sigma/h_s,n)); // min void ratio
@@ -207,12 +209,13 @@ void GB_hypoplastic(amrex::Real eps_dot[NCOMP_TENSOR],
                                  + tensor_omega_dot_sigma[i*AMREX_SPACEDIM+j]
                                  - tensor_sigma_dot_omega[i*AMREX_SPACEDIM+j];
                 sigma[index] = sigma[index]+sigma_dot[index]*dt;
-                sigma[XX] = sigma[XX]<=-10?sigma[XX]:-10;
-                sigma[YY] = sigma[YY]<=-10?sigma[YY]:-10;
-                sigma[ZZ] = sigma[ZZ]<=-10?sigma[ZZ]:-10;
                 index++;
             }   
         }
+        //limit stress to be compressive
+        sigma[XX] = (sigma[XX]<=stress_cutoff)?sigma[XX]:stress_cutoff;
+        sigma[YY] = (sigma[YY]<=stress_cutoff)?sigma[YY]:stress_cutoff;
+        sigma[ZZ] = (sigma[ZZ]<=stress_cutoff)?sigma[ZZ]:stress_cutoff;
         //sigma_dot[i] = 
         //sigma[i] = sigma[i]+sigma_dot[i]*dt;
     }
