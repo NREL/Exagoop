@@ -66,6 +66,7 @@ class MPMspecs
         Real screen_output_time;
         int maxsteps=1;
         std::string particlefilename;
+        std::string restart_checkfile;
 
         //1-->tent function, 3--> cubic spline shape function
         int order_scheme=1;				
@@ -88,6 +89,8 @@ class MPMspecs
         
         Vector<int> bclo;
         Vector<int> bchi;
+
+        Array<int,AMREX_SPACEDIM> order_scheme_directional{AMREX_D_DECL(1,1,1)};
        
         int use_autogen=0; 
         Vector<Real> autogen_mincoords; 
@@ -104,6 +107,7 @@ class MPMspecs
 
         int levelset_bc=1; //no slip wall
         Real levelset_wall_mu=0.1;
+
 
         Array<Real,AMREX_SPACEDIM> wall_mu_lo{AMREX_D_DECL(0.1, 0.1, 0.1)};
         Array<Real,AMREX_SPACEDIM> wall_mu_hi{AMREX_D_DECL(0.1, 0.1, 0.1)};
@@ -123,6 +127,11 @@ class MPMspecs
             autogen_maxcoords.resize(AMREX_SPACEDIM);
             autogen_vel.resize(AMREX_SPACEDIM);
             
+            ParmParse pp1("amr");
+            restart_checkfile="";
+            pp1.query("restart_checkfile",restart_checkfile);
+
+
 
             ParmParse pp("mpm");
             pp.get("prob_lo",plo);

@@ -60,7 +60,7 @@ void MPMParticleContainer::CalculateVelocity(Real &Vcm)
     Vcmx = amrex::ReduceSum(*this, [=] 
     AMREX_GPU_HOST_DEVICE (const PType& p) -> Real 
     {
-        return(p.rdata(realData::mass)*p.rdata(realData::xvel));
+        return(p.rdata(realData::mass)*p.rdata(realData::yvel));
     });
     
     mass_tot = amrex::ReduceSum(*this, [=] 

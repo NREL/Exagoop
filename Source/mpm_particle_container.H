@@ -42,6 +42,9 @@ public:
 
     void updateVolume (const amrex::Real& dt);
     void writeParticles (const int n);  
+    void writeCheckpointFile(amrex::Real cur_time,  int nstep, int output_it);
+    void WriteHeader(const std::string& name, bool is_checkpoint, amrex::Real cur_time, int nstep, int EB_generate_max_level, int output_it) const;
+    void readCheckpointFile(std::string & restart_chkfile, int &nstep, double &cur_time, int &output_it);
     void deposit_onto_grid(MultiFab& nodaldata,
                            Array<Real,AMREX_SPACEDIM> gravity,
                            int external_loads_present,
@@ -49,11 +52,15 @@ public:
                            Array<Real,AMREX_SPACEDIM> force_slab_hi,
                            Array<Real,AMREX_SPACEDIM> extforce,
                            int update_massvel,int update_forces, 
-                           amrex::Real mass_tolerance, int order_scheme);
+                           amrex::Real mass_tolerance,
+						   Array<int, AMREX_SPACEDIM> order_scheme_directional,
+						   Array<int, AMREX_SPACEDIM> periodic);
 
     void interpolate_from_grid(MultiFab& nodaldata,
                                int update_vel,int update_strainrate,
-                               int order,amrex::Real alpha_pic_flip);
+							   Array <int,AMREX_SPACEDIM> order_scheme_directional,
+							   Array <int,AMREX_SPACEDIM> periodic,
+							   amrex::Real alpha_pic_flip);
 
     void move_particles_from_nodevel(MultiFab& nodaldata,const amrex::Real& dt,
             int bclo[AMREX_SPACEDIM],int bchi[AMREX_SPACEDIM],

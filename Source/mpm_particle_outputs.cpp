@@ -1,5 +1,7 @@
 #include <mpm_particle_container.H>
 #include <interpolants.H>
+#include <AMReX_PlotFileUtil.H>
+#include <AMReX_AmrMesh.H>
 
 void MPMParticleContainer::update_density_field(MultiFab& densdata,int refratio,Real smoothfactor)
 {
@@ -154,4 +156,172 @@ void MPMParticleContainer::writeParticles(const int n)
     
     WritePlotFile(pltfile, "particles",writeflags_real, 
                   writeflags_int, real_data_names, int_data_names);
+}
+
+void MPMParticleContainer::WriteHeader(const std::string& name, bool is_checkpoint, amrex::Real cur_time, int nstep, int EB_generate_max_level, int output_it) const
+{
+    if(ParallelDescriptor::IOProcessor())
+    {
+    	const int finest_level = 0;
+        std::string HeaderFileName(name + "/Header");
+        VisMF::IO_Buffer io_buffer(VisMF::IO_Buffer_Size);
+        std::ofstream HeaderFile;
+
+        HeaderFile.rdbuf()->pubsetbuf(io_buffer.dataPtr(), io_buffer.size());
+
+        HeaderFile.open(HeaderFileName.c_str(),
+                        std::ofstream::out | std::ofstream::trunc | std::ofstream::binary);
+
+        if(!HeaderFile.good()) {
+            amrex::FileOpenFailed(HeaderFileName);
+        }
+
+        HeaderFile.precision(17);
+        if(is_checkpoint) {
+            HeaderFile << "Checkpoint version: 1\n";
+        } else {
+            HeaderFile << "HyperCLaw-V1.1\n";
+        }
+
+        HeaderFile << nstep << "\n";
+        HeaderFile << output_it << "\n";
+
+#ifdef AMREX_USE_EB
+        HeaderFile << EB_generate_max_level << "\n";
+#endif
+
+        HeaderFile << cur_time << "\n";
+
+
+    }
+}
+
+void MPMParticleContainer::writeCheckpointFile(amrex::Real cur_time, int nstep, int output_it)
+{
+	BL_PROFILE("MPMParticleContainer::writeCheckpointFile");
+	std::string m_check_file="chk";
+	const int m_nstep = nstep;
+	const int m_ioDigits=6;
+	const int finest_level=0;
+	const int EB_generate_max_level=0;
+	std::string level_prefix = "Level_";
+	const std::string& checkpointname = amrex::Concatenate(m_check_file, m_nstep, m_ioDigits);
+	amrex::PreBuildDirectorHierarchy(checkpointname, level_prefix, finest_level + 1, true);
+	bool is_checkpoint = true;
+	WriteHeader(checkpointname, is_checkpoint, cur_time, nstep, EB_generate_max_level,output_it);
+
+	amrex::Vector<std::string> real_data_names;
+	real_data_names.push_back("radius");
+	real_data_names.push_back("xvel");
+	real_data_names.push_back("yvel");
+	real_data_names.push_back("zvel");
+	for(int i=0;i<6;i++)
+	{
+		real_data_names.push_back(amrex::Concatenate("strainrate_", i, 1));
+	}
+	for(int i=0;i<6;i++)
+	{
+		real_data_names.push_back(amrex::Concatenate("strain_", i, 1));
+	}
+	for(int i=0;i<6;i++)
+	{
+		real_data_names.push_back(amrex::Concatenate("stress_", i, 1));
+	}
+	real_data_names.push_back("volume");
+	real_data_names.push_back("mass");
+	real_data_names.push_back("density");
+	real_data_names.push_back("jacobian");
+	real_data_names.push_back("pressure");
+	real_data_names.push_back("vol_init");
+	real_data_names.push_back("E");
+	real_data_names.push_back("nu");
+	real_data_names.push_back("Bulk_modulus");
+	real_data_names.push_back("Gama_pressure");
+	real_data_names.push_back("Dynamic_viscosity");
+
+	amrex::Vector<std::string> int_data_names;
+	int_data_names.push_back("phase");
+	int_data_names.push_back("constitutive_model");
+
+	Checkpoint( checkpointname, "particles", is_checkpoint, real_data_names, int_data_names);
+}
+
+void GotoNextLine(std::istream& is)
+{
+       constexpr std::streamsize bl_ignore_max{100000};
+           is.ignore(bl_ignore_max, '\n');
+}
+
+void MPMParticleContainer::readCheckpointFile(std::string & restart_chkfile, int &nstep, double &cur_time, int &output_it)
+{
+	BL_PROFILE("MPMParticleContainer::readCheckpointFile");
+
+	amrex::Print() << "Restarting from checkpoint " << restart_chkfile << "\n";
+
+	Real prob_lo[AMREX_SPACEDIM];
+	Real prob_hi[AMREX_SPACEDIM];
+	const int max_level = 0;
+	const int finest_level=0;
+
+	/***************************************************************************
+	   ** Load header: set up problem domain (including BoxArray)                 *
+	   **              allocate PeleLM memory (PeleLM::AllocateArrays)            *
+	   **              (by calling MakeNewLevelFromScratch)                       *
+	   ****************************************************************************/
+
+	std::string File(restart_chkfile + "/Header");
+
+	VisMF::IO_Buffer io_buffer(VisMF::GetIOBufferSize());
+
+	Vector<char> fileCharPtr;
+	ParallelDescriptor::ReadAndBcastFile(File, fileCharPtr);
+	std::string fileCharPtrString(fileCharPtr.dataPtr());
+	std::istringstream is(fileCharPtrString, std::istringstream::in);
+
+	std::string line, word;
+
+	// Start reading from checkpoint file
+
+	// Title line
+	std::getline(is, line);
+
+	// Finest level
+	int chk_finest_level = 0;
+
+	// Step count
+	is >> nstep;
+	GotoNextLine(is);
+
+	// Output number for plot files
+	is >> output_it;
+	GotoNextLine(is);
+
+	#ifdef AMREX_USE_EB
+	   // Finest level at which EB was generated
+	   // actually used independently, so just skip ...
+	   std::getline(is, line);
+
+	   // ... but to be backward compatible, if we get a float,
+	   // let's assume it's m_cur_time
+	   if (line.find('.') != std::string::npos) {
+	      cur_time = std::stod(line);
+
+	   } else {
+	      // Skip line and read current time
+	      is >> cur_time;
+	      GotoNextLine(is);
+	   }
+	#else
+
+	   // Current time
+	   is >> cur_time;
+	   GotoNextLine(is);
+	#endif
+
+	   Restart(restart_chkfile,"particles", true);
+
+	   if (m_verbose) {
+	      amrex::Print() << "Restart complete" << std::endl;
+	   }
+
 }

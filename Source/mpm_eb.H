@@ -48,6 +48,8 @@ amrex::Real get_levelset_value(amrex::Array4<amrex::Real> phi,
     amrex::GpuArray<amrex::Real,AMREX_SPACEDIM> ls_dx;
     const int lo[AMREX_SPACEDIM]={0};
     const int hi[AMREX_SPACEDIM]={0};
+    const Array<int, AMREX_SPACEDIM> order_scheme_pseudo={1,1,1};
+    const Array<int, AMREX_SPACEDIM> periodic_pseudo={1,1,1};
 
     ls_dx[XDIR]=dx[XDIR]/lsref;
     ls_dx[YDIR]=dx[YDIR]/lsref;
@@ -65,7 +67,7 @@ amrex::Real get_levelset_value(amrex::Array4<amrex::Real> phi,
             for(int l=0;l<2;l++)
             {
                 lsval += phi(i+l,j+m,k+n)*
-                    basisval(l,m,n,i,j,k,ptxyz,problo,ls_dx,1,lo,hi);
+                    basisval(l,m,n,i,j,k,ptxyz,problo,ls_dx,order_scheme_pseudo,periodic_pseudo,lo,hi);
             }
         }
     }
@@ -86,6 +88,8 @@ void get_levelset_grad(amrex::Array4<amrex::Real> phi,
     amrex::GpuArray<amrex::Real,AMREX_SPACEDIM> ls_dx;
     const int lo[AMREX_SPACEDIM]={0};
     const int hi[AMREX_SPACEDIM]={0};
+    const Array<int, AMREX_SPACEDIM> order_scheme_pseudo={1,1,1};
+    const Array<int, AMREX_SPACEDIM> periodic_pseudo={1,1,1};
 
     ls_dx[XDIR]=dx[XDIR]/lsref;
     ls_dx[YDIR]=dx[YDIR]/lsref;
@@ -105,11 +109,11 @@ void get_levelset_grad(amrex::Array4<amrex::Real> phi,
             for(int l=0;l<2;l++)
             {
                 lsgrad[XDIR] += phi(i+l,j+m,k+n)*
-                    basisvalder(XDIR,l,m,n,i,j,k,ptxyz,problo,ls_dx,1,lo,hi);
+                    basisvalder(XDIR,l,m,n,i,j,k,ptxyz,problo,ls_dx,order_scheme_pseudo,periodic_pseudo,lo,hi);
                 lsgrad[YDIR] += phi(i+l,j+m,k+n)*
-                    basisvalder(YDIR,l,m,n,i,j,k,ptxyz,problo,ls_dx,1,lo,hi);
+                    basisvalder(YDIR,l,m,n,i,j,k,ptxyz,problo,ls_dx,order_scheme_pseudo,periodic_pseudo,lo,hi);
                 lsgrad[ZDIR] += phi(i+l,j+m,k+n)*
-                    basisvalder(ZDIR,l,m,n,i,j,k,ptxyz,problo,ls_dx,1,lo,hi);
+                    basisvalder(ZDIR,l,m,n,i,j,k,ptxyz,problo,ls_dx,order_scheme_pseudo,periodic_pseudo,lo,hi);
             }
         }
     }

@@ -18,7 +18,19 @@ int main (int argc, char* argv[])
         MPMspecs specs;
         specs.read_mpm_specs();	//Read input file
 
+        //Declaring solver variables
+        int steps=0;
+        Real dt;
+        Real time;
+        int output_it=0;
+        std::string pltfile;
+
         //
+        //Check if max_grid_size==1. Then Abort.
+        if(specs.max_grid_size==1)
+        {
+        	amrex::Abort("\nMax grid size should be greater than or equal to two");
+        }
         int coord = 0; //cartesian
         RealBox real_box;
         for (int n = 0; n < AMREX_SPACEDIM; n++)
@@ -41,7 +53,7 @@ int main (int argc, char* argv[])
         int ng_cells = 1;
         if(specs.order_scheme==3)
         {
-        	ng_cells = 3;
+        	ng_cells = 2;
         }
 
         mpm_ebtools::init_eb(geom,ba,dm);
@@ -49,7 +61,12 @@ int main (int argc, char* argv[])
         //Initialise particle properties
         MPMParticleContainer mpm_pc(geom, dm, ba, ng_cells);
 
-        if(!specs.use_autogen)
+        if(specs.restart_checkfile !="")	//Restart from solution
+        {
+        	mpm_pc.readCheckpointFile(specs.restart_checkfile, steps,time,output_it);
+        	Print()<<"\nRestarting from checkpoint file: "<<specs.restart_checkfile;
+        }
+        else if(!specs.use_autogen)
         {
             mpm_pc.InitParticles(specs.particlefilename,
                                  specs.total_mass,specs.total_vol);
@@ -80,14 +97,103 @@ int main (int argc, char* argv[])
         else if(specs.order_scheme==3)
         {
             ng_cells_nodaldata=3;
+            //Check if periodic
+            if(specs.periodic[0]==0)
+            {
+            	if(specs.ncells[0]<5)	//Not enough number of cells in x-direction for splines. Calculate using hat shape functions
+            	{
+            		specs.order_scheme_directional[0]=1;
+            	}
+            	else
+            	{
+            		specs.order_scheme_directional[0]=3;
+            	}
+            }
+            else
+            {
+            	if(specs.ncells[0]<3)	//Not enough number of cells in x-direction for splines. Calculate using hat shape functions
+            	{
+            		specs.order_scheme_directional[0]=1;
+            	}
+            	else
+            	{
+            		specs.order_scheme_directional[0]=3;
+            	}
+            }
+
+            if(specs.periodic[1]==0)
+            {
+            	if(specs.ncells[1]<5)	//Not enough number of cells in y-direction for splines. Calculate using hat shape functions
+            	{
+            		specs.order_scheme_directional[1]=1;
+            	}
+            	else
+            	{
+            		specs.order_scheme_directional[1]=3;
+            	}
+            }
+            else
+            {
+            	if(specs.ncells[1]<3)	//Not enough number of cells in y-direction for splines. Calculate using hat shape functions
+            	{
+            		specs.order_scheme_directional[1]=1;
+            	}
+            	else
+            	{
+            		specs.order_scheme_directional[1]=3;
+            	}
+            }
+
+            if(specs.periodic[2]==0)
+            {
+            	if(specs.ncells[2]<5)	//Not enough number of cells in z-direction for splines. Calculate using hat shape functions
+            	{
+            		specs.order_scheme_directional[2]=1;
+            	}
+            	else
+            	{
+            		specs.order_scheme_directional[2]=3;
+            	}
+            }
+            else
+            {
+            	if(specs.ncells[2]<3)	//Not enough number of cells in z-direction for splines. Calculate using hat shape functions
+            	{
+            		specs.order_scheme_directional[2]=1;
+            	}
+            	else
+            	{
+            		specs.order_scheme_directional[2]=3;
+            	}
+            }
+
+            if(specs.order_scheme_directional[0]==1 and specs.order_scheme_directional[1]==1 and specs.order_scheme_directional[2]==1 )
+            {
+            	amrex::Print()<<"\nWarning! Number of cells in all directions do not qualify for cubic-spline shape functions. Hence calculating using linear hat shape functions in all directions";
+            }
+
+            //Make sure that none of the boxes that use spline function are of size of 1. For example if ncell=5 and max_grid_size = 2,we get boxes of {2,2,1}. I (Sreejith) noticed that when the box size is one
+            //ghost particles are not recorded correctly.
+            for(int box_index=0;box_index<ba.size();box_index++)
+            {
+            	for(int dim=0;dim<AMREX_SPACEDIM;dim++)
+            	{
+            		if(ba[box_index].size()[dim]==1 and specs.order_scheme_directional[dim]==3)
+            		{
+            		   	amrex::Abort("\nError! Box cannot be of size =1. Please change max_grid_size value to make sure all boxes have size>1 when using splines");
+            		}
+            	}
+            }
         }
         else
         {
-            amrex::Abort("order scheme not implemented yet\n");
+            amrex::Abort("\nOrder scheme not implemented yet\n");
         }
 
         MultiFab nodaldata(nodeba, dm, NUM_STATES, ng_cells_nodaldata);
         nodaldata.setVal(0.0,ng_cells_nodaldata);
+
+
 
         MultiFab dens_field_data;
         BoxArray dens_ba=ba;
@@ -105,20 +211,21 @@ int main (int argc, char* argv[])
         //mpm_pc.fillNeighbors();
         mpm_pc.RedistributeLocal();
         mpm_pc.fillNeighbors();
-        Real dt=specs.timestep;
+        dt=specs.timestep;
+
         mpm_pc.deposit_onto_grid(nodaldata,specs.gravity,
                                  specs.external_loads_present,
                                  specs.force_slab_lo,
                                  specs.force_slab_hi,
                                  specs.extforce,1,0,specs.mass_tolerance,
-                                 specs.order_scheme);	//Deposit mass and velocity on node
+								 specs.order_scheme_directional,
+								 specs.periodic);	//Deposit mass and velocity on node
 
         mpm_pc.interpolate_mass_from_grid(nodaldata,1);						//Calculate volume of each mp
-        mpm_pc.interpolate_from_grid(nodaldata,0,1,specs.order_scheme,specs.alpha_pic_flip);	//Calculate strainrate at each mp
+        mpm_pc.interpolate_from_grid(nodaldata,0,1,specs.order_scheme_directional,specs.periodic,specs.alpha_pic_flip);	//Calculate strainrate at each mp
         dt = mpm_pc.Calculate_time_step();
         dt=specs.CFL*dt;
         dt=min(dt,specs.dtmax);
-
 
         mpm_pc.apply_constitutive_model(dt,specs.applied_strainrate);
 
@@ -136,47 +243,53 @@ int main (int argc, char* argv[])
         Real Vmex=0.0;
 
 
-
-        int steps=0;
-        Real time=zero;
         Real output_time=zero;
         Real output_timePrint=zero;
-        int output_it=0;
 
 
         if(specs.print_diagnostics)
         {
-            mpm_pc.FindWaterFront(Vmnum);
-            PrintToFile("waterfront.out")<<time<<"\t"<<Vmnum<<"\n";
-            PrintToFile("Energy.out")<<time<<"\t"<<TKE<<"\t"<<TSE<<"\t"<<TE<<"\n";
+        	mpm_pc.CalculateVelocity(Vmnum);
+        	Real n = 1;
+        	        	Real beta_n = (2*n-1.0)/2*3.141592/25.0;
+        	        	Real w_n = 10*beta_n;
+        	        	Vmex = 0.1/(beta_n*25.0)*cos(w_n*time);
+            //mpm_pc.FindWaterFront(Vmnum);
+            //mpm_pc.CalculateEnergies(TKE,TSE);
+            PrintToFile("AxialBar.out")<<time<<"\t"<<Vmex<<"\t"<<Vmnum<<"\n";
+            //PrintToFile("Energy.out")<<time<<"\t"<<TKE<<"\t"<<TSE<<"\t"<<TE<<"\n";
         }
 
-        mpm_pc.writeParticles(steps);
         amrex::Vector<std::string> nodaldata_names;
-        nodaldata_names.push_back("mass");
-        nodaldata_names.push_back("vel_x");
-        nodaldata_names.push_back("vel_y");
-        nodaldata_names.push_back("vel_z");
-        nodaldata_names.push_back("force_x");
-        nodaldata_names.push_back("force_y");
-        nodaldata_names.push_back("force_z");
-        nodaldata_names.push_back("delta_velx");
-        nodaldata_names.push_back("delta_vely");
-        nodaldata_names.push_back("delta_velz");
-        nodaldata_names.push_back("mass_old");
+                	nodaldata_names.push_back("mass");
+                	nodaldata_names.push_back("vel_x");
+                	nodaldata_names.push_back("vel_y");
+                	nodaldata_names.push_back("vel_z");
+                	nodaldata_names.push_back("force_x");
+                	nodaldata_names.push_back("force_y");
+                	nodaldata_names.push_back("force_z");
+                	nodaldata_names.push_back("delta_velx");
+                	nodaldata_names.push_back("delta_vely");
+                	nodaldata_names.push_back("delta_velz");
+                	nodaldata_names.push_back("mass_old");
 
-        std::string pltfile;
-        pltfile = amrex::Concatenate("nplt", steps, 5);
-        write_plot_file(pltfile,nodaldata,nodaldata_names,geom,ba,dm,time);
 
-        if(specs.dens_field_output)
+        if(specs.restart_checkfile =="")
         {
-            pltfile = amrex::Concatenate("dplt", steps, 5);
-            WriteSingleLevelPlotfile(pltfile, dens_field_data, {"density"}, geom_dens, time, 0);
+        	mpm_pc.writeParticles(steps);
+
+
+        	pltfile = amrex::Concatenate("nplt", steps, 5);
+        	write_plot_file(pltfile,nodaldata,nodaldata_names,geom,ba,dm,time);
+
+        	if(specs.dens_field_output)
+        	{
+        		pltfile = amrex::Concatenate("dplt", steps, 5);
+        		WriteSingleLevelPlotfile(pltfile, dens_field_data, {"density"}, geom_dens, time, 0);
+        	}
         }
 
-
-        amrex::Print()<<"number of particles in the simulation:"<<mpm_pc.TotalNumberOfParticles()<<"\n";
+        amrex::Print()<<"\nNumber of particles in the simulation:"<<mpm_pc.TotalNumberOfParticles()<<"\n";
 
         while((steps < specs.maxsteps) and (time < specs.final_time))
         {
@@ -187,10 +300,11 @@ int main (int argc, char* argv[])
             time += dt;
             output_time += dt;
             output_timePrint += dt;
+            steps++;
 
-            if (output_timePrint > specs.screen_output_time)
+            if (output_timePrint >= specs.screen_output_time)
             {
-                Print()<<"step:"<<steps<<"\t"<<"time:"<<time<<" dt = "<<dt<<"\n";
+                Print()<<"\nIteration: "<<std::setw(10)<<steps<<",\t"<<"Time: "<<std::fixed<<std::setprecision(10)<<time<<",\tDt = "<<std::scientific<<std::setprecision(5)<<dt;
                 output_timePrint=zero;
             }
 
@@ -209,11 +323,13 @@ int main (int argc, char* argv[])
             //find mass/vel at nodes
             //update_massvel=1, update_forces=0
             //Update mass and velocity only
+
             mpm_pc.deposit_onto_grid(nodaldata,specs.gravity,
                     specs.external_loads_present,
                     specs.force_slab_lo,
                     specs.force_slab_hi,
-                    specs.extforce,1,0,specs.mass_tolerance,specs.order_scheme); 		
+                    specs.extforce,1,0,specs.mass_tolerance,specs.order_scheme_directional,
+					specs.periodic);
 
             //Store velocity at time level t to calculate Delta_vel later for flip update
             backup_current_velocity(nodaldata);									
@@ -224,7 +340,8 @@ int main (int argc, char* argv[])
                     specs.force_slab_lo,
                     specs.force_slab_hi,
                     specs.extforce,0,1,
-                    specs.mass_tolerance,specs.order_scheme);
+                    specs.mass_tolerance,specs.order_scheme_directional,
+					 specs.periodic);
 
             //update velocity on nodes
             nodal_update(nodaldata,dt,specs.mass_tolerance);
@@ -248,7 +365,7 @@ int main (int argc, char* argv[])
             //Update particle velocity at time t+dt
             mpm_pc.updateNeighbors();
             mpm_pc.interpolate_from_grid(nodaldata,1,0,
-                    specs.order_scheme,specs.alpha_pic_flip);
+                    specs.order_scheme_directional,specs.periodic,specs.alpha_pic_flip);
             mpm_pc.updateNeighbors();
 
             //Update particle position at t+dt
@@ -267,7 +384,8 @@ int main (int argc, char* argv[])
                                          specs.force_slab_lo,
                                          specs.force_slab_hi,
                                          specs.extforce,1,0,
-                                         specs.mass_tolerance,specs.order_scheme);
+                                         specs.mass_tolerance,specs.order_scheme_directional,
+										 specs.periodic);
                 nodal_bcs(geom,nodaldata,specs.bclo.data(),specs.bchi.data(),
                         specs.wall_mu_lo.data(),specs.wall_mu_hi.data(),
                         specs.wall_vel_lo.data(),specs.wall_vel_hi.data(),
@@ -281,7 +399,7 @@ int main (int argc, char* argv[])
             }
 
             //find strainrate at material points at time t+dt
-            mpm_pc.interpolate_from_grid(nodaldata,0,1,specs.order_scheme,specs.alpha_pic_flip);
+            mpm_pc.interpolate_from_grid(nodaldata,0,1,specs.order_scheme_directional,specs.periodic,specs.alpha_pic_flip);
             mpm_pc.updateNeighbors();
 
             //mpm_pc.move_particles_from_nodevel(nodaldata,dt,specs.bclo.data(),specs.bchi.data(),1);
@@ -306,17 +424,22 @@ int main (int argc, char* argv[])
 
             if(specs.print_diagnostics)
             {
-                mpm_pc.FindWaterFront(Vmnum);
-                PrintToFile("waterfront.out")<<time<<"\t"<<Vmnum<<"\n";
-                mpm_pc.CalculateEnergies(TKE,TSE);
-                PrintToFile("Energy.out")<<time<<"\t"<<TKE<<"\t"<<TSE<<"\t"<<(TKE+TSE)<<"\n";
+            	mpm_pc.CalculateVelocity(Vmnum);
+            	Real n = 1;
+            	Real beta_n = (2*n-1.0)/2*3.141592/25.0;
+            	Real w_n = 10*beta_n;
+            	Vmex = 0.1/(beta_n*25.0)*cos(w_n*time);
+                //mpm_pc.FindWaterFront(Vmnum);
+                PrintToFile("AxialBar.out")<<time<<"\t"<<Vmex<<"\t"<<Vmnum<<"\n";
+                //mpm_pc.CalculateEnergies(TKE,TSE);
+                //PrintToFile("Energy.out")<<time<<"\t"<<TKE<<"\t"<<TSE<<"\t"<<(TKE+TSE)<<"\n";
             }
 
 
-            if (output_time > specs.write_output_time) 
+            if (fabs(output_time-specs.write_output_time)<dt*0.5)
             {
                 BL_PROFILE_VAR("OUTPUT_TIME",outputs);
-                Print()<<"writing outputs at step,time:"<<steps<<"\t"<<time<<"\n";
+                Print()<<"\nWriting outputs at step,time:"<<steps<<"\t"<<time;
                 mpm_pc.Redistribute();
                 mpm_pc.fillNeighbors();
 
@@ -334,8 +457,10 @@ int main (int argc, char* argv[])
 
                 output_time=zero;
                 BL_PROFILE_VAR_STOP(outputs);
+
+                mpm_pc.writeCheckpointFile(time,steps,output_it);
             }
-            steps++;
+
         }
 
         mpm_pc.Redistribute();
