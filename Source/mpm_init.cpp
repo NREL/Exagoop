@@ -57,9 +57,7 @@ void MPMParticleContainer::InitParticles (const std::string& filename,
             ifs >> p.rdata(realData::yvel);
             ifs >> p.rdata(realData::zvel);
             ifs >> p.idata(intData::constitutive_model);		
-            //Commented only for getting the HPRO inputfile to work
-            //ifs>>junk;
-            //p.idata(intData::constitutive_model)=0;
+
             if(p.idata(intData::constitutive_model)==0)	//Elastic solid
             {
             	ifs >> p.rdata(realData::E);
@@ -83,13 +81,13 @@ void MPMParticleContainer::InitParticles (const std::string& filename,
 
             // Set other particle properties
             p.rdata(realData::volume)      = fourbythree*PI*pow(p.rdata(realData::radius),three);	
-            //This is a dummy initialisation. We will correct this value later
+            //This is the right mass of each particle. Make sure the radius is entered correctly while generating the particle file
             p.rdata(realData::mass)        = p.rdata(realData::density)*p.rdata(realData::volume);
 
             total_mass +=p.rdata(realData::mass);
             total_vol +=p.rdata(realData::volume);
             p.rdata(realData::jacobian)	   = 1.0;
-            p.rdata(realData::vol_init)	   = 0.0;
+            p.rdata(realData::vol_init)	   = p.rdata(realData::volume);
             p.rdata(realData::pressure)    = 0.0;
 
 

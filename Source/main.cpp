@@ -14,23 +14,26 @@ int main (int argc, char* argv[])
     amrex::Initialize(argc,argv);
 
     {
-    	//Reading input files for the simulation
+    	//Initialising and reading input file for the simulation
         MPMspecs specs;
-        specs.read_mpm_specs();	//Read input file
+        specs.read_mpm_specs();
 
         //Declaring solver variables
         int steps=0;
         Real dt;
-        Real time;
+        Real time = 0.0;
         int output_it=0;
         std::string pltfile;
+        Real output_time=zero;
+        Real output_timePrint=zero;
 
-        //
         //Check if max_grid_size==1. Then Abort.
         if(specs.max_grid_size==1)
         {
         	amrex::Abort("\nMax grid size should be greater than or equal to two");
         }
+
+
         int coord = 0; //cartesian
         RealBox real_box;
         for (int n = 0; n < AMREX_SPACEDIM; n++)
@@ -40,22 +43,23 @@ int main (int argc, char* argv[])
         }
 
         IntVect domain_lo(AMREX_D_DECL(0,0,0));
-        IntVect domain_hi(AMREX_D_DECL(specs.ncells[XDIR]-1,
-                    specs.ncells[YDIR]-1,specs.ncells[ZDIR]-1));
+        IntVect domain_hi(AMREX_D_DECL(	specs.ncells[XDIR]-1,
+                    					specs.ncells[YDIR]-1,
+										specs.ncells[ZDIR]-1));
         const Box domain(domain_lo, domain_hi);
-
         Geometry geom(domain, &real_box, coord, specs.periodic.data());
 
+        //Create box array and chunking it
         BoxArray ba(domain);
         ba.maxSize(specs.max_grid_size);
         DistributionMapping dm(ba);
 
+        //Defining number of ghost cells for particle data
         int ng_cells = 1;
         if(specs.order_scheme==3)
         {
         	ng_cells = 2;
         }
-
         mpm_ebtools::init_eb(geom,ba,dm);
 
         //Initialise particle properties
@@ -86,7 +90,7 @@ int main (int argc, char* argv[])
             mpm_pc.removeParticlesInsideEB();
         }
 
-        //Set grid properties
+        //Set Euler grid properties
         const BoxArray& nodeba = amrex::convert(ba, IntVect{1,1,1});
 
         int ng_cells_nodaldata=1;
@@ -193,8 +197,6 @@ int main (int argc, char* argv[])
         MultiFab nodaldata(nodeba, dm, NUM_STATES, ng_cells_nodaldata);
         nodaldata.setVal(0.0,ng_cells_nodaldata);
 
-
-
         MultiFab dens_field_data;
         BoxArray dens_ba=ba;
         Box dom_dens = geom.Domain();
@@ -213,19 +215,25 @@ int main (int argc, char* argv[])
         mpm_pc.fillNeighbors();
         dt=specs.timestep;
 
-        mpm_pc.deposit_onto_grid(nodaldata,specs.gravity,
+        //Deposit mass and velocity on node
+        mpm_pc.deposit_onto_grid(nodaldata,
+        		 	 	 	 	 specs.gravity,
                                  specs.external_loads_present,
                                  specs.force_slab_lo,
                                  specs.force_slab_hi,
                                  specs.extforce,1,0,specs.mass_tolerance,
 								 specs.order_scheme_directional,
-								 specs.periodic);	//Deposit mass and velocity on node
+								 specs.periodic);
 
-        mpm_pc.interpolate_mass_from_grid(nodaldata,1);						//Calculate volume of each mp
-        mpm_pc.interpolate_from_grid(nodaldata,0,1,specs.order_scheme_directional,specs.periodic,specs.alpha_pic_flip);	//Calculate strainrate at each mp
-        dt = mpm_pc.Calculate_time_step();
-        dt=specs.CFL*dt;
-        dt=min(dt,specs.dtmax);
+        mpm_pc.interpolate_from_grid(nodaldata,
+        							0,
+									1,
+									specs.order_scheme_directional,
+									specs.periodic,
+									specs.alpha_pic_flip);	//Calculate strainrate at each mp
+        dt 	= mpm_pc.Calculate_time_step();
+        dt	= specs.CFL*dt;
+        dt	= min(dt,specs.dtmax);
 
         mpm_pc.apply_constitutive_model(dt,specs.applied_strainrate);
 
@@ -242,18 +250,13 @@ int main (int argc, char* argv[])
         Real Vmnum=0.0;
         Real Vmex=0.0;
 
-
-        Real output_time=zero;
-        Real output_timePrint=zero;
-
-
         if(specs.print_diagnostics)
         {
         	mpm_pc.CalculateVelocity(Vmnum);
         	Real n = 1;
-        	        	Real beta_n = (2*n-1.0)/2*3.141592/25.0;
-        	        	Real w_n = 10*beta_n;
-        	        	Vmex = 0.1/(beta_n*25.0)*cos(w_n*time);
+        	Real beta_n = (2*n-1.0)/2*3.141592/25.0;
+        	Real w_n = 10*beta_n;
+        	Vmex = 0.1/(beta_n*25.0)*cos(w_n*time);
             //mpm_pc.FindWaterFront(Vmnum);
             //mpm_pc.CalculateEnergies(TKE,TSE);
             PrintToFile("AxialBar.out")<<time<<"\t"<<Vmex<<"\t"<<Vmnum<<"\n";
@@ -277,7 +280,6 @@ int main (int argc, char* argv[])
         if(specs.restart_checkfile =="")
         {
         	mpm_pc.writeParticles(steps);
-
 
         	pltfile = amrex::Concatenate("nplt", steps, 5);
         	write_plot_file(pltfile,nodaldata,nodaldata_names,geom,ba,dm,time);
@@ -320,38 +322,46 @@ int main (int argc, char* argv[])
             }
 
             nodaldata.setVal(zero,ng_cells_nodaldata);
-            //find mass/vel at nodes
+
             //update_massvel=1, update_forces=0
-            //Update mass and velocity only
+            mpm_pc.deposit_onto_grid(	nodaldata,
+            							specs.gravity,
+										specs.external_loads_present,
+										specs.force_slab_lo,
+										specs.force_slab_hi,
+										specs.extforce,
+										1,
+										0,
+										specs.mass_tolerance,
+										specs.order_scheme_directional,
+										specs.periodic);
 
-            mpm_pc.deposit_onto_grid(nodaldata,specs.gravity,
-                    specs.external_loads_present,
-                    specs.force_slab_lo,
-                    specs.force_slab_hi,
-                    specs.extforce,1,0,specs.mass_tolerance,specs.order_scheme_directional,
-					specs.periodic);
-
-            //Store velocity at time level t to calculate Delta_vel later for flip update
+            //Store node velocity at time level t to calculate Delta_vel later for flip update
             backup_current_velocity(nodaldata);									
 
             // Calculate forces on nodes
-            mpm_pc.deposit_onto_grid(nodaldata,specs.gravity,					
-                    specs.external_loads_present,
-                    specs.force_slab_lo,
-                    specs.force_slab_hi,
-                    specs.extforce,0,1,
-                    specs.mass_tolerance,specs.order_scheme_directional,
-					 specs.periodic);
+            mpm_pc.deposit_onto_grid(	nodaldata,
+            							specs.gravity,
+										specs.external_loads_present,
+										specs.force_slab_lo,
+										specs.force_slab_hi,
+										specs.extforce,0,1,
+										specs.mass_tolerance,
+										specs.order_scheme_directional,
+										specs.periodic);
 
             //update velocity on nodes
             nodal_update(nodaldata,dt,specs.mass_tolerance);
 
             //impose bcs at nodes
-            nodal_bcs(geom,nodaldata,specs.bclo.data(),
-                    specs.bchi.data(),specs.wall_mu_lo.data(),
-                    specs.wall_mu_hi.data(),
-                    specs.wall_vel_lo.data(),specs.wall_vel_hi.data(),
-                    dt);
+            nodal_bcs(	geom,nodaldata,
+            			specs.bclo.data(),
+						specs.bchi.data(),
+						specs.wall_mu_lo.data(),
+						specs.wall_mu_hi.data(),
+						specs.wall_vel_lo.data(),
+						specs.wall_vel_hi.data(),
+						dt);
 
             if(mpm_ebtools::using_levelset_geometry)
             {
@@ -364,16 +374,23 @@ int main (int argc, char* argv[])
 
             //Update particle velocity at time t+dt
             mpm_pc.updateNeighbors();
-            mpm_pc.interpolate_from_grid(nodaldata,1,0,
-                    specs.order_scheme_directional,specs.periodic,specs.alpha_pic_flip);
+            mpm_pc.interpolate_from_grid(	nodaldata,
+            								1,
+											0,
+											specs.order_scheme_directional,
+											specs.periodic,
+											specs.alpha_pic_flip);
             mpm_pc.updateNeighbors();
 
             //Update particle position at t+dt
-            mpm_pc.moveParticles(dt,specs.bclo.data(),specs.bchi.data(),
-                    specs.levelset_bc,
-                    specs.wall_mu_lo.data(),specs.wall_mu_hi.data(),
-                    specs.wall_vel_lo.data(),specs.wall_vel_hi.data(),
-                    specs.levelset_wall_mu);
+            mpm_pc.moveParticles(	dt,
+            						specs.bclo.data(),specs.bchi.data(),
+									specs.levelset_bc,
+									specs.wall_mu_lo.data(),
+									specs.wall_mu_hi.data(),
+									specs.wall_vel_lo.data(),
+									specs.wall_vel_hi.data(),
+									specs.levelset_wall_mu);
 
             if(specs.stress_update_scheme==1)										
             {

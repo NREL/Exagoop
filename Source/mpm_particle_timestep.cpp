@@ -81,7 +81,7 @@ void MPMParticleContainer::updateVolume(const amrex::Real& dt)
             p.rdata(realData::jacobian) += (p.rdata(realData::strainrate+XX)
             +p.rdata(realData::strainrate+YY)+p.rdata(realData::strainrate+ZZ)) * dt * p.rdata(realData::jacobian);
             p.rdata(realData::volume)	= p.rdata(realData::vol_init)*p.rdata(realData::jacobian);
-            p.rdata(realData::density)	= p.rdata(realData::mass)/p.rdata(realData::volume);
+            //p.rdata(realData::density)	= p.rdata(realData::mass)/p.rdata(realData::volume);
 
         });
     }
