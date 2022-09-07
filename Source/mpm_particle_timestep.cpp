@@ -3,7 +3,7 @@
 #include <mpm_eb.H>
 #include <mpm_kernels.H>
 
-amrex::Real MPMParticleContainer::Calculate_time_step()
+amrex::Real MPMParticleContainer::Calculate_time_step(amrex::Real CFL,amrex::Real dtmax,amrex::Real dtmin)
 {
     const int lev = 0;
     const Geometry& geom = Geom(lev);
@@ -39,10 +39,10 @@ amrex::Real MPMParticleContainer::Calculate_time_step()
     ParallelDescriptor::ReduceRealMin(dt);
 #endif
 
-    if(dt<1e-10)
-    {
-        amrex::Print()<<"\nWarning: Time step is getting too low (dt = "<<dt<<" )";
-    }
+    dt	= CFL*dt;
+    dt  = (dt>dtmax)?dtmax:((dt<dtmin)?dtmin:dt);
+
+
     return(dt);
 }
 

@@ -7,7 +7,9 @@ void MPMParticleContainer::deposit_onto_grid(MultiFab& nodaldata,
                                              Array<Real,AMREX_SPACEDIM> force_slab_lo,
                                              Array<Real,AMREX_SPACEDIM> force_slab_hi,
                                              Array<Real,AMREX_SPACEDIM> extforce,
-                                             int update_massvel,int update_forces, amrex::Real mass_tolerance, int order_scheme)
+                                             int update_massvel,int update_forces, amrex::Real mass_tolerance,
+											 Array<int,AMREX_SPACEDIM> order_scheme_directional,
+											 Array<int,AMREX_SPACEDIM> periodic)
 {
     const int lev = 0;
     const Geometry& geom = Geom(lev);
@@ -68,7 +70,6 @@ void MPMParticleContainer::deposit_onto_grid(MultiFab& nodaldata,
         int ng =aos.numNeighborParticles();
         int nt = np+ng;
 
-
         Array4<Real> nodal_data_arr=nodaldata.array(mfi);
 
         ParticleType* pstruct = aos().dataPtr();
@@ -88,64 +89,19 @@ void MPMParticleContainer::deposit_onto_grid(MultiFab& nodaldata,
 
             auto iv = getParticleCell(p, plo, dxi, domain);
 
-            if(order_scheme==1)
-            {
-                lmin=0;
-                lmax=2;
-                nmin=0;
-                nmax=2;
-                mmin=0;
-                mmax=2;
-            }
-            else
-            {
-                if(iv[0]==lo[0])
-                {
-                    lmin=0;
-                    lmax=3;
-                }
-                else if(iv[0]==hi[0])
-                {
-                    lmin=-1;
-                    lmax=2;
-                }
-                else
-                {
-                    lmin=-1;
-                    lmax=3;
-                }
+            lmin=(order_scheme_directional[0]==1)?0:((order_scheme_directional[0]==3)?(iv[XDIR]==lo[XDIR])?0:((iv[XDIR]==hi[XDIR])?-1:-1):-1000);
+            lmax=(order_scheme_directional[0]==1)?2:((order_scheme_directional[0]==3)?(iv[XDIR]==lo[XDIR])?lmin+3:((iv[XDIR]==hi[XDIR])?lmin+3:lmin+4):-1000);
 
-                if(iv[1]==lo[1])
-                {
-                    mmin=0;
-                    mmax=3;
-                }
-                else if(iv[1]==hi[1])
-                {
-                    mmin=-1;
-                    mmax=2;
-                }
-                else
-                {
-                    mmin=-1;
-                    mmax=3;
-                }
+            mmin=(order_scheme_directional[1]==1)?0:((order_scheme_directional[1]==3)?(iv[YDIR]==lo[YDIR])?0:((iv[YDIR]==hi[YDIR])?-1:-1):-1000);
+            mmax=(order_scheme_directional[1]==1)?2:((order_scheme_directional[1]==3)?(iv[YDIR]==lo[YDIR])?mmin+3:((iv[YDIR]==hi[YDIR])?mmin+3:mmin+4):-1000);
 
-                if(iv[2]==lo[2])
-                {
-                    nmin=0;
-                    nmax=3;
-                }
-                else if(iv[2]==hi[2])
-                {
-                    nmin=-1;
-                    nmax=2;
-                }
-                else
-                {
-                    nmin=-1;
-                    nmax=3;
-                }
+            nmin=(order_scheme_directional[2]==1)?0:((order_scheme_directional[2]==3)?(iv[ZDIR]==lo[ZDIR])?0:((iv[ZDIR]==hi[ZDIR])?-1:-1):-1000);
+            nmax=(order_scheme_directional[2]==1)?2:((order_scheme_directional[2]==3)?(iv[ZDIR]==lo[ZDIR])?nmin+3:((iv[ZDIR]==hi[ZDIR])?nmin+3:nmin+4):-1000);
+
+
+            if(lmin==-1000 or lmax==-1000 or mmin==-1000 or mmax==-1000 or nmin==-1000 or nmax==-1000)
+            {
+            	amrex::Abort("\nError. Something wrong with min/max index values in deposit onto grid");
             }
 
             for(int n=nmin;n<nmax;n++)
@@ -159,7 +115,7 @@ void MPMParticleContainer::deposit_onto_grid(MultiFab& nodaldata,
                         if(nodalbox.contains(ivlocal))
                         {
 
-                            amrex::Real basisvalue=basisval(l,m,n,iv[XDIR],iv[YDIR],iv[ZDIR],xp,plo,dx,order_scheme,lo,hi);
+                            amrex::Real basisvalue=basisval(l,m,n,iv[XDIR],iv[YDIR],iv[ZDIR],xp,plo,dx,order_scheme_directional,periodic,lo,hi);
 
                             if(update_massvel)
                             {
@@ -169,7 +125,6 @@ void MPMParticleContainer::deposit_onto_grid(MultiFab& nodaldata,
                                 {p.rdata(realData::mass)*p.rdata(realData::xvel)*basisvalue,
                                     p.rdata(realData::mass)*p.rdata(realData::yvel)*basisvalue,
                                     p.rdata(realData::mass)*p.rdata(realData::zvel)*basisvalue};
-
 
                                 amrex::Gpu::Atomic::AddNoRet(&nodal_data_arr(ivlocal,MASS_INDEX), mass_contrib);
 
@@ -189,7 +144,7 @@ void MPMParticleContainer::deposit_onto_grid(MultiFab& nodaldata,
 
                                 for(int d=0;d<AMREX_SPACEDIM;d++)
                                 {
-                                    basisval_grad[d]=basisvalder(d,l,m,n,iv[XDIR],iv[YDIR],iv[ZDIR],xp,plo,dx,order_scheme,lo,hi);
+                                    basisval_grad[d]=basisvalder(d,l,m,n,iv[XDIR],iv[YDIR],iv[ZDIR],xp,plo,dx,order_scheme_directional,periodic,lo,hi);
                                 }
 
                                 amrex::Real bforce_contrib[AMREX_SPACEDIM]=
@@ -254,6 +209,7 @@ void MPMParticleContainer::deposit_onto_grid(MultiFab& nodaldata,
         {
             if(update_massvel)
             {
+            	//amrex::Print()<<"\n Nodal mass values for i = "<<i<<" j = "<<j<<" k = "<<k<<" is "<<nodal_data_arr(i,j,k,MASS_INDEX);
                 if(nodal_data_arr(i,j,k,MASS_INDEX) > 0.0)
                 {
                     for(int dim=0;dim<AMREX_SPACEDIM;dim++)
@@ -316,22 +272,23 @@ void MPMParticleContainer::interpolate_mass_from_grid(MultiFab& nodaldata,int or
 
             auto iv = getParticleCell(p, plo, dxi, domain);
 
-            if(order_scheme==1)
-            {
-                p.rdata(realData::vol_init) = bilin_interp(xp,iv[XDIR],iv[YDIR],iv[ZDIR],plo,dx,nodal_data_arr,MASS_INDEX);
+            p.rdata(realData::vol_init) = bilin_interp(xp,iv[XDIR],iv[YDIR],iv[ZDIR],plo,dx,nodal_data_arr,MASS_INDEX);
                 
-                //Actually the density. Dont get confused by the variable name.
-                p.rdata(realData::vol_init) = p.rdata(realData::vol_init)/(dx[XDIR]*dx[YDIR]*dx[ZDIR]);
+            //Actually the density. Dont get confused by the variable name.
+            p.rdata(realData::vol_init) = p.rdata(realData::vol_init)/(dx[XDIR]*dx[YDIR]*dx[ZDIR]);
                 
-                //INitial volume
-                p.rdata(realData::vol_init) = p.rdata(realData::mass)/p.rdata(realData::vol_init);	
-            }
+            //INitial volume
+            p.rdata(realData::vol_init) = p.rdata(realData::mass)/p.rdata(realData::vol_init);
+
         });
     }
 }
 
 void MPMParticleContainer::interpolate_from_grid(MultiFab& nodaldata,int update_vel,
-                    int update_strainrate,int order_scheme,amrex::Real alpha_pic_flip)
+                    int update_strainrate,
+					Array <int,AMREX_SPACEDIM> order_scheme_directional,
+					Array <int,AMREX_SPACEDIM> periodic,
+					amrex::Real alpha_pic_flip)
 {
     const int lev = 0;
     const Geometry& geom = Geom(lev);
@@ -344,6 +301,7 @@ void MPMParticleContainer::interpolate_from_grid(MultiFab& nodaldata,int update_
     int ncomp=nodaldata.nComp();
     const int* lo = domain.loVect ();
     const int* hi = domain.hiVect ();
+    const double pi = 3.141592654;
 
     nodaldata.FillBoundary(geom.periodicity());
 
@@ -377,113 +335,59 @@ void MPMParticleContainer::interpolate_from_grid(MultiFab& nodaldata,int update_
 
             auto iv = getParticleCell(p, plo, dxi, domain);
 
-            if(order_scheme==1)
-            {
-                lmin=0;
-                lmax=2;
-                nmin=0;
-                nmax=2;
-                mmin=0;
-                mmax=2;
-            }
-            else if(order_scheme==3)
-            {
-                if(iv[0]==lo[0])
-                {
-                    lmin=0;
-                    lmax=3;
-                }
-                else if(iv[0]==hi[0])
-                {
-                    lmin=-1;
-                    lmax=2;
-                }
-                else
-                {
-                    lmin=-1;
-                    lmax=3;
-                }
-                if(iv[1]==lo[1])
-                {
-                    mmin=0;
-                    mmax=3;
-                }
-                else if(iv[1]==hi[1])
-                {
-                    mmin=-1;
-                    mmax=2;
-                }
-                else
-                {
-                    mmin=-1;
-                    mmax=3;
-                }
-                if(iv[2]==lo[2])
-                {
-                    nmin=0;
-                    nmax=3;
-                }
-                else if(iv[2]==hi[2])
-                {
-                    nmin=-1;
-                    nmax=2;
-                }
-                else
-                {
-                    nmin=-1;
-                    nmax=3;
-                }
-            }
+            lmin=(order_scheme_directional[0]==1)?0:((order_scheme_directional[0]==3)?(iv[XDIR]==lo[XDIR])?0:((iv[XDIR]==hi[XDIR])?-1:-1):-1000);
+            lmax=(order_scheme_directional[0]==1)?2:((order_scheme_directional[0]==3)?(iv[XDIR]==lo[XDIR])?lmin+3:((iv[XDIR]==hi[XDIR])?lmin+3:lmin+4):-1000);
 
+            mmin=(order_scheme_directional[1]==1)?0:((order_scheme_directional[1]==3)?(iv[YDIR]==lo[YDIR])?0:((iv[YDIR]==hi[YDIR])?-1:-1):-1000);
+            mmax=(order_scheme_directional[1]==1)?2:((order_scheme_directional[1]==3)?(iv[YDIR]==lo[YDIR])?mmin+3:((iv[YDIR]==hi[YDIR])?mmin+3:mmin+4):-1000);
+
+            nmin=(order_scheme_directional[2]==1)?0:((order_scheme_directional[2]==3)?(iv[ZDIR]==lo[ZDIR])?0:((iv[ZDIR]==hi[ZDIR])?-1:-1):-1000);
+            nmax=(order_scheme_directional[2]==1)?2:((order_scheme_directional[2]==3)?(iv[ZDIR]==lo[ZDIR])?nmin+3:((iv[ZDIR]==hi[ZDIR])?nmin+3:nmin+4):-1000);
+
+            if(lmin ==-1000 or lmax==-1000 or mmin==-1000 or mmax==-1000 or nmin==-1000 or nmax==-1000)
+            {
+            	amrex::Abort("\nError. Something wrong with min/max index values");
+            }
 
             if(update_vel)
             {
-                if(order_scheme==1)
+                if(order_scheme_directional[0]==1)
                 {
                     p.rdata(realData::xvel) = (alpha_pic_flip)*p.rdata(realData::xvel)
                     +(alpha_pic_flip)*bilin_interp(xp,iv[XDIR],iv[YDIR],iv[ZDIR],plo,dx,nodal_data_arr,DELTA_VELX_INDEX)
                     +(1-alpha_pic_flip)*bilin_interp(xp,iv[XDIR],iv[YDIR],iv[ZDIR],plo,dx,nodal_data_arr,VELX_INDEX);
+                }
+                else if(order_scheme_directional[0]==3)
+                {
+                	p.rdata(realData::xvel) = (alpha_pic_flip)*p.rdata(realData::xvel)
+                	+(alpha_pic_flip)*cubic_interp(xp,iv[XDIR],iv[YDIR],iv[ZDIR],lmin,mmin,nmin,lmax,mmax,nmax,plo,dx,nodal_data_arr,DELTA_VELX_INDEX,lo,hi)
+                	+(1-alpha_pic_flip)*cubic_interp(xp,iv[XDIR],iv[YDIR],iv[ZDIR],lmin,mmin,nmin,lmax,mmax,nmax,plo,dx,nodal_data_arr,VELX_INDEX,lo,hi);
+                }
 
+                if(order_scheme_directional[1]==1)
+                {
                     p.rdata(realData::yvel) = (alpha_pic_flip)*p.rdata(realData::yvel)
                     +(alpha_pic_flip)*bilin_interp(xp,iv[XDIR],iv[YDIR],iv[ZDIR],plo,dx,nodal_data_arr,DELTA_VELY_INDEX)
                     +(1-alpha_pic_flip)*bilin_interp(xp,iv[XDIR],iv[YDIR],iv[ZDIR],plo,dx,nodal_data_arr,VELY_INDEX);
+                }
+                else if(order_scheme_directional[1]==3)
+                {
+                	p.rdata(realData::yvel) = (alpha_pic_flip)*p.rdata(realData::yvel)
+					+(alpha_pic_flip)*cubic_interp(xp,iv[XDIR],iv[YDIR],iv[ZDIR],lmin,mmin,nmin,lmax,mmax,nmax,plo,dx,nodal_data_arr,DELTA_VELY_INDEX,lo,hi)
+                	+(1-alpha_pic_flip)*cubic_interp(xp,iv[XDIR],iv[YDIR],iv[ZDIR],lmin,mmin,nmin,lmax,mmax,nmax,plo,dx,nodal_data_arr,VELY_INDEX,lo,hi);
+                }
 
+                if(order_scheme_directional[2]==1)
+                {
                     p.rdata(realData::zvel) = (alpha_pic_flip)*p.rdata(realData::zvel)
                     +(alpha_pic_flip)*bilin_interp(xp,iv[XDIR],iv[YDIR],iv[ZDIR],plo,dx,nodal_data_arr,DELTA_VELZ_INDEX)
                     +(1-alpha_pic_flip)*bilin_interp(xp,iv[XDIR],iv[YDIR],iv[ZDIR],plo,dx,nodal_data_arr,VELZ_INDEX);
                 }
-                if(order_scheme==3)
+                if(order_scheme_directional[2]==3)
                 {
-                    /*p.rdata(realData::xvel) = (alpha_pic_flip)*p.rdata(realData::xvel)
-                      +(alpha_pic_flip)*bilin_interp(xp,iv[XDIR],iv[YDIR],iv[ZDIR],plo,dx,nodal_data_arr,DELTA_VELX_INDEX)
-                      +(1-alpha_pic_flip)*bilin_interp(xp,iv[XDIR],iv[YDIR],iv[ZDIR],plo,dx,nodal_data_arr,VELX_INDEX);
-                      p.rdata(realData::yvel) = (alpha_pic_flip)*p.rdata(realData::yvel)
-                      +(alpha_pic_flip)*bilin_interp(xp,iv[XDIR],iv[YDIR],iv[ZDIR],plo,dx,nodal_data_arr,DELTA_VELY_INDEX)
-                      +(1-alpha_pic_flip)*bilin_interp(xp,iv[XDIR],iv[YDIR],iv[ZDIR],plo,dx,nodal_data_arr,VELY_INDEX);
-                      p.rdata(realData::zvel) = (alpha_pic_flip)*p.rdata(realData::zvel)
-                      +(alpha_pic_flip)*bilin_interp(xp,iv[XDIR],iv[YDIR],iv[ZDIR],plo,dx,nodal_data_arr,DELTA_VELZ_INDEX)
-                      +(1-alpha_pic_flip)*bilin_interp(xp,iv[XDIR],iv[YDIR],iv[ZDIR],plo,dx,nodal_data_arr,VELZ_INDEX);*/
-
-
-                    p.rdata(realData::xvel) = (alpha_pic_flip)*p.rdata(realData::xvel)
-                    +(alpha_pic_flip)*cubic_interp(xp,iv[XDIR],iv[YDIR],iv[ZDIR],lmin,mmin,nmin,lmax,mmax,nmax,plo,dx,nodal_data_arr,DELTA_VELX_INDEX,lo,hi)
-                    +(1-alpha_pic_flip)*cubic_interp(xp,iv[XDIR],iv[YDIR],iv[ZDIR],lmin,mmin,nmin,lmax,mmax,nmax,plo,dx,nodal_data_arr,VELX_INDEX,lo,hi);
-
-                    p.rdata(realData::yvel) = (alpha_pic_flip)*p.rdata(realData::yvel)
-                    +(alpha_pic_flip)*cubic_interp(xp,iv[XDIR],iv[YDIR],iv[ZDIR],lmin,mmin,nmin,lmax,mmax,nmax,plo,dx,nodal_data_arr,DELTA_VELY_INDEX,lo,hi)
-                    +(1-alpha_pic_flip)*cubic_interp(xp,iv[XDIR],iv[YDIR],iv[ZDIR],lmin,mmin,nmin,lmax,mmax,nmax,plo,dx,nodal_data_arr,VELY_INDEX,lo,hi);
-
                     p.rdata(realData::zvel) = (alpha_pic_flip)*p.rdata(realData::zvel)
                     +(alpha_pic_flip)*cubic_interp(xp,iv[XDIR],iv[YDIR],iv[ZDIR],lmin,mmin,nmin,lmax,mmax,nmax,plo,dx,nodal_data_arr,DELTA_VELZ_INDEX,lo,hi)
                     +(1-alpha_pic_flip)*cubic_interp(xp,iv[XDIR],iv[YDIR],iv[ZDIR],lmin,mmin,nmin,lmax,mmax,nmax,plo,dx,nodal_data_arr,VELZ_INDEX,lo,hi);
-
-
-                    /*
-                       p.rdata(realData::xvel) = cubic_interp(xp,iv[XDIR],iv[YDIR],iv[ZDIR],lmin,mmin,nmin,lmax,mmax,nmax,plo,dx,nodal_data_arr,VELX_INDEX,lo,hi);
-                       p.rdata(realData::yvel) = cubic_interp(xp,iv[XDIR],iv[YDIR],iv[ZDIR],lmin,mmin,nmin,lmax,mmax,nmax,plo,dx,nodal_data_arr,VELY_INDEX,lo,hi);
-                       p.rdata(realData::zvel) = cubic_interp(xp,iv[XDIR],iv[YDIR],iv[ZDIR],lmin,mmin,nmin,lmax,mmax,nmax,plo,dx,nodal_data_arr,VELZ_INDEX,lo,hi);
-                       */
-
                 }
             }
 
@@ -498,7 +402,7 @@ void MPMParticleContainer::interpolate_from_grid(MultiFab& nodaldata,int update_
                             amrex::Real basisval_grad[AMREX_SPACEDIM];
                             for(int d=0;d<AMREX_SPACEDIM;d++)
                             {
-                                basisval_grad[d]=basisvalder(d,l,m,n,iv[XDIR],iv[YDIR],iv[ZDIR],xp,plo,dx,order_scheme,lo,hi);
+                                basisval_grad[d]=basisvalder(d,l,m,n,iv[XDIR],iv[YDIR],iv[ZDIR],xp,plo,dx,order_scheme_directional,periodic,lo,hi);
                             }
 
                             gradvp[XDIR][XDIR]+=nodal_data_arr(iv[XDIR]+l,iv[YDIR]+m,iv[ZDIR]+n,VELX_INDEX)*basisval_grad[XDIR];
@@ -523,7 +427,22 @@ void MPMParticleContainer::interpolate_from_grid(MultiFab& nodaldata,int update_
                     for(int d2=d1;d2<AMREX_SPACEDIM;d2++)
                     {
                         p.rdata(realData::strainrate+ind)=0.5*(gradvp[d1][d2]+gradvp[d2][d1]);
+<<<<<<< HEAD
+                        /*if(ind==0)			//Use this block for gradient calculation checks
+                        {
+                        	p.rdata(realData::strainrate+ind)-=2.0*pi*cos(2.0*pi*p.pos(0));
+                        }
+                        if(ind==3)
+                        {
+                        	p.rdata(realData::strainrate+ind)-=2.0*pi*cos(2.0*pi*p.pos(1));
+                        }
+                        if(ind==5)
+                        {
+                        	p.rdata(realData::strainrate+ind)-=2.0*pi*cos(2.0*pi*p.pos(2));
+                        }*/
+=======
                         p.rdata(realData::spinrate+ind)=0.5*(gradvp[d1][d2]-gradvp[d2][d1]); // this only calculates the upper half of spin tensor
+>>>>>>> d5c7d54231eba60d59d812246340602316df4709
                         ind++;
                     }
                 }
