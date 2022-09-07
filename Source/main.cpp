@@ -82,7 +82,8 @@ int main (int argc, char* argv[])
                                  specs.autogen_vel.data(),specs.autogen_dens,specs.autogen_constmodel,
                                  specs.autogen_E,specs.autogen_nu,
                                  specs.autogen_bulkmod,specs.autogen_Gama_pres,specs.autogen_visc,
-                                 specs.autogen_multi_part_per_cell,specs.total_mass,specs.total_vol);
+                                 specs.autogen_multi_part_per_cell,specs.total_mass,specs.total_vol,specs.initial_void_ratio);
+
         }
 
         if(mpm_ebtools::using_levelset_geometry)
@@ -173,8 +174,10 @@ int main (int argc, char* argv[])
         //Calculate time step
         dt 	= (specs.fixed_timestep==1)?specs.timestep:mpm_pc.Calculate_time_step(specs.CFL,specs.dt_max_limit,specs.dt_min_limit);
 
+        //Calculate time step
+        dt 	= (specs.fixed_timestep==1)?specs.timestep:mpm_pc.Calculate_time_step(specs.CFL,specs.dt_max_limit,specs.dt_min_limit);
 
-        mpm_pc.apply_constitutive_model(dt,specs.applied_strainrate);
+        mpm_pc.apply_constitutive_model(specs,dt,specs.applied_strainrate);
 
         if(specs.dens_field_output)
         {
@@ -405,13 +408,11 @@ int main (int argc, char* argv[])
             if(time<specs.applied_strainrate_time)
             {
 
-                mpm_pc.apply_constitutive_model(dt,
-                								specs.applied_strainrate);
+                mpm_pc.apply_constitutive_model(specs,dt,specs.applied_strainrate);
             }
             else
             {
-                mpm_pc.apply_constitutive_model(dt,
-                								0.0);
+                mpm_pc.apply_constitutive_model(specs,dt,0.0);
             }
 
             if(specs.dens_field_output)

@@ -28,7 +28,7 @@ public:
         Real vel[AMREX_SPACEDIM],
         Real dens, int constmodel, 
         Real E, Real nu,Real bulkMod, Real Gama_pres,Real visc,
-        int do_multi_part_per_cell,Real &total_mass,Real &total_vol);
+        int do_multi_part_per_cell,Real &total_mass,Real &total_vol, Real inital_void_ratio);
 
     void moveParticles (const amrex::Real& dt,
                         int bclo[AMREX_SPACEDIM],
@@ -73,7 +73,7 @@ public:
     void WriteDeflectionCantilever();
     void FindWaterFront(Real &Xwf);
 
-    void apply_constitutive_model(const amrex::Real& dt,amrex::Real applied_strainrate);
+    void apply_constitutive_model(MPMspecs specs, const amrex::Real& dt,amrex::Real applied_strainrate);
 
     void interpolate_mass_from_grid(MultiFab& nodaldata,int order_scheme);
 
@@ -87,7 +87,7 @@ private:
         (Real x,Real y,Real z,
         Real vel[AMREX_SPACEDIM],
         Real dens, Real vol, int constmodel, Real E, Real nu,
-        Real bulkmod, Real Gama_pres,Real visc);
+        Real bulkmod, Real Gama_pres,Real visc, Real initial_void_ratio);
 
 };
 #endif

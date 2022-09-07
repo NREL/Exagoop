@@ -427,6 +427,7 @@ void MPMParticleContainer::interpolate_from_grid(MultiFab& nodaldata,int update_
                     for(int d2=d1;d2<AMREX_SPACEDIM;d2++)
                     {
                         p.rdata(realData::strainrate+ind)=0.5*(gradvp[d1][d2]+gradvp[d2][d1]);
+<<<<<<< HEAD
                         /*if(ind==0)			//Use this block for gradient calculation checks
                         {
                         	p.rdata(realData::strainrate+ind)-=2.0*pi*cos(2.0*pi*p.pos(0));
@@ -439,6 +440,9 @@ void MPMParticleContainer::interpolate_from_grid(MultiFab& nodaldata,int update_
                         {
                         	p.rdata(realData::strainrate+ind)-=2.0*pi*cos(2.0*pi*p.pos(2));
                         }*/
+=======
+                        p.rdata(realData::spinrate+ind)=0.5*(gradvp[d1][d2]-gradvp[d2][d1]); // this only calculates the upper half of spin tensor
+>>>>>>> d5c7d54231eba60d59d812246340602316df4709
                         ind++;
                     }
                 }

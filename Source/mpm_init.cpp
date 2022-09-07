@@ -65,6 +65,7 @@ void MPMParticleContainer::InitParticles (const std::string& filename,
             	p.rdata(realData::Bulk_modulus)=0.0;
             	p.rdata(realData::Gama_pressure)=0.0;
             	p.rdata(realData::Dynamic_viscosity)=0.0;
+                p.rdata(realData::void_ratio)=0.0;
             }
             else if(p.idata(intData::constitutive_model)==1)
             {
@@ -73,6 +74,16 @@ void MPMParticleContainer::InitParticles (const std::string& filename,
             	ifs >> p.rdata(realData::Bulk_modulus);
             	ifs >> p.rdata(realData::Gama_pressure);
             	ifs >> p.rdata(realData::Dynamic_viscosity);
+                p.rdata(realData::void_ratio)=0.0;
+            }
+            else if(p.idata(intData::constitutive_model)==2) // Yudong: hypoplastic model
+            {
+            	p.rdata(realData::E)=0.0;
+            	p.rdata(realData::nu)=0.0;
+                p.rdata(realData::Bulk_modulus)=0.0;
+            	p.rdata(realData::Gama_pressure)=0.0;
+            	p.rdata(realData::Dynamic_viscosity)=0.0;
+            	ifs >> p.rdata(realData::void_ratio);
             }
             else
             {
@@ -91,11 +102,24 @@ void MPMParticleContainer::InitParticles (const std::string& filename,
             p.rdata(realData::pressure)    = 0.0;
 
 
+            double initial_strainrate = zero;
+            double initial_spinrate = zero;
+            double initial_strain = zero;
+            double initial_stress = zero;
+            
+            if(p.idata(intData::constitutive_model)==2){
+                initial_strainrate = zero;
+                initial_spinrate = zero;
+                initial_strain = zero;
+                initial_stress = -10; // initial stress provide by input
+            }
+            
             for(int comp=0;comp<NCOMP_TENSOR;comp++)
             {
-                p.rdata(realData::strainrate+comp) = zero;
-                p.rdata(realData::strain+comp)     = zero;
-                p.rdata(realData::stress+comp)     = zero;
+                p.rdata(realData::strainrate+comp) = initial_strainrate;
+                p.rdata(realData::spinrate+comp) = initial_spinrate;
+                p.rdata(realData::strain+comp)     = initial_strain;
+                p.rdata(realData::stress+comp)     = initial_stress; 
             }
             
             host_particles.push_back(p);
@@ -122,7 +146,7 @@ void MPMParticleContainer::InitParticles (Real mincoords[AMREX_SPACEDIM],Real ma
         Real vel[AMREX_SPACEDIM],
         Real dens, int constmodel, 
         Real E, Real nu,Real bulkmod, Real Gama_pres,Real visc,
-        int do_multi_part_per_cell,Real &total_mass,Real &total_vol)
+        int do_multi_part_per_cell,Real &total_mass,Real &total_vol, Real initial_void_ratio)
 {
     int lev = 0;
     Real x,y,z,x0,y0,z0;
@@ -162,7 +186,7 @@ void MPMParticleContainer::InitParticles (Real mincoords[AMREX_SPACEDIM],Real ma
                 {
                     ParticleType p = generate_particle(x,y,z,vel,
                             dens,dx*dy*dz,constmodel,
-                            E,nu,bulkmod,Gama_pres,visc);
+                            E,nu,bulkmod,Gama_pres,visc,initial_void_ratio);
 
                     total_mass += p.rdata(realData::mass);
                     total_vol += p.rdata(realData::volume);
@@ -195,7 +219,7 @@ void MPMParticleContainer::InitParticles (Real mincoords[AMREX_SPACEDIM],Real ma
                             {
                                 ParticleType p = generate_particle(x,y,z,vel,
                                                  dens,eighth*dx*dy*dz,constmodel,
-                                                 E,nu,bulkmod,Gama_pres,visc);
+                                                 E,nu,bulkmod,Gama_pres,visc,initial_void_ratio);
                     
                                 total_mass += p.rdata(realData::mass);
                                 total_vol += p.rdata(realData::volume);
@@ -228,7 +252,7 @@ MPMParticleContainer::ParticleType MPMParticleContainer::generate_particle
         (Real x,Real y,Real z,
         Real vel[AMREX_SPACEDIM],
         Real dens, Real vol, int constmodel, Real E, Real nu,
-        Real bulkmod, Real Gama_pres,Real visc)
+        Real bulkmod, Real Gama_pres,Real visc, Real initial_void_ratio)
 {
     ParticleType p;
     p.id()  = ParticleType::NextID();
@@ -241,7 +265,7 @@ MPMParticleContainer::ParticleType MPMParticleContainer::generate_particle
     p.idata(intData::phase) = 0;
     p.rdata(realData::radius) = std::pow(three*fourth*vol/PI,0.33333333);
 
-    p.rdata(realData::density) = dens;
+    //p.rdata(realData::density) = dens;
     p.rdata(realData::xvel) = vel[XDIR];
     p.rdata(realData::yvel) = vel[YDIR];
     p.rdata(realData::zvel) = vel[ZDIR];
@@ -254,17 +278,41 @@ MPMParticleContainer::ParticleType MPMParticleContainer::generate_particle
     p.rdata(realData::Gama_pressure)=Gama_pres;
     p.rdata(realData::Dynamic_viscosity)=visc;
 
-    p.rdata(realData::volume)=vol;	
-    p.rdata(realData::mass)=dens*vol;
+    p.rdata(realData::volume)=vol;
+    if(constmodel==2){
+        p.rdata(realData::density) = dens*1.0/(1.0+initial_void_ratio);
+        p.rdata(realData::mass)=dens*vol*1.0/(1.0+initial_void_ratio); // use particle density
+        p.rdata(realData::vol_init)=vol;
+    }
+    else{
+        p.rdata(realData::density) = dens;
+        p.rdata(realData::mass)=dens*vol;
+        p.rdata(realData::vol_init)=0.0; // TODO: why vol_init is set to 0 ?
+    }		
+    //p.rdata(realData::mass)=dens*vol;
     p.rdata(realData::jacobian)=1.0;
     p.rdata(realData::pressure)=0.0;
-    p.rdata(realData::vol_init)=0.0;
+    //p.rdata(realData::vol_init)=0.0;
+    p.rdata(realData::void_ratio)=initial_void_ratio;
+    
+    double initial_strainrate = zero;
+    double initial_spinrate = zero;
+    double initial_strain = zero;
+    double initial_stress = zero;
+    
+    if(constmodel==2){
+        initial_strainrate = zero;
+        initial_spinrate = zero;
+        initial_strain = zero;
+        initial_stress = -10; // initial stress provide by input
+    }
     
     for(int comp=0;comp<NCOMP_TENSOR;comp++)
     {
-        p.rdata(realData::strainrate+comp) = zero;
-        p.rdata(realData::strain+comp)     = zero;
-        p.rdata(realData::stress+comp)     = zero;
+        p.rdata(realData::strainrate+comp) = initial_strainrate;
+        p.rdata(realData::spinrate+comp) = initial_spinrate;
+        p.rdata(realData::strain+comp)     = initial_strain;
+        p.rdata(realData::stress+comp)     = initial_stress; 
     }
 
     return(p);
