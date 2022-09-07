@@ -56,7 +56,8 @@ AMREX_GPU_DEVICE AMREX_FORCE_INLINE
         amrex::Real bilin_interp(amrex::Real xp[AMREX_SPACEDIM], int i, int j, int k, 
                 const amrex::GpuArray<amrex::Real, AMREX_SPACEDIM> plo, 
                 const amrex::GpuArray<amrex::Real, AMREX_SPACEDIM> dx,
-                amrex::Array4<amrex::Real> nodaldata, int comp) 
+                amrex::Array4<amrex::Real> nodaldata,
+				int comp)
 {
 
     amrex::Real alpha,beta,gama;
@@ -65,6 +66,7 @@ AMREX_GPU_DEVICE AMREX_FORCE_INLINE
     alpha = (xp[XDIR]-(plo[XDIR]+i*dx[XDIR]))/dx[XDIR];
     beta  = (xp[YDIR]-(plo[YDIR]+j*dx[YDIR]))/dx[YDIR];
     gama  = (xp[ZDIR]-(plo[ZDIR]+k*dx[ZDIR]))/dx[ZDIR];
+
 
     value += (1.0-alpha) * (1-beta) * (1-gama) * nodaldata(i,j,k,comp);
     value += alpha       * (1-beta) * (1-gama) * nodaldata(i+1,j,k,comp);
@@ -79,23 +81,319 @@ AMREX_GPU_DEVICE AMREX_FORCE_INLINE
     return(value);
 }
 
+
+AMREX_GPU_DEVICE AMREX_FORCE_INLINE
+        amrex::Real cubicspline_1d_der(int shapefunctiontype,amrex:: Real zi)
+{
+	amrex::Real value=0.0;
+	if(shapefunctiontype==1)	//Boundary node
+	{
+		if(zi>=-2 && zi<=-1)
+		{
+			value=zi*zi/2.0+2*zi+2.0;
+		}
+		else if(zi>=-1 && zi<=0)
+		{
+			value=-zi*zi/2.0+1.0;
+		}
+		else if(zi>=0 && zi<=1)
+		{
+			value=zi*zi/2.0-1.0;
+		}
+		else if(zi>=1 && zi<=2.0)
+		{
+			value=-zi*zi/2.0+2*zi-2.0;
+		}
+	}
+	else if(shapefunctiontype==2)	//Near Boundary node
+	{
+		if(zi>=-1 && zi<=0)
+		{
+			value=-zi*zi-2.0*zi;
+		}
+		else if(zi>=0 && zi<=1)
+		{
+			value=3.0*zi*zi/2.0-2.0*zi;
+		}
+		else if(zi>=1 && zi<=2.0)
+		{
+			value=-zi*zi/2.0+2*zi-2.0;
+		}
+	}
+	else if(shapefunctiontype==3)	//Interior node
+	{
+		if(zi>=-2 && zi<=-1)
+		{
+			value=zi*zi/2.0+2*zi+2.0;
+		}
+		else if(zi>=-1 && zi<=0)
+		{
+			value=-3.0*zi*zi/2.0-2.0*zi;
+		}
+		else if(zi>=0 && zi<=1)
+		{
+			value=3.0*zi*zi/2.0-2.0*zi;
+		}
+		else if(zi>=1 && zi<=2.0)
+		{
+			value=-zi*zi/2.0+2*zi-2.0;
+		}
+	}
+	else if(shapefunctiontype==4)	//Interior node
+	{
+		if(zi>=-2 && zi<=-1)
+		{
+			value=zi*zi/2.0+2*zi+2.0;
+		}
+		else if(zi>=-1 && zi<=0)
+		{
+			value=-3.0*zi*zi/2.0-2.0*zi;
+		}
+		else if(zi>=0 && zi<=1)
+		{
+			value=zi*zi-2.0*zi;
+		}
+	}
+	else
+	{
+#ifndef AMREX_USE_GPU
+		amrex::Print()<<"\n Shapefunction = "<<shapefunctiontype;
+#endif
+		amrex::Abort("\n Incorrect shape function type in cubicspline_1d_der");
+	}
+	return value;
+
+}
+
+AMREX_GPU_DEVICE AMREX_FORCE_INLINE
+        amrex::Real cubicspline_1d(int shapefunctiontype,amrex:: Real zi)
+{
+	amrex::Real value=0.0;
+	if(shapefunctiontype==1)	//Boundary node
+	{
+		if(zi>=-2 && zi<=-1)
+		{
+			value=zi*zi*zi/6.0+zi*zi+2.0*zi+4.0/3.0;
+		}
+		else if(zi>=-1 && zi<=0)
+		{
+			value=-zi*zi*zi/6.0+zi+1.0;
+		}
+		else if(zi>=0 && zi<=1)
+		{
+			value=zi*zi*zi/6.0-zi+1.0;
+		}
+		else if(zi>=1 && zi<=2.0)
+		{
+			value=-zi*zi*zi/6.0+zi*zi-2.0*zi+4.0/3.0;
+		}
+	}
+	else if(shapefunctiontype==2)	//Near Boundary node
+	{
+		if(zi>=-1 && zi<=0)
+		{
+			value=-zi*zi*zi/3.0-zi*zi+2.0/3.0;
+		}
+		else if(zi>=0 && zi<=1)
+		{
+			value=zi*zi*zi/2.0-zi*zi+2.0/3.0;
+		}
+		else if(zi>=1 && zi<=2.0)
+		{
+			value=-zi*zi*zi/6.0+zi*zi-2.0*zi+4.0/3.0;
+		}
+	}
+	else if(shapefunctiontype==3)	//Interior node
+	{
+		if(zi>=-2 && zi<=-1)
+		{
+			value=zi*zi*zi/6.0+zi*zi+2.0*zi+4.0/3.0;
+		}
+		else if(zi>=-1 && zi<=0)
+		{
+			value=-zi*zi*zi/2.0-zi*zi+2.0/3.0;
+		}
+		else if(zi>=0 && zi<=1)
+		{
+			value=zi*zi*zi/2.0-zi*zi+2.0/3.0;
+		}
+		else if(zi>=1 && zi<=2.0)
+		{
+			value=-zi*zi*zi/6.0+zi*zi-2.0*zi+4.0/3.0;
+		}
+	}
+	else if(shapefunctiontype==4)	//Interior node
+	{
+		if(zi>=-2 && zi<=-1)
+		{
+			value=zi*zi*zi/6.0+zi*zi+2.0*zi+4.0/3.0;
+		}
+		else if(zi>=-1 && zi<=0)
+		{
+			value=-zi*zi*zi/2.0-zi*zi+2.0/3.0;
+		}
+		else if(zi>=0 && zi<=1)
+		{
+			value=zi*zi*zi/3.0-zi*zi+2.0/3.0;
+		}
+		else
+                {
+#ifndef AMREX_USE_GPU
+			amrex::Print()<<"\n Error in shape func 4: "<<zi;
+#endif
+		}
+	}
+	else
+	{
+#ifndef AMREX_USE_GPU
+		amrex::Print()<<"\n Shapefunction = "<<shapefunctiontype;
+#endif
+		amrex::Print()<<"\n Shapefunction = "<<shapefunctiontype;
+		amrex::Abort("\n Incorrect shape function type in cubicspline_1d");
+	}
+	return value;
+
+}
+
+AMREX_GPU_DEVICE AMREX_FORCE_INLINE
+        amrex::Real cubic_interp(amrex::Real xp[AMREX_SPACEDIM],
+        		int i, int j, int k,
+        		int lmin,int mmin,int nmin,int lmax,int mmax, int nmax,
+                const amrex::GpuArray<amrex::Real, AMREX_SPACEDIM> plo,
+                const amrex::GpuArray<amrex::Real, AMREX_SPACEDIM> dx,
+                amrex::Array4<amrex::Real> nodaldata,
+				int comp,const int* lo,const int* hi)
+{
+
+    amrex::Real rx,ry,rz;
+    amrex::Real lval,mval,nval;
+    amrex::Real value=zero;
+    int shapetypex,shapetypey,shapetypez;
+
+    for(int n=nmin;n<nmax;n++)
+    {
+    	for(int m=mmin;m<mmax;m++)
+    	{
+    		for(int l=lmin;l<lmax;l++)
+    		{
+    			if(i+l==lo[0]) shapetypex=1;
+    			else if(i+l==lo[0]+1) shapetypex=2;
+    			else if(i+l==hi[0]+1) shapetypex=1;
+    			else if(i+l==hi[0]) shapetypex=4;
+    			else shapetypex=3;
+
+    			if(j+m==lo[1]) shapetypey=1;
+    			else if(j+m==lo[1]+1) shapetypey=2;
+    			else if(j+m==hi[1]+1) shapetypey=1;
+    			else if(j+m==hi[1]) shapetypey=4;
+    			else shapetypey=3;
+
+    			if(k+n==lo[2]) shapetypez=1;
+    			else if(k+n==lo[2]+1) shapetypez=2;
+    			else if(k+n==hi[2]+1) shapetypez=1;
+    			else if(k+n==hi[2]) shapetypez=4;
+    			else shapetypez=3;
+
+    			rx = (xp[XDIR]-(plo[XDIR]+(i+l)*dx[XDIR]))/dx[XDIR];
+    			ry  = (xp[YDIR]-(plo[YDIR]+(j+m)*dx[YDIR]))/dx[YDIR];
+    			rz  = (xp[ZDIR]-(plo[ZDIR]+(k+n)*dx[ZDIR]))/dx[ZDIR];
+
+    			lval=cubicspline_1d(shapetypex,rx);
+    			mval=cubicspline_1d(shapetypey,ry);
+    			nval=cubicspline_1d(shapetypez,rz);
+    			value += lval*mval*nval* nodaldata(i+l,j+m,k+n,comp);
+
+    		}
+    	}
+    }
+
+    return(value);
+}
+
+
 AMREX_GPU_DEVICE AMREX_FORCE_INLINE
         amrex::Real basisval(int l,int m,int n, int i, int j, int k,
                amrex::Real xp[AMREX_SPACEDIM], 
                 const amrex::GpuArray<amrex::Real, AMREX_SPACEDIM> plo, 
-                const amrex::GpuArray<amrex::Real, AMREX_SPACEDIM> dx)
+                const amrex::GpuArray<amrex::Real, AMREX_SPACEDIM> dx,
+				Array <int, AMREX_SPACEDIM> order_scheme_directional,
+				Array <int, AMREX_SPACEDIM> periodic,
+				const int *lo,
+				const int *hi)
 {
     amrex::Real lval,mval,nval;
-    amrex::Real alpha,beta,gama;
+    amrex::Real rx,ry,rz;
+
+    lval=0.0;
+    mval=0.0;
+    nval=0.0;
     
-    alpha = (xp[XDIR]-(plo[XDIR]+i*dx[XDIR]))/dx[XDIR];
-    beta  = (xp[YDIR]-(plo[YDIR]+j*dx[YDIR]))/dx[YDIR];
-    gama  = (xp[ZDIR]-(plo[ZDIR]+k*dx[ZDIR]))/dx[ZDIR];
+    int shapefunctype;
 
-    lval=(l==0)?(one-alpha):alpha;
-    mval=(m==0)?(one-beta):beta;
-    nval=(n==0)?(one-gama):gama;
+    rx 	= (xp[XDIR]-(plo[XDIR]+i*dx[XDIR]))/dx[XDIR];
+    ry  = (xp[YDIR]-(plo[YDIR]+j*dx[YDIR]))/dx[YDIR];
+    rz  = (xp[ZDIR]-(plo[ZDIR]+k*dx[ZDIR]))/dx[ZDIR];
 
+    if(order_scheme_directional[0]==1)
+    {
+    	lval=(l==0)?(one-rx):rx;
+    }
+    else
+    {
+    	if(periodic[0]==0)
+    	{
+    		shapefunctype = ((i+l)==lo[XDIR] || (i+l)==hi[XDIR]+1)?1:((i+l==lo[XDIR]+1)?2:((i+l==hi[XDIR]))?4:3);
+    		rx = (xp[XDIR]-(plo[XDIR]+(i+l)*dx[XDIR]))/dx[XDIR];
+    		lval=cubicspline_1d(shapefunctype,rx);
+    	}
+    	else
+    	{
+    		shapefunctype = 3;
+    		rx = (xp[XDIR]-(plo[XDIR]+(i+l)*dx[XDIR]))/dx[XDIR];
+    		lval=cubicspline_1d(shapefunctype,rx);
+    	}
+    }
+
+    if(order_scheme_directional[1]==1)
+    {
+    	mval=(m==0)?(one-ry):ry;
+    }
+    else
+    {
+    	if(periodic[1]==0)
+    	{
+    		shapefunctype = ((j+m)==lo[YDIR] || (j+m)==hi[YDIR]+1)?1:((j+m==lo[YDIR]+1)?2:((j+m==hi[YDIR]))?4:3);
+    		ry = (xp[YDIR]-(plo[YDIR]+(j+m)*dx[YDIR]))/dx[YDIR];
+    		mval=cubicspline_1d(shapefunctype,ry);
+
+    	}
+    	else
+    	{
+    		shapefunctype = 3;
+    		ry = (xp[YDIR]-(plo[YDIR]+(j+m)*dx[YDIR]))/dx[YDIR];
+    		mval=cubicspline_1d(shapefunctype,ry);
+    	}
+    }
+
+    if(order_scheme_directional[2]==1)
+    {
+    	nval=(n==0)?(one-rz):rz;
+    }
+    else
+    {
+    	if(periodic[2]==0)
+    	{
+    		shapefunctype = ((k+n)==lo[ZDIR] || (k+n)==hi[ZDIR]+1)?1:((k+n==lo[ZDIR]+1)?2:((k+n==hi[ZDIR]))?4:3);
+    		rz = (xp[ZDIR]-(plo[ZDIR]+(k+n)*dx[ZDIR]))/dx[ZDIR];
+    		nval=cubicspline_1d(shapefunctype,rz);
+    	}
+        else
+        {
+        	shapefunctype = 3;
+        	rz = (xp[ZDIR]-(plo[ZDIR]+(k+n)*dx[ZDIR]))/dx[ZDIR];
+        	nval=cubicspline_1d(shapefunctype,rz);
+        }
+    }
     return(lval*mval*nval);
 }
 
@@ -103,35 +401,124 @@ AMREX_GPU_DEVICE AMREX_FORCE_INLINE
         amrex::Real basisvalder(int dir, int l,int m,int n, int i, int j, int k, 
                 amrex::Real xp[AMREX_SPACEDIM], 
                 const amrex::GpuArray<amrex::Real, AMREX_SPACEDIM> plo, 
-                const amrex::GpuArray<amrex::Real, AMREX_SPACEDIM> dx)
+                const amrex::GpuArray<amrex::Real, AMREX_SPACEDIM> dx,
+				Array <int, AMREX_SPACEDIM> order_scheme_directional,
+				Array <int, AMREX_SPACEDIM> periodic,
+				const int *lo,
+				const int *hi)
 {
     amrex::Real lval,mval,nval;
-    amrex::Real alpha,beta,gama;
+    amrex::Real rx,ry,rz;
     amrex::Real dxinv[AMREX_SPACEDIM];
+
+    int shapefunctype;
 
     dxinv[XDIR]=one/dx[XDIR];
     dxinv[YDIR]=one/dx[YDIR];
     dxinv[ZDIR]=one/dx[ZDIR];
-    
-    alpha = (xp[XDIR]-(plo[XDIR]+i*dx[XDIR]))/dx[XDIR];
-    beta  = (xp[YDIR]-(plo[YDIR]+j*dx[YDIR]))/dx[YDIR];
-    gama  = (xp[ZDIR]-(plo[ZDIR]+k*dx[ZDIR]))/dx[ZDIR];
 
-    lval=(l==0)?(one-alpha):alpha;
-    mval=(m==0)?(one-beta):beta;
-    nval=(n==0)?(one-gama):gama;
+    rx  = (xp[XDIR]-(plo[XDIR]+i*dx[XDIR]))/dx[XDIR];
+    ry  = (xp[YDIR]-(plo[YDIR]+j*dx[YDIR]))/dx[YDIR];
+    rz  = (xp[ZDIR]-(plo[ZDIR]+k*dx[ZDIR]))/dx[ZDIR];
+
+    if(order_scheme_directional[0]==1)
+    {
+    	lval=(l==0)?(one-rx):rx;
+    }
+    else if(order_scheme_directional[0]==3)
+    {
+    	if(periodic[0]==0)
+    	{
+    		shapefunctype = ((i+l)==lo[XDIR] || (i+l)==hi[XDIR]+1)?1:((i+l==lo[XDIR]+1)?2:((i+l==hi[XDIR]))?4:3);
+    		rx = (xp[XDIR]-(plo[XDIR]+(i+l)*dx[XDIR]))/dx[XDIR];
+    		lval=cubicspline_1d(shapefunctype,rx);
+    	}
+    	else
+    	{
+    		shapefunctype = 3;
+    		rx = (xp[XDIR]-(plo[XDIR]+(i+l)*dx[XDIR]))/dx[XDIR];
+    		lval=cubicspline_1d(shapefunctype,rx);
+    	}
+    }
+
+    if(order_scheme_directional[1]==1)
+    {
+    	mval=(m==0)?(one-ry):ry;
+    }
+    else if(order_scheme_directional[1]==3)
+    {
+    	if(periodic[1]==0)
+    	{
+    		shapefunctype = ((j+m)==lo[YDIR] || (j+m)==hi[YDIR]+1)?1:((j+m==lo[YDIR]+1)?2:((j+m==hi[YDIR]))?4:3);
+    		ry = (xp[YDIR]-(plo[YDIR]+(j+m)*dx[YDIR]))/dx[YDIR];
+    		mval=cubicspline_1d(shapefunctype,ry);
+    	}
+    	else
+    	{
+    		shapefunctype = 3;
+    		ry = (xp[YDIR]-(plo[YDIR]+(j+m)*dx[YDIR]))/dx[YDIR];
+    		mval=cubicspline_1d(shapefunctype,ry);
+    	}
+    }
+
+    if(order_scheme_directional[2]==1)
+    {
+    	nval=(n==0)?(one-rz):rz;
+    }
+    else if(order_scheme_directional[2]==3)
+    {
+    	if(periodic[2]==0)
+    	{
+    		shapefunctype = ((k+n)==lo[ZDIR] || (k+n)==hi[ZDIR]+1)?1:((k+n==lo[ZDIR]+1)?2:((k+n==hi[ZDIR]))?4:3);
+    		rz = (xp[ZDIR]-(plo[ZDIR]+(k+n)*dx[ZDIR]))/dx[ZDIR];
+    		nval=cubicspline_1d(shapefunctype,rz);
+    	}
+    	else
+    	{
+    		shapefunctype = 3;
+    		rz = (xp[ZDIR]-(plo[ZDIR]+(k+n)*dx[ZDIR]))/dx[ZDIR];
+    		nval=cubicspline_1d(shapefunctype,rz);
+    	}
+    }
 
     if(dir==0)
     {
-        lval=(l==0)?-dxinv[XDIR]:dxinv[XDIR];
+    	if(order_scheme_directional[0]==1)
+    	{
+    		lval=(l==0)?-dxinv[XDIR]:dxinv[XDIR];
+    	}
+    	else
+    	{
+    		shapefunctype = ((i+l)==lo[XDIR] || (i+l)==hi[XDIR]+1)?1:((i+l==lo[XDIR]+1)?2:((i+l==hi[XDIR]))?4:3);
+    		rx = (xp[XDIR]-(plo[XDIR]+(i+l)*dx[XDIR]))/dx[XDIR];
+    		lval=cubicspline_1d_der(shapefunctype,rx)*dxinv[XDIR];
+    	}
     }
     else if(dir==1)
     {
-        mval=(m==0)?-dxinv[YDIR]:dxinv[YDIR];
+    	if(order_scheme_directional[1]==1)
+    	{
+    		mval=(m==0)?-dxinv[YDIR]:dxinv[YDIR];
+    	}
+    	else
+    	{
+    		shapefunctype = ((j+m)==lo[YDIR] || (j+m)==hi[YDIR]+1)?1:((j+m==lo[YDIR]+1)?2:((j+m==hi[YDIR]))?4:3);
+    		ry = (xp[YDIR]-(plo[YDIR]+(j+m)*dx[YDIR]))/dx[YDIR];
+    		mval=cubicspline_1d_der(shapefunctype,ry)*dxinv[YDIR];
+    	}
     }
-    else
+    else if(dir==2)
     {
-        nval=(n==0)?-dxinv[ZDIR]:dxinv[ZDIR];
+    	if(order_scheme_directional[2]==1)
+    	{
+    		nval=(n==0)?-dxinv[ZDIR]:dxinv[ZDIR];
+    	}
+    	else
+    	{
+    		shapefunctype = ((k+n)==lo[ZDIR] || (k+n)==hi[ZDIR]+1)?1:((k+n==lo[ZDIR]+1)?2:((k+n==hi[ZDIR]))?4:3);
+    		rz = (xp[ZDIR]-(plo[ZDIR]+(k+n)*dx[ZDIR]))/dx[ZDIR];
+    		nval=cubicspline_1d_der(shapefunctype,rz)*dxinv[ZDIR];
+    	}
     }
 
     return(lval*mval*nval);
