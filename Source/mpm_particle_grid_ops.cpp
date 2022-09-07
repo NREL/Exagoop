@@ -98,6 +98,7 @@ void MPMParticleContainer::deposit_onto_grid(MultiFab& nodaldata,
             nmin=(order_scheme_directional[2]==1)?0:((order_scheme_directional[2]==3)?(iv[ZDIR]==lo[ZDIR])?0:((iv[ZDIR]==hi[ZDIR])?-1:-1):-1000);
             nmax=(order_scheme_directional[2]==1)?2:((order_scheme_directional[2]==3)?(iv[ZDIR]==lo[ZDIR])?nmin+3:((iv[ZDIR]==hi[ZDIR])?nmin+3:nmin+4):-1000);
 
+
             if(lmin==-1000 or lmax==-1000 or mmin==-1000 or mmax==-1000 or nmin==-1000 or nmax==-1000)
             {
             	amrex::Abort("\nError. Something wrong with min/max index values in deposit onto grid");

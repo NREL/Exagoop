@@ -3,7 +3,7 @@
 #include <mpm_eb.H>
 #include <mpm_kernels.H>
 
-amrex::Real MPMParticleContainer::Calculate_time_step()
+amrex::Real MPMParticleContainer::Calculate_time_step(amrex::Real CFL,amrex::Real dtmax,amrex::Real dtmin)
 {
     const int lev = 0;
     const Geometry& geom = Geom(lev);
@@ -39,10 +39,10 @@ amrex::Real MPMParticleContainer::Calculate_time_step()
     ParallelDescriptor::ReduceRealMin(dt);
 #endif
 
-    if(dt<1e-10)
-    {
-        amrex::Print()<<"\nWarning: Time step is getting too low (dt = "<<dt<<" )";
-    }
+    dt	= CFL*dt;
+    dt  = (dt>dtmax)?dtmax:((dt<dtmin)?dtmin:dt);
+
+
     return(dt);
 }
 
@@ -77,11 +77,9 @@ void MPMParticleContainer::updateVolume(const amrex::Real& dt)
         AMREX_GPU_DEVICE (int i) noexcept
         {
             ParticleType& p = pstruct[i];
-
-            p.rdata(realData::jacobian) += (p.rdata(realData::strainrate+XX)
-            +p.rdata(realData::strainrate+YY)+p.rdata(realData::strainrate+ZZ)) * dt * p.rdata(realData::jacobian);
+            p.rdata(realData::jacobian) += (p.rdata(realData::strainrate+XX)+p.rdata(realData::strainrate+YY)+p.rdata(realData::strainrate+ZZ)) * dt * p.rdata(realData::jacobian);
             p.rdata(realData::volume)	= p.rdata(realData::vol_init)*p.rdata(realData::jacobian);
-            //p.rdata(realData::density)	= p.rdata(realData::mass)/p.rdata(realData::volume);
+            p.rdata(realData::density)	= p.rdata(realData::mass)/p.rdata(realData::volume);
 
         });
     }

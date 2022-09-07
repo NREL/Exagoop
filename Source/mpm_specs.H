@@ -68,6 +68,30 @@ class MPMspecs
         std::string particlefilename;
         std::string restart_checkfile;
 
+        //Output parameters
+        std::string prefix_particlefilename = "plt";
+        std::string prefix_gridfilename =  "nplt";
+        std::string prefix_densityfilename = "dens";
+        std::string prefix_checkpointfilename = "chk";
+        int num_of_digits_in_filenames=6;
+
+        //Diagnostic parameters
+        int print_diagnostics=0;
+        bool is_standard_test = true;
+        int test_number = 0;	//0->is_standard_test=false,1-->axial vibration of bar, 2-->Dam break, 3--> Elastic collision of disks, 4--> Lateral deflection of beam
+
+        	//Parameters for Axial bar test
+        	amrex::Real axial_bar_E = 100.0;
+        	amrex::Real axial_bar_rho = 1.0;
+        	amrex::Real axial_bar_L = 25.0;
+        	int axial_bar_modenumber = 1;
+        	amrex::Real axial_bar_v0 = 0.1;
+
+        	//Parameters for dam break
+        	amrex::Real dam_break_H1 = 0.2;
+        	amrex::Real dam_break_g = 9.81;
+
+
         //1-->tent function, 3--> cubic spline shape function
         int order_scheme=1;				
 
@@ -77,16 +101,17 @@ class MPMspecs
         int dens_field_gridratio=1;
         Real smoothfactor=1.0;
         int external_loads_present=0.0;
-        int fixed_timestep = 1;
-        Real dtmax=1e-5;
+        int fixed_timestep = 0;				//Use fixed time step provided by user if this flag is 1
+        Real dt_max_limit=1e0;
+        Real dt_min_limit=1e-12;
         Real CFL=0.1;
         Real mass_tolerance = 1e-8;
         Real alpha_pic_flip = 0.95;
         Real total_mass = 0.0;
         Real total_vol = 0.0;
         int stress_update_scheme=1;
-        int print_diagnostics=0;
         
+
         Vector<int> bclo;
         Vector<int> bchi;
 
@@ -155,6 +180,23 @@ class MPMspecs
 
             pp.query("use_autogen",use_autogen);
 
+            //Read output parameters
+            pp.query("prefix_particlefilename",prefix_particlefilename);
+            pp.query("prefix_gridfilename",prefix_gridfilename);
+            pp.query("prefix_densityfilename",prefix_densityfilename);
+            pp.query("prefix_checkpointfilename",prefix_checkpointfilename);
+            pp.query("num_of_digits_in_filenames",num_of_digits_in_filenames);
+
+            //Reading diagnostic parameters
+            pp.query("is_standard_test",is_standard_test);
+            pp.query("test_number",test_number);
+            pp.query("axial_bar_E",axial_bar_E);
+            pp.query("axial_bar_rho",axial_bar_rho);
+            pp.query("axial_bar_L",axial_bar_L);
+            pp.query("axial_bar_modenumber",axial_bar_modenumber);
+            pp.query("axial_bar_v0",axial_bar_v0);
+
+
             if(!use_autogen)
             {
                 particlefilename="mpm_particles.dat";
@@ -187,7 +229,8 @@ class MPMspecs
             }
 
             pp.query("alpha_pic_flip",alpha_pic_flip);
-            pp.query("dtmax",dtmax);
+            pp.query("dt_max_limit",dt_max_limit);
+            pp.query("dt_min_limit",dt_min_limit);
             pp.query("CFL",CFL);
 
             pp.query("applied_strainrate",applied_strainrate);

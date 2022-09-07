@@ -93,10 +93,10 @@ void MPMParticleContainer::update_density_field(MultiFab& densdata,int refratio,
     densdata.SumBoundary(geom.periodicity());
 }
 
-void MPMParticleContainer::writeParticles(const int n)
+void MPMParticleContainer::writeParticles(std::string prefix_particlefilename, int num_of_digits_in_filenames, const int n)
 {
     BL_PROFILE("MPMParticleContainer::writeParticles");
-    const std::string& pltfile = amrex::Concatenate("plt", n, 5);
+    const std::string& pltfile = amrex::Concatenate(prefix_particlefilename, n, num_of_digits_in_filenames);
 
     Vector<int> writeflags_real(realData::count,1);
     Vector<int> writeflags_int(intData::count,0);
@@ -196,16 +196,14 @@ void MPMParticleContainer::WriteHeader(const std::string& name, bool is_checkpoi
     }
 }
 
-void MPMParticleContainer::writeCheckpointFile(amrex::Real cur_time, int nstep, int output_it)
+void MPMParticleContainer::writeCheckpointFile(std::string prefix_particlefilename, int num_of_digits_in_filenames, amrex::Real cur_time, int nstep, int output_it)
 {
 	BL_PROFILE("MPMParticleContainer::writeCheckpointFile");
-	std::string m_check_file="chk";
-	const int m_nstep = nstep;
-	const int m_ioDigits=6;
+	const int m_nstep = output_it;
 	const int finest_level=0;
 	const int EB_generate_max_level=0;
 	std::string level_prefix = "Level_";
-	const std::string& checkpointname = amrex::Concatenate(m_check_file, m_nstep, m_ioDigits);
+	const std::string& checkpointname = amrex::Concatenate(prefix_particlefilename, m_nstep, num_of_digits_in_filenames);
 	amrex::PreBuildDirectorHierarchy(checkpointname, level_prefix, finest_level + 1, true);
 	bool is_checkpoint = true;
 	WriteHeader(checkpointname, is_checkpoint, cur_time, nstep, EB_generate_max_level,output_it);

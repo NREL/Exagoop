@@ -41,8 +41,9 @@ public:
                         amrex::Real lset_wall_mu);
 
     void updateVolume (const amrex::Real& dt);
-    void writeParticles (const int n);  
-    void writeCheckpointFile(amrex::Real cur_time,  int nstep, int output_it);
+    amrex::Real CalculateExactVelocity(int modenumber,amrex::Real E, amrex::Real rho, amrex::Real v0,amrex::Real L, amrex::Real time);
+    void writeParticles (std::string prefix_particlefilename, int num_of_digits_in_filenames, const int n);
+    void writeCheckpointFile(std::string prefix_particlefilename, int num_of_digits_in_filenames, amrex::Real cur_time,  int nstep, int output_it);
     void WriteHeader(const std::string& name, bool is_checkpoint, amrex::Real cur_time, int nstep, int EB_generate_max_level, int output_it) const;
     void readCheckpointFile(std::string & restart_chkfile, int &nstep, double &cur_time, int &output_it);
     void deposit_onto_grid(MultiFab& nodaldata,
@@ -68,6 +69,8 @@ public:
     
     void CalculateEnergies(Real &TKE,Real &TSE);
     void CalculateVelocity(Real &Vcm);
+    void CalculateVelocityCantilever(Real &Vcm);
+    void WriteDeflectionCantilever();
     void FindWaterFront(Real &Xwf);
 
     void apply_constitutive_model(const amrex::Real& dt,amrex::Real applied_strainrate);
@@ -75,7 +78,7 @@ public:
     void interpolate_mass_from_grid(MultiFab& nodaldata,int order_scheme);
 
     void update_density_field(MultiFab& nodaldata,int refratio,amrex::Real smoothfactor);
-    amrex::Real Calculate_time_step();
+    amrex::Real Calculate_time_step(amrex::Real CFL, amrex::Real dtmax,amrex::Real dtmin);
     void removeParticlesInsideEB();
 
 private:
