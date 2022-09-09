@@ -74,6 +74,7 @@ public:
     void FindWaterFront(Real &Xwf);
 
     void apply_constitutive_model(const amrex::Real& dt,amrex::Real applied_strainrate);
+    void apply_constitutive_model_delta(const amrex::Real& dt,amrex::Real applied_strainrate);
 
     void interpolate_mass_from_grid(MultiFab& nodaldata,int order_scheme);
 

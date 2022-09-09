@@ -110,6 +110,7 @@ class MPMspecs
         Real total_mass = 0.0;
         Real total_vol = 0.0;
         int stress_update_scheme=1;
+        int calculate_strain_based_on_delta=0;
         
 
         Vector<int> bclo;
@@ -169,6 +170,7 @@ class MPMspecs
             pp.get("final_time",final_time);
 
             pp.query("gravity", gravity);
+            pp.query("calculate_strain_based_on_delta",calculate_strain_based_on_delta);
 
             write_output_time=final_time/10.0;
             pp.query("write_output_time", write_output_time);

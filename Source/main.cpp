@@ -405,13 +405,27 @@ int main (int argc, char* argv[])
             if(time<specs.applied_strainrate_time)
             {
 
-                mpm_pc.apply_constitutive_model(dt,
-                								specs.applied_strainrate);
+            	if(specs.calculate_strain_based_on_delta==1)
+            	{
+            		mpm_pc.apply_constitutive_model_delta(dt,specs.applied_strainrate);
+            	}
+            	else
+            	{
+            		mpm_pc.apply_constitutive_model(dt,specs.applied_strainrate);
+
+            	}
             }
             else
             {
-                mpm_pc.apply_constitutive_model(dt,
-                								0.0);
+            	if(specs.calculate_strain_based_on_delta==1)
+            	{
+            		mpm_pc.apply_constitutive_model_delta(dt,0.0);
+            	}
+            	else
+            	{
+            		mpm_pc.apply_constitutive_model(dt,0.0);
+            	}
+
             }
 
             if(specs.dens_field_output)
@@ -507,7 +521,10 @@ int main (int argc, char* argv[])
 
         pltfile = amrex::Concatenate(specs.prefix_gridfilename, output_it+1, specs.num_of_digits_in_filenames);
         write_plot_file(pltfile,nodaldata,nodaldata_names,geom,ba,dm,time);
-        mpm_pc.WriteDeflectionCantilever();
+        if(specs.print_diagnostics and specs.is_standard_test and specs.test_number==4)
+        {
+        	mpm_pc.WriteDeflectionCantilever();
+        }
 
         if(specs.dens_field_output)
         {

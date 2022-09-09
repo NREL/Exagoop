@@ -6,18 +6,20 @@ import os
 
 no_of_cell_in_x=int(argv[1])
 L=25.0
-buffer =4
+bufferx =4
+buffery = int(argv[2])
+bufferz = buffery
 dx1=L/no_of_cell_in_x
+periodic = int(argv[3])
 
-
-blo    = np.array([float(0.0),float(-(buffer+0.5)*dx1),float(-(buffer+0.5)*dx1)])
-bhi    = np.array([float(L+buffer*dx1),float((buffer+0.5)*dx1),float((buffer+0.5)*dx1)])
-ncells = np.array([no_of_cell_in_x+buffer,2*buffer+1,2*buffer+1])
+blo    = np.array([float(0.0),float(-(buffery+0.5)*dx1),float(-(bufferz+0.5)*dx1)])
+bhi    = np.array([float(L+bufferx*dx1),float((buffery+0.5)*dx1),float((bufferz+0.5)*dx1)])
+ncells = np.array([no_of_cell_in_x+bufferx,2*buffery+1,2*bufferz+1])
 npart  = 0 
 dx = (bhi-blo)/ncells;
 if(dx[0]!=dx[1] or dx[0]!=dx[2] or dx[1]!=dx[2]):
     print("Error! mesh sizes are not same in all directions")
-nparticle_per_cells_eachdirx=int(argv[2])
+nparticle_per_cells_eachdirx=int(argv[4])
 nparticle_per_cells_eachdiry=1
 nparticle_per_cells_eachdirz=1
 xmin=0.0
@@ -53,7 +55,6 @@ print("Bhi = ",bhi)
 
 dens=1
 phase=0
-rad=0.025
 E = 100
 nu=0.0
 
@@ -82,56 +83,127 @@ for k in range(ncells[2]):
                             
                             cell_cx=c_cx+(2*ii+1)*dx[0]/(2.0*nparticle_per_cells_eachdirx)
                             cell_cy=c_cy+(2*jj+1)*dx[1]/(2.0*nparticle_per_cells_eachdiry)
-                            cell_cy=v0*np.sin(beta_n*cell_cx)
-                            cell_cz=c_cz+(2*kk+1)*dx[2]/(2.0*nparticle_per_cells_eachdirz)
+                            #cell_cy=v0*np.sin(beta_n*cell_cx)
                             vely=0.0
                             velx=v0*np.sin(beta_n*cell_cx)
                             velz=0.0
     
-                            outfile.write("%d\t%e\t%e\t%e\t"%(phase,cell_cx,cell_cy,0.0));
-                            outfile.write("%e\t%e\t"%(rad,dens));
-                            outfile.write("%e\t%e\t%e\t"%(velx,vely,velz));
-                            outfile.write("%d\t%e\t%e\n"%(0,E,nu));
+                            outfile.write("%d\t%e\t%e\t%e\t"%(phase,cell_cx,0.0,0.0));
+                            outfile.write("%e\t%e\t"%(rad,dens))
+                            outfile.write("%e\t%e\t%e\t"%(velx,vely,velz))
+                            outfile.write("%d\t%e\t%e\n"%(0,E,nu))
 
 
 outfile.close()
 
 
 xmin=0.0
-xmax=L+buffer*dx1
-ymin=-dx1*(buffer+0.5)
-ymax= dx1*(buffer+0.5)
-zmin=-dx1*(buffer+0.5)
-zmax= dx1*(buffer+0.5)
-outfile=open("inputs","w")
-outfile.write("#geometry parameters")
-outfile.write("\nmpm.prob_lo = "+str(xmin)+" "+str(ymin)+" "+str(zmin))
-outfile.write("\nmpm.prob_hi = "+str(xmax)+" "+str(ymax)+" "+str(zmax))
-outfile.write("\nmpm.ncells  = "+str(no_of_cell_in_x+buffer)+" "+str(2*buffer+1)+" "+str(2*buffer+1))
-outfile.write("\nmpm.max_grid_size = "+str(no_of_cell_in_x+buffer+1))
-outfile.write("\nmpm.is_it_periodic = 0  1  1")
+xmax=L+bufferx*dx1
+ymin=-dx1*(buffery+0.5)
+ymax= dx1*(buffery+0.5)
+zmin=-dx1*(bufferz+0.5)
+zmax= dx1*(bufferz+0.5)
+outfile=open("inputs_test","w")
 
-outfile.write("\n#timestepping")
-outfile.write("\nmpm.fixed_timestep = 0  #1=> fixed time step, 0=> CFL based adaptive time step")
-outfile.write("\nmpm.final_time=50")
-outfile.write("\nmpm.max_steps=500000")
-outfile.write("\nmpm.write_output_time=0.5")
-outfile.write("\nmpm.num_redist = 1")
-outfile.write("\nmpm.timestep = 0.00005")
-outfile.write("\nmpm.screen_output_time = 0.001")
-outfile.write("\nmpm.gravity = 0.0 0.0 0.0")
-outfile.write("\nmpm.dtmin=1e-2")
-outfile.write("\nmpm.CFL=0.1")
-outfile.write("\nmpm.order_scheme="+argv[3])
+
+outfile.write("#geometry parameters")
+outfile.write("\nmpm.prob_lo = "+str(xmin)+" "+str(ymin)+" "+str(zmin)+"\t\t\t#Lower corner of physical domain")
+outfile.write("\nmpm.prob_hi = "+str(xmax)+" "+str(ymax)+" "+str(zmax)+"\t\t\t#Upper corner of physical domain")
+outfile.write("\nmpm.ncells  = "+str(no_of_cell_in_x+bufferx)+" "+str(2*buffery+1)+" "+str(2*buffery+1))
+outfile.write("\nmpm.max_grid_size = "+str(no_of_cell_in_x+bufferx+1))
+outfile.write("\nmpm.is_it_periodic = 0  "+str(periodic)+"  "+str(periodic))
+
+outfile.write("\n\n#AMR Parameters")
+outfile.write("\n#restart_checkfile = \"\"") 
+
+outfile.write("\n\n#Input files")
+outfile.write("\nmpm.use_autogen=0")
+outfile.write("\nmpm.mincoords_autogen=0.0 0.0 0.0")
+outfile.write("\nmpm.maxcoords_autogen=1.0 1.0 1.0")
+outfile.write("\nmpm.vel_autogen=0.0 0.0 0.0") 
+outfile.write("\nmpm.constmodel_autogen=0")   
+outfile.write("\nmpm.dens_autogen=1.0")      
+outfile.write("\nmpm.E_autogen=1e6")        
+outfile.write("\nmpm.nu_autogen=0.3")      
+outfile.write("\nmpm.bulkmod_autogen=2e6")
+outfile.write("\nmpm.Gama_pres_autogen=7")
+outfile.write("\nmpm.visc_autogen=0.001")
+outfile.write("\nmpm.multi_part_per_cell_autogen=1")
+outfile.write("\nmpm.particle_file=\"mpm_particles.dat\"")
+
+outfile.write("\n\n#File output parameters")
+outfile.write("\nmpm.prefix_particlefilename=\"./Solution/"+argv[13]+"/plt\"")
+outfile.write("\nmpm.prefix_gridfilename=\"./Solution/"+argv[13]+"/nplt\"")             
+outfile.write("\nmpm.prefix_densityfilename=\"./Solution/"+argv[13]+"/dens\"")         
+outfile.write("\nmpm.prefix_checkpointfilename=\"./Solution/"+argv[13]+"/chk\"")      
+outfile.write("\nmpm.num_of_digits_in_filenames=6")
+
+outfile.write("\n\n#Simulation run parameters")
+outfile.write("\nmpm.final_time=50.0")                    
+outfile.write("\nmpm.max_steps=5000000")                
+outfile.write("\nmpm.screen_output_time = 0.001")      
+outfile.write("\nmpm.write_output_time=0.5")        
+outfile.write("\nmpm.num_redist = 1")                
+
+outfile.write("\n\n#Timestepping parameters")
+outfile.write("\nmpm.fixed_timestep = 0")           
+outfile.write("\nmpm.timestep = 1.0e-5")           
+outfile.write("\nmpm.CFL="+argv[8])                    
+outfile.write("\nmpm.dt_min_limit=1e-12")        
+outfile.write("\nmpm.dt_max_limit=1e+00")       
+
+outfile.write("\n\n#Numerical schemes")
+outfile.write("\nmpm.order_scheme="+argv[5])          
+outfile.write("\nmpm.alpha_pic_flip = "+argv[6])  
+outfile.write("\nmpm.stress_update_scheme= "+argv[7])
 outfile.write("\nmpm.mass_tolerance = 1e-18")
-outfile.write("\nmpm.alpha_pic_flip = "+argv[4])
-outfile.write("\nmpm.stress_update_scheme= "+argv[5])
+
+outfile.write("\n\n#Physics parameters")
+outfile.write("\nmpm.gravity = 0.0 0.0 0.0")
+outfile.write("\nmpm.applied_strainrate_time=0.0")
+outfile.write("\nmpm.applied_strainrate=0.0")    
+outfile.write("\nmpm.external_loads=0")         
+outfile.write("\nmpm.force_slab_lo= 0.0 0.0 0.0")
+outfile.write("\nmpm.force_slab_hi= 1.0 1.0 1.0")
+outfile.write("\nmpm.extforce = 0.0 0.0 0.0")   
+
+outfile.write("\n\n#Diagnostics and Test")
+outfile.write("\nmpm.print_diagnostics= 1")    
+outfile.write("\nmpm.is_standard_test= 1")    
+outfile.write("\nmpm.test_number= 1")        
+outfile.write("\nmpm.axial_bar_E= 100")     
+outfile.write("\nmpm.axial_bar_rho= 1")    
+outfile.write("\nmpm.axial_bar_L= 25.0")  
+outfile.write("\nmpm.axial_bar_modenumber= 1")
+outfile.write("\nmpm.axial_bar_v0= 0.1")     
+
+outfile.write("\n\n#Boundary conditions")
+outfile.write("\nmpm.bc_lower=1 0 0")
+outfile.write("\nmpm.bc_upper=2 0 0")
+
 outfile.close()
 
-os.system('./mpm3d.gnu.ex inputs')
-os.system('python plot_energy.py '+argv[6])
-os.system('python plot_vel.py '+argv[7])
+os.system('./mpm3d.gnu.ex inputs_test')
+os.system('python3 plot_energy.py '+argv[9])
+os.system('python3 plot_vel.py '+argv[10])
 
-os.system('mv AxialBar.out '+argv[8])
-os.system('mv Energy.out '+argv[9])
+if(os.path.exists('./PostProc/')):
+  if(os.path.exists('./PostProc/'+argv[13])):
+    os.system('mv '+argv[9]+' '+'./PostProc/'+argv[13]+'/'+argv[9])
+    os.system('mv '+argv[10]+' '+'./PostProc/'+argv[13]+'/'+argv[10])
+    os.system('mv AxialBarEnergy.out.0 '+'./PostProc/'+argv[13]+'/'+argv[11])
+    os.system('mv AxialBarVel.out.0 '+'./PostProc/'+argv[13]+'/'+argv[12])
+  else:
+    os.system('mkdir ./PostProc/'+argv[13])    
+    os.system('mv '+argv[9]+' '+'./PostProc/'+argv[13]+'/'+argv[9])
+    os.system('mv '+argv[10]+' '+'./PostProc/'+argv[13]+'/'+argv[10])
+    os.system('mv AxialBarEnergy.out.0 '+'./PostProc/'+argv[13]+'/'+argv[11])
+    os.system('mv AxialBarVel.out.0 '+'./PostProc/'+argv[13]+'/'+argv[12])
+else:
+  os.system('mkdir ./PostProc')
+  os.system('mkdir ./PostProc/'+argv[13])
+  os.system('mv '+argv[9]+' '+'./PostProc/'+argv[13]+'/'+argv[9])
+  os.system('mv '+argv[10]+' '+'./PostProc/'+argv[13]+'/'+argv[10])
+  os.system('mv AxialBarEnergy.out.0 '+'./PostProc/'+argv[13]+'/'+argv[11])
+  os.system('mv AxialBarVel.out.0 '+'./PostProc/'+argv[13]+'/'+argv[12])
 

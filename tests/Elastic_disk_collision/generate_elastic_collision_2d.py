@@ -2,21 +2,29 @@ import numpy as np
 from sys import argv
 from _locale import ABMON_10
 
+L = 1.0
+no_of_cells_in_z = 1
+
 # Use the same parameters as in input file
+ncell_x = 20
+ncell_y = 20
+ncell_z = no_of_cells_in_z
+dx2 = L/ncell_x
+
 blo    = np.array([float(0.0),float(0.0),float(0.0)])
-bhi    = np.array([float(1.4),float(1.4),float(1.4)])
-ncells = np.array([14,14,14])
+bhi    = np.array([L,L,float(dx2*ncell_z)])
+ncells = np.array([ncell_x,ncell_y,ncell_z])
 npart  = 0 
 dx = (bhi-blo)/ncells;
 if(dx[0]!=dx[1] or dx[0]!=dx[2] or dx[1]!=dx[2]):
     print("Error! mesh sizes are not same in all directions",dx[0],dx[1],dx[2])
-nparticle_per_cells_eachdir=1
+nparticle_per_cells_eachdir=4
 xmin=0.0
-xmax=1.4
+xmax=L
 ymin=0.0
-ymax=1.4
-zmin=0
-zmax=1.4
+ymax=L
+zmin=0.0
+zmax=dx2*ncell_z
 
 print(range(nparticle_per_cells_eachdir))
 
@@ -24,14 +32,16 @@ print('Number of particles = ',npart)
 outfile=open("mpm_particles.dat","w")
 outfile.write("%d\n"%(npart));
 
+factor=[0.125,0.375,0.625,0.875]
+
 dens=997.5
 phase=0
 rad=0.025
 E = 1000
 nu=0.3
 #Volume in each cell
-xc=0.4
-yc=0.4
+xc=0.2
+yc=0.2
 zc=0.7
 vol_cell=dx[0]*dx[1]*dx[2]
 vol_particle=vol_cell/(nparticle_per_cells_eachdir*nparticle_per_cells_eachdir*nparticle_per_cells_eachdir)
@@ -48,11 +58,14 @@ for k in range(ncells[2]):
                     for jj in range(nparticle_per_cells_eachdir):
                         for kk in range(nparticle_per_cells_eachdir):
                             
-                            cell_cx=c_cx+(2*ii+1)*dx[0]/(2.0*nparticle_per_cells_eachdir)
-                            cell_cy=c_cy+(2*jj+1)*dx[1]/(2.0*nparticle_per_cells_eachdir)
-                            cell_cz=c_cz+(2*kk+1)*dx[2]/(2.0*nparticle_per_cells_eachdir)
+                            #cell_cx=c_cx+(2*ii+1)*dx[0]/(2.0*nparticle_per_cells_eachdir)
+                            cell_cx=c_cx+factor[ii]*dx[0]
+                            #cell_cy=c_cy+(2*jj+1)*dx[1]/(2.0*nparticle_per_cells_eachdir)
+                            cell_cy=c_cy+factor[jj]*dx[1]
+                            #cell_cz=c_cz+(2*kk+1)*dx[2]/(2.0*nparticle_per_cells_eachdir)
+                            cell_cz=c_cz+factor[kk]*dx[2]
                             
-                            if(((cell_cx-xc)*(cell_cx-xc)+(cell_cy-yc)*(cell_cy-yc)+(cell_cz-zc)*(cell_cz-zc))**0.5<=0.2):
+                            if(((cell_cx-xc)*(cell_cx-xc)+(cell_cy-yc)*(cell_cy-yc))**0.5<=0.2):
                                 npart=npart+1
                                 velx=0.1;
                                 vely=0.1;
@@ -62,8 +75,8 @@ for k in range(ncells[2]):
                                 outfile.write("%e\t%e\t"%(rad,dens));
                                 outfile.write("%e\t%e\t%e\t"%(velx,vely,velz));                                
                                 outfile.write("%d\t%e\t%e\n"%(0,E,nu));
-xc=1.0
-yc=1.0
+xc=0.8
+yc=0.8
 zc=0.7
 for k in range(ncells[2]):
     for j in range(ncells[1]):
@@ -76,11 +89,14 @@ for k in range(ncells[2]):
                     for jj in range(nparticle_per_cells_eachdir):
                         for kk in range(nparticle_per_cells_eachdir):
                             
-                            cell_cx=c_cx+(2*ii+1)*dx[0]/(2.0*nparticle_per_cells_eachdir)
-                            cell_cy=c_cy+(2*jj+1)*dx[1]/(2.0*nparticle_per_cells_eachdir)
-                            cell_cz=c_cz+(2*kk+1)*dx[2]/(2.0*nparticle_per_cells_eachdir)
+                            #cell_cx=c_cx+(2*ii+1)*dx[0]/(2.0*nparticle_per_cells_eachdir)
+                            cell_cx=c_cx+factor[ii]*dx[0]
+                            #cell_cy=c_cy+(2*jj+1)*dx[1]/(2.0*nparticle_per_cells_eachdir)
+                            cell_cy=c_cy+factor[jj]*dx[1]
+                            #cell_cz=c_cz+(2*kk+1)*dx[2]/(2.0*nparticle_per_cells_eachdir)
+                            cell_cz=c_cz+factor[kk]*dx[2]
                             
-                            if(((cell_cx-xc)*(cell_cx-xc)+(cell_cy-yc)*(cell_cy-yc)+(cell_cz-zc)*(cell_cz-zc))**0.5<=0.2):
+                            if(((cell_cx-xc)*(cell_cx-xc)+(cell_cy-yc)*(cell_cy-yc))**0.5<=0.2):
                                 npart=npart+1
                                 velx=-0.1;
                                 vely=-0.1;

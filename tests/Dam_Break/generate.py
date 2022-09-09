@@ -3,8 +3,8 @@ from sys import argv
 
 # Use the same parameters as in input file
 blo    = np.array([float(0.0),float(0.0),float(0.0)])
-bhi    = np.array([float(0.4),float(0.4),float(0.012)])
-ncells = np.array([100,100,3])
+bhi    = np.array([float(0.4),float(0.4),float(0.02)])
+ncells = np.array([100,100,5])
 npart  = 0 
 dx = (bhi-blo)/ncells;
 if(dx[0]!=dx[1] or dx[0]!=dx[2] or dx[1]!=dx[2]):
@@ -15,7 +15,7 @@ xmax=0.1
 ymin=0.0
 ymax=0.2
 zmin=0
-zmax=0.012
+zmax=0.02
 
 print(range(nparticle_per_cells_eachdir))
 
@@ -60,7 +60,6 @@ for k in range(ncells[2]):
                             cell_cx=c_cx+(2*ii+1)*dx[0]/(2.0*nparticle_per_cells_eachdir)
                             cell_cy=c_cy+(2*jj+1)*dx[1]/(2.0*nparticle_per_cells_eachdir)
                             cell_cz=c_cz+(2*kk+1)*dx[2]/(2.0*nparticle_per_cells_eachdir)
-                            print(dx[0],dx[1],dx[2],c_cx,c_cy,c_cz,ii,jj,kk)
                             velx=0.0;
                             vely=0.0;
                             velz=0.0;
