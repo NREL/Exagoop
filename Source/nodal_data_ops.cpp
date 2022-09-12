@@ -375,7 +375,7 @@ void nodal_bcs(const amrex::Geometry geom,
             {
                 nodal_data_arr(nodeid,VELX_INDEX+d)=relvel_out[d]+wallvel[d];
             }
-
+            //amrex::Print()<<"\nX = Vel "<<nodal_data_arr(nodeid,0);
         });
     }
 }

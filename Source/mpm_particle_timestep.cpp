@@ -77,7 +77,10 @@ void MPMParticleContainer::updateVolume(const amrex::Real& dt)
         AMREX_GPU_DEVICE (int i) noexcept
         {
             ParticleType& p = pstruct[i];
-            p.rdata(realData::jacobian) += (p.rdata(realData::strainrate+XX)+p.rdata(realData::strainrate+YY)+p.rdata(realData::strainrate+ZZ)) * dt * p.rdata(realData::jacobian);
+            //p.rdata(realData::jacobian) += (p.rdata(realData::strainrate+XX)+p.rdata(realData::strainrate+YY)+p.rdata(realData::strainrate+ZZ)) * dt * p.rdata(realData::jacobian);
+            p.rdata(realData::jacobian) = p.rdata(realData::deformation_gradient+0)*(p.rdata(realData::deformation_gradient+4)*p.rdata(realData::deformation_gradient+8)-p.rdata(realData::deformation_gradient+7)*p.rdata(realData::deformation_gradient+5))-
+            							  p.rdata(realData::deformation_gradient+1)*(p.rdata(realData::deformation_gradient+3)*p.rdata(realData::deformation_gradient+8)-p.rdata(realData::deformation_gradient+6)*p.rdata(realData::deformation_gradient+5))+
+										  p.rdata(realData::deformation_gradient+2)*(p.rdata(realData::deformation_gradient+3)*p.rdata(realData::deformation_gradient+7)-p.rdata(realData::deformation_gradient+6)*p.rdata(realData::deformation_gradient+4));
             p.rdata(realData::volume)	= p.rdata(realData::vol_init)*p.rdata(realData::jacobian);
             p.rdata(realData::density)	= p.rdata(realData::mass)/p.rdata(realData::volume);
 
@@ -132,9 +135,9 @@ void MPMParticleContainer::moveParticles(const amrex::Real& dt,
         {
             ParticleType& p = pstruct[i];
 
-            p.pos(XDIR) += p.rdata(realData::xvel) * dt;
-            p.pos(YDIR) += p.rdata(realData::yvel) * dt;
-            p.pos(ZDIR) += p.rdata(realData::zvel) * dt;
+            p.pos(XDIR) += p.rdata(realData::xvel_prime) * dt;
+            p.pos(YDIR) += p.rdata(realData::yvel_prime) * dt;
+            p.pos(ZDIR) += p.rdata(realData::zvel_prime) * dt;
 
             //for imposing boundary conditions           
             Real relvel_in[AMREX_SPACEDIM]  = {p.rdata(realData::xvel),p.rdata(realData::yvel),p.rdata(realData::zvel)};

@@ -20,6 +20,7 @@
 #define BIGVAL 1e20
 
 #define NCOMP_TENSOR 6
+#define NCOMP_FULLTENSOR 9
 
 #define NUM_STATES 11
 #define MASS_INDEX 0

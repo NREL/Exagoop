@@ -61,7 +61,8 @@ public:
                                int update_vel,int update_strainrate,
 							   Array <int,AMREX_SPACEDIM> order_scheme_directional,
 							   Array <int,AMREX_SPACEDIM> periodic,
-							   amrex::Real alpha_pic_flip);
+							   amrex::Real alpha_pic_flip,
+							   amrex::Real dt);
 
     void move_particles_from_nodevel(MultiFab& nodaldata,const amrex::Real& dt,
             int bclo[AMREX_SPACEDIM],int bchi[AMREX_SPACEDIM],

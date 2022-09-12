@@ -541,6 +541,51 @@ AMREX_GPU_DEVICE AMREX_FORCE_INLINE
    }
 }
 
+AMREX_GPU_DEVICE AMREX_FORCE_INLINE
+        void get_deformation_gradient_tensor(MPMParticleContainer::ParticleType &p,int start_index,
+                amrex::Real gradvp[AMREX_SPACEDIM][AMREX_SPACEDIM],amrex::Real dt)
+{
+	amrex::Real Lp[AMREX_SPACEDIM][AMREX_SPACEDIM];
+	amrex::Real Fp[AMREX_SPACEDIM][AMREX_SPACEDIM];
+
+	for(int i=0;i<AMREX_SPACEDIM;i++)
+	{
+		for(int j=0;j<AMREX_SPACEDIM;j++)
+		{
+			if(i==j)
+			{
+				Lp[i][j]=1.0+gradvp[i][j]*dt;
+			}
+			else
+			{
+				Lp[i][j]=gradvp[i][j]*dt;
+			}
+		}
+	}
+
+	Fp[0][0]=p.rdata(start_index+0);
+	Fp[0][1]=p.rdata(start_index+1);
+	Fp[0][2]=p.rdata(start_index+2);
+	Fp[1][0]=p.rdata(start_index+3);
+	Fp[1][1]=p.rdata(start_index+4);
+	Fp[1][2]=p.rdata(start_index+5);
+	Fp[2][0]=p.rdata(start_index+6);
+	Fp[2][1]=p.rdata(start_index+7);
+	Fp[2][2]=p.rdata(start_index+8);
+
+	//Lp * Fp
+	p.rdata(start_index+0)= Lp[0][0]*Fp[0][0]+Lp[0][1]*Fp[1][0]+Lp[0][2]*Fp[2][0];
+	p.rdata(start_index+1)= Lp[0][0]*Fp[0][1]+Lp[0][1]*Fp[1][1]+Lp[0][2]*Fp[2][1];
+	p.rdata(start_index+2)= Lp[0][0]*Fp[0][2]+Lp[0][1]*Fp[1][2]+Lp[0][2]*Fp[2][2];
+	p.rdata(start_index+3)= Lp[1][0]*Fp[0][0]+Lp[1][1]*Fp[1][0]+Lp[1][2]*Fp[2][0];
+	p.rdata(start_index+4)= Lp[1][0]*Fp[0][1]+Lp[1][1]*Fp[1][1]+Lp[1][2]*Fp[2][1];
+	p.rdata(start_index+5)= Lp[1][0]*Fp[0][2]+Lp[1][1]*Fp[1][2]+Lp[1][2]*Fp[2][2];
+	p.rdata(start_index+6)= Lp[2][0]*Fp[0][0]+Lp[2][1]*Fp[1][0]+Lp[2][2]*Fp[2][0];
+	p.rdata(start_index+7)= Lp[2][0]*Fp[0][1]+Lp[2][1]*Fp[1][1]+Lp[2][2]*Fp[2][1];
+	p.rdata(start_index+8)= Lp[2][0]*Fp[0][2]+Lp[2][1]*Fp[1][2]+Lp[2][2]*Fp[2][2];
+
+
+}
 
 AMREX_GPU_DEVICE AMREX_FORCE_INLINE
         void tensor_vector_pdt(amrex::Real tens[AMREX_SPACEDIM*AMREX_SPACEDIM],

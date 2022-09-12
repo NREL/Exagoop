@@ -16,20 +16,24 @@ struct realData
         xvel=1,
         yvel=2,
         zvel=3,
-        strainrate=4,
-        strain=10,
-        stress=16,
-        volume=22,
-        mass=23,
-        density=24,
-        jacobian=25,
-        pressure=26,
-        vol_init=27,
-        E=28,
-        nu=29,
-        Bulk_modulus=30,
-        Gama_pressure=31,
-        Dynamic_viscosity=32,
+		xvel_prime=4,				//For position update. Check the review paper page 34
+		yvel_prime=5,
+		zvel_prime=6,
+        strainrate=7, 				//4
+        strain=13,	  				//10
+        stress=19,					//16
+		deformation_gradient=25,	//22
+        volume=34,					//31
+        mass=35,					//32
+        density=36,					//33
+        jacobian=37,				//34
+        pressure=38,				//35
+        vol_init=39,				//36
+        E=40,						//37
+        nu=41,						//38
+        Bulk_modulus=42,			//39
+        Gama_pressure=43,			//40
+        Dynamic_viscosity=44,		//41
         count
     };
 };

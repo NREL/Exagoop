@@ -109,6 +109,9 @@ void MPMParticleContainer::writeParticles(std::string prefix_particlefilename, i
     real_data_names.push_back("xvel");
     real_data_names.push_back("yvel");
     real_data_names.push_back("zvel");
+    real_data_names.push_back("xvel_prime");
+    real_data_names.push_back("yvel_prime");
+    real_data_names.push_back("zvel_prime");
     for(int i=0;i<6;i++)
     {
         real_data_names.push_back(amrex::Concatenate("strainrate_", i, 1));
@@ -120,6 +123,10 @@ void MPMParticleContainer::writeParticles(std::string prefix_particlefilename, i
     for(int i=0;i<6;i++)
     {
         real_data_names.push_back(amrex::Concatenate("stress_", i, 1));
+    }
+    for(int i=0;i<9;i++)
+    {
+    	real_data_names.push_back(amrex::Concatenate("deformationg_gradient_", i, 1));
     }
     real_data_names.push_back("volume");
     real_data_names.push_back("mass");
@@ -213,6 +220,9 @@ void MPMParticleContainer::writeCheckpointFile(std::string prefix_particlefilena
 	real_data_names.push_back("xvel");
 	real_data_names.push_back("yvel");
 	real_data_names.push_back("zvel");
+	real_data_names.push_back("xvel_prime");
+	real_data_names.push_back("yvel_prime");
+	real_data_names.push_back("zvel_prime");
 	for(int i=0;i<6;i++)
 	{
 		real_data_names.push_back(amrex::Concatenate("strainrate_", i, 1));
@@ -225,6 +235,10 @@ void MPMParticleContainer::writeCheckpointFile(std::string prefix_particlefilena
 	{
 		real_data_names.push_back(amrex::Concatenate("stress_", i, 1));
 	}
+	for(int i=0;i<9;i++)
+	    {
+	    	real_data_names.push_back(amrex::Concatenate("deformationg_gradient_", i, 1));
+	    }
 	real_data_names.push_back("volume");
 	real_data_names.push_back("mass");
 	real_data_names.push_back("density");

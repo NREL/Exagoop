@@ -90,6 +90,13 @@ void MPMParticleContainer::InitParticles (const std::string& filename,
             p.rdata(realData::vol_init)	   = p.rdata(realData::volume);
             p.rdata(realData::pressure)    = 0.0;
 
+            for(int comp=0;comp<NCOMP_FULLTENSOR;comp++)
+            {
+            	p.rdata(realData::deformation_gradient+comp) = 0.0;
+            }
+            p.rdata(realData::deformation_gradient+0) = 1.0;
+            p.rdata(realData::deformation_gradient+4) = 1.0;
+            p.rdata(realData::deformation_gradient+8) = 1.0;
 
             for(int comp=0;comp<NCOMP_TENSOR;comp++)
             {

@@ -150,7 +150,9 @@ int main (int argc, char* argv[])
         //mpm_pc.fillNeighbors();
         mpm_pc.RedistributeLocal();
         mpm_pc.fillNeighbors();
-        dt=specs.timestep;
+
+        //Calculate time step
+        dt 	= (specs.fixed_timestep==1)?specs.timestep:mpm_pc.Calculate_time_step(specs.CFL,specs.dt_max_limit,specs.dt_min_limit);
 
         //Deposit mass and velocity on node
         mpm_pc.deposit_onto_grid(nodaldata,
@@ -168,10 +170,10 @@ int main (int argc, char* argv[])
 									1,
 									specs.order_scheme_directional,
 									specs.periodic,
-									specs.alpha_pic_flip);	//Calculate strainrate at each mp
+									specs.alpha_pic_flip,
+									dt);	//Calculate strainrate at each mp
 
-        //Calculate time step
-        dt 	= (specs.fixed_timestep==1)?specs.timestep:mpm_pc.Calculate_time_step(specs.CFL,specs.dt_max_limit,specs.dt_min_limit);
+
 
 
         mpm_pc.apply_constitutive_model(dt,specs.applied_strainrate);
@@ -348,7 +350,8 @@ int main (int argc, char* argv[])
 											0,
 											specs.order_scheme_directional,
 											specs.periodic,
-											specs.alpha_pic_flip);
+											specs.alpha_pic_flip,
+											dt);
             mpm_pc.updateNeighbors();
 
             //Update particle position at t+dt
@@ -395,7 +398,7 @@ int main (int argc, char* argv[])
             }
 
             //find strainrate at material points at time t+dt
-            mpm_pc.interpolate_from_grid(nodaldata,0,1,specs.order_scheme_directional,specs.periodic,specs.alpha_pic_flip);
+            mpm_pc.interpolate_from_grid(nodaldata,0,1,specs.order_scheme_directional,specs.periodic,specs.alpha_pic_flip,dt);
             mpm_pc.updateNeighbors();
 
             //mpm_pc.move_particles_from_nodevel(nodaldata,dt,specs.bclo.data(),specs.bchi.data(),1);
