@@ -46,8 +46,8 @@ void MPMParticleContainer::InitParticles (const std::string& filename,
 
             // Read from input file
             //ifs >> junk;
-            ifs >> p.idata(intData::phase);
-            p.idata(intData::phase) = 0;
+            ifs >> p.idata(intData::phase);		//phase=0=> use for mpm computation, phase=1=> rigid body particles, not used in std. mpm operations
+
             ifs >> p.pos(0);
             ifs >> p.pos(1);
             ifs >> p.pos(2);
@@ -245,7 +245,7 @@ MPMParticleContainer::ParticleType MPMParticleContainer::generate_particle
     p.pos(YDIR) = y;
     p.pos(ZDIR) = z;
 
-    p.idata(intData::phase) = 0;
+    p.idata(intData::phase) = 0;			//Make sure this simulation does not use rigid body particles
     p.rdata(realData::radius) = std::pow(three*fourth*vol/PI,0.33333333);
 
     p.rdata(realData::density) = dens;

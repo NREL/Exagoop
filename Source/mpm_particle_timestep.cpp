@@ -221,7 +221,7 @@ void MPMParticleContainer::moveParticles(const amrex::Real& dt,
                     p.pos(XDIR) = two*phi[XDIR] - p.pos(XDIR);
                 }
             }
-            else if (p.pos(YDIR) < plo[YDIR])
+            if (p.pos(YDIR) < plo[YDIR])
             {
                 int dir=YDIR;
                 for(int d=0;d<AMREX_SPACEDIM;d++)
@@ -255,7 +255,7 @@ void MPMParticleContainer::moveParticles(const amrex::Real& dt,
                     p.pos(YDIR) = two*phi[YDIR] - p.pos(YDIR);
                 }
             }
-            else if (p.pos(ZDIR) < plo[ZDIR])
+            if (p.pos(ZDIR) < plo[ZDIR])
             {
                 int dir=ZDIR;
                 for(int d=0;d<AMREX_SPACEDIM;d++)

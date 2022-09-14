@@ -333,6 +333,7 @@ int main (int argc, char* argv[])
 						specs.wall_vel_lo.data(),
 						specs.wall_vel_hi.data(),
 						dt);
+            //nodal_bcs(geom,nodaldata,dt);
 
             if(mpm_ebtools::using_levelset_geometry)
             {
@@ -387,6 +388,7 @@ int main (int argc, char* argv[])
 							specs.wall_vel_lo.data(),
 							specs.wall_vel_hi.data(),
 							dt);
+                //nodal_bcs(	geom, nodaldata, dt);
                 
                 if(mpm_ebtools::using_levelset_geometry)
                 {

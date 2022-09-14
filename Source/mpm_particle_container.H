@@ -57,6 +57,8 @@ public:
 						   Array<int, AMREX_SPACEDIM> order_scheme_directional,
 						   Array<int, AMREX_SPACEDIM> periodic);
 
+    void checkifallparticlesinsidedomain();
+
     void interpolate_from_grid(MultiFab& nodaldata,
                                int update_vel,int update_strainrate,
 							   Array <int,AMREX_SPACEDIM> order_scheme_directional,

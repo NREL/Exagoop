@@ -166,7 +166,7 @@ AMREX_GPU_DEVICE AMREX_FORCE_INLINE
 }
 
 AMREX_GPU_DEVICE AMREX_FORCE_INLINE
-        amrex::Real cubicspline_1d(int shapefunctiontype,amrex:: Real zi)
+        amrex::Real cubicspline_1d(int shapefunctiontype,amrex:: Real zi,int dir)
 {
 	amrex::Real value=0.0;
 	if(shapefunctiontype==1)	//Boundary node
@@ -187,6 +187,13 @@ AMREX_GPU_DEVICE AMREX_FORCE_INLINE
 		{
 			value=-zi*zi*zi/6.0+zi*zi-2.0*zi+4.0/3.0;
 		}
+		else
+		{
+			#ifndef AMREX_USE_GPU
+			amrex::Print()<<"\n Error in shape func 1: "<<zi;
+			#endif
+
+		}
 	}
 	else if(shapefunctiontype==2)	//Near Boundary node
 	{
@@ -201,6 +208,13 @@ AMREX_GPU_DEVICE AMREX_FORCE_INLINE
 		else if(zi>=1 && zi<=2.0)
 		{
 			value=-zi*zi*zi/6.0+zi*zi-2.0*zi+4.0/3.0;
+		}
+		else
+		{
+			#ifndef AMREX_USE_GPU
+			amrex::Print()<<"\n Error in shape func 2: "<<zi<<" dir = "<<dir;
+			#endif
+
 		}
 	}
 	else if(shapefunctiontype==3)	//Interior node
@@ -221,6 +235,12 @@ AMREX_GPU_DEVICE AMREX_FORCE_INLINE
 		{
 			value=-zi*zi*zi/6.0+zi*zi-2.0*zi+4.0/3.0;
 		}
+		else
+		{
+			#ifndef AMREX_USE_GPU
+			amrex::Print()<<"\n Error in shape func 3: "<<zi;
+			#endif
+		}
 	}
 	else if(shapefunctiontype==4)	//Interior node
 	{
@@ -237,10 +257,10 @@ AMREX_GPU_DEVICE AMREX_FORCE_INLINE
 			value=zi*zi*zi/3.0-zi*zi+2.0/3.0;
 		}
 		else
-                {
-#ifndef AMREX_USE_GPU
-			amrex::Print()<<"\n Error in shape func 4: "<<zi;
-#endif
+		{
+			#ifndef AMREX_USE_GPU
+			amrex::Print()<<"\n Error in shape func 4: "<<zi<<" dir= "<<dir;
+			#endif
 		}
 	}
 	else
@@ -298,9 +318,11 @@ AMREX_GPU_DEVICE AMREX_FORCE_INLINE
     			ry  = (xp[YDIR]-(plo[YDIR]+(j+m)*dx[YDIR]))/dx[YDIR];
     			rz  = (xp[ZDIR]-(plo[ZDIR]+(k+n)*dx[ZDIR]))/dx[ZDIR];
 
-    			lval=cubicspline_1d(shapetypex,rx);
-    			mval=cubicspline_1d(shapetypey,ry);
-    			nval=cubicspline_1d(shapetypez,rz);
+    			//amrex::Print()<<"\n dx = "<<dx[XDIR]<<" "<<dx[YDIR]<<" "<<dx[ZDIR];
+
+    			lval=cubicspline_1d(shapetypex,rx,0);
+    			mval=cubicspline_1d(shapetypey,ry,1);
+    			nval=cubicspline_1d(shapetypez,rz,2);
     			value += lval*mval*nval* nodaldata(i+l,j+m,k+n,comp);
 
     		}
@@ -344,13 +366,13 @@ AMREX_GPU_DEVICE AMREX_FORCE_INLINE
     	{
     		shapefunctype = ((i+l)==lo[XDIR] || (i+l)==hi[XDIR]+1)?1:((i+l==lo[XDIR]+1)?2:((i+l==hi[XDIR]))?4:3);
     		rx = (xp[XDIR]-(plo[XDIR]+(i+l)*dx[XDIR]))/dx[XDIR];
-    		lval=cubicspline_1d(shapefunctype,rx);
+    		lval=cubicspline_1d(shapefunctype,rx,0);
     	}
     	else
     	{
     		shapefunctype = 3;
     		rx = (xp[XDIR]-(plo[XDIR]+(i+l)*dx[XDIR]))/dx[XDIR];
-    		lval=cubicspline_1d(shapefunctype,rx);
+    		lval=cubicspline_1d(shapefunctype,rx,0);
     	}
     }
 
@@ -364,14 +386,14 @@ AMREX_GPU_DEVICE AMREX_FORCE_INLINE
     	{
     		shapefunctype = ((j+m)==lo[YDIR] || (j+m)==hi[YDIR]+1)?1:((j+m==lo[YDIR]+1)?2:((j+m==hi[YDIR]))?4:3);
     		ry = (xp[YDIR]-(plo[YDIR]+(j+m)*dx[YDIR]))/dx[YDIR];
-    		mval=cubicspline_1d(shapefunctype,ry);
+    		mval=cubicspline_1d(shapefunctype,ry,1);
 
     	}
     	else
     	{
     		shapefunctype = 3;
     		ry = (xp[YDIR]-(plo[YDIR]+(j+m)*dx[YDIR]))/dx[YDIR];
-    		mval=cubicspline_1d(shapefunctype,ry);
+    		mval=cubicspline_1d(shapefunctype,ry,1);
     	}
     }
 
@@ -385,13 +407,13 @@ AMREX_GPU_DEVICE AMREX_FORCE_INLINE
     	{
     		shapefunctype = ((k+n)==lo[ZDIR] || (k+n)==hi[ZDIR]+1)?1:((k+n==lo[ZDIR]+1)?2:((k+n==hi[ZDIR]))?4:3);
     		rz = (xp[ZDIR]-(plo[ZDIR]+(k+n)*dx[ZDIR]))/dx[ZDIR];
-    		nval=cubicspline_1d(shapefunctype,rz);
+    		nval=cubicspline_1d(shapefunctype,rz,2);
     	}
         else
         {
         	shapefunctype = 3;
         	rz = (xp[ZDIR]-(plo[ZDIR]+(k+n)*dx[ZDIR]))/dx[ZDIR];
-        	nval=cubicspline_1d(shapefunctype,rz);
+        	nval=cubicspline_1d(shapefunctype,rz,2);
         }
     }
     return(lval*mval*nval);
@@ -431,13 +453,13 @@ AMREX_GPU_DEVICE AMREX_FORCE_INLINE
     	{
     		shapefunctype = ((i+l)==lo[XDIR] || (i+l)==hi[XDIR]+1)?1:((i+l==lo[XDIR]+1)?2:((i+l==hi[XDIR]))?4:3);
     		rx = (xp[XDIR]-(plo[XDIR]+(i+l)*dx[XDIR]))/dx[XDIR];
-    		lval=cubicspline_1d(shapefunctype,rx);
+    		lval=cubicspline_1d(shapefunctype,rx,0);
     	}
     	else
     	{
     		shapefunctype = 3;
     		rx = (xp[XDIR]-(plo[XDIR]+(i+l)*dx[XDIR]))/dx[XDIR];
-    		lval=cubicspline_1d(shapefunctype,rx);
+    		lval=cubicspline_1d(shapefunctype,rx,0);
     	}
     }
 
@@ -451,13 +473,13 @@ AMREX_GPU_DEVICE AMREX_FORCE_INLINE
     	{
     		shapefunctype = ((j+m)==lo[YDIR] || (j+m)==hi[YDIR]+1)?1:((j+m==lo[YDIR]+1)?2:((j+m==hi[YDIR]))?4:3);
     		ry = (xp[YDIR]-(plo[YDIR]+(j+m)*dx[YDIR]))/dx[YDIR];
-    		mval=cubicspline_1d(shapefunctype,ry);
+    		mval=cubicspline_1d(shapefunctype,ry,1);
     	}
     	else
     	{
     		shapefunctype = 3;
     		ry = (xp[YDIR]-(plo[YDIR]+(j+m)*dx[YDIR]))/dx[YDIR];
-    		mval=cubicspline_1d(shapefunctype,ry);
+    		mval=cubicspline_1d(shapefunctype,ry,1);
     	}
     }
 
@@ -471,13 +493,13 @@ AMREX_GPU_DEVICE AMREX_FORCE_INLINE
     	{
     		shapefunctype = ((k+n)==lo[ZDIR] || (k+n)==hi[ZDIR]+1)?1:((k+n==lo[ZDIR]+1)?2:((k+n==hi[ZDIR]))?4:3);
     		rz = (xp[ZDIR]-(plo[ZDIR]+(k+n)*dx[ZDIR]))/dx[ZDIR];
-    		nval=cubicspline_1d(shapefunctype,rz);
+    		nval=cubicspline_1d(shapefunctype,rz,2);
     	}
     	else
     	{
     		shapefunctype = 3;
     		rz = (xp[ZDIR]-(plo[ZDIR]+(k+n)*dx[ZDIR]))/dx[ZDIR];
-    		nval=cubicspline_1d(shapefunctype,rz);
+    		nval=cubicspline_1d(shapefunctype,rz,2);
     	}
     }
 
