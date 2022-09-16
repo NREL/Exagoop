@@ -249,6 +249,10 @@ int main (int argc, char* argv[])
         nodaldata_names.push_back("delta_vely");
         nodaldata_names.push_back("delta_velz");
         nodaldata_names.push_back("mass_old");
+        nodaldata_names.push_back("VELX_RIGID_INDEX");
+        nodaldata_names.push_back("VELY_RIGID_INDEX");
+        nodaldata_names.push_back("VELZ_RIGID_INDEX");
+        nodaldata_names.push_back("MASS_RIGID_INDEX");
 
         if(specs.restart_checkfile =="")
         {
@@ -265,6 +269,7 @@ int main (int argc, char* argv[])
         }
 
         amrex::Print()<<"\nNumber of particles in the simulation:"<<mpm_pc.TotalNumberOfParticles()<<"\n";
+        amrex::Real vel_piston_old=0.0;
 
         while((steps < specs.maxsteps) and (time < specs.final_time))
         {
@@ -321,8 +326,29 @@ int main (int argc, char* argv[])
 										specs.order_scheme_directional,
 										specs.periodic);
 
+            //Calculate mass and velocity from rigid nodes
+            mpm_pc.deposit_onto_grid_rigidnodesonly(	nodaldata,
+                        							specs.gravity,
+            										specs.external_loads_present,
+            										specs.force_slab_lo,
+            										specs.force_slab_hi,
+            										specs.extforce,0,1,
+            										specs.mass_tolerance,
+            										specs.order_scheme_directional,
+            										specs.periodic);
+
             //update velocity on nodes
             nodal_update(nodaldata,dt,specs.mass_tolerance);
+
+            //Calculate restoring force and velocity
+            amrex::Real vel_piston_new=mpm_pc.GetVelPiston(dt,vel_piston_old);
+            amrex::Print()<<"\n Piston vel = "<<vel_piston_new;
+
+            vel_piston_old = vel_piston_new;
+            //Detect contact from rigid nodes
+            amrex::Real contact_alpha=specs.mass_tolerance;
+            nodal_detect_contact(nodaldata,contact_alpha,vel_piston_new);
+
 
             //impose bcs at nodes
             nodal_bcs(	geom,nodaldata,

@@ -57,7 +57,19 @@ public:
 						   Array<int, AMREX_SPACEDIM> order_scheme_directional,
 						   Array<int, AMREX_SPACEDIM> periodic);
 
+    void deposit_onto_grid_rigidnodesonly(MultiFab& nodaldata,
+                               Array<Real,AMREX_SPACEDIM> gravity,
+                               int external_loads_present,
+                               Array<Real,AMREX_SPACEDIM> force_slab_lo,
+                               Array<Real,AMREX_SPACEDIM> force_slab_hi,
+                               Array<Real,AMREX_SPACEDIM> extforce,
+                               int update_massvel,int update_forces,
+                               amrex::Real mass_tolerance,
+    						   Array<int, AMREX_SPACEDIM> order_scheme_directional,
+    						   Array<int, AMREX_SPACEDIM> periodic);
+
     void checkifallparticlesinsidedomain();
+    amrex::Real GetVelPiston(const amrex::Real& dt,amrex::Real v_old);
 
     void interpolate_from_grid(MultiFab& nodaldata,
                                int update_vel,int update_strainrate,

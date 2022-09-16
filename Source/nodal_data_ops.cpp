@@ -159,6 +159,34 @@ void nodal_update(MultiFab &nodaldata,const amrex::Real& dt, const amrex::Real& 
     }
 }
 
+void nodal_detect_contact(MultiFab &nodaldata,amrex::Real& contact_tolerance,amrex::Real vely)
+{
+    for (MFIter mfi(nodaldata); mfi.isValid(); ++mfi)
+    {
+        const Box& bx=mfi.validbox();
+        Box nodalbox = convert(bx, {1, 1, 1});
+
+        Array4<Real> nodal_data_arr=nodaldata.array(mfi);
+
+        amrex::Real normaly=1.0;
+
+        amrex::ParallelFor(nodalbox,[=]
+        AMREX_GPU_DEVICE (int i,int j,int k) noexcept
+        {
+            if(nodal_data_arr(i,j,k,MASS_INDEX) >contact_tolerance and nodal_data_arr(i,j,k,MASS_RIGID_INDEX)>contact_tolerance)
+            {
+
+            	amrex::Real contact_alpha;
+           		contact_alpha = (nodal_data_arr(i,j,k,VELX_INDEX+1)-vely)*normaly;
+           		if(contact_alpha>=0)
+           		{
+           			nodal_data_arr(i,j,k,VELX_INDEX+1) =vely;
+           		}
+            }
+        });
+    }
+}
+
 void initialise_shape_function_indices(iMultiFab &shapefunctionindex,const amrex::Geometry geom)
 {
     const int* domloarr = geom.Domain().loVect();
