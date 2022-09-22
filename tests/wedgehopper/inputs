@@ -1,0 +1,45 @@
+#geometry parameters
+mpm.prob_lo        = 0.0      0.0     0.0  
+mpm.prob_hi        = 1.0      2.0     0.1
+mpm.ncells         = 64 128 4
+mpm.max_grid_size  = 8
+mpm.is_it_periodic = 0  0  1
+ 
+#timestepping
+mpm.fixed_timestep = 0
+mpm.final_time=20
+mpm.max_steps=100000000
+mpm.write_output_time=2e-2
+mpm.num_redist = 1
+mpm.timestep = 2e-5
+mpm.CFL=0.1
+mpm.order_scheme=1
+mpm.mass_tolerance = 1e-18
+mpm.alpha_pic_flip = 0.99
+mpm.stress_update_scheme= 1
+
+mpm.gravity = 0.0 -9.81 0.0
+
+mpm.use_autogen=1
+mpm.mincoords_autogen=0.0 1.0 0.0
+mpm.maxcoords_autogen=1.0 1.8 1.0
+mpm.vel_autogen=0.0 0.0 0.0
+mpm.constmodel_autogen=1
+mpm.visc_autogen=1e-3
+mpm.Gama_pres_autogen=7.0
+mpm.bulkmod_autogen=2e4
+
+
+#periodic 0
+#noslip wall 1
+#slip wall 2
+#outflow 3
+mpm.bc_lower=2 2 0
+mpm.bc_upper=2 2 0
+
+eb2.geom_type = "wedge_hopper"
+eb2.ls_refinement=2
+wedge_hopper.exit_size    = 0.2
+wedge_hopper.bin_size     = 0.7
+wedge_hopper.funnel_height = 0.3
+wedge_hopper.vertical_offset=1.0

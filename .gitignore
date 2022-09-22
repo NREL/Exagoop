@@ -1,0 +1,5 @@
+.project
+.pydevproject
+build/*
+tests/AxialVibrationofBar/GNUmakefile
+tests/AxialVibrationofBar/mpm_particles.dat
