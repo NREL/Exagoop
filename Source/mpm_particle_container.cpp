@@ -60,7 +60,6 @@ void MPMParticleContainer::apply_constitutive_model(const amrex::Real& dt,
 					strain[d]=p.rdata(realData::strain+d);
 				}
 
-
 				if(p.idata(intData::constitutive_model)==0)		//Elastic solid
 				{
 					linear_elastic(strain,strainrate,stress,p.rdata(realData::E),p.rdata(realData::nu));
@@ -137,9 +136,9 @@ void MPMParticleContainer::apply_constitutive_model_delta(const amrex::Real& dt,
 				}
 
 				//apply axial strain
-				/*delta_strain[0] = dt*applied_strainrate;
-				delta_strain[3] = dt*applied_strainrate;
-				delta_strain[5] = dt*applied_strainrate;*/
+				delta_strain[XX] += dt*applied_strainrate;
+				delta_strain[YY] += dt*applied_strainrate;
+				delta_strain[ZZ] += dt*applied_strainrate;
 
 				if(p.idata(intData::constitutive_model)==0)		//Elastic solid
 				{
@@ -147,7 +146,7 @@ void MPMParticleContainer::apply_constitutive_model_delta(const amrex::Real& dt,
 				}
 				else if(p.idata(intData::constitutive_model)==1)		//Viscous fluid with approximate EoS
 				{
-
+					amrex::Abort("\nDelta strain model for weakly compressible fluids not implemented yet.");
 				}
 
 				for(int d=0;d<NCOMP_TENSOR;d++)

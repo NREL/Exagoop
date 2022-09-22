@@ -81,6 +81,7 @@ class MPMspecs
 
         //Diagnostic parameters
         int print_diagnostics=0;
+        int ifrigidnodespresent=0;
         bool is_standard_test = true;
         int test_number = 0;	//0->is_standard_test=false,1-->axial vibration of bar, 2-->Dam break, 3--> Elastic collision of disks, 4--> Lateral deflection of beam
 

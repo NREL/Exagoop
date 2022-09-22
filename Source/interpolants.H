@@ -606,7 +606,6 @@ AMREX_GPU_DEVICE AMREX_FORCE_INLINE
 	p.rdata(start_index+7)= Lp[2][0]*Fp[0][1]+Lp[2][1]*Fp[1][1]+Lp[2][2]*Fp[2][1];
 	p.rdata(start_index+8)= Lp[2][0]*Fp[0][2]+Lp[2][1]*Fp[1][2]+Lp[2][2]*Fp[2][2];
 
-
 }
 
 AMREX_GPU_DEVICE AMREX_FORCE_INLINE

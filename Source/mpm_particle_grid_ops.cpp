@@ -1,13 +1,44 @@
 #include <mpm_particle_container.H>
 #include <interpolants.H>
 
+int MPMParticleContainer::checkifrigidnodespresent()
+{
+	int rigidnodespresent=0;
+	const int lev = 0;
+	auto& plev  = GetParticles(lev);
+
+	using PType = typename MPMParticleContainer::SuperParticleType;
+	rigidnodespresent = amrex::ReduceMax(*this, [=]
+	    AMREX_GPU_HOST_DEVICE (const PType& p) -> Real
+	    {
+	        if(p.idata(intData::phase)==1)
+	        {
+	        	int rigidnodespresenttmp=1;
+				return(rigidnodespresenttmp);
+	        }
+	        else
+	        {
+	        	int rigidnodespresenttmp=0;
+	        	return(rigidnodespresenttmp);
+	        }
+	    });
+
+	#ifdef BL_USE_MPI
+	    ParallelDescriptor::ReduceIntMax(rigidnodespresent);
+	#endif
+	return(rigidnodespresent);
+
+}
+
 void MPMParticleContainer::deposit_onto_grid(MultiFab& nodaldata,
                                              Array<Real,AMREX_SPACEDIM> gravity,
                                              int external_loads_present,
                                              Array<Real,AMREX_SPACEDIM> force_slab_lo,
                                              Array<Real,AMREX_SPACEDIM> force_slab_hi,
                                              Array<Real,AMREX_SPACEDIM> extforce,
-                                             int update_massvel,int update_forces, amrex::Real mass_tolerance,
+                                             int update_massvel,
+											 int update_forces,
+											 amrex::Real mass_tolerance,
 											 Array<int,AMREX_SPACEDIM> order_scheme_directional,
 											 Array<int,AMREX_SPACEDIM> periodic)
 {
@@ -504,7 +535,7 @@ void MPMParticleContainer::interpolate_from_grid(MultiFab& nodaldata,int update_
 						+(alpha_pic_flip)*bilin_interp(xp,iv[XDIR],iv[YDIR],iv[ZDIR],plo,dx,nodal_data_arr,DELTA_VELZ_INDEX)
 						+(1-alpha_pic_flip)*p.rdata(realData::zvel_prime);
 					}
-					if(order_scheme_directional[2]==3)
+					else if(order_scheme_directional[2]==3)
 					{
 						p.rdata(realData::zvel_prime) = cubic_interp(xp,iv[XDIR],iv[YDIR],iv[ZDIR],lmin,mmin,nmin,lmax,mmax,nmax,plo,dx,nodal_data_arr,VELZ_INDEX,lo,hi);
 						p.rdata(realData::zvel) = (alpha_pic_flip)*p.rdata(realData::zvel)

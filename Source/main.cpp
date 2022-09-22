@@ -27,12 +27,11 @@ int main (int argc, char* argv[])
         Real output_time=zero;
         Real output_timePrint=zero;
 
-        //Check if max_grid_size==1. Then Abort.
+        //Check if max_grid_size==1. If yes, Abort.
         if(specs.max_grid_size==1)
         {
         	amrex::Abort("\nMax grid size should be greater than or equal to two");
         }
-
 
         int coord = 0; //cartesian
         RealBox real_box;
@@ -66,7 +65,7 @@ int main (int argc, char* argv[])
         //Initialise particle properties
         MPMParticleContainer mpm_pc(geom, dm, ba, ng_cells);
 
-        if(specs.restart_checkfile !="")	//Restart from solution
+        if(specs.restart_checkfile !="")	//Restart from checkpoint solution
         {
         	mpm_pc.readCheckpointFile(specs.restart_checkfile, steps,time,output_it);
         	Print()<<"\nRestarting from checkpoint file: "<<specs.restart_checkfile;
@@ -85,12 +84,14 @@ int main (int argc, char* argv[])
                                  specs.autogen_multi_part_per_cell,specs.total_mass,specs.total_vol);
         }
 
+        specs.ifrigidnodespresent = mpm_pc.checkifrigidnodespresent();
+
         if(mpm_ebtools::using_levelset_geometry)
         {
             mpm_pc.removeParticlesInsideEB();
         }
 
-        //Set Euler grid properties
+        //Set background grid properties
         const BoxArray& nodeba = amrex::convert(ba, IntVect{1,1,1});
 
         int ng_cells_nodaldata=1;
@@ -128,7 +129,7 @@ int main (int argc, char* argv[])
         }
         else
         {
-            amrex::Abort("\nOrder scheme not implemented yet\n");
+            amrex::Abort("\nOrder scheme not implemented yet. Please use order_scheme=1 or order_scheme=3 in the input file.\n");
         }
 
         MultiFab nodaldata(nodeba, dm, NUM_STATES, ng_cells_nodaldata);
@@ -172,8 +173,6 @@ int main (int argc, char* argv[])
 									specs.periodic,
 									specs.alpha_pic_flip,
 									dt);	//Calculate strainrate at each mp
-
-
 
 
         mpm_pc.apply_constitutive_model(dt,specs.applied_strainrate);
@@ -327,27 +326,34 @@ int main (int argc, char* argv[])
 										specs.periodic);
 
             //Calculate mass and velocity from rigid nodes
-            mpm_pc.deposit_onto_grid_rigidnodesonly(	nodaldata,
-                        							specs.gravity,
-            										specs.external_loads_present,
-            										specs.force_slab_lo,
-            										specs.force_slab_hi,
-            										specs.extforce,0,1,
-            										specs.mass_tolerance,
-            										specs.order_scheme_directional,
-            										specs.periodic);
+            if(specs.ifrigidnodespresent==1)
+            {
+            	mpm_pc.deposit_onto_grid_rigidnodesonly(	nodaldata,
+            												specs.gravity,
+															specs.external_loads_present,
+															specs.force_slab_lo,
+															specs.force_slab_hi,
+															specs.extforce,0,1,
+															specs.mass_tolerance,
+															specs.order_scheme_directional,
+															specs.periodic);
+            }
 
             //update velocity on nodes
             nodal_update(nodaldata,dt,specs.mass_tolerance);
 
-            //Calculate restoring force and velocity
-            amrex::Real vel_piston_new=mpm_pc.GetVelPiston(dt,vel_piston_old);
-            amrex::Print()<<"\n Piston vel = "<<vel_piston_new;
+            if(specs.ifrigidnodespresent==1)
+            {
+            	//The following code statements are not generic. I have coded them just to check the membrane compaction framework (Sreejith, 21 Sept 2022)
+            	//Calculate restoring force and velocity
+            	amrex::Real vel_piston_new=mpm_pc.GetVelPiston(dt,vel_piston_old);
+            	amrex::Print()<<"\n Piston vel = "<<vel_piston_new;
 
-            vel_piston_old = vel_piston_new;
-            //Detect contact from rigid nodes
-            amrex::Real contact_alpha=specs.mass_tolerance;
-            nodal_detect_contact(nodaldata,contact_alpha,vel_piston_new);
+            	vel_piston_old = vel_piston_new;
+            	//Detect contact from rigid nodes
+            	amrex::Real contact_alpha=specs.mass_tolerance;
+            	nodal_detect_contact(nodaldata,contact_alpha,vel_piston_new);
+            }
 
 
             //impose bcs at nodes
@@ -359,7 +365,6 @@ int main (int argc, char* argv[])
 						specs.wall_vel_lo.data(),
 						specs.wall_vel_hi.data(),
 						dt);
-            //nodal_bcs(geom,nodaldata,dt);
 
             if(mpm_ebtools::using_levelset_geometry)
             {
@@ -400,7 +405,9 @@ int main (int argc, char* argv[])
 											specs.external_loads_present,
 											specs.force_slab_lo,
 											specs.force_slab_hi,
-											specs.extforce,1,0,
+											specs.extforce,
+											1,
+											0,
 											specs.mass_tolerance,
 											specs.order_scheme_directional,
 											specs.periodic);

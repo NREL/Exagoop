@@ -66,10 +66,13 @@ int  applybc(Real relvel_in[AMREX_SPACEDIM],
     		}
     	}
     }
-    else //nothing to do if periodic/outflow
+    else if(bc==BC_PERIODIC) //nothing to do if periodic/outflow
+    {
+
+    }
+    else
     {
     	amrex::Abort("\nUnknown boundary condition");
-
     }
     
     return(modify_pos);
