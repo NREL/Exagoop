@@ -140,6 +140,13 @@ void MPMParticleContainer::writeParticles(std::string prefix_particlefilename, i
     real_data_names.push_back("Gama_pressure");
     real_data_names.push_back("Dynamic_viscosity");
 
+    //yli add for gbhypo
+    for(int i=0;i<6;i++)
+    {
+        real_data_names.push_back(amrex::Concatenate("spinrate_", i, 1));
+    }
+    real_data_names.push_back("void_ratio");
+    //end yli add
     int_data_names.push_back("phase");
     int_data_names.push_back("constitutive_model");
 
@@ -160,6 +167,9 @@ void MPMParticleContainer::writeParticles(std::string prefix_particlefilename, i
     writeflags_real[realData::Bulk_modulus]=0;
     writeflags_real[realData::Gama_pressure]=0;
     writeflags_real[realData::Dynamic_viscosity]=0;
+    //yli add for gbhypo
+    writeflags_real[realData::void_ratio]=1;
+    //end yli add
     
     WritePlotFile(pltfile, "particles",writeflags_real, 
                   writeflags_int, real_data_names, int_data_names);
@@ -250,6 +260,13 @@ void MPMParticleContainer::writeCheckpointFile(std::string prefix_particlefilena
 	real_data_names.push_back("Bulk_modulus");
 	real_data_names.push_back("Gama_pressure");
 	real_data_names.push_back("Dynamic_viscosity");
+     //yli add for gbhypo
+    for(int i=0;i<6;i++)
+    {
+        real_data_names.push_back(amrex::Concatenate("spinrate_", i, 1));
+    }
+    real_data_names.push_back("void_ratio");
+    //end yli add
 
 	amrex::Vector<std::string> int_data_names;
 	int_data_names.push_back("phase");

@@ -74,6 +74,17 @@ void MPMParticleContainer::InitParticles (const std::string& filename,
             	ifs >> p.rdata(realData::Gama_pressure);
             	ifs >> p.rdata(realData::Dynamic_viscosity);
             }
+            // yli add for gbhypo
+            else if(p.idata(intData::constitutive_model)==2) // Yudong: hypoplastic model
+            {
+            	p.rdata(realData::E)=0.0;
+            	p.rdata(realData::nu)=0.0;
+                p.rdata(realData::Bulk_modulus)=0.0;
+            	p.rdata(realData::Gama_pressure)=0.0;
+            	p.rdata(realData::Dynamic_viscosity)=0.0;
+            	ifs >> p.rdata(realData::void_ratio);
+            }
+            // end yli add
             else
             {
             	amrex::Abort("\nIncorrect constitutive model. Please check your particle file");
@@ -97,13 +108,39 @@ void MPMParticleContainer::InitParticles (const std::string& filename,
             p.rdata(realData::deformation_gradient+0) = 1.0;
             p.rdata(realData::deformation_gradient+4) = 1.0;
             p.rdata(realData::deformation_gradient+8) = 1.0;
-
+            
+            // yli edit for gbhypo
+            /*
             for(int comp=0;comp<NCOMP_TENSOR;comp++)
             {
                 p.rdata(realData::strainrate+comp) = zero;
                 p.rdata(realData::strain+comp)     = zero;
                 p.rdata(realData::stress+comp)     = zero;
             }
+            */
+            // end yli edit
+
+            // yli add for gbhypo
+            double initial_strainrate = zero;
+            double initial_spinrate = zero;
+            double initial_strain = zero;
+            double initial_stress = zero;
+
+            if(p.idata(intData::constitutive_model)==2){
+                initial_strainrate = zero;
+                initial_spinrate = zero;
+                initial_strain = zero;
+                initial_stress = -10; // initial stress provide by input
+            }
+
+            for(int comp=0;comp<NCOMP_TENSOR;comp++)
+            {
+                p.rdata(realData::strainrate+comp) = initial_strainrate;
+                p.rdata(realData::spinrate+comp)   = initial_spinrate;
+                p.rdata(realData::strain+comp)     = initial_strain;
+                p.rdata(realData::stress+comp)     = initial_stress;
+            }
+            // end yli add
             
             host_particles.push_back(p);
 
@@ -230,6 +267,185 @@ void MPMParticleContainer::InitParticles (Real mincoords[AMREX_SPACEDIM],Real ma
     // we do need this to move particles from tile 0 to the correct tile.
     Redistribute();
 }
+
+// yli add for gbhypo
+void MPMParticleContainer::InitParticles (Real mincoords[AMREX_SPACEDIM],Real maxcoords[AMREX_SPACEDIM], 
+        Real vel[AMREX_SPACEDIM],
+        Real dens, int constmodel, 
+        Real E, Real nu,Real bulkmod, Real Gama_pres,Real visc,
+        int do_multi_part_per_cell,Real &total_mass,Real &total_vol, Real initial_void_ratio)
+{
+    int lev = 0;
+    Real x,y,z,x0,y0,z0;
+
+    Real dx = Geom(lev).CellSize(0);
+    Real dy = Geom(lev).CellSize(1);
+    Real dz = Geom(lev).CellSize(2);
+    const Real* plo = Geom(lev).ProbLo();
+
+    total_mass=0.0;
+    total_vol=0.0;
+
+    //std::mt19937 mt(0451);
+    //std::uniform_real_distribution<double> dist(0.4, 0.6);
+
+    for (MFIter mfi = MakeMFIter(lev); mfi.isValid(); ++mfi) 
+    {
+
+        const Box& tile_box = mfi.tilebox();
+        const int grid_id = mfi.index();
+        const int tile_id = mfi.LocalTileIndex();
+        auto& particle_tile = GetParticles(lev)[std::make_pair(grid_id, tile_id)];
+        
+        Gpu::HostVector<ParticleType> host_particles;
+
+        for (IntVect iv = tile_box.smallEnd(); iv <= tile_box.bigEnd(); tile_box.next(iv)) 
+        {
+            if(do_multi_part_per_cell == 0)
+            {
+                x = plo[XDIR] + (iv[XDIR] + half)*dx;
+                y = plo[YDIR] + (iv[YDIR] + half)*dy;
+                z = plo[ZDIR] + (iv[ZDIR] + half)*dz;
+
+                if(x>=mincoords[XDIR] && x<=maxcoords[XDIR] &&
+                   y>=mincoords[YDIR] && y<=maxcoords[YDIR] &&
+                   z>=mincoords[ZDIR] && z<=maxcoords[ZDIR])
+                {
+                    ParticleType p = generate_particle(x,y,z,vel,
+                            dens,dx*dy*dz,constmodel,
+                            E,nu,bulkmod,Gama_pres,visc,initial_void_ratio);
+
+                    total_mass += p.rdata(realData::mass);
+                    total_vol += p.rdata(realData::volume);
+
+                    host_particles.push_back(p);
+                }
+            }
+            else
+            {
+                x0 = plo[XDIR]+iv[XDIR]*dx;
+                y0 = plo[YDIR]+iv[YDIR]*dy;
+                z0 = plo[ZDIR]+iv[ZDIR]*dz;
+
+                for(int k=0;k<2;k++)
+                {
+                    for(int j=0;j<2;j++)
+                    {
+                        for(int i=0;i<2;i++)
+                        {
+                            //x = x0 + (i+dist(mt))*half*dx;
+                            //y = y0 + (j+dist(mt))*half*dy;
+                            //z = z0 + (k+dist(mt))*half*dz;
+                            x = x0 + (i+half)*half*dx;
+                            y = y0 + (j+half)*half*dy;
+                            z = z0 + (k+half)*half*dz;
+
+                            if(x>=mincoords[XDIR] and x<=maxcoords[XDIR] and 
+                                    y>=mincoords[YDIR] and y<=maxcoords[YDIR] and
+                                    z>=mincoords[ZDIR] and z<=maxcoords[ZDIR])
+                            {
+                                ParticleType p = generate_particle(x,y,z,vel,
+                                                 dens,eighth*dx*dy*dz,constmodel,
+                                                 E,nu,bulkmod,Gama_pres,visc,initial_void_ratio);
+                    
+                                total_mass += p.rdata(realData::mass);
+                                total_vol += p.rdata(realData::volume);
+                                
+                                host_particles.push_back(p);
+                            }
+                        }
+                    } 
+                }
+            }
+        }
+        
+        auto old_size = particle_tile.GetArrayOfStructs().size();
+        auto new_size = old_size + host_particles.size();
+        particle_tile.resize(new_size);
+
+        Gpu::copy(Gpu::hostToDevice,
+                  host_particles.begin(),
+                  host_particles.end(),
+                  particle_tile.GetArrayOfStructs().begin() + old_size);
+
+    }
+
+    // We shouldn't need this if the particles are tiled with one tile per grid, but otherwise
+    // we do need this to move particles from tile 0 to the correct tile.
+    Redistribute();
+}
+
+MPMParticleContainer::ParticleType MPMParticleContainer::generate_particle
+        (Real x,Real y,Real z,
+        Real vel[AMREX_SPACEDIM],
+        Real dens, Real vol, int constmodel, Real E, Real nu,
+        Real bulkmod, Real Gama_pres,Real visc, Real initial_void_ratio)
+{
+    ParticleType p;
+    p.id()  = ParticleType::NextID();
+    p.cpu() = ParallelDescriptor::MyProc();                
+
+    p.pos(XDIR) = x;
+    p.pos(YDIR) = y;
+    p.pos(ZDIR) = z;
+
+    p.idata(intData::phase) = 0;
+    p.rdata(realData::radius) = std::pow(three*fourth*vol/PI,0.33333333);
+
+    //p.rdata(realData::density) = dens;
+    p.rdata(realData::xvel) = vel[XDIR];
+    p.rdata(realData::yvel) = vel[YDIR];
+    p.rdata(realData::zvel) = vel[ZDIR];
+
+    p.idata(intData::constitutive_model)=constmodel;
+
+    p.rdata(realData::E)=E;
+    p.rdata(realData::nu)=nu;
+    p.rdata(realData::Bulk_modulus)=bulkmod;
+    p.rdata(realData::Gama_pressure)=Gama_pres;
+    p.rdata(realData::Dynamic_viscosity)=visc;
+
+    p.rdata(realData::volume)=vol;
+    if(constmodel==2){
+        p.rdata(realData::density) = dens*1.0/(1.0+initial_void_ratio);
+        p.rdata(realData::mass)=dens*vol*1.0/(1.0+initial_void_ratio); // use particle density
+        p.rdata(realData::vol_init)=vol;
+    }
+    else{
+        p.rdata(realData::density) = dens;
+        p.rdata(realData::mass)=dens*vol;
+        p.rdata(realData::vol_init)=0.0; // 
+    }		
+    //p.rdata(realData::mass)=dens*vol;
+    p.rdata(realData::jacobian)=1.0;
+    p.rdata(realData::pressure)=0.0;
+    //p.rdata(realData::vol_init)=0.0;
+    p.rdata(realData::void_ratio)=initial_void_ratio;
+    
+    double initial_strainrate = zero;
+    double initial_spinrate = zero;
+    double initial_strain = zero;
+    double initial_stress = zero;
+    
+    if(constmodel==2){
+        initial_strainrate = zero;
+        initial_spinrate = zero;
+        initial_strain = zero;
+        initial_stress = -10; // initial stress provide by input
+    }
+    
+    for(int comp=0;comp<NCOMP_TENSOR;comp++)
+    {
+        p.rdata(realData::strainrate+comp) = initial_strainrate;
+        p.rdata(realData::spinrate+comp) = initial_spinrate;
+        p.rdata(realData::strain+comp)     = initial_strain;
+        p.rdata(realData::stress+comp)     = initial_stress; 
+    }
+
+    return(p);
+}
+
+//end yli add
 
 MPMParticleContainer::ParticleType MPMParticleContainer::generate_particle
         (Real x,Real y,Real z,
