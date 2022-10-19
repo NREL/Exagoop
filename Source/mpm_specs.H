@@ -216,8 +216,8 @@ class MPMspecs
                 pp.getarr("vel_autogen",autogen_vel);
                 pp.query("constmodel_autogen",autogen_constmodel);
                 pp.query("dens_autogen",autogen_dens);
-                pp.query("E_autogen",autogen_constmodel);
-                pp.query("nu_autogen",autogen_constmodel);
+                pp.query("E_autogen",autogen_E);
+                pp.query("nu_autogen",autogen_nu);
                 pp.query("bulkmod_autogen",autogen_bulkmod);
                 pp.query("Gama_pres_autogen",autogen_Gama_pres);
                 pp.query("visc_autogen",autogen_visc);
