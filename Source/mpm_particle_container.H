@@ -22,7 +22,7 @@ public:
     
     }
 
-    void InitParticles (const std::string & filename,Real &total_mass, Real &total_vol);
+    void InitParticles (const std::string & filename,Real &total_mass, Real &total_vol, Real &total_rigid_mass);
 
     void InitParticles (Real mincoords[AMREX_SPACEDIM],Real maxcoords[AMREX_SPACEDIM], 
         Real vel[AMREX_SPACEDIM],
@@ -47,6 +47,8 @@ public:
     void WriteHeader(const std::string& name, bool is_checkpoint, amrex::Real cur_time, int nstep, int EB_generate_max_level, int output_it) const;
     void readCheckpointFile(std::string & restart_chkfile, int &nstep, double &cur_time, int &output_it);
     int checkifrigidnodespresent();
+    amrex::Real GetPosPiston();
+    void CalculateSurfaceIntegralTop(Array<Real,AMREX_SPACEDIM> gravity, Real &Fy_top, Real &Fy_bottom);
     void deposit_onto_grid(MultiFab& nodaldata,
                            Array<Real,AMREX_SPACEDIM> gravity,
                            int external_loads_present,
@@ -70,7 +72,8 @@ public:
     						   Array<int, AMREX_SPACEDIM> periodic);
 
     void checkifallparticlesinsidedomain();
-    amrex::Real GetVelPiston(const amrex::Real& dt,amrex::Real v_old);
+    amrex::Real GetVelPiston(const amrex::Real& dt,amrex::Real v_old,Array<Real,AMREX_SPACEDIM> gravity,amrex::Real Fy_top);
+    void CalculateErrorP2G(MultiFab& nodaldata,amrex::Real p2g_L,amrex::Real p2g_f,int ncell);
 
     void interpolate_from_grid(MultiFab& nodaldata,
                                int update_vel,int update_strainrate,
@@ -84,8 +87,11 @@ public:
             int order_scheme);
     
     void CalculateEnergies(Real &TKE,Real &TSE);
+    amrex::Real CalculateEffectiveSpringConstant(amrex::Real Area,amrex::Real L0);
     void CalculateVelocity(Real &Vcm);
     void CalculateVelocityCantilever(Real &Vcm);
+    void CalculateErrorTVB(Real tvb_E,Real tvb_v0,Real tvb_L,Real tvb_rho,Real err);
+    void WriteDeflectionTVB(Real tvb_E,Real tvb_v0,Real tvb_L,Real tvb_rho, Real time, int output_it);
     void WriteDeflectionCantilever();
     void FindWaterFront(Real &Xwf);
 

@@ -83,6 +83,10 @@ void MPMParticleContainer::deposit_onto_grid(MultiFab& nodaldata,
                 nodal_data_arr(i,j,k,FRCY_INDEX)=zero;
                 nodal_data_arr(i,j,k,FRCZ_INDEX)=zero;
             }
+            if(update_forces==2)
+            {
+            	nodal_data_arr(i,j,k,STRESS_INDEX)=zero;
+            }
         });
     }
 
@@ -146,14 +150,16 @@ void MPMParticleContainer::deposit_onto_grid(MultiFab& nodaldata,
             			{
             				IntVect ivlocal(iv[XDIR]+l,iv[YDIR]+m,iv[ZDIR]+n);
 
+            				if(iv[YDIR]+m==lo[1] && iv[XDIR]+l==25 && iv[ZDIR]+n==25)
+            				{
+            					//amrex::Print()<<"\n Particle = "<<p.pos(0)<<" "<<p.pos(1)<<" "<<p.pos(2);
+            				}
             				if(nodalbox.contains(ivlocal))
             				{
-
             					amrex::Real basisvalue=basisval(l,m,n,iv[XDIR],iv[YDIR],iv[ZDIR],xp,plo,dx,order_scheme_directional,periodic,lo,hi);
 
             					if(update_massvel)
             					{
-
             						amrex::Real mass_contrib=p.rdata(realData::mass)*basisvalue;
             						amrex::Real p_contrib[AMREX_SPACEDIM] =
             						{p.rdata(realData::mass)*p.rdata(realData::xvel)*basisvalue,
@@ -210,6 +216,12 @@ void MPMParticleContainer::deposit_onto_grid(MultiFab& nodaldata,
 												bforce_contrib[dim]+intforce_contrib[dim]);
             						}
             					}
+
+            					if(update_forces==2)
+            					{
+            						amrex::Real stress_contrib=p.rdata(realData::stress+3)*p.rdata(realData::mass)*basisvalue;
+            						amrex::Gpu::Atomic::AddNoRet(&nodal_data_arr(ivlocal,STRESS_INDEX), stress_contrib);
+            					}
             				}
             			}
             		}
@@ -257,6 +269,20 @@ void MPMParticleContainer::deposit_onto_grid(MultiFab& nodaldata,
                         }
                     }
                 }
+            }
+            if(update_forces==2)
+            {
+            	if(nodal_data_arr(i,j,k,MASS_INDEX) > 0.0)
+            	{
+            		if(nodal_data_arr(i,j,k,MASS_INDEX)>=mass_tolerance)
+            		{
+            			nodal_data_arr(i,j,k,STRESS_INDEX)/=nodal_data_arr(i,j,k,MASS_INDEX);
+            		}
+            		else
+            		{
+            			nodal_data_arr(i,j,k,STRESS_INDEX) = 0.0;
+            		}
+            	}
             }
         });
 
@@ -406,7 +432,7 @@ void MPMParticleContainer::deposit_onto_grid_rigidnodesonly(MultiFab& nodaldata,
             if(update_massvel)
             {
             	//amrex::Print()<<"\n Nodal mass values for i = "<<i<<" j = "<<j<<" k = "<<k<<" is "<<nodal_data_arr(i,j,k,MASS_INDEX);
-                if(nodal_data_arr(i,j,k,MASS_INDEX) > 0.0)
+                if(nodal_data_arr(i,j,k,MASS_RIGID_INDEX) > 0.0)
                 {
                     for(int dim=0;dim<AMREX_SPACEDIM;dim++)
                     {
@@ -500,6 +526,7 @@ void MPMParticleContainer::interpolate_from_grid(MultiFab& nodaldata,int update_
 				{
 					if(order_scheme_directional[0]==1)
 					{
+
 						p.rdata(realData::xvel_prime) = bilin_interp(xp,iv[XDIR],iv[YDIR],iv[ZDIR],plo,dx,nodal_data_arr,VELX_INDEX);
 						p.rdata(realData::xvel) = (alpha_pic_flip)*p.rdata(realData::xvel)
 						+(alpha_pic_flip)*bilin_interp(xp,iv[XDIR],iv[YDIR],iv[ZDIR],plo,dx,nodal_data_arr,DELTA_VELX_INDEX)
@@ -515,17 +542,22 @@ void MPMParticleContainer::interpolate_from_grid(MultiFab& nodaldata,int update_
 
 					if(order_scheme_directional[1]==1)
 					{
+						p.rdata(realData::yacceleration)= p.rdata(realData::yvel);
 						p.rdata(realData::yvel_prime) = bilin_interp(xp,iv[XDIR],iv[YDIR],iv[ZDIR],plo,dx,nodal_data_arr,VELY_INDEX);
 						p.rdata(realData::yvel) = (alpha_pic_flip)*p.rdata(realData::yvel)
 						+(alpha_pic_flip)*bilin_interp(xp,iv[XDIR],iv[YDIR],iv[ZDIR],plo,dx,nodal_data_arr,DELTA_VELY_INDEX)
 						+(1-alpha_pic_flip)*p.rdata(realData::yvel_prime);
+						p.rdata(realData::yacceleration)= (p.rdata(realData::yvel)-p.rdata(realData::yacceleration))/dt;
 					}
 					else if(order_scheme_directional[1]==3)
 					{
+						p.rdata(realData::yacceleration)= p.rdata(realData::yvel);
 						p.rdata(realData::yvel_prime) = cubic_interp(xp,iv[XDIR],iv[YDIR],iv[ZDIR],lmin,mmin,nmin,lmax,mmax,nmax,plo,dx,nodal_data_arr,VELY_INDEX,lo,hi);
 						p.rdata(realData::yvel) = (alpha_pic_flip)*p.rdata(realData::yvel)
 						+(alpha_pic_flip)*cubic_interp(xp,iv[XDIR],iv[YDIR],iv[ZDIR],lmin,mmin,nmin,lmax,mmax,nmax,plo,dx,nodal_data_arr,DELTA_VELY_INDEX,lo,hi)
 						+(1-alpha_pic_flip)*p.rdata(realData::yvel_prime);
+						p.rdata(realData::yacceleration)= (p.rdata(realData::yvel)-p.rdata(realData::yacceleration))/dt;
+
 					}
 
 					if(order_scheme_directional[2]==1)

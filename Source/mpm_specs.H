@@ -34,6 +34,7 @@ struct realData
         Bulk_modulus=42,			//39
         Gama_pressure=43,			//40
         Dynamic_viscosity=44,		//41
+		yacceleration=45,			//45	This is for storing the acceleration of each particle in the y-direction. This variable is not generic and used only for the spring-mass and membrane simulations only
         count
     };
 };
@@ -85,16 +86,32 @@ class MPMspecs
         bool is_standard_test = true;
         int test_number = 0;	//0->is_standard_test=false,1-->axial vibration of bar, 2-->Dam break, 3--> Elastic collision of disks, 4--> Lateral deflection of beam
 
-        	//Parameters for Axial bar test
-        	amrex::Real axial_bar_E = 100.0;
-        	amrex::Real axial_bar_rho = 1.0;
-        	amrex::Real axial_bar_L = 25.0;
-        	int axial_bar_modenumber = 1;
-        	amrex::Real axial_bar_v0 = 0.1;
+        //Parameters for Axial bar test
+        amrex::Real axial_bar_E = 100.0;
+        amrex::Real axial_bar_rho = 1.0;
+        amrex::Real axial_bar_L = 25.0;
+        int axial_bar_modenumber = 1;
+        amrex::Real axial_bar_v0 = 0.1;
 
-        	//Parameters for dam break
-        	amrex::Real dam_break_H1 = 0.2;
-        	amrex::Real dam_break_g = 9.81;
+        //Parameters for dam break
+        amrex::Real dam_break_H1 = 0.2;
+        amrex::Real dam_break_g = 9.81;
+
+        //Parameters for lateral vibration of bar (TVB). The test case is performed for first mode
+        amrex::Real tvb_E = 50.0;
+        amrex::Real tvb_L = 0.1;
+        amrex::Real tvb_rho = 25.0;
+        amrex::Real tvb_v0 = 0.0;
+
+        amrex::Real p2g_L = 1.0;
+        amrex::Real p2g_f = 1.0;
+        int p2g_ncell=0;
+
+        //Parameters for membrane compaction
+        amrex::Real mem_compaction_area=1.0;
+        amrex::Real mem_compaction_L0=1.0;
+        int mem_compaction_restoring_force_calc_method = 1;
+
 
 
         //1-->tent function, 3--> cubic spline shape function
@@ -113,7 +130,10 @@ class MPMspecs
         Real mass_tolerance = 1e-8;
         Real alpha_pic_flip = 0.95;
         Real total_mass = 0.0;
+        Real total_rigid_mass = 0.0;
         Real total_vol = 0.0;
+        Real mem_compaction_vnew=0.0;
+        Real mem_compaction_vold=0.0;
         int stress_update_scheme=1;
         int calculate_strain_based_on_delta=0;
         
@@ -162,8 +182,6 @@ class MPMspecs
             restart_checkfile="";
             pp1.query("restart_checkfile",restart_checkfile);
 
-
-
             ParmParse pp("mpm");
             pp.get("prob_lo",plo);
             pp.get("prob_hi",phi);
@@ -202,6 +220,20 @@ class MPMspecs
             pp.query("axial_bar_L",axial_bar_L);
             pp.query("axial_bar_modenumber",axial_bar_modenumber);
             pp.query("axial_bar_v0",axial_bar_v0);
+
+            //Reading TVB test parameters
+            pp.query("tvb_v0",tvb_v0);
+            pp.query("tvb_L",tvb_L);
+            pp.query("tvb_E",tvb_E);
+            pp.query("tvb_rho",tvb_rho);
+
+            pp.query("p2g_L",p2g_L);
+            pp.query("p2g_f",p2g_f);
+            pp.query("p2g_ncell",p2g_ncell);
+
+            pp.query("mem_compaction_area",mem_compaction_area);
+            pp.query("mem_compaction_restoring_force_calc_method",mem_compaction_restoring_force_calc_method);
+
 
 
             if(!use_autogen)

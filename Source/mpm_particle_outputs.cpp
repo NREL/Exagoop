@@ -139,6 +139,7 @@ void MPMParticleContainer::writeParticles(std::string prefix_particlefilename, i
     real_data_names.push_back("Bulk_modulus");
     real_data_names.push_back("Gama_pressure");
     real_data_names.push_back("Dynamic_viscosity");
+    real_data_names.push_back("yacceleration");
 
     int_data_names.push_back("phase");
     int_data_names.push_back("constitutive_model");
@@ -250,6 +251,7 @@ void MPMParticleContainer::writeCheckpointFile(std::string prefix_particlefilena
 	real_data_names.push_back("Bulk_modulus");
 	real_data_names.push_back("Gama_pressure");
 	real_data_names.push_back("Dynamic_viscosity");
+	real_data_names.push_back("yacceleration");
 
 	amrex::Vector<std::string> int_data_names;
 	int_data_names.push_back("phase");

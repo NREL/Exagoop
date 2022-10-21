@@ -3,7 +3,7 @@
 #include <mpm_eb.H>
 
 void MPMParticleContainer::InitParticles (const std::string& filename,
-                                          Real &total_mass,Real &total_vol)
+                                          Real &total_mass,Real &total_vol,Real &total_rigid_mass)
 {
 
     // only read the file on the IO proc
@@ -31,6 +31,7 @@ void MPMParticleContainer::InitParticles (const std::string& filename,
 
         total_mass=0.0;
         total_vol=0.0;
+        total_rigid_mass=0.0;
 
         auto& particle_tile = DefineAndReturnParticleTile(lev,grid,tile);
         Gpu::HostVector<ParticleType> host_particles;
@@ -79,13 +80,23 @@ void MPMParticleContainer::InitParticles (const std::string& filename,
             	amrex::Abort("\nIncorrect constitutive model. Please check your particle file");
             }
 
+
             // Set other particle properties
-            p.rdata(realData::volume)      = fourbythree*PI*pow(p.rdata(realData::radius),three);	
+            p.rdata(realData::volume)      = fourbythree*PI*pow(p.rdata(realData::radius),three);
             //This is the right mass of each particle. Make sure the radius is entered correctly while generating the particle file
             p.rdata(realData::mass)        = p.rdata(realData::density)*p.rdata(realData::volume);
 
-            total_mass +=p.rdata(realData::mass);
-            total_vol +=p.rdata(realData::volume);
+
+            if(p.idata(intData::phase)==0)
+            {
+            	total_mass +=p.rdata(realData::mass);
+            	total_vol +=p.rdata(realData::volume);
+            }
+            else if(p.idata(intData::phase)==1)
+            {
+            	total_rigid_mass+=p.rdata(realData::mass);
+            }
+
             p.rdata(realData::jacobian)	   = 1.0;
             p.rdata(realData::vol_init)	   = p.rdata(realData::volume);
             p.rdata(realData::pressure)    = 0.0;
@@ -112,6 +123,9 @@ void MPMParticleContainer::InitParticles (const std::string& filename,
                 amrex::Abort("Error initializing particles from Ascii file. \n");
             }
         }
+        amrex::Print()<<"\nTotal mass and volume = "<<total_mass<<" "<<total_vol;
+        amrex::Print()<<"\nTotal rigid mass = "<<total_rigid_mass;
+
         
         auto old_size = particle_tile.GetArrayOfStructs().size();
         auto new_size = old_size + host_particles.size();

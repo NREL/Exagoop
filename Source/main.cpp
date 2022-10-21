@@ -27,6 +27,8 @@ int main (int argc, char* argv[])
         Real output_time=zero;
         Real output_timePrint=zero;
 
+        Array <int,AMREX_SPACEDIM> order_surface_integral={3,3,3};
+
         //Check if max_grid_size==1. If yes, Abort.
         if(specs.max_grid_size==1)
         {
@@ -73,7 +75,7 @@ int main (int argc, char* argv[])
         else if(!specs.use_autogen)
         {
             mpm_pc.InitParticles(specs.particlefilename,
-                                 specs.total_mass,specs.total_vol);
+                                 specs.total_mass,specs.total_vol,specs.total_rigid_mass);
         }
         else
         {
@@ -156,6 +158,8 @@ int main (int argc, char* argv[])
         dt 	= (specs.fixed_timestep==1)?specs.timestep:mpm_pc.Calculate_time_step(specs.CFL,specs.dt_max_limit,specs.dt_min_limit);
 
         //Deposit mass and velocity on node
+        amrex::Print()<<"\nOrder = "<<specs.order_scheme_directional;
+
         mpm_pc.deposit_onto_grid(nodaldata,
         		 	 	 	 	 specs.gravity,
                                  specs.external_loads_present,
@@ -166,7 +170,7 @@ int main (int argc, char* argv[])
 								 specs.periodic);
 
         //Calculate strainrate at each material point
-        mpm_pc.interpolate_from_grid(nodaldata,
+       mpm_pc.interpolate_from_grid(nodaldata,
         							0,
 									1,
 									specs.order_scheme_directional,
@@ -195,6 +199,9 @@ int main (int argc, char* argv[])
         		Real Vmnum=0.0;
         		Real Vmex=0.0;
         		Real Xwf;
+        		Real err = 0.0;
+        		Real Fy_bottom = 0.0;
+        		Real Fy_top = 0.0;
 
         		switch(specs.test_number)
         		{
@@ -222,6 +229,46 @@ int main (int argc, char* argv[])
 				            mpm_pc.CalculateEnergies(TKE,TSE);
 				            TE=TKE+TSE;
 				            PrintToFile("CantileverEnergy.out")<<time<<"\t"<<TKE<<"\t"<<TSE<<"\t"<<TE<<"\n";
+        					break;
+        		case(5):	//Transverse vibration of a bar
+							mpm_pc.CalculateErrorTVB(specs.tvb_E,specs.tvb_v0,specs.tvb_L,specs.tvb_rho,err);
+        					PrintToFile("TVB_Error.out")<<time<<"\t"<<TKE<<"\t"<<TSE<<"\t"<<TE<<"\n";
+        					break;
+        		case(6):    //Check function reconstruction and convergence
+							mpm_pc.CalculateErrorP2G(nodaldata,specs.p2g_L,specs.p2g_f,specs.p2g_ncell);
+		        			break;
+        		case(7):	//Checks the weight of a block of elastic solid. Used to validate functionality to evaluate surface forces
+							mpm_pc.deposit_onto_grid(nodaldata,
+		        		 	 	 	 	 specs.gravity,
+		                                 specs.external_loads_present,
+		                                 specs.force_slab_lo,
+		                                 specs.force_slab_hi,
+		                                 specs.extforce,0,2,specs.mass_tolerance,
+										 specs.order_scheme_directional,
+										 specs.periodic);
+        					CalculateSurfaceIntegralOnBG(geom, nodaldata,STRESS_INDEX,err);
+        					PrintToFile("Weight.out")<<time<<"\t"<<err<<"\t"<<-specs.total_mass*9.81<<"\n";
+        					break;
+        		case(8): 	CalculateInterpolationError(geom, nodaldata,STRESS_INDEX);
+        				    break;
+        		case(9):    /*mpm_pc.deposit_onto_grid(nodaldata,
+													 specs.gravity,
+													 specs.external_loads_present,
+													 specs.force_slab_lo,
+													 specs.force_slab_hi,
+													 specs.extforce,
+													 0,
+													 2,
+													 specs.mass_tolerance,
+													 order_surface_integral,
+													 specs.periodic);
+        					CalculateSurfaceIntegralOnBG(geom, nodaldata,STRESS_INDEX,Fy_bottom);
+        					Fy_bottom=-1*Fy_bottom;
+        					mpm_pc.CalculateSurfaceIntegralTop(specs.gravity,Fy_top,Fy_bottom);
+        					specs.mem_compaction_vnew = mpm_pc.GetVelPiston(dt,specs.mem_compaction_vold,specs.gravity,Fy_top);
+        					nodal_detect_contact(nodaldata,specs.mass_tolerance,specs.mem_compaction_vnew);
+        					specs.mem_compaction_vold=specs.mem_compaction_vnew;*/
+        					specs.mem_compaction_L0=specs.total_vol/specs.mem_compaction_area;
         					break;
         		default:	//
         					amrex::Abort("\nSorry. The test number does not exist");
@@ -252,6 +299,7 @@ int main (int argc, char* argv[])
         nodaldata_names.push_back("VELY_RIGID_INDEX");
         nodaldata_names.push_back("VELZ_RIGID_INDEX");
         nodaldata_names.push_back("MASS_RIGID_INDEX");
+        nodaldata_names.push_back("STRESS_INDEX");
 
         if(specs.restart_checkfile =="")
         {
@@ -326,14 +374,14 @@ int main (int argc, char* argv[])
 										specs.periodic);
 
             //Calculate mass and velocity from rigid nodes
-            if(specs.ifrigidnodespresent==1)
+            if(specs.is_standard_test==1 and specs.test_number ==9 and specs.ifrigidnodespresent==1)
             {
             	mpm_pc.deposit_onto_grid_rigidnodesonly(	nodaldata,
             												specs.gravity,
 															specs.external_loads_present,
 															specs.force_slab_lo,
 															specs.force_slab_hi,
-															specs.extforce,0,1,
+															specs.extforce,1,1,
 															specs.mass_tolerance,
 															specs.order_scheme_directional,
 															specs.periodic);
@@ -342,17 +390,28 @@ int main (int argc, char* argv[])
             //update velocity on nodes
             nodal_update(nodaldata,dt,specs.mass_tolerance);
 
-            if(specs.ifrigidnodespresent==1)
+            if(specs.is_standard_test==1 and specs.test_number ==9 and specs.ifrigidnodespresent==1)
             {
-            	//The following code statements are not generic. I have coded them just to check the membrane compaction framework (Sreejith, 21 Sept 2022)
-            	//Calculate restoring force and velocity
-            	amrex::Real vel_piston_new=mpm_pc.GetVelPiston(dt,vel_piston_old);
-            	amrex::Print()<<"\n Piston vel = "<<vel_piston_new;
+            	Real Fy_top=0.0;
+            	Real Fy_bottom=0.0;
+            	Real ymin=0.0;
 
-            	vel_piston_old = vel_piston_new;
-            	//Detect contact from rigid nodes
-            	amrex::Real contact_alpha=specs.mass_tolerance;
-            	nodal_detect_contact(nodaldata,contact_alpha,vel_piston_new);
+            	if(specs.mem_compaction_restoring_force_calc_method==1)
+            	{
+            		CalculateSurfaceIntegralOnBG(geom, nodaldata,STRESS_INDEX,Fy_bottom);
+            		mpm_pc.CalculateSurfaceIntegralTop(specs.gravity,Fy_top,Fy_bottom);
+            	}
+            	else
+            	{
+            		Fy_top=mpm_pc.CalculateEffectiveSpringConstant(specs.mem_compaction_area,specs.mem_compaction_L0);
+
+            	}
+
+            	specs.mem_compaction_vnew = mpm_pc.GetVelPiston(dt,specs.mem_compaction_vold,specs.gravity,Fy_top);
+            	nodal_detect_contact(nodaldata,specs.mass_tolerance,specs.mem_compaction_vnew);
+            	specs.mem_compaction_vold=specs.mem_compaction_vnew;
+            	ymin = mpm_pc.GetPosPiston();
+            	PrintToFile("Spring.out")<<time<<"\t"<<ymin<<"\n";
             }
 
 
@@ -484,6 +543,11 @@ int main (int argc, char* argv[])
             		Real Vmnum=0.0;
             		Real Vmex=0.0;
             		Real Xwf;
+            		Real err;
+            		Real Fy_top=0.0;
+            		Real Fy_bottom=0.0;
+            		Real ymin=0.0;
+
 
             		switch(specs.test_number)
             		{
@@ -512,12 +576,54 @@ int main (int argc, char* argv[])
 		                    		TE=TKE+TSE;
 		                    		PrintToFile("CantileverEnergy.out")<<time<<"\t"<<TKE<<"\t"<<TSE<<"\t"<<TE<<"\n";
                     				break;
+                    	case(5):	//Transverse vibration of a bar
+                    				mpm_pc.CalculateErrorTVB(specs.tvb_E,specs.tvb_v0,specs.tvb_L,specs.tvb_rho,err);
+                    	        	PrintToFile("TVB_Error.out")<<time<<"\t"<<TKE<<"\t"<<TSE<<"\t"<<TE<<"\n";
+                    	        	break;
+                    	case(6):    //Check function reconstruction and convergence
+									mpm_pc.CalculateErrorP2G(nodaldata,specs.p2g_L,specs.p2g_f,specs.p2g_ncell);
+                    			    break;
+                    	case(7):	//Checks the weight of a block of elastic solid. Used to validate functionality to evaluate surface forces
+									mpm_pc.deposit_onto_grid(nodaldata,
+				        		 	 	 	 	 specs.gravity,
+				                                 specs.external_loads_present,
+				                                 specs.force_slab_lo,
+				                                 specs.force_slab_hi,
+				                                 specs.extforce,0,2,specs.mass_tolerance,
+												 order_surface_integral,
+												 specs.periodic);
+									CalculateSurfaceIntegralOnBG(geom, nodaldata,STRESS_INDEX,err);
+									PrintToFile("Weight.out")<<time<<"\t"<<err<<"\t"<<-specs.total_mass*9.81<<"\n";
+                    				break;
+                    	case(8):    CalculateInterpolationError(geom, nodaldata,STRESS_INDEX);
+                    			    break;
+                    	case(9):	/*mpm_pc.deposit_onto_grid(nodaldata,
+                    										specs.gravity,
+															specs.external_loads_present,
+															specs.force_slab_lo,
+															specs.force_slab_hi,
+															specs.extforce,
+															0,
+															2,
+															specs.mass_tolerance,
+															order_surface_integral,
+															specs.periodic);
+                    				CalculateSurfaceIntegralOnBG(geom, nodaldata,STRESS_INDEX,Fy_bottom);
+                    				Fy_bottom=-1*Fy_bottom;
+                    				amrex::Print()<<"\n Fy = "<<Fy_bottom;
+                    				mpm_pc.CalculateSurfaceIntegralTop(specs.gravity,Fy_top,Fy_bottom);
+                    				specs.mem_compaction_vnew = mpm_pc.GetVelPiston(dt,specs.mem_compaction_vold,specs.gravity,Fy_top);
+                    				nodal_detect_contact(nodaldata,specs.mass_tolerance,specs.mem_compaction_vnew);
+                    				specs.mem_compaction_vold=specs.mem_compaction_vnew;
+                    				ymin = mpm_pc.GetPosPiston();
+                    				PrintToFile("Spring.out")<<time<<"\t"<<ymin<<"\n";*/
+                    				break;
                     	default:	//
                     				amrex::Print()<<"\nTest number = "<<specs.test_number;
                     				amrex::Abort("\nSorry. The test number does not exist");
 
-                    	}
-                    }
+            		}
+            	}
             	else
                 {
             		mpm_pc.CalculateEnergies(TKE,TSE);
@@ -538,6 +644,11 @@ int main (int argc, char* argv[])
 
                 pltfile = amrex::Concatenate(specs.prefix_gridfilename, output_it,specs.num_of_digits_in_filenames );
                 write_plot_file(pltfile,nodaldata,nodaldata_names,geom,ba,dm,time);
+
+                if(specs.test_number==5)
+                {
+                	mpm_pc.WriteDeflectionTVB(specs.tvb_E,specs.tvb_v0,specs.tvb_L,specs.tvb_rho,time,output_it);
+                }
 
                 if(specs.dens_field_output)
                 {

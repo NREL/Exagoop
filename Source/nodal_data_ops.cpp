@@ -175,7 +175,6 @@ void nodal_detect_contact(MultiFab &nodaldata,amrex::Real& contact_tolerance,amr
         {
             if(nodal_data_arr(i,j,k,MASS_INDEX) >contact_tolerance and nodal_data_arr(i,j,k,MASS_RIGID_INDEX)>contact_tolerance)
             {
-
             	amrex::Real contact_alpha;
            		contact_alpha = (nodal_data_arr(i,j,k,VELX_INDEX+1)-vely)*normaly;
            		if(contact_alpha>=0)
@@ -414,6 +413,55 @@ void nodal_bcs(const amrex::Geometry geom,
             //amrex::Print()<<"\nX = Vel "<<nodal_data_arr(nodeid,0);
         });
     }
+}
+
+void CalculateSurfaceIntegralOnBG(const amrex::Geometry geom, amrex::MultiFab &nodaldata, int nodaldataindex,amrex::Real &integral_value)
+{
+	//For the time being, calculate the surface integral of y-velocity on the bottom surface ie y=0 and validate the code
+	const int* domloarr = geom.Domain().loVect();
+	const int* domhiarr = geom.Domain().hiVect();
+	const auto plo = geom.ProbLoArray();
+	const auto phi = geom.ProbHiArray();
+	const auto dx = geom.CellSizeArray();
+	integral_value = 0.0;
+
+	for (MFIter mfi(nodaldata); mfi.isValid(); ++mfi)
+	{
+		const Box& bx=mfi.validbox();
+		Box nodalbox = convert(bx, {1, 1, 1});
+
+		Array4<Real> nodal_data_arr=nodaldata.array(mfi);
+
+		amrex::ParallelFor(nodalbox,[=,&integral_value]AMREX_GPU_DEVICE (int i,int j,int k) noexcept
+		{
+			integral_value+=(nodal_data_arr(i,j,k,nodaldataindex)+nodal_data_arr(i+1,j,k,nodaldataindex)+nodal_data_arr(i,j,k+1,nodaldataindex)+nodal_data_arr(i+1,j,k+1,nodaldataindex))/4.0*dx[0]*dx[2];
+		});
+	}
+#ifdef BL_USE_MPI
+    ParallelDescriptor::ReduceRealSum(integral_value);
+#endif
+}
+
+void CalculateInterpolationError(const amrex::Geometry geom,amrex::MultiFab &nodaldata, int nodaldataindex)
+{
+	const int* domloarr = geom.Domain().loVect();
+	const int* domhiarr = geom.Domain().hiVect();
+	const auto dx = geom.CellSizeArray();
+	const auto Pi = 4.0*atan(1.0);
+
+	for (MFIter mfi(nodaldata); mfi.isValid(); ++mfi)
+	{
+		const Box& bx=mfi.validbox();
+		Box nodalbox = convert(bx, {1, 1, 1});
+
+		Array4<Real> nodal_data_arr=nodaldata.array(mfi);
+
+		amrex::ParallelFor(nodalbox,[=]AMREX_GPU_DEVICE (int i,int j,int k) noexcept
+		{
+			nodal_data_arr(i,j,k,nodaldataindex) = nodal_data_arr(i,j,k,VELX_INDEX)-cos(2.0*Pi*(domloarr[0]+i*dx[0])/1.0);
+		});
+	}
+
 }
 
 
