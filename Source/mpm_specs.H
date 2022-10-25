@@ -35,8 +35,8 @@ struct realData
         Gama_pressure=43,			//40
         Dynamic_viscosity=44,		//41
         // yli add for gbhypo
-        spinrate=33, //rate of rotation; this tensor is anti-symmetric, to better utilize existing code, we store the upper half matrix [XX, XY, XZ, YY, YZ, ZZ] (XX YY ZZ === 0)
-        void_ratio=39, // for hypoplastic model
+        spinrate=45,//33 //rate of rotation; this tensor is anti-symmetric, to better utilize existing code, we store the upper half matrix [XX, XY, XZ, YY, YZ, ZZ] (XX YY ZZ === 0)
+        void_ratio=51,// 39 // for hypoplastic model
         // end yli add
         count
     };

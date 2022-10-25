@@ -66,7 +66,7 @@ int  applybc(Real relvel_in[AMREX_SPACEDIM],
     		}
     	}
     }
-    else if(bc==BC_PERIODIC) //nothing to do if periodic/outflow
+    else if(bc==BC_PERIODIC || bc==BC_OUTFLOW) //nothing to do if periodic/outflow
     {
 
     }
