@@ -37,8 +37,8 @@ mpm.bulkmod_autogen=2e4
 mpm.bc_lower=2 2 0
 mpm.bc_upper=2 2 0
 
-eb2.geom_type = "wedge_hopper"
-eb2.ls_refinement=2
+mpm.kind_of_geometry = "wedge_hopper"
+mpm.ls_refinement=2
 wedge_hopper.exit_size    = 0.2
 wedge_hopper.bin_size     = 0.7
 wedge_hopper.funnel_height = 0.3
