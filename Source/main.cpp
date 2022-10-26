@@ -280,7 +280,6 @@ int main (int argc, char* argv[])
             output_time += dt;
             output_timePrint += dt;
             steps++;
-
             if (output_timePrint >= specs.screen_output_time)
             {
                 Print()<<"\nIteration: "<<std::setw(10)<<steps<<",\t"<<"Time: "<<std::fixed<<std::setprecision(10)<<time<<",\tDt = "<<std::scientific<<std::setprecision(5)<<dt;
@@ -312,7 +311,6 @@ int main (int argc, char* argv[])
 										specs.mass_tolerance,
 										specs.order_scheme_directional,
 										specs.periodic);
-
             //Store node velocity at time level t to calculate Delta_vel later for flip update
             backup_current_velocity(nodaldata);									
 

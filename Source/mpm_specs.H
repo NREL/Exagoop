@@ -89,16 +89,16 @@ class MPMspecs
         bool is_standard_test = true;
         int test_number = 0;	//0->is_standard_test=false,1-->axial vibration of bar, 2-->Dam break, 3--> Elastic collision of disks, 4--> Lateral deflection of beam
 
-        	//Parameters for Axial bar test
-        	amrex::Real axial_bar_E = 100.0;
-        	amrex::Real axial_bar_rho = 1.0;
-        	amrex::Real axial_bar_L = 25.0;
-        	int axial_bar_modenumber = 1;
-        	amrex::Real axial_bar_v0 = 0.1;
+        //Parameters for Axial bar test
+        amrex::Real axial_bar_E = 100.0;
+        amrex::Real axial_bar_rho = 1.0;
+        amrex::Real axial_bar_L = 25.0;
+        int axial_bar_modenumber = 1;
+        amrex::Real axial_bar_v0 = 0.1;
 
-        	//Parameters for dam break
-        	amrex::Real dam_break_H1 = 0.2;
-        	amrex::Real dam_break_g = 9.81;
+        //Parameters for dam break
+        amrex::Real dam_break_H1 = 0.2;
+        amrex::Real dam_break_g = 9.81;
 
 
         //1-->tent function, 3--> cubic spline shape function
