@@ -265,8 +265,16 @@ MPMParticleContainer::ParticleType MPMParticleContainer::generate_particle
     p.rdata(realData::mass)=dens*vol;
     p.rdata(realData::jacobian)=1.0;
     p.rdata(realData::pressure)=0.0;
-    p.rdata(realData::vol_init)=0.0;
+    p.rdata(realData::vol_init)=p.rdata(realData::volume);
     
+    for(int comp=0;comp<NCOMP_FULLTENSOR;comp++)
+    {
+        p.rdata(realData::deformation_gradient+comp) = zero;
+    }
+    p.rdata(realData::deformation_gradient+0) = one;
+    p.rdata(realData::deformation_gradient+4) = one;
+    p.rdata(realData::deformation_gradient+8) = one;
+
     for(int comp=0;comp<NCOMP_TENSOR;comp++)
     {
         p.rdata(realData::strainrate+comp) = zero;
@@ -307,19 +315,19 @@ void MPMParticleContainer::removeParticlesInsideEB()
         amrex::Array4<amrex::Real> lsetarr=mpm_ebtools::lsphi->array(mfi);
 
         amrex::ParallelFor(np,[=]
-                           AMREX_GPU_DEVICE (int i) noexcept
-                           {
-                               ParticleType& p = pstruct[i];
-                               amrex::Real xp[AMREX_SPACEDIM]={p.pos(XDIR),p.pos(YDIR),p.pos(ZDIR)};
+                AMREX_GPU_DEVICE (int i) noexcept
+                {
+                ParticleType& p = pstruct[i];
+                amrex::Real xp[AMREX_SPACEDIM]={p.pos(XDIR),p.pos(YDIR),p.pos(ZDIR)};
 
-                               amrex::Real lsval=get_levelset_value(lsetarr,plo,dx,xp,lsref);
+                amrex::Real lsval=get_levelset_value(lsetarr,plo,dx,xp,lsref);
 
-                               if(lsval<TINYVAL)
-                               {
-                                   p.id()=-1;
-                               }
+                if(lsval<TINYVAL)
+                {
+                p.id()=-1;
+                }
 
-                           });
+                });
     }
     Redistribute();
 }

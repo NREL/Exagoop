@@ -5,6 +5,7 @@
 #include <AMReX_ParmParse.H>
 #include <AMReX_MultiFab.H>
 #include <AMReX_EB2_IF_Cylinder.H>
+#include <AMReX_EB2_IF_Box.H>
 #include <AMReX_EBFArrayBox.H>
 #include <AMReX_EBFabFactory.H>
 #include <AMReX_PlotFileUtil.H>
@@ -29,6 +30,7 @@ namespace mpm_ebtools
     extern EBFArrayBoxFactory* ebfactory;
     extern MultiFab *lsphi;
     extern int ls_refinement;
+    extern const int max_blocks;
     extern bool using_levelset_geometry;
     void init_eb(const Geometry &geom,const BoxArray &ba,
             const DistributionMapping &dm);
