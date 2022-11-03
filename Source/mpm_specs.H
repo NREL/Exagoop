@@ -112,6 +112,12 @@ class MPMspecs
         amrex::Real mem_compaction_L0=1.0;
         int mem_compaction_restoring_force_calc_method = 1;
 
+        //Parameters for spring alone simulation
+        amrex::Real spring_alone_area = 0.1;
+        amrex::Real spring_alone_length = 0.0;
+        amrex::Real spring_alone_E = 0.0;
+        amrex::Real spring_alone_exact_deflection = 0.0;
+        amrex::Real spring_alone_exact_delta = 0.0;
 
 
         //1-->tent function, 3--> cubic spline shape function
@@ -233,6 +239,10 @@ class MPMspecs
 
             pp.query("mem_compaction_area",mem_compaction_area);
             pp.query("mem_compaction_restoring_force_calc_method",mem_compaction_restoring_force_calc_method);
+
+            pp.query("spring_alone_area",spring_alone_area);
+            pp.query("spring_alone_length",spring_alone_length);
+            pp.query("spring_alone_E",spring_alone_E);
 
 
 

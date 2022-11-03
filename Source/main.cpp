@@ -270,6 +270,12 @@ int main (int argc, char* argv[])
         					specs.mem_compaction_vold=specs.mem_compaction_vnew;*/
         					specs.mem_compaction_L0=specs.total_vol/specs.mem_compaction_area;
         					break;
+        		case(10):   //Spring alone deflection problem.
+							//Calculate the eaxct steady state deflection
+							specs.spring_alone_exact_deflection = specs.spring_alone_length-specs.total_mass*fabs(specs.gravity[YDIR])/(2.0*specs.spring_alone_E*specs.spring_alone_area/specs.spring_alone_length);
+        					specs.spring_alone_exact_delta = specs.spring_alone_length-mpm_pc.GetPosSpring();
+        					amrex::Print()<<"\n"<<specs.total_mass<<" "<<specs.gravity[YDIR]<<" "<<specs.spring_alone_length<<" "<<specs.spring_alone_area<<" "<<specs.spring_alone_E;
+        				    break;
         		default:	//
         					amrex::Abort("\nSorry. The test number does not exist");
 
@@ -547,6 +553,7 @@ int main (int argc, char* argv[])
             		Real Fy_top=0.0;
             		Real Fy_bottom=0.0;
             		Real ymin=0.0;
+            		Real ymax = 0.0;
 
 
             		switch(specs.test_number)
@@ -617,6 +624,10 @@ int main (int argc, char* argv[])
                     				specs.mem_compaction_vold=specs.mem_compaction_vnew;
                     				ymin = mpm_pc.GetPosPiston();
                     				PrintToFile("Spring.out")<<time<<"\t"<<ymin<<"\n";*/
+                    				break;
+                    	case(10):	//Get oscillations of a single spring under self weight
+									ymax = mpm_pc.GetPosSpring()+specs.spring_alone_exact_delta;
+                    				PrintToFile("Spring.out")<<time<<"\t"<<ymax<<"\t"<<specs.spring_alone_exact_deflection<<"\n";
                     				break;
                     	default:	//
                     				amrex::Print()<<"\nTest number = "<<specs.test_number;

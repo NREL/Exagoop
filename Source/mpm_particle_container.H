@@ -48,6 +48,7 @@ public:
     void readCheckpointFile(std::string & restart_chkfile, int &nstep, double &cur_time, int &output_it);
     int checkifrigidnodespresent();
     amrex::Real GetPosPiston();
+    amrex::Real GetPosSpring();
     void CalculateSurfaceIntegralTop(Array<Real,AMREX_SPACEDIM> gravity, Real &Fy_top, Real &Fy_bottom);
     void deposit_onto_grid(MultiFab& nodaldata,
                            Array<Real,AMREX_SPACEDIM> gravity,

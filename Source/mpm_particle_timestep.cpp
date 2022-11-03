@@ -319,6 +319,28 @@ void MPMParticleContainer::moveParticles(const amrex::Real& dt,
     }
 }
 
+amrex::Real MPMParticleContainer::GetPosSpring()
+{
+	const int lev = 0;
+	const Geometry& geom = Geom(lev);
+	const auto plo = Geom(lev).ProbLoArray();
+	const auto phi = Geom(lev).ProbHiArray();
+	const auto dx = Geom(lev).CellSizeArray();
+	auto& plev  = GetParticles(lev);
+	amrex::Real ymin = 0.0;
+
+	using PType = typename MPMParticleContainer::SuperParticleType;
+	ymin = amrex::ReduceMax(*this, [=]
+			AMREX_GPU_HOST_DEVICE (const PType& p) -> Real
+	        {
+	        	Real yscale;
+	        	yscale = p.pos(YDIR);
+	        	return(yscale);
+	         });
+	return(ymin);
+
+}
+
 amrex::Real MPMParticleContainer::GetPosPiston()
 {
 	const int lev = 0;
@@ -361,7 +383,7 @@ amrex::Real MPMParticleContainer::GetVelPiston(const amrex::Real& dt,amrex::Real
     amrex::Real ymin = std::numeric_limits<amrex::Real>::max();
     amrex::Real v_new;
     amrex::Real m_tot;
-    amrex::Real damping_coeff=100.0;
+    amrex::Real damping_coeff=0;
 
     using PType = typename MPMParticleContainer::SuperParticleType;
     m_tot = amrex::ReduceSum(*this, [=]

@@ -376,6 +376,7 @@ amrex::Real MPMParticleContainer::CalculateEffectiveSpringConstant(amrex::Real A
 	amrex::Real deflection = 0.0;
 	amrex::Real Restoring_force = 0.0;
 	amrex::Real smallval = 1e-10;
+	amrex::Real Calculated_Spring_Const = 0.0;
 
 	using PType = typename MPMParticleContainer::SuperParticleType;
 
@@ -413,7 +414,11 @@ amrex::Real MPMParticleContainer::CalculateEffectiveSpringConstant(amrex::Real A
 	else
 	{
 		Restoring_force= 2*TSE/deflection;
+		Calculated_Spring_Const = 2*TSE/(deflection*deflection);
+
 	}
+
+	PrintToFile("SpringConst.out")<<Calculated_Spring_Const<<"\n";
 
 	//Calculate and return the restoring force
 	return(Restoring_force);
