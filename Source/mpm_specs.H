@@ -56,7 +56,7 @@ class MPMspecs
         Array<Real,AMREX_SPACEDIM> plo{AMREX_D_DECL(0.0, 0.0, 0.0)};
         Array<Real,AMREX_SPACEDIM> phi{AMREX_D_DECL(0.0, 0.0, 0.0)};
         Array<int,AMREX_SPACEDIM> ncells{AMREX_D_DECL(0, 0, 0)};
-        Array<int,AMREX_SPACEDIM> periodic{AMREX_D_DECL(0, 0, 0)};
+        GpuArray<int,AMREX_SPACEDIM> periodic{AMREX_D_DECL(0, 0, 0)};
         Array<Real,AMREX_SPACEDIM> gravity{AMREX_D_DECL(0.0, -9.81, 0.0)};
 
         Array<Real,AMREX_SPACEDIM> force_slab_lo{AMREX_D_DECL(0.0, 0.0, 0.0)};
@@ -147,7 +147,7 @@ class MPMspecs
         Vector<int> bclo;
         Vector<int> bchi;
 
-        Array<int,AMREX_SPACEDIM> order_scheme_directional{AMREX_D_DECL(1,1,1)};
+        GpuArray<int,AMREX_SPACEDIM> order_scheme_directional{AMREX_D_DECL(1,1,1)};
        
         int use_autogen=0; 
         Vector<Real> autogen_mincoords; 
@@ -192,7 +192,9 @@ class MPMspecs
             pp.get("prob_lo",plo);
             pp.get("prob_hi",phi);
             pp.get("ncells", ncells);
-            pp.get("is_it_periodic",periodic);
+            Array<int,AMREX_SPACEDIM> periodicarr{AMREX_D_DECL(0, 0, 0)};
+            pp.get("is_it_periodic",periodicarr);
+            periodic={AMREX_D_DECL(periodicarr[XDIR],periodicarr[YDIR],periodicarr[ZDIR])};
             pp.get("max_grid_size", max_grid_size);
 
             pp.get("max_steps", maxsteps);

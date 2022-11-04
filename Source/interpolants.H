@@ -268,7 +268,6 @@ AMREX_GPU_DEVICE AMREX_FORCE_INLINE
 #ifndef AMREX_USE_GPU
 		amrex::Print()<<"\n Shapefunction = "<<shapefunctiontype;
 #endif
-		amrex::Print()<<"\n Shapefunction = "<<shapefunctiontype;
 		amrex::Abort("\n Incorrect shape function type in cubicspline_1d");
 	}
 	return value;
@@ -338,13 +337,15 @@ AMREX_GPU_DEVICE AMREX_FORCE_INLINE
                amrex::Real xp[AMREX_SPACEDIM], 
                 const amrex::GpuArray<amrex::Real, AMREX_SPACEDIM> plo, 
                 const amrex::GpuArray<amrex::Real, AMREX_SPACEDIM> dx,
-				Array <int, AMREX_SPACEDIM> order_scheme_directional,
-				Array <int, AMREX_SPACEDIM> periodic,
+				GpuArray <int, AMREX_SPACEDIM> order_scheme_directional,
+				GpuArray <int, AMREX_SPACEDIM> periodic,
 				const int *lo,
 				const int *hi)
 {
     amrex::Real lval,mval,nval;
     amrex::Real rx,ry,rz;
+
+    Real order_scheme_dir[]={AMREX_D_DECL(order_scheme_directional[XDIR],order_scheme_directional[YDIR],order_scheme_directional[ZDIR])}; 
 
     lval=0.0;
     mval=0.0;
@@ -356,7 +357,7 @@ AMREX_GPU_DEVICE AMREX_FORCE_INLINE
     ry  = (xp[YDIR]-(plo[YDIR]+j*dx[YDIR]))/dx[YDIR];
     rz  = (xp[ZDIR]-(plo[ZDIR]+k*dx[ZDIR]))/dx[ZDIR];
 
-    if(order_scheme_directional[0]==1)
+    if(order_scheme_dir[0]==1)
     {
     	lval=(l==0)?(one-rx):rx;
     }
@@ -376,7 +377,7 @@ AMREX_GPU_DEVICE AMREX_FORCE_INLINE
     	}
     }
 
-    if(order_scheme_directional[1]==1)
+    if(order_scheme_dir[1]==1)
     {
     	mval=(m==0)?(one-ry):ry;
     }
@@ -397,7 +398,7 @@ AMREX_GPU_DEVICE AMREX_FORCE_INLINE
     	}
     }
 
-    if(order_scheme_directional[2]==1)
+    if(order_scheme_dir[2]==1)
     {
     	nval=(n==0)?(one-rz):rz;
     }
@@ -424,8 +425,8 @@ AMREX_GPU_DEVICE AMREX_FORCE_INLINE
                 amrex::Real xp[AMREX_SPACEDIM], 
                 const amrex::GpuArray<amrex::Real, AMREX_SPACEDIM> plo, 
                 const amrex::GpuArray<amrex::Real, AMREX_SPACEDIM> dx,
-				Array <int, AMREX_SPACEDIM> order_scheme_directional,
-				Array <int, AMREX_SPACEDIM> periodic,
+				GpuArray <int, AMREX_SPACEDIM> order_scheme_directional,
+				GpuArray <int, AMREX_SPACEDIM> periodic,
 				const int *lo,
 				const int *hi)
 {

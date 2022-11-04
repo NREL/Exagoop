@@ -27,7 +27,7 @@ int main (int argc, char* argv[])
         Real output_time=zero;
         Real output_timePrint=zero;
 
-        Array <int,AMREX_SPACEDIM> order_surface_integral={3,3,3};
+        GpuArray <int,AMREX_SPACEDIM> order_surface_integral={3,3,3};
 
         //Check if max_grid_size==1. If yes, Abort.
         if(specs.max_grid_size==1)
@@ -158,7 +158,7 @@ int main (int argc, char* argv[])
         dt 	= (specs.fixed_timestep==1)?specs.timestep:mpm_pc.Calculate_time_step(specs.CFL,specs.dt_max_limit,specs.dt_min_limit);
 
         //Deposit mass and velocity on node
-        amrex::Print()<<"\nOrder = "<<specs.order_scheme_directional;
+        //amrex::Print()<<"\nOrder = "<<specs.order_scheme_directional;
 
         mpm_pc.deposit_onto_grid(nodaldata,
         		 	 	 	 	 specs.gravity,
