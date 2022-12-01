@@ -55,10 +55,12 @@ void MPMParticleContainer::deposit_onto_grid(MultiFab& nodaldata,
     Real slab_lo[]={AMREX_D_DECL(force_slab_lo[XDIR],force_slab_lo[YDIR],force_slab_lo[ZDIR])};
     Real slab_hi[]={AMREX_D_DECL(force_slab_hi[XDIR],force_slab_hi[YDIR],force_slab_hi[ZDIR])};
     Real extpforce[]={AMREX_D_DECL(extforce[XDIR],extforce[YDIR],extforce[ZDIR])};
-
-    const int* lo = domain.loVect ();
-    const int* hi = domain.hiVect ();
-
+    
+    const int* loarr = domain.loVect ();
+    const int* hiarr = domain.hiVect ();
+    
+    int lo[]={loarr[0],loarr[1],loarr[2]};
+    int hi[]={hiarr[0],hiarr[1],hiarr[2]};
 
     for (MFIter mfi(nodaldata); mfi.isValid(); ++mfi)
     {
@@ -108,6 +110,7 @@ void MPMParticleContainer::deposit_onto_grid(MultiFab& nodaldata,
         Array4<Real> nodal_data_arr=nodaldata.array(mfi);
 
         ParticleType* pstruct = aos().dataPtr();
+    
 
         amrex::ParallelFor(nt,[=]
         AMREX_GPU_DEVICE (int i) noexcept
@@ -151,6 +154,7 @@ void MPMParticleContainer::deposit_onto_grid(MultiFab& nodaldata,
             				IntVect ivlocal(iv[XDIR]+l,iv[YDIR]+m,iv[ZDIR]+n);
 
             				if(iv[YDIR]+m==lo[1] && iv[XDIR]+l==25 && iv[ZDIR]+n==25)
+            				//if(iv[XDIR]+l==25 && iv[ZDIR]+n==25)
             				{
             					//amrex::Print()<<"\n Particle = "<<p.pos(0)<<" "<<p.pos(1)<<" "<<p.pos(2);
             				}
@@ -222,11 +226,11 @@ void MPMParticleContainer::deposit_onto_grid(MultiFab& nodaldata,
             						amrex::Real stress_contrib=p.rdata(realData::stress+3)*p.rdata(realData::mass)*basisvalue;
             						amrex::Gpu::Atomic::AddNoRet(&nodal_data_arr(ivlocal,STRESS_INDEX), stress_contrib);
             					}
-            				}
-            			}
-            		}
-            	}
-            }
+            				} //nodalbox if loop
+            			} //l loop
+            		}//m loop
+            	}//n loop
+            }//phase=0 if loop
         });
 
     }
@@ -314,10 +318,11 @@ void MPMParticleContainer::deposit_onto_grid_rigidnodesonly(MultiFab& nodaldata,
     Real slab_hi[]={AMREX_D_DECL(force_slab_hi[XDIR],force_slab_hi[YDIR],force_slab_hi[ZDIR])};
     Real extpforce[]={AMREX_D_DECL(extforce[XDIR],extforce[YDIR],extforce[ZDIR])};
 
-    const int* lo = domain.loVect ();
-    const int* hi = domain.hiVect ();
-
-
+    const int* loarr = domain.loVect ();
+    const int* hiarr = domain.hiVect ();
+    
+    int lo[]={loarr[0],loarr[1],loarr[2]};
+    int hi[]={hiarr[0],hiarr[1],hiarr[2]};
 
     for(MFIter mfi = MakeMFIter(lev); mfi.isValid(); ++mfi)
     {
@@ -469,8 +474,11 @@ void MPMParticleContainer::interpolate_from_grid(MultiFab& nodaldata,int update_
     const auto domain = geom.Domain();
 
     int ncomp=nodaldata.nComp();
-    const int* lo = domain.loVect ();
-    const int* hi = domain.hiVect ();
+    const int* loarr = domain.loVect ();
+    const int* hiarr = domain.hiVect ();
+    
+    int lo[]={loarr[0],loarr[1],loarr[2]};
+    int hi[]={hiarr[0],hiarr[1],hiarr[2]};
     const double pi = 3.141592654;
 
     nodaldata.FillBoundary(geom.periodicity());

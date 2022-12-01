@@ -240,9 +240,13 @@ void MPMParticleContainer::CalculateErrorP2G(MultiFab& nodaldata,amrex::Real p2g
 	    const auto plo = geom.ProbLoArray();
 	    const auto domain = geom.Domain();
 	    std::string outputfile;
+    
+            const int* loarr = domain.loVect ();
+            const int* hiarr = domain.hiVect ();
+    
+            int lo[]={loarr[0],loarr[1],loarr[2]};
+            int hi[]={hiarr[0],hiarr[1],hiarr[2]};
 
-	    const int* lo = domain.loVect ();
-	    const int* hi = domain.hiVect ();
 	    outputfile = amrex::Concatenate("P2GTest1",ncell,3);
 
 	    for (MFIter mfi(nodaldata); mfi.isValid(); ++mfi)
