@@ -130,14 +130,19 @@ void MPMParticleContainer::deposit_onto_grid(MultiFab& nodaldata,
 
             	auto iv = getParticleCell(p, plo, dxi, domain);
 
-            	lmin=(order_scheme_directional[0]==1)?0:((order_scheme_directional[0]==3)?(iv[XDIR]==lo[XDIR])?0:((iv[XDIR]==hi[XDIR])?-1:-1):-1000);
-            	lmax=(order_scheme_directional[0]==1)?2:((order_scheme_directional[0]==3)?(iv[XDIR]==lo[XDIR])?lmin+3:((iv[XDIR]==hi[XDIR])?lmin+3:lmin+4):-1000);
+            	//amrex::Print()<<"\niV cell = "<<iv[0]<<" "<<iv[1]<<" "<<iv[2]<<" "<<hi[XDIR];
 
-            	mmin=(order_scheme_directional[1]==1)?0:((order_scheme_directional[1]==3)?(iv[YDIR]==lo[YDIR])?0:((iv[YDIR]==hi[YDIR])?-1:-1):-1000);
-            	mmax=(order_scheme_directional[1]==1)?2:((order_scheme_directional[1]==3)?(iv[YDIR]==lo[YDIR])?mmin+3:((iv[YDIR]==hi[YDIR])?mmin+3:mmin+4):-1000);
 
-            	nmin=(order_scheme_directional[2]==1)?0:((order_scheme_directional[2]==3)?(iv[ZDIR]==lo[ZDIR])?0:((iv[ZDIR]==hi[ZDIR])?-1:-1):-1000);
-            	nmax=(order_scheme_directional[2]==1)?2:((order_scheme_directional[2]==3)?(iv[ZDIR]==lo[ZDIR])?nmin+3:((iv[ZDIR]==hi[ZDIR])?nmin+3:nmin+4):-1000);
+
+
+            	lmin=(order_scheme_directional[0]==1)?0:((order_scheme_directional[0]==3 or order_scheme_directional[0]==2)?(iv[XDIR]==lo[XDIR])?0:((iv[XDIR]==hi[XDIR])?-1:-1):-1000);
+            	lmax=(order_scheme_directional[0]==1)?2:((order_scheme_directional[0]==3 or order_scheme_directional[0]==2)?(iv[XDIR]==lo[XDIR])?lmin+3:((iv[XDIR]==hi[XDIR])?lmin+3:lmin+4):-1000);
+
+            	mmin=(order_scheme_directional[1]==1)?0:((order_scheme_directional[1]==3 or order_scheme_directional[0]==2)?(iv[YDIR]==lo[YDIR])?0:((iv[YDIR]==hi[YDIR])?-1:-1):-1000);
+            	mmax=(order_scheme_directional[1]==1)?2:((order_scheme_directional[1]==3 or order_scheme_directional[0]==2)?(iv[YDIR]==lo[YDIR])?mmin+3:((iv[YDIR]==hi[YDIR])?mmin+3:mmin+4):-1000);
+
+            	nmin=(order_scheme_directional[2]==1)?0:((order_scheme_directional[2]==3 or order_scheme_directional[0]==2)?(iv[ZDIR]==lo[ZDIR])?0:((iv[ZDIR]==hi[ZDIR])?-1:-1):-1000);
+            	nmax=(order_scheme_directional[2]==1)?2:((order_scheme_directional[2]==3 or order_scheme_directional[0]==2)?(iv[ZDIR]==lo[ZDIR])?nmin+3:((iv[ZDIR]==hi[ZDIR])?nmin+3:nmin+4):-1000);
 
 
             	if(lmin==-1000 or lmax==-1000 or mmin==-1000 or mmax==-1000 or nmin==-1000 or nmax==-1000)
@@ -153,11 +158,6 @@ void MPMParticleContainer::deposit_onto_grid(MultiFab& nodaldata,
             			{
             				IntVect ivlocal(iv[XDIR]+l,iv[YDIR]+m,iv[ZDIR]+n);
 
-            				if(iv[YDIR]+m==lo[1] && iv[XDIR]+l==25 && iv[ZDIR]+n==25)
-            				//if(iv[XDIR]+l==25 && iv[ZDIR]+n==25)
-            				{
-            					//amrex::Print()<<"\n Particle = "<<p.pos(0)<<" "<<p.pos(1)<<" "<<p.pos(2);
-            				}
             				if(nodalbox.contains(ivlocal))
             				{
             					amrex::Real basisvalue=basisval(l,m,n,iv[XDIR],iv[YDIR],iv[ZDIR],xp,plo,dx,order_scheme_directional,periodic,lo,hi);
@@ -361,14 +361,14 @@ void MPMParticleContainer::deposit_onto_grid_rigidnodesonly(MultiFab& nodaldata,
 
             	auto iv = getParticleCell(p, plo, dxi, domain);
 
-            	lmin=(order_scheme_directional[0]==1)?0:((order_scheme_directional[0]==3)?(iv[XDIR]==lo[XDIR])?0:((iv[XDIR]==hi[XDIR])?-1:-1):-1000);
-            	lmax=(order_scheme_directional[0]==1)?2:((order_scheme_directional[0]==3)?(iv[XDIR]==lo[XDIR])?lmin+3:((iv[XDIR]==hi[XDIR])?lmin+3:lmin+4):-1000);
+            	lmin=(order_scheme_directional[0]==1)?0:((order_scheme_directional[0]==3 or order_scheme_directional[0]==2)?(iv[XDIR]==lo[XDIR])?0:((iv[XDIR]==hi[XDIR])?-1:-1):-1000);
+            	lmax=(order_scheme_directional[0]==1)?2:((order_scheme_directional[0]==3 or order_scheme_directional[0]==2)?(iv[XDIR]==lo[XDIR])?lmin+3:((iv[XDIR]==hi[XDIR])?lmin+3:lmin+4):-1000);
 
-            	mmin=(order_scheme_directional[1]==1)?0:((order_scheme_directional[1]==3)?(iv[YDIR]==lo[YDIR])?0:((iv[YDIR]==hi[YDIR])?-1:-1):-1000);
-            	mmax=(order_scheme_directional[1]==1)?2:((order_scheme_directional[1]==3)?(iv[YDIR]==lo[YDIR])?mmin+3:((iv[YDIR]==hi[YDIR])?mmin+3:mmin+4):-1000);
+            	mmin=(order_scheme_directional[1]==1)?0:((order_scheme_directional[1]==3 or order_scheme_directional[0]==2)?(iv[YDIR]==lo[YDIR])?0:((iv[YDIR]==hi[YDIR])?-1:-1):-1000);
+            	mmax=(order_scheme_directional[1]==1)?2:((order_scheme_directional[1]==3 or order_scheme_directional[0]==2)?(iv[YDIR]==lo[YDIR])?mmin+3:((iv[YDIR]==hi[YDIR])?mmin+3:mmin+4):-1000);
 
-            	nmin=(order_scheme_directional[2]==1)?0:((order_scheme_directional[2]==3)?(iv[ZDIR]==lo[ZDIR])?0:((iv[ZDIR]==hi[ZDIR])?-1:-1):-1000);
-            	nmax=(order_scheme_directional[2]==1)?2:((order_scheme_directional[2]==3)?(iv[ZDIR]==lo[ZDIR])?nmin+3:((iv[ZDIR]==hi[ZDIR])?nmin+3:nmin+4):-1000);
+            	nmin=(order_scheme_directional[2]==1)?0:((order_scheme_directional[2]==3 or order_scheme_directional[0]==2)?(iv[ZDIR]==lo[ZDIR])?0:((iv[ZDIR]==hi[ZDIR])?-1:-1):-1000);
+            	nmax=(order_scheme_directional[2]==1)?2:((order_scheme_directional[2]==3 or order_scheme_directional[0]==2)?(iv[ZDIR]==lo[ZDIR])?nmin+3:((iv[ZDIR]==hi[ZDIR])?nmin+3:nmin+4):-1000);
 
 
             	if(lmin==-1000 or lmax==-1000 or mmin==-1000 or mmax==-1000 or nmin==-1000 or nmax==-1000)
@@ -516,14 +516,14 @@ void MPMParticleContainer::interpolate_from_grid(MultiFab& nodaldata,int update_
 
 				auto iv = getParticleCell(p, plo, dxi, domain);
 
-				lmin=(order_scheme_directional[0]==1)?0:((order_scheme_directional[0]==3)?(iv[XDIR]==lo[XDIR])?0:((iv[XDIR]==hi[XDIR])?-1:-1):-1000);
-				lmax=(order_scheme_directional[0]==1)?2:((order_scheme_directional[0]==3)?(iv[XDIR]==lo[XDIR])?lmin+3:((iv[XDIR]==hi[XDIR])?lmin+3:lmin+4):-1000);
+				lmin=(order_scheme_directional[0]==1)?0:((order_scheme_directional[0]==3 or order_scheme_directional[0]==2)?(iv[XDIR]==lo[XDIR])?0:((iv[XDIR]==hi[XDIR])?-1:-1):-1000);
+				lmax=(order_scheme_directional[0]==1)?2:((order_scheme_directional[0]==3 or order_scheme_directional[0]==2)?(iv[XDIR]==lo[XDIR])?lmin+3:((iv[XDIR]==hi[XDIR])?lmin+3:lmin+4):-1000);
 
-				mmin=(order_scheme_directional[1]==1)?0:((order_scheme_directional[1]==3)?(iv[YDIR]==lo[YDIR])?0:((iv[YDIR]==hi[YDIR])?-1:-1):-1000);
-				mmax=(order_scheme_directional[1]==1)?2:((order_scheme_directional[1]==3)?(iv[YDIR]==lo[YDIR])?mmin+3:((iv[YDIR]==hi[YDIR])?mmin+3:mmin+4):-1000);
+				mmin=(order_scheme_directional[1]==1)?0:((order_scheme_directional[1]==3 or order_scheme_directional[0]==2)?(iv[YDIR]==lo[YDIR])?0:((iv[YDIR]==hi[YDIR])?-1:-1):-1000);
+				mmax=(order_scheme_directional[1]==1)?2:((order_scheme_directional[1]==3 or order_scheme_directional[0]==2)?(iv[YDIR]==lo[YDIR])?mmin+3:((iv[YDIR]==hi[YDIR])?mmin+3:mmin+4):-1000);
 
-				nmin=(order_scheme_directional[2]==1)?0:((order_scheme_directional[2]==3)?(iv[ZDIR]==lo[ZDIR])?0:((iv[ZDIR]==hi[ZDIR])?-1:-1):-1000);
-				nmax=(order_scheme_directional[2]==1)?2:((order_scheme_directional[2]==3)?(iv[ZDIR]==lo[ZDIR])?nmin+3:((iv[ZDIR]==hi[ZDIR])?nmin+3:nmin+4):-1000);
+				nmin=(order_scheme_directional[2]==1)?0:((order_scheme_directional[2]==3 or order_scheme_directional[0]==2)?(iv[ZDIR]==lo[ZDIR])?0:((iv[ZDIR]==hi[ZDIR])?-1:-1):-1000);
+				nmax=(order_scheme_directional[2]==1)?2:((order_scheme_directional[2]==3 or order_scheme_directional[0]==2)?(iv[ZDIR]==lo[ZDIR])?nmin+3:((iv[ZDIR]==hi[ZDIR])?nmin+3:nmin+4):-1000);
 
 				if(lmin ==-1000 or lmax==-1000 or mmin==-1000 or mmax==-1000 or nmin==-1000 or nmax==-1000)
 				{

@@ -294,8 +294,8 @@ void nodal_bcs(const amrex::Geometry geom,
     GpuArray<int,AMREX_SPACEDIM> domlo={domloarr[0],domloarr[1],domloarr[2]};
     GpuArray<int,AMREX_SPACEDIM> domhi={domhiarr[0],domhiarr[1],domhiarr[2]};
 
-    Real bclo[]={bcloarr[0],bcloarr[1],bcloarr[2]};
-    Real bchi[]={bchiarr[0],bchiarr[1],bchiarr[2]};
+    int bclo[]={bcloarr[0],bcloarr[1],bcloarr[2]};
+    int bchi[]={bchiarr[0],bchiarr[1],bchiarr[2]};
     
     Real wall_mu_lo[]={wall_mu_loarr[0],wall_mu_loarr[1],wall_mu_loarr[2]};
     Real wall_mu_hi[]={wall_mu_hiarr[0],wall_mu_hiarr[1],wall_mu_hiarr[2]};

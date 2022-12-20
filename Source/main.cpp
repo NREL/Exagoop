@@ -101,6 +101,14 @@ int main (int argc, char* argv[])
         {
             ng_cells_nodaldata=1;
         }
+        else if(specs.order_scheme==2)
+        {
+        	ng_cells_nodaldata=2;
+        	specs.order_scheme_directional[XDIR] = ((specs.periodic[XDIR]==0)?((specs.ncells[XDIR]<5)?1:2):((specs.ncells[XDIR]<3)?1:2));
+        	specs.order_scheme_directional[YDIR] = ((specs.periodic[YDIR]==0)?((specs.ncells[YDIR]<5)?1:2):((specs.ncells[YDIR]<3)?1:2));
+        	specs.order_scheme_directional[ZDIR] = ((specs.periodic[ZDIR]==0)?((specs.ncells[ZDIR]<5)?1:2):((specs.ncells[ZDIR]<3)?1:2));
+
+        }
         else if(specs.order_scheme==3)
         {
             ng_cells_nodaldata=3;
@@ -324,8 +332,11 @@ int main (int argc, char* argv[])
         amrex::Print()<<"\nNumber of particles in the simulation:"<<mpm_pc.TotalNumberOfParticles()<<"\n";
         amrex::Real vel_piston_old=0.0;
 
+
         while((steps < specs.maxsteps) and (time < specs.final_time))
         {
+        	auto iter_time_start = amrex::second();
+
             dt 	= (specs.fixed_timestep==1)?specs.timestep:mpm_pc.Calculate_time_step(specs.CFL,specs.dt_max_limit,specs.dt_min_limit);
 
             time += dt;
@@ -333,11 +344,7 @@ int main (int argc, char* argv[])
             output_timePrint += dt;
             steps++;
 
-            if (output_timePrint >= specs.screen_output_time)
-            {
-                Print()<<"\nIteration: "<<std::setw(10)<<steps<<",\t"<<"Time: "<<std::fixed<<std::setprecision(10)<<time<<",\tDt = "<<std::scientific<<std::setprecision(5)<<dt;
-                output_timePrint=zero;
-            }
+
 
             if (steps % specs.num_redist == 0)
             {
@@ -672,12 +679,19 @@ int main (int argc, char* argv[])
 
                 mpm_pc.writeCheckpointFile(specs.prefix_checkpointfilename, specs.num_of_digits_in_filenames, time,steps,output_it);
             }
+            auto time_per_iter=amrex::second()-iter_time_start;
+                            if (output_timePrint >= specs.screen_output_time)
+                                        {
+                                            Print()<<"\nIteration: "<<std::setw(10)<<steps<<",\t"<<"Time: "<<std::fixed<<std::setprecision(10)<<time<<",\tDt = "<<std::scientific<<std::setprecision(5)<<dt<<std::fixed<<std::setprecision(10)<<",\t Time/Iter = "<<time_per_iter;
+                                            output_timePrint=zero;
+                                        }
 
         }
 
         mpm_pc.Redistribute();
         //mpm_pc.fillNeighbors();
         mpm_pc.writeParticles(specs.prefix_particlefilename, specs.num_of_digits_in_filenames,output_it+1);
+
 
         pltfile = amrex::Concatenate(specs.prefix_gridfilename, output_it+1, specs.num_of_digits_in_filenames);
         write_plot_file(pltfile,nodaldata,nodaldata_names,geom,ba,dm,time);
@@ -691,6 +705,8 @@ int main (int argc, char* argv[])
             pltfile = amrex::Concatenate(specs.prefix_densityfilename, output_it+1, specs.num_of_digits_in_filenames);
             WriteSingleLevelPlotfile(pltfile, dens_field_data, {"density"}, geom_dens, time, 0);
         }
+
+
     }
 
     amrex::Finalize();
