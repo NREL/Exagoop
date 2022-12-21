@@ -130,19 +130,16 @@ void MPMParticleContainer::deposit_onto_grid(MultiFab& nodaldata,
 
             	auto iv = getParticleCell(p, plo, dxi, domain);
 
-            	//amrex::Print()<<"\niV cell = "<<iv[0]<<" "<<iv[1]<<" "<<iv[2]<<" "<<hi[XDIR];
-
-
 
 
             	lmin=(order_scheme_directional[0]==1)?0:((order_scheme_directional[0]==3 or order_scheme_directional[0]==2)?(iv[XDIR]==lo[XDIR])?0:((iv[XDIR]==hi[XDIR])?-1:-1):-1000);
             	lmax=(order_scheme_directional[0]==1)?2:((order_scheme_directional[0]==3 or order_scheme_directional[0]==2)?(iv[XDIR]==lo[XDIR])?lmin+3:((iv[XDIR]==hi[XDIR])?lmin+3:lmin+4):-1000);
 
-            	mmin=(order_scheme_directional[1]==1)?0:((order_scheme_directional[1]==3 or order_scheme_directional[0]==2)?(iv[YDIR]==lo[YDIR])?0:((iv[YDIR]==hi[YDIR])?-1:-1):-1000);
-            	mmax=(order_scheme_directional[1]==1)?2:((order_scheme_directional[1]==3 or order_scheme_directional[0]==2)?(iv[YDIR]==lo[YDIR])?mmin+3:((iv[YDIR]==hi[YDIR])?mmin+3:mmin+4):-1000);
+            	mmin=(order_scheme_directional[1]==1)?0:((order_scheme_directional[1]==3 or order_scheme_directional[1]==2)?(iv[YDIR]==lo[YDIR])?0:((iv[YDIR]==hi[YDIR])?-1:-1):-1000);
+            	mmax=(order_scheme_directional[1]==1)?2:((order_scheme_directional[1]==3 or order_scheme_directional[1]==2)?(iv[YDIR]==lo[YDIR])?mmin+3:((iv[YDIR]==hi[YDIR])?mmin+3:mmin+4):-1000);
 
-            	nmin=(order_scheme_directional[2]==1)?0:((order_scheme_directional[2]==3 or order_scheme_directional[0]==2)?(iv[ZDIR]==lo[ZDIR])?0:((iv[ZDIR]==hi[ZDIR])?-1:-1):-1000);
-            	nmax=(order_scheme_directional[2]==1)?2:((order_scheme_directional[2]==3 or order_scheme_directional[0]==2)?(iv[ZDIR]==lo[ZDIR])?nmin+3:((iv[ZDIR]==hi[ZDIR])?nmin+3:nmin+4):-1000);
+            	nmin=(order_scheme_directional[2]==1)?0:((order_scheme_directional[2]==3 or order_scheme_directional[2]==2)?(iv[ZDIR]==lo[ZDIR])?0:((iv[ZDIR]==hi[ZDIR])?-1:-1):-1000);
+            	nmax=(order_scheme_directional[2]==1)?2:((order_scheme_directional[2]==3 or order_scheme_directional[2]==2)?(iv[ZDIR]==lo[ZDIR])?nmin+3:((iv[ZDIR]==hi[ZDIR])?nmin+3:nmin+4):-1000);
 
 
             	if(lmin==-1000 or lmax==-1000 or mmin==-1000 or mmax==-1000 or nmin==-1000 or nmax==-1000)
@@ -364,11 +361,11 @@ void MPMParticleContainer::deposit_onto_grid_rigidnodesonly(MultiFab& nodaldata,
             	lmin=(order_scheme_directional[0]==1)?0:((order_scheme_directional[0]==3 or order_scheme_directional[0]==2)?(iv[XDIR]==lo[XDIR])?0:((iv[XDIR]==hi[XDIR])?-1:-1):-1000);
             	lmax=(order_scheme_directional[0]==1)?2:((order_scheme_directional[0]==3 or order_scheme_directional[0]==2)?(iv[XDIR]==lo[XDIR])?lmin+3:((iv[XDIR]==hi[XDIR])?lmin+3:lmin+4):-1000);
 
-            	mmin=(order_scheme_directional[1]==1)?0:((order_scheme_directional[1]==3 or order_scheme_directional[0]==2)?(iv[YDIR]==lo[YDIR])?0:((iv[YDIR]==hi[YDIR])?-1:-1):-1000);
-            	mmax=(order_scheme_directional[1]==1)?2:((order_scheme_directional[1]==3 or order_scheme_directional[0]==2)?(iv[YDIR]==lo[YDIR])?mmin+3:((iv[YDIR]==hi[YDIR])?mmin+3:mmin+4):-1000);
+            	mmin=(order_scheme_directional[1]==1)?0:((order_scheme_directional[1]==3 or order_scheme_directional[1]==2)?(iv[YDIR]==lo[YDIR])?0:((iv[YDIR]==hi[YDIR])?-1:-1):-1000);
+            	mmax=(order_scheme_directional[1]==1)?2:((order_scheme_directional[1]==3 or order_scheme_directional[1]==2)?(iv[YDIR]==lo[YDIR])?mmin+3:((iv[YDIR]==hi[YDIR])?mmin+3:mmin+4):-1000);
 
-            	nmin=(order_scheme_directional[2]==1)?0:((order_scheme_directional[2]==3 or order_scheme_directional[0]==2)?(iv[ZDIR]==lo[ZDIR])?0:((iv[ZDIR]==hi[ZDIR])?-1:-1):-1000);
-            	nmax=(order_scheme_directional[2]==1)?2:((order_scheme_directional[2]==3 or order_scheme_directional[0]==2)?(iv[ZDIR]==lo[ZDIR])?nmin+3:((iv[ZDIR]==hi[ZDIR])?nmin+3:nmin+4):-1000);
+            	nmin=(order_scheme_directional[2]==1)?0:((order_scheme_directional[2]==3 or order_scheme_directional[2]==2)?(iv[ZDIR]==lo[ZDIR])?0:((iv[ZDIR]==hi[ZDIR])?-1:-1):-1000);
+            	nmax=(order_scheme_directional[2]==1)?2:((order_scheme_directional[2]==3 or order_scheme_directional[2]==2)?(iv[ZDIR]==lo[ZDIR])?nmin+3:((iv[ZDIR]==hi[ZDIR])?nmin+3:nmin+4):-1000);
 
 
             	if(lmin==-1000 or lmax==-1000 or mmin==-1000 or mmax==-1000 or nmin==-1000 or nmax==-1000)
@@ -519,11 +516,11 @@ void MPMParticleContainer::interpolate_from_grid(MultiFab& nodaldata,int update_
 				lmin=(order_scheme_directional[0]==1)?0:((order_scheme_directional[0]==3 or order_scheme_directional[0]==2)?(iv[XDIR]==lo[XDIR])?0:((iv[XDIR]==hi[XDIR])?-1:-1):-1000);
 				lmax=(order_scheme_directional[0]==1)?2:((order_scheme_directional[0]==3 or order_scheme_directional[0]==2)?(iv[XDIR]==lo[XDIR])?lmin+3:((iv[XDIR]==hi[XDIR])?lmin+3:lmin+4):-1000);
 
-				mmin=(order_scheme_directional[1]==1)?0:((order_scheme_directional[1]==3 or order_scheme_directional[0]==2)?(iv[YDIR]==lo[YDIR])?0:((iv[YDIR]==hi[YDIR])?-1:-1):-1000);
-				mmax=(order_scheme_directional[1]==1)?2:((order_scheme_directional[1]==3 or order_scheme_directional[0]==2)?(iv[YDIR]==lo[YDIR])?mmin+3:((iv[YDIR]==hi[YDIR])?mmin+3:mmin+4):-1000);
+				mmin=(order_scheme_directional[1]==1)?0:((order_scheme_directional[1]==3 or order_scheme_directional[1]==2)?(iv[YDIR]==lo[YDIR])?0:((iv[YDIR]==hi[YDIR])?-1:-1):-1000);
+				mmax=(order_scheme_directional[1]==1)?2:((order_scheme_directional[1]==3 or order_scheme_directional[1]==2)?(iv[YDIR]==lo[YDIR])?mmin+3:((iv[YDIR]==hi[YDIR])?mmin+3:mmin+4):-1000);
 
-				nmin=(order_scheme_directional[2]==1)?0:((order_scheme_directional[2]==3 or order_scheme_directional[0]==2)?(iv[ZDIR]==lo[ZDIR])?0:((iv[ZDIR]==hi[ZDIR])?-1:-1):-1000);
-				nmax=(order_scheme_directional[2]==1)?2:((order_scheme_directional[2]==3 or order_scheme_directional[0]==2)?(iv[ZDIR]==lo[ZDIR])?nmin+3:((iv[ZDIR]==hi[ZDIR])?nmin+3:nmin+4):-1000);
+				nmin=(order_scheme_directional[2]==1)?0:((order_scheme_directional[2]==3 or order_scheme_directional[2]==2)?(iv[ZDIR]==lo[ZDIR])?0:((iv[ZDIR]==hi[ZDIR])?-1:-1):-1000);
+				nmax=(order_scheme_directional[2]==1)?2:((order_scheme_directional[2]==3 or order_scheme_directional[2]==2)?(iv[ZDIR]==lo[ZDIR])?nmin+3:((iv[ZDIR]==hi[ZDIR])?nmin+3:nmin+4):-1000);
 
 				if(lmin ==-1000 or lmax==-1000 or mmin==-1000 or mmax==-1000 or nmin==-1000 or nmax==-1000)
 				{
@@ -534,53 +531,69 @@ void MPMParticleContainer::interpolate_from_grid(MultiFab& nodaldata,int update_
 				{
 					if(order_scheme_directional[0]==1)
 					{
-
-						p.rdata(realData::xvel_prime) = bilin_interp(xp,iv[XDIR],iv[YDIR],iv[ZDIR],plo,dx,nodal_data_arr,VELX_INDEX);
-						p.rdata(realData::xvel) = (alpha_pic_flip)*p.rdata(realData::xvel)
-						+(alpha_pic_flip)*bilin_interp(xp,iv[XDIR],iv[YDIR],iv[ZDIR],plo,dx,nodal_data_arr,DELTA_VELX_INDEX)
-						+(1-alpha_pic_flip)*p.rdata(realData::xvel_prime);
+						p.rdata(realData::xvel_prime) 	= bilin_interp(xp,iv[XDIR],iv[YDIR],iv[ZDIR],plo,dx,nodal_data_arr,VELX_INDEX);
+						p.rdata(realData::xvel) 		= (alpha_pic_flip)*p.rdata(realData::xvel)
+														  +(alpha_pic_flip)*bilin_interp(xp,iv[XDIR],iv[YDIR],iv[ZDIR],plo,dx,nodal_data_arr,DELTA_VELX_INDEX)
+														  +(1-alpha_pic_flip)*p.rdata(realData::xvel_prime);
+					}
+					else if(order_scheme_directional[0]==2)
+					{
+						p.rdata(realData::xvel_prime) 	= quadratic_interp(xp,iv[XDIR],iv[YDIR],iv[ZDIR],lmin,mmin,nmin,lmax,mmax,nmax,plo,dx,nodal_data_arr,VELX_INDEX,lo,hi);
+						p.rdata(realData::xvel) 		= (alpha_pic_flip)*p.rdata(realData::xvel)
+														  +(alpha_pic_flip)*quadratic_interp(xp,iv[XDIR],iv[YDIR],iv[ZDIR],lmin,mmin,nmin,lmax,mmax,nmax,plo,dx,nodal_data_arr,DELTA_VELX_INDEX,lo,hi)
+														  +(1-alpha_pic_flip)*p.rdata(realData::xvel_prime);
 					}
 					else if(order_scheme_directional[0]==3)
 					{
-						p.rdata(realData::xvel_prime) = cubic_interp(xp,iv[XDIR],iv[YDIR],iv[ZDIR],lmin,mmin,nmin,lmax,mmax,nmax,plo,dx,nodal_data_arr,VELX_INDEX,lo,hi);
-						p.rdata(realData::xvel) = (alpha_pic_flip)*p.rdata(realData::xvel)
-						+(alpha_pic_flip)*cubic_interp(xp,iv[XDIR],iv[YDIR],iv[ZDIR],lmin,mmin,nmin,lmax,mmax,nmax,plo,dx,nodal_data_arr,DELTA_VELX_INDEX,lo,hi)
-						+(1-alpha_pic_flip)*p.rdata(realData::xvel_prime);
+						p.rdata(realData::xvel_prime) 	= cubic_interp(xp,iv[XDIR],iv[YDIR],iv[ZDIR],lmin,mmin,nmin,lmax,mmax,nmax,plo,dx,nodal_data_arr,VELX_INDEX,lo,hi);
+						p.rdata(realData::xvel) 		= (alpha_pic_flip)*p.rdata(realData::xvel)
+														  +(alpha_pic_flip)*cubic_interp(xp,iv[XDIR],iv[YDIR],iv[ZDIR],lmin,mmin,nmin,lmax,mmax,nmax,plo,dx,nodal_data_arr,DELTA_VELX_INDEX,lo,hi)
+														  +(1-alpha_pic_flip)*p.rdata(realData::xvel_prime);
 					}
 
 					if(order_scheme_directional[1]==1)
 					{
-						p.rdata(realData::yacceleration)= p.rdata(realData::yvel);
-						p.rdata(realData::yvel_prime) = bilin_interp(xp,iv[XDIR],iv[YDIR],iv[ZDIR],plo,dx,nodal_data_arr,VELY_INDEX);
-						p.rdata(realData::yvel) = (alpha_pic_flip)*p.rdata(realData::yvel)
-						+(alpha_pic_flip)*bilin_interp(xp,iv[XDIR],iv[YDIR],iv[ZDIR],plo,dx,nodal_data_arr,DELTA_VELY_INDEX)
-						+(1-alpha_pic_flip)*p.rdata(realData::yvel_prime);
-						p.rdata(realData::yacceleration)= (p.rdata(realData::yvel)-p.rdata(realData::yacceleration))/dt;
+						p.rdata(realData::yvel_prime) 	= bilin_interp(xp,iv[XDIR],iv[YDIR],iv[ZDIR],plo,dx,nodal_data_arr,VELY_INDEX);
+						p.rdata(realData::yvel) 		= (alpha_pic_flip)*p.rdata(realData::yvel)
+														  +(alpha_pic_flip)*bilin_interp(xp,iv[XDIR],iv[YDIR],iv[ZDIR],plo,dx,nodal_data_arr,DELTA_VELY_INDEX)
+														  +(1-alpha_pic_flip)*p.rdata(realData::yvel_prime);
+					}
+					else if(order_scheme_directional[1]==2)
+					{
+						p.rdata(realData::yvel_prime) 	= quadratic_interp(xp,iv[XDIR],iv[YDIR],iv[ZDIR],lmin,mmin,nmin,lmax,mmax,nmax,plo,dx,nodal_data_arr,VELY_INDEX,lo,hi);
+						p.rdata(realData::yvel) 		= (alpha_pic_flip)*p.rdata(realData::yvel)
+														  +(alpha_pic_flip)*quadratic_interp(xp,iv[XDIR],iv[YDIR],iv[ZDIR],lmin,mmin,nmin,lmax,mmax,nmax,plo,dx,nodal_data_arr,DELTA_VELY_INDEX,lo,hi)
+											              +(1-alpha_pic_flip)*p.rdata(realData::yvel_prime);
 					}
 					else if(order_scheme_directional[1]==3)
 					{
-						p.rdata(realData::yacceleration)= p.rdata(realData::yvel);
-						p.rdata(realData::yvel_prime) = cubic_interp(xp,iv[XDIR],iv[YDIR],iv[ZDIR],lmin,mmin,nmin,lmax,mmax,nmax,plo,dx,nodal_data_arr,VELY_INDEX,lo,hi);
-						p.rdata(realData::yvel) = (alpha_pic_flip)*p.rdata(realData::yvel)
-						+(alpha_pic_flip)*cubic_interp(xp,iv[XDIR],iv[YDIR],iv[ZDIR],lmin,mmin,nmin,lmax,mmax,nmax,plo,dx,nodal_data_arr,DELTA_VELY_INDEX,lo,hi)
-						+(1-alpha_pic_flip)*p.rdata(realData::yvel_prime);
-						p.rdata(realData::yacceleration)= (p.rdata(realData::yvel)-p.rdata(realData::yacceleration))/dt;
+						p.rdata(realData::yvel_prime) 	= cubic_interp(xp,iv[XDIR],iv[YDIR],iv[ZDIR],lmin,mmin,nmin,lmax,mmax,nmax,plo,dx,nodal_data_arr,VELY_INDEX,lo,hi);
+						p.rdata(realData::yvel) 		= (alpha_pic_flip)*p.rdata(realData::yvel)
+														  +(alpha_pic_flip)*cubic_interp(xp,iv[XDIR],iv[YDIR],iv[ZDIR],lmin,mmin,nmin,lmax,mmax,nmax,plo,dx,nodal_data_arr,DELTA_VELY_INDEX,lo,hi)
+														  +(1-alpha_pic_flip)*p.rdata(realData::yvel_prime);
 
 					}
 
 					if(order_scheme_directional[2]==1)
 					{
-						p.rdata(realData::zvel_prime) = bilin_interp(xp,iv[XDIR],iv[YDIR],iv[ZDIR],plo,dx,nodal_data_arr,VELZ_INDEX);
-						p.rdata(realData::zvel) = (alpha_pic_flip)*p.rdata(realData::zvel)
-						+(alpha_pic_flip)*bilin_interp(xp,iv[XDIR],iv[YDIR],iv[ZDIR],plo,dx,nodal_data_arr,DELTA_VELZ_INDEX)
-						+(1-alpha_pic_flip)*p.rdata(realData::zvel_prime);
+						p.rdata(realData::zvel_prime) 	= bilin_interp(xp,iv[XDIR],iv[YDIR],iv[ZDIR],plo,dx,nodal_data_arr,VELZ_INDEX);
+						p.rdata(realData::zvel) 		= (alpha_pic_flip)*p.rdata(realData::zvel)
+														  +(alpha_pic_flip)*bilin_interp(xp,iv[XDIR],iv[YDIR],iv[ZDIR],plo,dx,nodal_data_arr,DELTA_VELZ_INDEX)
+														  +(1-alpha_pic_flip)*p.rdata(realData::zvel_prime);
+					}
+					else if(order_scheme_directional[2]==2)
+					{
+						p.rdata(realData::zvel_prime) 	= quadratic_interp(xp,iv[XDIR],iv[YDIR],iv[ZDIR],lmin,mmin,nmin,lmax,mmax,nmax,plo,dx,nodal_data_arr,VELZ_INDEX,lo,hi);
+						p.rdata(realData::zvel) 		= (alpha_pic_flip)*p.rdata(realData::zvel)
+														  +(alpha_pic_flip)*quadratic_interp(xp,iv[XDIR],iv[YDIR],iv[ZDIR],lmin,mmin,nmin,lmax,mmax,nmax,plo,dx,nodal_data_arr,DELTA_VELZ_INDEX,lo,hi)
+														  +(1-alpha_pic_flip)*p.rdata(realData::zvel_prime);
 					}
 					else if(order_scheme_directional[2]==3)
 					{
-						p.rdata(realData::zvel_prime) = cubic_interp(xp,iv[XDIR],iv[YDIR],iv[ZDIR],lmin,mmin,nmin,lmax,mmax,nmax,plo,dx,nodal_data_arr,VELZ_INDEX,lo,hi);
-						p.rdata(realData::zvel) = (alpha_pic_flip)*p.rdata(realData::zvel)
-						+(alpha_pic_flip)*cubic_interp(xp,iv[XDIR],iv[YDIR],iv[ZDIR],lmin,mmin,nmin,lmax,mmax,nmax,plo,dx,nodal_data_arr,DELTA_VELZ_INDEX,lo,hi)
-						+(1-alpha_pic_flip)*p.rdata(realData::zvel_prime);
+						p.rdata(realData::zvel_prime) 	= cubic_interp(xp,iv[XDIR],iv[YDIR],iv[ZDIR],lmin,mmin,nmin,lmax,mmax,nmax,plo,dx,nodal_data_arr,VELZ_INDEX,lo,hi);
+						p.rdata(realData::zvel) 		= (alpha_pic_flip)*p.rdata(realData::zvel)
+														  +(alpha_pic_flip)*cubic_interp(xp,iv[XDIR],iv[YDIR],iv[ZDIR],lmin,mmin,nmin,lmax,mmax,nmax,plo,dx,nodal_data_arr,DELTA_VELZ_INDEX,lo,hi)
+														  +(1-alpha_pic_flip)*p.rdata(realData::zvel_prime);
 					}
 				}
 

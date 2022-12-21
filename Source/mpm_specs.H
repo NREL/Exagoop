@@ -120,7 +120,7 @@ class MPMspecs
         amrex::Real spring_alone_exact_delta = 0.0;
 
 
-        //1-->tent function, 3--> cubic spline shape function
+        //1-->tent function, 2--> Quadratic Spline Shape Function, 3--> Cubic Spline Shape Function
         int order_scheme=1;				
 
         Real applied_strainrate=0.0;

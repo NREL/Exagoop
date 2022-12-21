@@ -6,8 +6,18 @@
 #include <AMReX_PlotFileUtil.H>
 #include <nodal_data_ops.H>
 #include <mpm_eb.H>
+#include <AMReX_Config.H>
 
 using namespace amrex;
+
+void PrintWelcomeMessage()
+{
+	amrex::Print() << " ===============================================\n";
+	amrex::Print() << "        Welcome to EXAGOOP MPM Solver           \n";
+	amrex::Print() << "        Developed by HPACFers at NREL           \n";
+	amrex::Print() << "                 -Hari, Sree and Marc           \n";
+	amrex::Print() << " ===============================================\n";
+}
 
 int main (int argc, char* argv[])
 {
@@ -17,6 +27,9 @@ int main (int argc, char* argv[])
         //Initializing and reading input file for the simulation
         MPMspecs specs;
         specs.read_mpm_specs();
+
+        PrintWelcomeMessage();
+
 
         //Declaring solver variables
         int steps=0;
@@ -57,10 +70,14 @@ int main (int argc, char* argv[])
 
         //Defining number of ghost cells for particle data
         int ng_cells = 1;
-        if(specs.order_scheme==3)
+        if(specs.order_scheme==3 )
         {
             ng_cells = 2;
         }
+        if(specs.order_scheme==2 )
+                {
+                    ng_cells = 3;
+                }
         mpm_ebtools::init_eb(geom,ba,dm);
 
 
@@ -344,8 +361,6 @@ int main (int argc, char* argv[])
             output_timePrint += dt;
             steps++;
 
-
-
             if (steps % specs.num_redist == 0)
             {
                 mpm_pc.RedistributeLocal();
@@ -360,7 +375,7 @@ int main (int argc, char* argv[])
             nodaldata.setVal(zero,ng_cells_nodaldata);
 
             //update_massvel=1, update_forces=0
-            mpm_pc.deposit_onto_grid(	nodaldata,
+            mpm_pc.deposit_onto_grid(nodaldata,
                                      specs.gravity,
                                      specs.external_loads_present,
                                      specs.force_slab_lo,
