@@ -268,7 +268,10 @@ AMREX_GPU_DEVICE AMREX_FORCE_INLINE
 #ifndef AMREX_USE_GPU
 		amrex::Print()<<"\n Shapefunction = "<<shapefunctiontype;
 #endif
+<<<<<<< HEAD
+=======
 		amrex::Print()<<"\n Shapefunction = "<<shapefunctiontype;
+>>>>>>> refs/heads/main
 		amrex::Abort("\n Incorrect shape function type in cubicspline_1d");
 	}
 	return value;
@@ -338,14 +341,24 @@ AMREX_GPU_DEVICE AMREX_FORCE_INLINE
                amrex::Real xp[AMREX_SPACEDIM], 
                 const amrex::GpuArray<amrex::Real, AMREX_SPACEDIM> plo, 
                 const amrex::GpuArray<amrex::Real, AMREX_SPACEDIM> dx,
+<<<<<<< HEAD
+				GpuArray <int, AMREX_SPACEDIM> order_scheme_directional,
+				GpuArray <int, AMREX_SPACEDIM> periodic,
+=======
 				Array <int, AMREX_SPACEDIM> order_scheme_directional,
 				Array <int, AMREX_SPACEDIM> periodic,
+>>>>>>> refs/heads/main
 				const int *lo,
 				const int *hi)
 {
     amrex::Real lval,mval,nval;
     amrex::Real rx,ry,rz;
 
+<<<<<<< HEAD
+    Real order_scheme_dir[]={AMREX_D_DECL(order_scheme_directional[XDIR],order_scheme_directional[YDIR],order_scheme_directional[ZDIR])}; 
+
+=======
+>>>>>>> refs/heads/main
     lval=0.0;
     mval=0.0;
     nval=0.0;
@@ -356,6 +369,50 @@ AMREX_GPU_DEVICE AMREX_FORCE_INLINE
     ry  = (xp[YDIR]-(plo[YDIR]+j*dx[YDIR]))/dx[YDIR];
     rz  = (xp[ZDIR]-(plo[ZDIR]+k*dx[ZDIR]))/dx[ZDIR];
 
+<<<<<<< HEAD
+    if(order_scheme_dir[0]==1)
+    {
+    	lval=(l==0)?(one-rx):rx;
+    }
+    else
+    {
+    	if(periodic[0]==0)
+    	{
+    		shapefunctype = ((i+l)==lo[XDIR] || (i+l)==hi[XDIR]+1)?1:((i+l==lo[XDIR]+1)?2:((i+l==hi[XDIR]))?4:3);
+    		rx = (xp[XDIR]-(plo[XDIR]+(i+l)*dx[XDIR]))/dx[XDIR];
+    		lval=cubicspline_1d(shapefunctype,rx,0);
+    	}
+    	else
+    	{
+    		shapefunctype = 3;
+    		rx = (xp[XDIR]-(plo[XDIR]+(i+l)*dx[XDIR]))/dx[XDIR];
+    		lval=cubicspline_1d(shapefunctype,rx,0);
+    	}
+    }
+
+    if(order_scheme_dir[1]==1)
+    {
+    	mval=(m==0)?(one-ry):ry;
+    }
+    else
+    {
+    	if(periodic[1]==0)
+    	{
+    		shapefunctype = ((j+m)==lo[YDIR] || (j+m)==hi[YDIR]+1)?1:((j+m==lo[YDIR]+1)?2:((j+m==hi[YDIR]))?4:3);
+    		ry = (xp[YDIR]-(plo[YDIR]+(j+m)*dx[YDIR]))/dx[YDIR];
+    		mval=cubicspline_1d(shapefunctype,ry,1);
+
+    	}
+    	else
+    	{
+    		shapefunctype = 3;
+    		ry = (xp[YDIR]-(plo[YDIR]+(j+m)*dx[YDIR]))/dx[YDIR];
+    		mval=cubicspline_1d(shapefunctype,ry,1);
+    	}
+    }
+
+    if(order_scheme_dir[2]==1)
+=======
     if(order_scheme_directional[0]==1)
     {
     	lval=(l==0)?(one-rx):rx;
@@ -398,6 +455,7 @@ AMREX_GPU_DEVICE AMREX_FORCE_INLINE
     }
 
     if(order_scheme_directional[2]==1)
+>>>>>>> refs/heads/main
     {
     	nval=(n==0)?(one-rz):rz;
     }
@@ -424,8 +482,13 @@ AMREX_GPU_DEVICE AMREX_FORCE_INLINE
                 amrex::Real xp[AMREX_SPACEDIM], 
                 const amrex::GpuArray<amrex::Real, AMREX_SPACEDIM> plo, 
                 const amrex::GpuArray<amrex::Real, AMREX_SPACEDIM> dx,
+<<<<<<< HEAD
+				GpuArray <int, AMREX_SPACEDIM> order_scheme_directional,
+				GpuArray <int, AMREX_SPACEDIM> periodic,
+=======
 				Array <int, AMREX_SPACEDIM> order_scheme_directional,
 				Array <int, AMREX_SPACEDIM> periodic,
+>>>>>>> refs/heads/main
 				const int *lo,
 				const int *hi)
 {
