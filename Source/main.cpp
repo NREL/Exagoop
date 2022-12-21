@@ -45,8 +45,8 @@ int main (int argc, char* argv[])
 
         IntVect domain_lo(AMREX_D_DECL(0,0,0));
         IntVect domain_hi(AMREX_D_DECL(	specs.ncells[XDIR]-1,
-                                       specs.ncells[YDIR]-1,
-                                       specs.ncells[ZDIR]-1));
+                    					specs.ncells[YDIR]-1,
+										specs.ncells[ZDIR]-1));
         const Box domain(domain_lo, domain_hi);
         Geometry geom(domain, &real_box, coord, specs.periodic.data());
 

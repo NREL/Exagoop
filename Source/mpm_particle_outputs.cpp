@@ -139,6 +139,7 @@ void MPMParticleContainer::writeParticles(std::string prefix_particlefilename, i
     real_data_names.push_back("Bulk_modulus");
     real_data_names.push_back("Gama_pressure");
     real_data_names.push_back("Dynamic_viscosity");
+<<<<<<< HEAD
     real_data_names.push_back("yacceleration");
 
     int_data_names.push_back("phase");
@@ -252,6 +253,119 @@ void MPMParticleContainer::writeCheckpointFile(std::string prefix_particlefilena
 	real_data_names.push_back("Gama_pressure");
 	real_data_names.push_back("Dynamic_viscosity");
 	real_data_names.push_back("yacceleration");
+=======
+
+    int_data_names.push_back("phase");
+    int_data_names.push_back("constitutive_model");
+
+
+    writeflags_int[intData::phase]=1;
+    writeflags_int[intData::constitutive_model]=1;
+
+    writeflags_real[realData::radius]=1;
+    writeflags_real[realData::xvel]=1;
+    writeflags_real[realData::yvel]=1;
+    writeflags_real[realData::zvel]=1;
+    writeflags_real[realData::mass]=1;
+    writeflags_real[realData::jacobian]=1;
+    writeflags_real[realData::pressure]=1;
+    writeflags_real[realData::vol_init]=1;
+    writeflags_real[realData::E]=0;
+    writeflags_real[realData::nu]=0;
+    writeflags_real[realData::Bulk_modulus]=0;
+    writeflags_real[realData::Gama_pressure]=0;
+    writeflags_real[realData::Dynamic_viscosity]=0;
+    
+    WritePlotFile(pltfile, "particles",writeflags_real, 
+                  writeflags_int, real_data_names, int_data_names);
+}
+
+void MPMParticleContainer::WriteHeader(const std::string& name, bool is_checkpoint, amrex::Real cur_time, int nstep, int EB_generate_max_level, int output_it) const
+{
+    if(ParallelDescriptor::IOProcessor())
+    {
+    	const int finest_level = 0;
+        std::string HeaderFileName(name + "/Header");
+        VisMF::IO_Buffer io_buffer(VisMF::IO_Buffer_Size);
+        std::ofstream HeaderFile;
+
+        HeaderFile.rdbuf()->pubsetbuf(io_buffer.dataPtr(), io_buffer.size());
+
+        HeaderFile.open(HeaderFileName.c_str(),
+                        std::ofstream::out | std::ofstream::trunc | std::ofstream::binary);
+
+        if(!HeaderFile.good()) {
+            amrex::FileOpenFailed(HeaderFileName);
+        }
+
+        HeaderFile.precision(17);
+        if(is_checkpoint) {
+            HeaderFile << "Checkpoint version: 1\n";
+        } else {
+            HeaderFile << "HyperCLaw-V1.1\n";
+        }
+
+        HeaderFile << nstep << "\n";
+        HeaderFile << output_it << "\n";
+
+#ifdef AMREX_USE_EB
+        HeaderFile << EB_generate_max_level << "\n";
+#endif
+
+        HeaderFile << cur_time << "\n";
+
+
+    }
+}
+
+void MPMParticleContainer::writeCheckpointFile(std::string prefix_particlefilename, int num_of_digits_in_filenames, amrex::Real cur_time, int nstep, int output_it)
+{
+	BL_PROFILE("MPMParticleContainer::writeCheckpointFile");
+	const int m_nstep = output_it;
+	const int finest_level=0;
+	const int EB_generate_max_level=0;
+	std::string level_prefix = "Level_";
+	const std::string& checkpointname = amrex::Concatenate(prefix_particlefilename, m_nstep, num_of_digits_in_filenames);
+	amrex::PreBuildDirectorHierarchy(checkpointname, level_prefix, finest_level + 1, true);
+	bool is_checkpoint = true;
+	WriteHeader(checkpointname, is_checkpoint, cur_time, nstep, EB_generate_max_level,output_it);
+
+	amrex::Vector<std::string> real_data_names;
+	real_data_names.push_back("radius");
+	real_data_names.push_back("xvel");
+	real_data_names.push_back("yvel");
+	real_data_names.push_back("zvel");
+	real_data_names.push_back("xvel_prime");
+	real_data_names.push_back("yvel_prime");
+	real_data_names.push_back("zvel_prime");
+	for(int i=0;i<6;i++)
+	{
+		real_data_names.push_back(amrex::Concatenate("strainrate_", i, 1));
+	}
+	for(int i=0;i<6;i++)
+	{
+		real_data_names.push_back(amrex::Concatenate("strain_", i, 1));
+	}
+	for(int i=0;i<6;i++)
+	{
+		real_data_names.push_back(amrex::Concatenate("stress_", i, 1));
+	}
+	for(int i=0;i<9;i++)
+	    {
+	    	real_data_names.push_back(amrex::Concatenate("deformationg_gradient_", i, 1));
+	    }
+	real_data_names.push_back("volume");
+	real_data_names.push_back("mass");
+	real_data_names.push_back("density");
+	real_data_names.push_back("jacobian");
+	real_data_names.push_back("pressure");
+	real_data_names.push_back("vol_init");
+	real_data_names.push_back("E");
+	real_data_names.push_back("nu");
+	real_data_names.push_back("Bulk_modulus");
+	real_data_names.push_back("Gama_pressure");
+	real_data_names.push_back("Dynamic_viscosity");
+>>>>>>> refs/heads/main
 
 	amrex::Vector<std::string> int_data_names;
 	int_data_names.push_back("phase");

@@ -24,8 +24,11 @@ amrex::Real wall_vel_lo[AMREX_SPACEDIM*AMREX_SPACEDIM],
 amrex::Real wall_vel_hi[AMREX_SPACEDIM*AMREX_SPACEDIM],
 const amrex::Real& dt);
 void nodal_bcs(const amrex::Geometry geom, amrex::MultiFab &nodaldata,const amrex::Real& dt);
+<<<<<<< HEAD
 void CalculateSurfaceIntegralOnBG(const amrex::Geometry geom,amrex::MultiFab &nodaldata, int nodaldataindex,amrex::Real &integral_value);
 void CalculateInterpolationError(const amrex::Geometry geom,amrex::MultiFab &nodaldata, int nodaldataindex);
+=======
+>>>>>>> refs/heads/main
 
 void nodal_levelset_bcs(amrex::MultiFab &nodaldata,const amrex::Geometry geom,
         amrex::Real& dt,int lsetbc,amrex::Real lset_wall_mu);

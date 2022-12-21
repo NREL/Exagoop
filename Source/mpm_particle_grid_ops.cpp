@@ -37,10 +37,10 @@ void MPMParticleContainer::deposit_onto_grid(MultiFab& nodaldata,
                                              Array<Real,AMREX_SPACEDIM> force_slab_hi,
                                              Array<Real,AMREX_SPACEDIM> extforce,
                                              int update_massvel,
-				             int update_forces,
-					     amrex::Real mass_tolerance,
-					     GpuArray<int,AMREX_SPACEDIM> order_scheme_directional,
-				             GpuArray<int,AMREX_SPACEDIM> periodic)
+				             				 int update_forces,
+					 						 amrex::Real mass_tolerance,
+					     					 GpuArray<int,AMREX_SPACEDIM> order_scheme_directional,
+											 GpuArray<int,AMREX_SPACEDIM> periodic)
 {
     const int lev = 0;
     const Geometry& geom = Geom(lev);
@@ -58,6 +58,7 @@ void MPMParticleContainer::deposit_onto_grid(MultiFab& nodaldata,
     
     const int* loarr = domain.loVect ();
     const int* hiarr = domain.hiVect ();
+    
     
     int lo[]={loarr[0],loarr[1],loarr[2]};
     int hi[]={hiarr[0],hiarr[1],hiarr[2]};

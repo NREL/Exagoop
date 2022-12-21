@@ -1,4 +1,5 @@
 #geometry parameters
+<<<<<<< HEAD
 mpm.prob_lo = 0.0 -0.2 -0.2
 mpm.prob_hi = 0.8500000000000001 0.2 0.2
 mpm.ncells  = 34 16 16
@@ -35,14 +36,40 @@ mpm.final_time=4.0
 mpm.max_steps=2500000
 mpm.screen_output_time = 0.001
 mpm.write_output_time=0.005
+=======
+mpm.prob_lo        = 0.0      0.0     0.0  
+mpm.prob_hi        = 1.0      1.0     1.0
+mpm.ncells         = 32 32 32
+mpm.max_grid_size  = 8
+mpm.is_it_periodic = 0  0   0
+ 
+#timestepping
+mpm.fixed_timestep = 0
+mpm.final_time=3.5
+mpm.max_steps=100000000
+mpm.write_output_time=2e-1
+>>>>>>> refs/heads/main
 mpm.num_redist = 1
+<<<<<<< HEAD
+=======
+mpm.timestep = 2e-5
+mpm.CFL=0.1
+mpm.order_scheme=1
+mpm.mass_tolerance = 1e-18
+mpm.alpha_pic_flip = 0.99
+mpm.stress_update_scheme= 1
+>>>>>>> refs/heads/main
 
+<<<<<<< HEAD
 #Timestepping parameters
 mpm.fixed_timestep = 0
 mpm.timestep = 1.0e-8
 mpm.CFL=0.1
 mpm.dt_min_limit=1e-12
 mpm.dt_max_limit=1e+00
+=======
+mpm.gravity = 0.0 -10.0 0.0
+>>>>>>> refs/heads/main
 
 #Numerical schemes
 mpm.order_scheme=3
