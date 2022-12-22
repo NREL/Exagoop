@@ -119,7 +119,6 @@ void MPMParticleContainer::WriteDeflectionCantilever()
 
 	            xp[XDIR]=p.pos(XDIR);
 	            xp[YDIR]=p.pos(YDIR);
-<<<<<<< HEAD
 	            //PrintToFile("CantileverDeflection.out")<<xp[XDIR]<<"\t"<<xp[YDIR]<<"\n";
 	        });
 	    }
@@ -431,71 +430,3 @@ amrex::Real MPMParticleContainer::CalculateEffectiveSpringConstant(amrex::Real A
 }
 
 
-=======
-	            PrintToFile("CantileverDeflection.out")<<xp[XDIR]<<"\t"<<xp[YDIR]<<"\n";
-	        });
-	    }
-
-}
-
-void MPMParticleContainer::CalculateVelocityCantilever(Real &Vcm)
-{
-    const int lev = 0;
-    const Geometry& geom = Geom(lev);
-    auto& plev  = GetParticles(lev);
-    const auto dxi = geom.InvCellSizeArray();
-    const auto dx = geom.CellSizeArray();
-    const auto plo = geom.ProbLoArray();
-    const auto domain = geom.Domain();
-
-    Real Vcmx=0.0;
-    Real mass_tot=0.0;
-
-    using PType = typename MPMParticleContainer::SuperParticleType;
-    Vcmx = amrex::ReduceSum(*this, [=]
-    AMREX_GPU_HOST_DEVICE (const PType& p) -> Real
-    {
-        return(p.rdata(realData::mass)*p.rdata(realData::yvel));
-    });
-
-    mass_tot = amrex::ReduceSum(*this, [=]
-    AMREX_GPU_HOST_DEVICE (const PType& p) -> Real
-    {
-        return(p.rdata(realData::mass));
-    });
-
-#ifdef BL_USE_MPI
-    ParallelDescriptor::ReduceRealSum(Vcmx);
-    ParallelDescriptor::ReduceRealSum(mass_tot);
-#endif
-
-    Vcm=Vcmx/mass_tot;
-}
-
-void MPMParticleContainer::FindWaterFront(Real &Xwf)
-{
-    const int lev = 0;
-    const Geometry& geom = Geom(lev);
-    auto& plev  = GetParticles(lev);
-    const auto dxi = geom.InvCellSizeArray();
-    const auto dx = geom.CellSizeArray();
-    const auto plo = geom.ProbLoArray();
-    const auto domain = geom.Domain();
-
-    Real wf_x=0.0;
-    Real mass_tot=0.0;
-    
-    using PType = typename MPMParticleContainer::SuperParticleType;
-    wf_x = amrex::ReduceMax(*this, [=] 
-    AMREX_GPU_HOST_DEVICE (const PType& p) -> Real 
-    {
-        return(p.pos(XDIR));
-    });
-
-#ifdef BL_USE_MPI
-    ParallelDescriptor::ReduceRealMax(wf_x);
-#endif
-
-    Xwf=wf_x;
-}
->>>>>>> refs/heads/main

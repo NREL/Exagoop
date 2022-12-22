@@ -13,7 +13,7 @@ void write_plot_file(std::string fname, amrex::MultiFab &nodaldata, amrex::Vecto
 void backup_current_velocity(amrex::MultiFab &nodaldata);
 void store_delta_velocity(amrex::MultiFab &nodaldata);
 void nodal_update(amrex::MultiFab &nodaldata,const amrex::Real& dt, const amrex::Real& mass_tolerance);
-void nodal_detect_contact(amrex::MultiFab &nodaldata,amrex::Real& contact_tolerance,amrex::Real vely);
+void nodal_detect_contact(amrex::MultiFab &nodaldata,const amrex::Geometry geom,amrex::Real& contact_tolerance,amrex::Real vely);
 void initialise_shape_function_indices(amrex::iMultiFab &shapefunctionindex,const amrex::Geometry geom);
 
 
@@ -24,11 +24,8 @@ amrex::Real wall_vel_lo[AMREX_SPACEDIM*AMREX_SPACEDIM],
 amrex::Real wall_vel_hi[AMREX_SPACEDIM*AMREX_SPACEDIM],
 const amrex::Real& dt);
 void nodal_bcs(const amrex::Geometry geom, amrex::MultiFab &nodaldata,const amrex::Real& dt);
-<<<<<<< HEAD
 void CalculateSurfaceIntegralOnBG(const amrex::Geometry geom,amrex::MultiFab &nodaldata, int nodaldataindex,amrex::Real &integral_value);
 void CalculateInterpolationError(const amrex::Geometry geom,amrex::MultiFab &nodaldata, int nodaldataindex);
-=======
->>>>>>> refs/heads/main
 
 void nodal_levelset_bcs(amrex::MultiFab &nodaldata,const amrex::Geometry geom,
         amrex::Real& dt,int lsetbc,amrex::Real lset_wall_mu);

@@ -40,28 +40,11 @@ void MPMParticleContainer::apply_constitutive_model(const amrex::Real& dt,
 
             if(p.idata(intData::phase)==0)
             {
-<<<<<<< HEAD
-				amrex::Real xp[AMREX_SPACEDIM];
-				amrex::Real strainrate[NCOMP_TENSOR];
-				amrex::Real strain[NCOMP_TENSOR];
-				amrex::Real stress[NCOMP_TENSOR];
-=======
                 amrex::Real xp[AMREX_SPACEDIM];
                 amrex::Real strainrate[NCOMP_TENSOR];
                 amrex::Real strain[NCOMP_TENSOR];
                 amrex::Real stress[NCOMP_TENSOR];
->>>>>>> refs/heads/main
 
-<<<<<<< HEAD
-				for(int d=0;d<NCOMP_TENSOR;d++)
-				{
-					p.rdata(realData::strain+d) += dt*p.rdata(realData::strainrate+d);
-				}
-				//apply axial strain
-				p.rdata(realData::strain+XX) += dt*applied_strainrate;
-				p.rdata(realData::strain+YY) += dt*applied_strainrate;
-				p.rdata(realData::strain+ZZ) += dt*applied_strainrate;
-=======
                 for(int d=0;d<NCOMP_TENSOR;d++)
                 {
                     p.rdata(realData::strain+d) += dt*p.rdata(realData::strainrate+d);
@@ -70,39 +53,13 @@ void MPMParticleContainer::apply_constitutive_model(const amrex::Real& dt,
                 p.rdata(realData::strain+XX) += dt*applied_strainrate;
                 p.rdata(realData::strain+YY) += dt*applied_strainrate;
                 p.rdata(realData::strain+ZZ) += dt*applied_strainrate;
->>>>>>> refs/heads/main
 
-<<<<<<< HEAD
-				for(int d=0;d<NCOMP_TENSOR;d++)
-				{
-					strainrate[d]=p.rdata(realData::strainrate+d);
-					strain[d]=p.rdata(realData::strain+d);
-				}
-=======
                 for(int d=0;d<NCOMP_TENSOR;d++)
                 {
                     strainrate[d]=p.rdata(realData::strainrate+d);
                     strain[d]=p.rdata(realData::strain+d);
                 }
->>>>>>> refs/heads/main
 
-<<<<<<< HEAD
-				if(p.idata(intData::constitutive_model)==0)		//Elastic solid
-				{
-					linear_elastic(strain,strainrate,stress,p.rdata(realData::E),p.rdata(realData::nu));
-				}
-				else if(p.idata(intData::constitutive_model)==1)		//Viscous fluid with approximate EoS
-				{
-					p.rdata(realData::pressure) = p.rdata(realData::Bulk_modulus)*
-						(pow(1/p.rdata(realData::jacobian),p.rdata(realData::Gama_pressure))-1.0)+p_inf;
-					Newtonian_Fluid(strainrate,stress,p.rdata(realData::Dynamic_viscosity),p.rdata(realData::pressure));
-				}
-
-				for(int d=0;d<NCOMP_TENSOR;d++)
-				{
-					p.rdata(realData::stress+d)=stress[d];
-				}
-=======
                 if(p.idata(intData::constitutive_model)==0)		//Elastic solid
                 {
                     linear_elastic(strain,strainrate,stress,p.rdata(realData::E),p.rdata(realData::nu));
@@ -118,18 +75,13 @@ void MPMParticleContainer::apply_constitutive_model(const amrex::Real& dt,
                 {
                     p.rdata(realData::stress+d)=stress[d];
                 }
->>>>>>> refs/heads/main
             }
         });
     }
 } 
 
 void MPMParticleContainer::apply_constitutive_model_delta(const amrex::Real& dt,
-<<<<<<< HEAD
-                                                    amrex::Real applied_strainrate=0.0)
-=======
                                                           amrex::Real applied_strainrate=0.0)
->>>>>>> refs/heads/main
 {
     const int lev = 0;
     const Geometry& geom = Geom(lev);
@@ -164,7 +116,6 @@ void MPMParticleContainer::apply_constitutive_model_delta(const amrex::Real& dt,
 
             if(p.idata(intData::phase)==0)
             {
-<<<<<<< HEAD
 				amrex::Real xp[AMREX_SPACEDIM];
 				amrex::Real strainrate[NCOMP_TENSOR];
 				amrex::Real delta_strain[NCOMP_TENSOR];
@@ -202,45 +153,6 @@ void MPMParticleContainer::apply_constitutive_model_delta(const amrex::Real& dt,
 				{
 					p.rdata(realData::stress+d)+=delta_stress[d];
 				}
-=======
-                amrex::Real xp[AMREX_SPACEDIM];
-                amrex::Real strainrate[NCOMP_TENSOR];
-                amrex::Real delta_strain[NCOMP_TENSOR];
-                amrex::Real delta_stress[NCOMP_TENSOR];
-
-                for(int d=0;d<NCOMP_TENSOR;d++)
-                {
-                    p.rdata(realData::strain+d) += dt*p.rdata(realData::strainrate+d);
-                }
-                //apply axial strain
-                p.rdata(realData::strain+XX) += dt*applied_strainrate;
-                p.rdata(realData::strain+YY) += dt*applied_strainrate;
-                p.rdata(realData::strain+ZZ) += dt*applied_strainrate;
-
-                for(int d=0;d<NCOMP_TENSOR;d++)
-                {
-                    delta_strain[d]=dt*p.rdata(realData::strainrate+d);
-                }
-
-                //apply axial strain
-                delta_strain[XX] += dt*applied_strainrate;
-                delta_strain[YY] += dt*applied_strainrate;
-                delta_strain[ZZ] += dt*applied_strainrate;
-
-                if(p.idata(intData::constitutive_model)==0)		//Elastic solid
-                {
-                    linear_elastic(delta_strain,delta_stress,p.rdata(realData::E),p.rdata(realData::nu));
-                }
-                else if(p.idata(intData::constitutive_model)==1)		//Viscous fluid with approximate EoS
-                {
-                    amrex::Abort("\nDelta strain model for weakly compressible fluids not implemented yet.");
-                }
-
-                for(int d=0;d<NCOMP_TENSOR;d++)
-                {
-                    p.rdata(realData::stress+d)+=delta_stress[d];
-                }
->>>>>>> refs/heads/main
             }
         });
     }

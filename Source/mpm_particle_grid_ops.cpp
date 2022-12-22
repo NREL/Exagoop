@@ -59,7 +59,6 @@ void MPMParticleContainer::deposit_onto_grid(MultiFab& nodaldata,
     const int* loarr = domain.loVect ();
     const int* hiarr = domain.hiVect ();
     
-    
     int lo[]={loarr[0],loarr[1],loarr[2]};
     int hi[]={hiarr[0],hiarr[1],hiarr[2]};
 
@@ -353,7 +352,6 @@ void MPMParticleContainer::deposit_onto_grid_rigidnodesonly(MultiFab& nodaldata,
 
             if(p.idata(intData::phase)==1)		//Compute only for standard particles and not rigid particles with phase=1
             {
-
             	amrex::Real xp[AMREX_SPACEDIM];
 
             	xp[XDIR]=p.pos(XDIR);
@@ -389,8 +387,6 @@ void MPMParticleContainer::deposit_onto_grid_rigidnodesonly(MultiFab& nodaldata,
             				{
 
             					amrex::Real basisvalue=basisval(l,m,n,iv[XDIR],iv[YDIR],iv[ZDIR],xp,plo,dx,order_scheme_directional,periodic,lo,hi);
-
-
 
             						amrex::Real mass_contrib=p.rdata(realData::mass)*basisvalue;
             						amrex::Real p_contrib[AMREX_SPACEDIM] =
@@ -566,7 +562,6 @@ void MPMParticleContainer::interpolate_from_grid(MultiFab& nodaldata,int update_
 						+(alpha_pic_flip)*cubic_interp(xp,iv[XDIR],iv[YDIR],iv[ZDIR],lmin,mmin,nmin,lmax,mmax,nmax,plo,dx,nodal_data_arr,DELTA_VELY_INDEX,lo,hi)
 						+(1-alpha_pic_flip)*p.rdata(realData::yvel_prime);
 						p.rdata(realData::yacceleration)= (p.rdata(realData::yvel)-p.rdata(realData::yacceleration))/dt;
-
 					}
 
 					if(order_scheme_directional[2]==1)
