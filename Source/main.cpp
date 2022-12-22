@@ -413,11 +413,11 @@ int main (int argc, char* argv[])
 
                 }
 
-                specs.mem_compaction_vnew = mpm_pc.GetVelPiston(dt,specs.mem_compaction_vold,specs.gravity,Fy_top);
-                nodal_detect_contact(nodaldata,specs.mass_tolerance,specs.mem_compaction_vnew);
-                specs.mem_compaction_vold=specs.mem_compaction_vnew;
-                ymin = mpm_pc.GetPosPiston();
-                PrintToFile("Spring.out")<<time<<"\t"<<ymin<<"\n";
+            	specs.mem_compaction_vnew = mpm_pc.GetVelPiston(dt,specs.mem_compaction_vold,specs.mem_compaction_dampcoeff,specs.gravity,Fy_top);
+            	nodal_detect_contact(nodaldata,geom,specs.mass_tolerance,specs.mem_compaction_vnew);
+            	specs.mem_compaction_vold=specs.mem_compaction_vnew;
+            	ymin = mpm_pc.GetPosPiston();
+            	PrintToFile("Spring.out")<<time<<"\t"<<ymin<<"\n";
             }
 
 

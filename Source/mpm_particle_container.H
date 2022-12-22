@@ -22,7 +22,6 @@ public:
     
     }
 
-<<<<<<< HEAD
     void InitParticles (const std::string & filename,Real &total_mass, Real &total_vol, Real &total_rigid_mass);
 
     void InitParticles (Real mincoords[AMREX_SPACEDIM],Real maxcoords[AMREX_SPACEDIM], 
@@ -51,33 +50,6 @@ public:
     amrex::Real GetPosPiston();
     amrex::Real GetPosSpring();
     void CalculateSurfaceIntegralTop(Array<Real,AMREX_SPACEDIM> gravity, Real &Fy_top, Real &Fy_bottom);
-=======
-    void InitParticles (const std::string & filename,Real &total_mass, Real &total_vol);
-
-    void InitParticles (Real mincoords[AMREX_SPACEDIM],Real maxcoords[AMREX_SPACEDIM], 
-        Real vel[AMREX_SPACEDIM],
-        Real dens, int constmodel, 
-        Real E, Real nu,Real bulkMod, Real Gama_pres,Real visc,
-        int do_multi_part_per_cell,Real &total_mass,Real &total_vol);
-
-    void moveParticles (const amrex::Real& dt,
-                        int bclo[AMREX_SPACEDIM],
-                        int bchi[AMREX_SPACEDIM],
-                        int lsetbc,
-                        amrex::Real wall_mu_lo[AMREX_SPACEDIM],
-                        amrex::Real wall_mu_hi[AMREX_SPACEDIM],
-                        amrex::Real wall_vel_lo[AMREX_SPACEDIM*AMREX_SPACEDIM],
-                        amrex::Real wall_vel_hi[AMREX_SPACEDIM*AMREX_SPACEDIM],
-                        amrex::Real lset_wall_mu);
-
-    void updateVolume (const amrex::Real& dt);
-    amrex::Real CalculateExactVelocity(int modenumber,amrex::Real E, amrex::Real rho, amrex::Real v0,amrex::Real L, amrex::Real time);
-    void writeParticles (std::string prefix_particlefilename, int num_of_digits_in_filenames, const int n);
-    void writeCheckpointFile(std::string prefix_particlefilename, int num_of_digits_in_filenames, amrex::Real cur_time,  int nstep, int output_it);
-    void WriteHeader(const std::string& name, bool is_checkpoint, amrex::Real cur_time, int nstep, int EB_generate_max_level, int output_it) const;
-    void readCheckpointFile(std::string & restart_chkfile, int &nstep, double &cur_time, int &output_it);
-    int checkifrigidnodespresent();
->>>>>>> refs/heads/main
     void deposit_onto_grid(MultiFab& nodaldata,
                            Array<Real,AMREX_SPACEDIM> gravity,
                            int external_loads_present,
@@ -86,13 +58,8 @@ public:
                            Array<Real,AMREX_SPACEDIM> extforce,
                            int update_massvel,int update_forces, 
                            amrex::Real mass_tolerance,
-<<<<<<< HEAD
-			   GpuArray<int, AMREX_SPACEDIM> order_scheme_directional,
-			   GpuArray<int, AMREX_SPACEDIM> periodic);
-=======
 						   Array<int, AMREX_SPACEDIM> order_scheme_directional,
 						   Array<int, AMREX_SPACEDIM> periodic);
->>>>>>> refs/heads/main
 
     void deposit_onto_grid_rigidnodesonly(MultiFab& nodaldata,
                                Array<Real,AMREX_SPACEDIM> gravity,
@@ -102,12 +69,11 @@ public:
                                Array<Real,AMREX_SPACEDIM> extforce,
                                int update_massvel,int update_forces,
                                amrex::Real mass_tolerance,
-<<<<<<< HEAD
     			       GpuArray<int, AMREX_SPACEDIM> order_scheme_directional,
     			       GpuArray<int, AMREX_SPACEDIM> periodic);
 
     void checkifallparticlesinsidedomain();
-    amrex::Real GetVelPiston(const amrex::Real& dt,amrex::Real v_old,Array<Real,AMREX_SPACEDIM> gravity,amrex::Real Fy_top);
+    amrex::Real GetVelPiston(const amrex::Real& dt,amrex::Real v_old,amrex::Real damping_coeff, Array<Real,AMREX_SPACEDIM> gravity,amrex::Real Fy_top);
     void CalculateErrorP2G(MultiFab& nodaldata,amrex::Real p2g_L,amrex::Real p2g_f,int ncell);
 
     void interpolate_from_grid(MultiFab& nodaldata,
@@ -127,28 +93,6 @@ public:
     void CalculateVelocityCantilever(Real &Vcm);
     void CalculateErrorTVB(Real tvb_E,Real tvb_v0,Real tvb_L,Real tvb_rho,Real err);
     void WriteDeflectionTVB(Real tvb_E,Real tvb_v0,Real tvb_L,Real tvb_rho, Real time, int output_it);
-=======
-    						   Array<int, AMREX_SPACEDIM> order_scheme_directional,
-    						   Array<int, AMREX_SPACEDIM> periodic);
-
-    void checkifallparticlesinsidedomain();
-    amrex::Real GetVelPiston(const amrex::Real& dt,amrex::Real v_old);
-
-    void interpolate_from_grid(MultiFab& nodaldata,
-                               int update_vel,int update_strainrate,
-							   Array <int,AMREX_SPACEDIM> order_scheme_directional,
-							   Array <int,AMREX_SPACEDIM> periodic,
-							   amrex::Real alpha_pic_flip,
-							   amrex::Real dt);
-
-    void move_particles_from_nodevel(MultiFab& nodaldata,const amrex::Real& dt,
-            int bclo[AMREX_SPACEDIM],int bchi[AMREX_SPACEDIM],
-            int order_scheme);
-    
-    void CalculateEnergies(Real &TKE,Real &TSE);
-    void CalculateVelocity(Real &Vcm);
-    void CalculateVelocityCantilever(Real &Vcm);
->>>>>>> refs/heads/main
     void WriteDeflectionCantilever();
     void FindWaterFront(Real &Xwf);
 

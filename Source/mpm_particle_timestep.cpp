@@ -145,7 +145,7 @@ void MPMParticleContainer::moveParticles(const amrex::Real& dt,
         {
             ParticleType& p = pstruct[i];
 
-            if(p.idata(intData::phase)==1)
+            if(p.idata(intData::phase)==1 and p.idata(intData::rigid_body_id)==0)
             {
             	p.pos(XDIR) += p.rdata(realData::xvel_prime) * dt;
             	p.pos(YDIR) += p.rdata(realData::yvel_prime) * dt;
@@ -319,7 +319,6 @@ void MPMParticleContainer::moveParticles(const amrex::Real& dt,
     }
 }
 
-<<<<<<< HEAD
 amrex::Real MPMParticleContainer::GetPosSpring()
 {
 	const int lev = 0;
@@ -357,7 +356,7 @@ amrex::Real MPMParticleContainer::GetPosPiston()
 			AMREX_GPU_HOST_DEVICE (const PType& p) -> Real
 	        {
 	        	Real yscale;
-	        	if(p.idata(intData::phase)==1)
+	        	if(p.idata(intData::phase)==1 and p.idata(intData::rigid_body_id)==0)
 	            {
 	        		yscale = p.pos(YDIR);
 	            }
@@ -371,7 +370,7 @@ amrex::Real MPMParticleContainer::GetPosPiston()
 
 }
 
-amrex::Real MPMParticleContainer::GetVelPiston(const amrex::Real& dt,amrex::Real v_old,Array<Real,AMREX_SPACEDIM> gravity, amrex::Real Fy_top)
+amrex::Real MPMParticleContainer::GetVelPiston(const amrex::Real& dt,amrex::Real v_old,amrex::Real damping_coeff,Array<Real,AMREX_SPACEDIM> gravity, amrex::Real Fy_top)
 {
     BL_PROFILE("MPMParticleContainer::GetVelPiston");
 
@@ -384,7 +383,8 @@ amrex::Real MPMParticleContainer::GetVelPiston(const amrex::Real& dt,amrex::Real
     amrex::Real ymin = std::numeric_limits<amrex::Real>::max();
     amrex::Real v_new;
     amrex::Real m_tot;
-    amrex::Real damping_coeff=0;
+
+
 
     using PType = typename MPMParticleContainer::SuperParticleType;
     m_tot = amrex::ReduceSum(*this, [=]
@@ -408,59 +408,6 @@ amrex::Real MPMParticleContainer::GetVelPiston(const amrex::Real& dt,amrex::Real
     v_new=v_old+(fabs(Fy_top)-m_tot*fabs(gravity[YDIR])-damping_coeff*v_old)/m_tot*dt;
     //v_new=v_old+(392699*(0.5-ymin)-m_tot*fabs(gravity[YDIR]))/m_tot*dt; //Testing the code by putting a spring const
     //amrex::Print()<<"\n Fy_top weight = "<<m_tot<<" "<<fabs(Fy_top)<<" "<<v_new<<" "<<v_old;
-=======
-amrex::Real MPMParticleContainer::GetVelPiston(const amrex::Real& dt,amrex::Real v_old)
-{
-    BL_PROFILE("MPMParticleContainer::GetVelPiston");
-
-    const int lev = 0;
-    const Geometry& geom = Geom(lev);
-    const auto plo = Geom(lev).ProbLoArray();
-    const auto phi = Geom(lev).ProbHiArray();
-    const auto dx = Geom(lev).CellSizeArray();
-    auto& plev  = GetParticles(lev);
-    amrex::Real ymin = std::numeric_limits<amrex::Real>::max();
-    amrex::Real v_new;
-    amrex::Real m_tot;
-
-    using PType = typename MPMParticleContainer::SuperParticleType;
-        ymin = amrex::ReduceMin(*this, [=]
-        AMREX_GPU_HOST_DEVICE (const PType& p) -> Real
-        {
-        	Real yscale;
-        	if(p.idata(intData::phase)==1)
-        	{
-        		yscale=p.pos(YDIR);
-        		return(yscale);
-        	}
-        	else
-        	{
-        		Real yscale=std::numeric_limits<amrex::Real>::max();
-        		return(yscale);
-        		//yscale=0.0;
-        	}
-
-        });
-
-        m_tot = amrex::ReduceSum(*this, [=]
-		AMREX_GPU_HOST_DEVICE (const PType& p) -> Real
-        {
-        	Real mscale;
-        	if(p.idata(intData::phase)==1)
-            {
-        		mscale = p.rdata(realData::mass);
-            }
-        	else
-        	{
-        		mscale = 0.0;
-        	}
-        	return(mscale);
-         });
-    amrex::Real Spring_Const = 10000.0;
-    amrex::Real Restoring_force =  Spring_Const*(1.1-ymin);
-    amrex::Print()<<"\n Total mass = "<<m_tot<<" "<<ymin<<" "<<Restoring_force;
-    v_new=v_old+9.81*(Restoring_force/(m_tot*9.81)-1.0)*dt;
->>>>>>> refs/heads/main
 
     for(MFIter mfi = MakeMFIter(lev); mfi.isValid(); ++mfi)
         {
