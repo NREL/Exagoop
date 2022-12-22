@@ -179,6 +179,7 @@ void nodal_detect_contact(MultiFab &nodaldata,const Geometry geom,amrex::Real& c
         {
             if(nodal_data_arr(i,j,k,MASS_INDEX) >contact_tolerance and nodal_data_arr(i,j,k,MASS_RIGID_INDEX)>contact_tolerance)
             {
+            	amrex::Real y_coordinate=plo[1]+j*dx[1];
             	amrex::Real contact_alpha;
             	if(y_coordinate>0.000235)
             	{
@@ -313,8 +314,8 @@ void nodal_bcs(const amrex::Geometry geom,
     GpuArray<int,AMREX_SPACEDIM> domlo={domloarr[0],domloarr[1],domloarr[2]};
     GpuArray<int,AMREX_SPACEDIM> domhi={domhiarr[0],domhiarr[1],domhiarr[2]};
 
-    Real bclo[]={bcloarr[0],bcloarr[1],bcloarr[2]};
-    Real bchi[]={bchiarr[0],bchiarr[1],bchiarr[2]};
+    int bclo[]={bcloarr[0],bcloarr[1],bcloarr[2]};
+    int bchi[]={bchiarr[0],bchiarr[1],bchiarr[2]};
     
     Real wall_mu_lo[]={wall_mu_loarr[0],wall_mu_loarr[1],wall_mu_loarr[2]};
     Real wall_mu_hi[]={wall_mu_hiarr[0],wall_mu_hiarr[1],wall_mu_hiarr[2]};

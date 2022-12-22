@@ -58,8 +58,8 @@ public:
                            Array<Real,AMREX_SPACEDIM> extforce,
                            int update_massvel,int update_forces, 
                            amrex::Real mass_tolerance,
-						   Array<int, AMREX_SPACEDIM> order_scheme_directional,
-						   Array<int, AMREX_SPACEDIM> periodic);
+			   GpuArray<int, AMREX_SPACEDIM> order_scheme_directional,
+			   GpuArray<int, AMREX_SPACEDIM> periodic);
 
     void deposit_onto_grid_rigidnodesonly(MultiFab& nodaldata,
                                Array<Real,AMREX_SPACEDIM> gravity,

@@ -50,8 +50,8 @@ void MPMParticleContainer::InitParticles (const std::string& filename,
             // Read from input file
             //ifs >> junk;
             ifs >> p.idata(intData::phase);		//phase=0=> use for mpm computation, phase=1=> rigid body particles, not used in std. mpm operations
-            ifs >> p.idata(intData::rigid_body_id);		//if there are multiple rigid bodies present, then tag them separately using this id. For the HPRO problem, rigid_body_id=0=> top jaw, rigid_body_id=1=>bottom jaw
-
+            //ifs >> p.idata(intData::rigid_body_id);		//if there are multiple rigid bodies present, then tag them separately using this id. For the HPRO problem, rigid_body_id=0=> top jaw, rigid_body_id=1=>bottom jaw
+            p.idata(intData::rigid_body_id)=0;
             ifs >> p.pos(0);
             ifs >> p.pos(1);
             ifs >> p.pos(2);

@@ -345,7 +345,7 @@ AMREX_GPU_DEVICE AMREX_FORCE_INLINE
     amrex::Real lval,mval,nval;
     amrex::Real rx,ry,rz;
 
-    Real order_scheme_dir[]={AMREX_D_DECL(order_scheme_directional[XDIR],order_scheme_directional[YDIR],order_scheme_directional[ZDIR])}; 
+    int order_scheme_dir[]={AMREX_D_DECL(order_scheme_directional[XDIR],order_scheme_directional[YDIR],order_scheme_directional[ZDIR])};
 
     lval=0.0;
     mval=0.0;
