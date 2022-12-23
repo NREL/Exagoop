@@ -9,11 +9,21 @@
 
 using namespace amrex;
 
+void PrintWelcomeMessage()
+{
+	amrex::Print() << " ===============================================\n";
+	amrex::Print() << "        Welcome to EXAGOOP MPM Solver           \n";
+	amrex::Print() << "        Developed by HPACFers at NREL           \n";
+	amrex::Print() << "                 -Hari, Sree and Marc           \n";
+	amrex::Print() << " ===============================================\n";
+}
+
 int main (int argc, char* argv[])
 {
     amrex::Initialize(argc,argv);
 
     {
+    	PrintWelcomeMessage();
         //Initializing and reading input file for the simulation
         MPMspecs specs;
         specs.read_mpm_specs();
@@ -326,18 +336,13 @@ int main (int argc, char* argv[])
 
         while((steps < specs.maxsteps) and (time < specs.final_time))
         {
+        	auto iter_time_start = amrex::second();
             dt 	= (specs.fixed_timestep==1)?specs.timestep:mpm_pc.Calculate_time_step(specs.CFL,specs.dt_max_limit,specs.dt_min_limit);
 
             time += dt;
             output_time += dt;
             output_timePrint += dt;
             steps++;
-
-            if (output_timePrint >= specs.screen_output_time)
-            {
-                Print()<<"\nIteration: "<<std::setw(10)<<steps<<",\t"<<"Time: "<<std::fixed<<std::setprecision(10)<<time<<",\tDt = "<<std::scientific<<std::setprecision(5)<<dt;
-                output_timePrint=zero;
-            }
 
             if (steps % specs.num_redist == 0)
             {
@@ -671,6 +676,12 @@ int main (int argc, char* argv[])
                 BL_PROFILE_VAR_STOP(outputs);
 
                 mpm_pc.writeCheckpointFile(specs.prefix_checkpointfilename, specs.num_of_digits_in_filenames, time,steps,output_it);
+            }
+            auto time_per_iter=amrex::second()-iter_time_start;
+            if (output_timePrint >= specs.screen_output_time)
+            {
+            	Print()<<"\nIteration: "<<std::setw(10)<<steps<<",\t"<<"Time: "<<std::fixed<<std::setprecision(10)<<time<<",\tDt = "<<std::scientific<<std::setprecision(5)<<dt<<std::fixed<<std::setprecision(10)<<",\t Time/Iter = "<<time_per_iter;
+            	output_timePrint=zero;
             }
 
         }
