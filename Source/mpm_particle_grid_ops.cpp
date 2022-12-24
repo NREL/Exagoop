@@ -30,6 +30,57 @@ int MPMParticleContainer::checkifrigidnodespresent()
 
 }
 
+void MPMParticleContainer::Calculate_Total_Mass_RigidParticles(int body_id,Real total_mass)
+{
+    const int lev = 0;
+    const Geometry& geom = Geom(lev);
+    auto& plev  = GetParticles(lev);
+    const auto dxi = geom.InvCellSizeArray();
+    const auto dx = geom.CellSizeArray();
+    const auto plo = geom.ProbLoArray();
+    const auto domain = geom.Domain();
+
+    total_mass=0.0;
+
+    using PType = typename MPMParticleContainer::SuperParticleType;
+    total_mass = amrex::ReduceSum(*this, [=]
+        AMREX_GPU_HOST_DEVICE (const PType& p) -> Real
+        {
+    			return(p.rdata(realData::mass));
+        });
+
+	#ifdef BL_USE_MPI
+	    ParallelDescriptor::ReduceRealSum(total_mass);
+	#endif
+}
+
+amrex::Real MPMParticleContainer::Calculate_Total_Vol_RigidParticles(int body_id)
+{
+
+	amrex::Real total_vol=0.0;
+	const int lev = 0;
+	auto& plev  = GetParticles(lev);
+
+	using PType = typename MPMParticleContainer::SuperParticleType;
+	total_vol = amrex::ReduceSum(*this, [=]
+	    AMREX_GPU_HOST_DEVICE (const PType& p) -> Real
+	    {
+			if(p.idata(intData::phase)==1 and  p.idata(intData::rigid_body_id)==body_id)
+	        {
+	        	return(p.rdata(realData::volume));
+	        }
+			else
+			{
+				return(0.0);
+			}
+	    });
+
+	#ifdef BL_USE_MPI
+	    ParallelDescriptor::ReduceRealSum(total_vol);
+	#endif
+	return(total_vol);
+}
+
 void MPMParticleContainer::deposit_onto_grid(MultiFab& nodaldata,
                                              Array<Real,AMREX_SPACEDIM> gravity,
                                              int external_loads_present,
@@ -350,7 +401,7 @@ void MPMParticleContainer::deposit_onto_grid_rigidnodesonly(MultiFab& nodaldata,
 
             ParticleType& p = pstruct[i];
 
-            if(p.idata(intData::phase)==1)		//Compute only for standard particles and not rigid particles with phase=1
+            if(p.idata(intData::phase)==1)		//Compute only for rigid particles with phase=1
             {
             	amrex::Real xp[AMREX_SPACEDIM];
 

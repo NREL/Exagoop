@@ -1,6 +1,8 @@
 #ifndef _CONSTANTS_H_
 #define _CONSTANTS_H_
 
+#define numrigidbodies 2
+
 #define XDIR 0
 #define YDIR 1
 #define ZDIR 2

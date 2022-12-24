@@ -3,7 +3,7 @@
 #include <mpm_eb.H>
 
 void MPMParticleContainer::InitParticles (const std::string& filename,
-                                          Real &total_mass,Real &total_vol,Real &total_rigid_mass)
+                                          Real &total_mass,Real &total_vol,Real &total_rigid_mass, int &num_of_rigid_bodies)
 {
 
     // only read the file on the IO proc
@@ -25,15 +25,16 @@ void MPMParticleContainer::InitParticles (const std::string& filename,
             Abort("\nCannot read number of particles from particle file\n");
         }
 
-        amrex::Print()<<"\nNo of particles="<<np;
-
         const int lev  = 0;
         const int grid = 0;
         const int tile = 0;
+        const int tot_rig_body_tmp=10;
+        int rigid_bodies_read_so_far[tot_rig_body_tmp]={-1};
+        int index_rigid_body_read_so_far=0;
 
-        total_mass=0.0;
-        total_vol=0.0;
-        total_rigid_mass=0.0;
+        total_mass=0.0;														//Total mass of phase 0 material points
+        total_vol=0.0;														//Total volume of phase 0 material points
+        total_rigid_mass=0.0;												//Total mass of phase 1 material points
 
         auto& particle_tile = DefineAndReturnParticleTile(lev,grid,tile);
         Gpu::HostVector<ParticleType> host_particles;
@@ -43,15 +44,37 @@ void MPMParticleContainer::InitParticles (const std::string& filename,
             ParticleType p;
             int ph;
        	    amrex::Real junk;
+
             // Set id and cpu for this particle
             p.id()  = ParticleType::NextID();
             p.cpu() = ParallelDescriptor::MyProc();
 
             // Read from input file
-            //ifs >> junk;
             ifs >> p.idata(intData::phase);		//phase=0=> use for mpm computation, phase=1=> rigid body particles, not used in std. mpm operations
-            //ifs >> p.idata(intData::rigid_body_id);		//if there are multiple rigid bodies present, then tag them separately using this id. For the HPRO problem, rigid_body_id=0=> top jaw, rigid_body_id=1=>bottom jaw
-            p.idata(intData::rigid_body_id)=0;
+
+            if(p.idata(intData::phase)==1)
+            {
+            	ifs >> p.idata(intData::rigid_body_id); 		//if there are multiple rigid bodies present, then tag them separately using this id. For the HPRO problem, rigid_body_id=0=> top jaw, rigid_body_id=1=>bottom jaw
+            	//Check if the rigid_body_id is not read before
+            	bool body_present=false;
+            	for(int j = 0;j<index_rigid_body_read_so_far;j++)
+            	{
+            		if(rigid_bodies_read_so_far[j]==p.idata(intData::rigid_body_id))
+            		{
+            			body_present=true;
+            		}
+            	}
+            	if(!body_present)
+            	{
+            		rigid_bodies_read_so_far[index_rigid_body_read_so_far]=p.idata(intData::rigid_body_id);
+            		index_rigid_body_read_so_far++;
+            	}
+            }
+            else
+            {
+            	p.idata(intData::rigid_body_id)=-1;				//rigid_body_id is invalid for phase=0 material points.
+            }
+
             ifs >> p.pos(0);
             ifs >> p.pos(1);
             ifs >> p.pos(2);
@@ -81,15 +104,13 @@ void MPMParticleContainer::InitParticles (const std::string& filename,
             }
             else
             {
-            	amrex::Abort("\nIncorrect constitutive model. Please check your particle file");
+            	amrex::Abort("\n\tIncorrect constitutive model. Please check your particle file");
             }
 
 
             // Set other particle properties
-            p.rdata(realData::volume)      = fourbythree*PI*pow(p.rdata(realData::radius),three);
-            //This is the right mass of each particle. Make sure the radius is entered correctly while generating the particle file
+            p.rdata(realData::volume)      = fourbythree*PI*pow(p.rdata(realData::radius),three);		//Material point is assumed to be a sphere. The radius provided in the input particle file is used to calculate the mp volume
             p.rdata(realData::mass)        = p.rdata(realData::density)*p.rdata(realData::volume);
-
 
             if(p.idata(intData::phase)==0)
             {
@@ -127,10 +148,8 @@ void MPMParticleContainer::InitParticles (const std::string& filename,
                 amrex::Abort("Error initializing particles from Ascii file. \n");
             }
         }
-        amrex::Print()<<"\nTotal mass and volume = "<<total_mass<<" "<<total_vol;
-        amrex::Print()<<"\nTotal rigid mass = "<<total_rigid_mass;
-
         
+        num_of_rigid_bodies=index_rigid_body_read_so_far;
         auto old_size = particle_tile.GetArrayOfStructs().size();
         auto new_size = old_size + host_particles.size();
         particle_tile.resize(new_size);

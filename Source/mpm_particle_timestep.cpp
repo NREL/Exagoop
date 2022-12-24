@@ -370,7 +370,8 @@ amrex::Real MPMParticleContainer::GetPosPiston()
 
 }
 
-amrex::Real MPMParticleContainer::GetVelPiston(const amrex::Real& dt,amrex::Real v_old,amrex::Real damping_coeff,Array<Real,AMREX_SPACEDIM> gravity, amrex::Real Fy_top)
+
+void MPMParticleContainer::UpdateRigidParticleVelocities(int rigid_body_id,Array <amrex::Real,AMREX_SPACEDIM> velocity)
 {
     BL_PROFILE("MPMParticleContainer::GetVelPiston");
 
@@ -380,34 +381,6 @@ amrex::Real MPMParticleContainer::GetVelPiston(const amrex::Real& dt,amrex::Real
     const auto phi = Geom(lev).ProbHiArray();
     const auto dx = Geom(lev).CellSizeArray();
     auto& plev  = GetParticles(lev);
-    amrex::Real ymin = std::numeric_limits<amrex::Real>::max();
-    amrex::Real v_new;
-    amrex::Real m_tot;
-
-
-
-    using PType = typename MPMParticleContainer::SuperParticleType;
-    m_tot = amrex::ReduceSum(*this, [=]
-		AMREX_GPU_HOST_DEVICE (const PType& p) -> Real
-        {
-        	Real mscale;
-        	if(p.idata(intData::phase)==1)
-            {
-        		mscale = p.rdata(realData::mass);
-            }
-        	else
-        	{
-        		mscale = 0.0;
-        	}
-        	return(mscale);
-         });
-
-
-    //ymin = GetPosPiston();	Uncomment this only when using with a user specified spring constant
-
-    v_new=v_old+(fabs(Fy_top)-m_tot*fabs(gravity[YDIR])-damping_coeff*v_old)/m_tot*dt;
-    //v_new=v_old+(392699*(0.5-ymin)-m_tot*fabs(gravity[YDIR]))/m_tot*dt; //Testing the code by putting a spring const
-    //amrex::Print()<<"\n Fy_top weight = "<<m_tot<<" "<<fabs(Fy_top)<<" "<<v_new<<" "<<v_old;
 
     for(MFIter mfi = MakeMFIter(lev); mfi.isValid(); ++mfi)
         {
@@ -422,23 +395,19 @@ amrex::Real MPMParticleContainer::GetVelPiston(const amrex::Real& dt,amrex::Real
 
             amrex::Array4<amrex::Real> lsetarr;
 
-
             // now we move the particles
             amrex::ParallelFor(np,[=]
             AMREX_GPU_DEVICE (int i) noexcept
             {
                 ParticleType& p = pstruct[i];
-                if(p.idata(intData::phase)==1)
+                if(p.idata(intData::phase)==1 and p.idata(intData::rigid_body_id)==rigid_body_id)
                 {
-                	p.rdata(realData::xvel_prime) =0.0;
-                	p.rdata(realData::yvel_prime) =v_new;
-                	p.rdata(realData::zvel_prime) =0.0;
+                	p.rdata(realData::xvel_prime) =velocity[0];
+                	p.rdata(realData::yvel_prime) =velocity[1];
+                	p.rdata(realData::zvel_prime) =velocity[2];
                 }
             });
         }
-
-
-    return(v_new);
 
 }
 

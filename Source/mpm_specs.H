@@ -50,6 +50,25 @@ struct intData
     };
 };
 
+struct Rigid_Bodies
+{
+	int Rigid_Body_Id;
+	amrex::Real total_mass;
+	amrex::Real total_volume;
+	Array <amrex::Real,AMREX_SPACEDIM> gravity;
+	Array <amrex::Real,AMREX_SPACEDIM> force_external;
+	Array <amrex::Real,AMREX_SPACEDIM> force_internal;
+	Array <amrex::Real,AMREX_SPACEDIM> velocity;
+	Array <amrex::Real,AMREX_SPACEDIM> imposed_velocity;
+	amrex::Real Damping_Coefficient;
+	//Body forces
+	int position_update_method;			//0-->Constant Velocity 1-->Particle dynamics solver
+	bool enable_weight;
+	bool enable_damping_force;
+};
+
+
+
 class MPMspecs
 {
     public:
@@ -86,6 +105,12 @@ class MPMspecs
         int ifrigidnodespresent=0;
         bool is_standard_test = true;
         int test_number = 0;	//0->is_standard_test=false,1-->axial vibration of bar, 2-->Dam break, 3--> Elastic collision of disks, 4--> Lateral deflection of beam
+        int no_of_rigidbodies_present=0;
+        amrex::Real total_mass_phase_0=0.0;
+        amrex::Real total_vol_phase_0=0.0;
+
+        //Rigid body nodes
+        Rigid_Bodies *Rb;
 
         //Parameters for Axial bar test
         amrex::Real axial_bar_E = 100.0;
@@ -150,7 +175,8 @@ class MPMspecs
         Vector<int> bchi;
 
         GpuArray<int,AMREX_SPACEDIM> order_scheme_directional{AMREX_D_DECL(1,1,1)};
-       
+
+
         int use_autogen=0; 
         Vector<Real> autogen_mincoords; 
         Vector<Real> autogen_maxcoords; 
@@ -335,5 +361,52 @@ class MPMspecs
             pp.query("wall_vel_lo",wall_vel_lo);
             pp.query("wall_vel_hi",wall_vel_hi);
         }
+
+        std::string Convert_arr_string(Array<Real,AMREX_SPACEDIM>arr)
+        {
+        	std::string str;
+        	str="[";
+        	for (int i=0;i<AMREX_SPACEDIM-1;i++)
+        	{
+        		str=str+std::to_string(arr[i])+",";
+        	}
+        	str=str+std::to_string(arr[AMREX_SPACEDIM-1]);
+        	return(str);
+        }
+
+        void PrintSimulationParams()
+        {
+        	//To be completed, Sreejith
+        	std::string vect_str;
+        	vect_str=Convert_arr_string(plo);
+        	amrex::Print()<<"\n\tBackground grid physical extents: "<<vect_str;
+        }
+        void ThreeDOF_Solver(amrex::Real dt)
+        {
+        	for (int i=0;i<no_of_rigidbodies_present;i++)
+        	{
+        		if(Rb[i].position_update_method==1)
+        		{
+        			for(int j=0;j<AMREX_SPACEDIM;j++)
+        			{
+        				Rb[i].velocity[j]+=(Rb[i].force_internal[j]+Rb[i].force_external[j])/Rb[i].total_mass*dt;
+        			}
+        		}
+        		else
+        		{
+        			for(int j=0;j<AMREX_SPACEDIM;j++)
+        			{
+        				Rb[i].velocity[j]=Rb[i].imposed_velocity[j];
+        			}
+        		}
+        	}
+        }
+
 };
+
+//void MPMspecs::PrintSimulationParams()
+//{
+	//amrex::Print()<<"\n\tBackground grid physical extents: ["<<plo[0]<<","<<"]";
+//}
 #endif
+
