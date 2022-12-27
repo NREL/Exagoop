@@ -98,6 +98,10 @@ public:
     amrex::Real CalculateEffectiveSpringConstant(amrex::Real Area,amrex::Real L0);
     void CalculateVelocity(Real &Vcm);
     void CalculateVelocityCantilever(Real &Vcm);
+    void Calculate_Total_Number_of_rigid_particles(int body_id,int &total_num);
+    void Calculate_Total_Number_of_MaterialParticles(int &total_num);
+    void Calculate_Total_Mass_MaterialPoints(Real &total_mass);
+    void Calculate_Total_Vol_MaterialPoints(Real &total_vol);
     void CalculateErrorTVB(Real tvb_E,Real tvb_v0,Real tvb_L,Real tvb_rho,Real err);
     void WriteDeflectionTVB(Real tvb_E,Real tvb_v0,Real tvb_L,Real tvb_rho, Real time, int output_it);
     void WriteDeflectionCantilever();

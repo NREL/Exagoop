@@ -53,6 +53,7 @@ struct intData
 struct Rigid_Bodies
 {
 	int Rigid_Body_Id;
+	int num_of_mp;
 	amrex::Real total_mass;
 	amrex::Real total_volume;
 	Array <amrex::Real,AMREX_SPACEDIM> gravity;

@@ -33,6 +33,20 @@ void PrintMessage(std::string msg,int print_length,bool begin)
 	}
 }
 
+void PrintMessage(std::string msg,int print_length,bool begin,char c)
+{
+	if(begin==true)
+	{
+		msg.append(print_length - msg.length(), c);
+		amrex::Print() <<msg;
+	}
+	else
+	{
+		msg=" Done";
+		amrex::Print() <<msg;
+	}
+}
+
 
 
 int main (int argc, char* argv[])
@@ -184,8 +198,8 @@ int main (int argc, char* argv[])
         	        }
         	mpm_pc.Calculate_Total_Mass_RigidParticles(0,specs.Rb[0].total_mass);
         	mpm_pc.Calculate_Total_Mass_RigidParticles(1,specs.Rb[1].total_mass);
-
-        	amrex::Print()<<"\n Total mass = "<<specs.Rb[0].total_mass<<" "<<specs.Rb[1].total_mass;
+        	mpm_pc.Calculate_Total_Number_of_rigid_particles(0,specs.Rb[0].num_of_mp);
+        	mpm_pc.Calculate_Total_Number_of_rigid_particles(1,specs.Rb[1].num_of_mp);
         }
 
 
@@ -429,7 +443,54 @@ int main (int argc, char* argv[])
         }
 
         //Printing problem parameters
-        specs.PrintSimulationParams();
+        //specs.PrintSimulationParams();
+        {
+        	int tmpi;
+        	amrex::Real tmpr;
+
+        	msg="\n     ";
+        	PrintMessage(msg,print_length,true,'*');	//* line
+
+        	msg="\n     Total number of material points:";
+        	PrintMessage(msg,print_length,true);
+
+        	mpm_pc.Calculate_Total_Number_of_MaterialParticles(tmpi);
+        	amrex::Print()<<" "<<tmpi;
+
+        	msg="\n     Total mass of material points:";
+        	PrintMessage(msg,print_length,true);
+
+        	mpm_pc.Calculate_Total_Mass_MaterialPoints(tmpr);
+        	amrex::Print()<<" "<<std::setprecision(4)<<tmpr;
+
+        	msg="\n     Total volume of material points:";
+        	PrintMessage(msg,print_length,true);
+
+        	mpm_pc.Calculate_Total_Vol_MaterialPoints(tmpr);
+        	amrex::Print()<<" "<<std::setprecision(4)<<tmpr;
+
+        	msg="\n     Rigid particle details:";
+        	PrintMessage(msg,print_length,true);
+
+        	for(int i=0;i<specs.no_of_rigidbodies_present;i++)
+        	{
+
+				msg="\n        Total number of rigid body particles in body "+std::to_string(i)+":";
+        		PrintMessage(msg,print_length,true);
+				amrex::Print()<<" "<<specs.Rb[i].num_of_mp;
+
+        		msg="\n        Total mass of rigid body "+std::to_string(i)+":";
+        		PrintMessage(msg,print_length,true);
+        		amrex::Print()<<" "<<specs.Rb[i].total_mass;
+        	}
+
+        	msg="\n     ";
+        	PrintMessage(msg,print_length,true,'*');	//* line
+        }
+
+
+
+
 
         amrex::Real vel_piston_old=0.0;
 

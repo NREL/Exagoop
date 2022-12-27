@@ -30,6 +30,68 @@ int MPMParticleContainer::checkifrigidnodespresent()
 
 }
 
+void MPMParticleContainer::Calculate_Total_Number_of_rigid_particles(int body_id,int &total_num)
+{
+    const int lev = 0;
+    const Geometry& geom = Geom(lev);
+    auto& plev  = GetParticles(lev);
+    const auto dxi = geom.InvCellSizeArray();
+    const auto dx = geom.CellSizeArray();
+    const auto plo = geom.ProbLoArray();
+    const auto domain = geom.Domain();
+
+    total_num=0;
+
+    using PType = typename MPMParticleContainer::SuperParticleType;
+    total_num = amrex::ReduceSum(*this, [=]
+        AMREX_GPU_HOST_DEVICE (const PType& p) -> Real
+        {
+    		if(p.idata(intData::phase)==1 and p.idata(intData::rigid_body_id)==body_id)
+    		{
+    			return(1);
+    		}
+    		else
+    		{
+    			return(0);
+    		}
+        });
+
+	#ifdef BL_USE_MPI
+	    ParallelDescriptor::ReduceIntSum(total_num);
+	#endif
+}
+
+void MPMParticleContainer::Calculate_Total_Number_of_MaterialParticles(int &total_num)
+{
+    const int lev = 0;
+    const Geometry& geom = Geom(lev);
+    auto& plev  = GetParticles(lev);
+    const auto dxi = geom.InvCellSizeArray();
+    const auto dx = geom.CellSizeArray();
+    const auto plo = geom.ProbLoArray();
+    const auto domain = geom.Domain();
+
+    total_num=0;
+
+    using PType = typename MPMParticleContainer::SuperParticleType;
+    total_num = amrex::ReduceSum(*this, [=]
+        AMREX_GPU_HOST_DEVICE (const PType& p) -> Real
+        {
+    		if(p.idata(intData::phase)==0)
+    		{
+    			return(1);
+    		}
+    		else
+    		{
+    			return(0);
+    		}
+        });
+
+	#ifdef BL_USE_MPI
+	    ParallelDescriptor::ReduceIntSum(total_num);
+	#endif
+}
+
 void MPMParticleContainer::Calculate_Total_Mass_RigidParticles(int body_id,Real &total_mass)
 {
     const int lev = 0;
@@ -46,11 +108,80 @@ void MPMParticleContainer::Calculate_Total_Mass_RigidParticles(int body_id,Real 
     total_mass = amrex::ReduceSum(*this, [=]
         AMREX_GPU_HOST_DEVICE (const PType& p) -> Real
         {
+    		if(p.idata(intData::phase)==1 and p.idata(intData::rigid_body_id)==body_id)
+    		{
     			return(p.rdata(realData::mass));
+    		}
+    		else
+    		{
+    			return(0.0);
+    		}
         });
 
 	#ifdef BL_USE_MPI
 	    ParallelDescriptor::ReduceRealSum(total_mass);
+	#endif
+}
+
+void MPMParticleContainer::Calculate_Total_Mass_MaterialPoints(Real &total_mass)
+{
+    const int lev = 0;
+    const Geometry& geom = Geom(lev);
+    auto& plev  = GetParticles(lev);
+    const auto dxi = geom.InvCellSizeArray();
+    const auto dx = geom.CellSizeArray();
+    const auto plo = geom.ProbLoArray();
+    const auto domain = geom.Domain();
+
+    total_mass=0.0;
+
+    using PType = typename MPMParticleContainer::SuperParticleType;
+    total_mass = amrex::ReduceSum(*this, [=]
+        AMREX_GPU_HOST_DEVICE (const PType& p) -> Real
+        {
+    		if(p.idata(intData::phase)==0)
+    		{
+    			return(p.rdata(realData::mass));
+    		}
+    		else
+    		{
+    			return(0.0);
+    		}
+        });
+
+	#ifdef BL_USE_MPI
+	    ParallelDescriptor::ReduceRealSum(total_mass);
+	#endif
+}
+
+void MPMParticleContainer::Calculate_Total_Vol_MaterialPoints(Real &total_vol)
+{
+    const int lev = 0;
+    const Geometry& geom = Geom(lev);
+    auto& plev  = GetParticles(lev);
+    const auto dxi = geom.InvCellSizeArray();
+    const auto dx = geom.CellSizeArray();
+    const auto plo = geom.ProbLoArray();
+    const auto domain = geom.Domain();
+
+    total_vol=0.0;
+
+    using PType = typename MPMParticleContainer::SuperParticleType;
+    total_vol = amrex::ReduceSum(*this, [=]
+        AMREX_GPU_HOST_DEVICE (const PType& p) -> Real
+        {
+    		if(p.idata(intData::phase)==0)
+    		{
+    			return(p.rdata(realData::volume));
+    		}
+    		else
+    		{
+    			return(0.0);
+    		}
+        });
+
+	#ifdef BL_USE_MPI
+	    ParallelDescriptor::ReduceRealSum(total_vol);
 	#endif
 }
 
