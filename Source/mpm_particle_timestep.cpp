@@ -99,7 +99,9 @@ void MPMParticleContainer::updateVolume(const amrex::Real& dt)
 }
 
 void MPMParticleContainer::moveParticles(const amrex::Real& dt,
-        int bclo[AMREX_SPACEDIM],int bchi[AMREX_SPACEDIM],int lsetbc,
+        int bclo[AMREX_SPACEDIM],
+		int bchi[AMREX_SPACEDIM],
+		int lsetbc,
         amrex::Real wall_mu_lo[AMREX_SPACEDIM],
         amrex::Real wall_mu_hi[AMREX_SPACEDIM],
         amrex::Real wall_vel_lo[AMREX_SPACEDIM*AMREX_SPACEDIM],
@@ -117,6 +119,34 @@ void MPMParticleContainer::moveParticles(const amrex::Real& dt,
 
     bool using_levsets=mpm_ebtools::using_levelset_geometry;
     int lsref=mpm_ebtools::ls_refinement;
+
+    //Some GPU stuff again (Sreejith)
+    GpuArray<int,AMREX_SPACEDIM> bc_lo_arr;
+    GpuArray<int,AMREX_SPACEDIM> bc_hi_arr;
+
+    for(int d=0;d<AMREX_SPACEDIM;d++)
+    {
+    	bc_lo_arr[d]=bclo[d];
+    	bc_hi_arr[d]=bchi[d];
+    }
+
+    GpuArray<Real,AMREX_SPACEDIM*AMREX_SPACEDIM> wall_vel_lo_arr;
+    GpuArray<Real,AMREX_SPACEDIM*AMREX_SPACEDIM> wall_vel_hi_arr;
+
+    for(int d=0;d<AMREX_SPACEDIM*AMREX_SPACEDIM;d++)
+    {
+    	wall_vel_lo_arr[d]=wall_vel_lo[d];
+    	wall_vel_hi_arr[d]=wall_vel_hi[d];
+    }
+
+    GpuArray<Real,AMREX_SPACEDIM*AMREX_SPACEDIM> wall_mu_lo_arr;
+    GpuArray<Real,AMREX_SPACEDIM*AMREX_SPACEDIM> wall_mu_hi_arr;
+
+    for(int d=0;d<AMREX_SPACEDIM*AMREX_SPACEDIM;d++)
+    {
+    	wall_mu_lo_arr[d]=wall_mu_lo[d];
+    	wall_mu_hi_arr[d]=wall_mu_hi[d];
+    }
 
     int periodic[AMREX_SPACEDIM]={Geom(lev).isPeriodic(XDIR),
         Geom(lev).isPeriodic(YDIR),
@@ -212,13 +242,13 @@ void MPMParticleContainer::moveParticles(const amrex::Real& dt,
                 int dir=XDIR;
                 for(int d=0;d<AMREX_SPACEDIM;d++)
                 {
-                    wallvel[d]=wall_vel_lo[dir*AMREX_SPACEDIM+d];
+                    wallvel[d]=wall_vel_lo_arr[dir*AMREX_SPACEDIM+d];
                     relvel_in[d] -= wallvel[d];
                 }
                 
                 Real normaldir[AMREX_SPACEDIM]={1.0,0.0,0.0};
-                int modify_pos=applybc(relvel_in,relvel_out,wall_mu_lo[XDIR],
-                        normaldir,bclo[XDIR]);
+                //int modify_pos=applybc(relvel_in,relvel_out,wall_mu_lo[XDIR],normaldir,bclo[XDIR]);
+                int modify_pos=applybc(relvel_in,relvel_out,wall_mu_lo_arr[XDIR],normaldir,bc_lo_arr[XDIR]);
                 if(modify_pos)
                 {
                     p.pos(XDIR) = two*plo[XDIR] - p.pos(XDIR);
@@ -229,13 +259,13 @@ void MPMParticleContainer::moveParticles(const amrex::Real& dt,
                 int dir=XDIR;
                 for(int d=0;d<AMREX_SPACEDIM;d++)
                 {
-                    wallvel[d]=wall_vel_hi[dir*AMREX_SPACEDIM+d];
+                    wallvel[d]=wall_vel_hi_arr[dir*AMREX_SPACEDIM+d];
                     relvel_in[d] -= wallvel[d];
                 }
 
                 Real normaldir[AMREX_SPACEDIM]={-1.0,0.0,0.0};
-                int modify_pos=applybc(relvel_in,relvel_out,wall_mu_hi[XDIR],
-                        normaldir,bchi[XDIR]);
+                //int modify_pos=applybc(relvel_in,relvel_out,wall_mu_hi[XDIR],normaldir,bchi[XDIR]);
+                int modify_pos=applybc(relvel_in,relvel_out,wall_mu_hi_arr[XDIR],normaldir,bc_hi_arr[XDIR]);
                 if(modify_pos)
                 {
                     p.pos(XDIR) = two*phi[XDIR] - p.pos(XDIR);
@@ -246,13 +276,13 @@ void MPMParticleContainer::moveParticles(const amrex::Real& dt,
                 int dir=YDIR;
                 for(int d=0;d<AMREX_SPACEDIM;d++)
                 {
-                    wallvel[d]=wall_vel_lo[dir*AMREX_SPACEDIM+d];
+                    wallvel[d]=wall_vel_lo_arr[dir*AMREX_SPACEDIM+d];
                     relvel_in[d] -= wallvel[d];
                 }
                 
                 Real normaldir[AMREX_SPACEDIM]={0.0,1.0,0.0};
-                int modify_pos=applybc(relvel_in,relvel_out,wall_mu_lo[YDIR],
-                        normaldir,bclo[YDIR]);
+                //int modify_pos=applybc(relvel_in,relvel_out,wall_mu_lo[YDIR],normaldir,bclo[YDIR]);
+                int modify_pos=applybc(relvel_in,relvel_out,wall_mu_lo_arr[YDIR],normaldir,bc_lo_arr[YDIR]);
                 if(modify_pos)
                 {
                     p.pos(YDIR) = two*plo[YDIR] - p.pos(YDIR);
@@ -263,13 +293,13 @@ void MPMParticleContainer::moveParticles(const amrex::Real& dt,
                 int dir=YDIR;
                 for(int d=0;d<AMREX_SPACEDIM;d++)
                 {
-                    wallvel[d]=wall_vel_hi[dir*AMREX_SPACEDIM+d];
+                    wallvel[d]=wall_vel_hi_arr[dir*AMREX_SPACEDIM+d];
                     relvel_in[d] -= wallvel[d];
                 }
             
                 Real normaldir[AMREX_SPACEDIM]={0.0,-1.0,0.0};
-                int modify_pos=applybc(relvel_in,relvel_out,wall_mu_hi[YDIR],
-                        normaldir,bchi[YDIR]);
+                //int modify_pos=applybc(relvel_in,relvel_out,wall_mu_hi[YDIR],normaldir,bchi[YDIR]);
+                int modify_pos=applybc(relvel_in,relvel_out,wall_mu_hi[YDIR],normaldir,bc_hi_arr[YDIR]);
                 if(modify_pos)
                 {
                     p.pos(YDIR) = two*phi[YDIR] - p.pos(YDIR);
@@ -280,13 +310,13 @@ void MPMParticleContainer::moveParticles(const amrex::Real& dt,
                 int dir=ZDIR;
                 for(int d=0;d<AMREX_SPACEDIM;d++)
                 {
-                    wallvel[d]=wall_vel_lo[dir*AMREX_SPACEDIM+d];
+                    wallvel[d]=wall_vel_lo_arr[dir*AMREX_SPACEDIM+d];
                     relvel_in[d] -= wallvel[d];
                 }
             
                 Real normaldir[AMREX_SPACEDIM]={0.0,0.0,1.0};
-                int modify_pos=applybc(relvel_in,relvel_out,wall_mu_lo[ZDIR],
-                        normaldir,bclo[ZDIR]);
+                //int modify_pos=applybc(relvel_in,relvel_out,wall_mu_lo[ZDIR],normaldir,bclo[ZDIR]);
+                int modify_pos=applybc(relvel_in,relvel_out,wall_mu_lo_arr[ZDIR],normaldir,bc_lo_arr[ZDIR]);
                 if(modify_pos)
                 {
                     p.pos(ZDIR) = two*plo[ZDIR] - p.pos(ZDIR);
@@ -297,13 +327,13 @@ void MPMParticleContainer::moveParticles(const amrex::Real& dt,
                 int dir=ZDIR;
                 for(int d=0;d<AMREX_SPACEDIM;d++)
                 {
-                    wallvel[d]=wall_vel_hi[dir*AMREX_SPACEDIM+d];
+                    wallvel[d]=wall_vel_hi_arr[dir*AMREX_SPACEDIM+d];
                     relvel_in[d] -= wallvel[d];
                 }
             
                 Real normaldir[AMREX_SPACEDIM]={0.0,0.0,-1.0};
-                int modify_pos=applybc(relvel_in,relvel_out,wall_mu_hi[ZDIR],
-                        normaldir,bchi[ZDIR]);
+                //int modify_pos=applybc(relvel_in,relvel_out,wall_mu_hi[ZDIR],normaldir,bchi[ZDIR]);
+                int modify_pos=applybc(relvel_in,relvel_out,wall_mu_hi_arr[ZDIR],normaldir,bc_hi_arr[ZDIR]);
                 if(modify_pos)
                 {
                     p.pos(ZDIR) = two*phi[ZDIR] - p.pos(ZDIR);
