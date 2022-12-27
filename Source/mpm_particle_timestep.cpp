@@ -393,8 +393,6 @@ void MPMParticleContainer::UpdateRigidParticleVelocities(int rigid_body_id,Array
             const size_t np = aos.numParticles();
             ParticleType* pstruct = aos().dataPtr();
 
-            amrex::Array4<amrex::Real> lsetarr;
-
             // now we move the particles
             amrex::ParallelFor(np,[=]
             AMREX_GPU_DEVICE (int i) noexcept
