@@ -3,7 +3,7 @@
 #include <mpm_eb.H>
 
 void MPMParticleContainer::InitParticles (const std::string& filename,
-                                          Real &total_mass,Real &total_vol,Real &total_rigid_mass, int &num_of_rigid_bodies)
+                                          Real &total_mass,Real &total_vol,Real &total_rigid_mass, int &num_of_rigid_bodies, int &ifrigidnodespresent)
 {
 
     // only read the file on the IO proc
@@ -54,6 +54,7 @@ void MPMParticleContainer::InitParticles (const std::string& filename,
 
             if(p.idata(intData::phase)==1)
             {
+            	ifrigidnodespresent=1;
             	ifs >> p.idata(intData::rigid_body_id); 		//if there are multiple rigid bodies present, then tag them separately using this id. For the HPRO problem, rigid_body_id=0=> top jaw, rigid_body_id=1=>bottom jaw
             	//Check if the rigid_body_id is not read before
             	bool body_present=false;

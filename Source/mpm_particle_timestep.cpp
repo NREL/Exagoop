@@ -145,7 +145,7 @@ void MPMParticleContainer::moveParticles(const amrex::Real& dt,
         {
             ParticleType& p = pstruct[i];
 
-            if(p.idata(intData::phase)==1 and p.idata(intData::rigid_body_id)==0)
+            if(p.idata(intData::phase)==1)
             {
             	p.pos(XDIR) += p.rdata(realData::xvel_prime) * dt;
             	p.pos(YDIR) += p.rdata(realData::yvel_prime) * dt;

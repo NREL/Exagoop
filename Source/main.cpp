@@ -121,7 +121,8 @@ int main (int argc, char* argv[])
                                  specs.total_mass,
 								 specs.total_vol,
 								 specs.total_rigid_mass,
-								 specs.no_of_rigidbodies_present);
+								 specs.no_of_rigidbodies_present,
+								 specs.ifrigidnodespresent);
             PrintMessage(msg,print_length,false);
             if(specs.no_of_rigidbodies_present!=numrigidbodies)
             {
@@ -141,7 +142,11 @@ int main (int argc, char* argv[])
             PrintMessage(msg,print_length,false);
         }
 
-        specs.ifrigidnodespresent = mpm_pc.checkifrigidnodespresent();
+        if(specs.ifrigidnodespresent==0)
+        {
+        	amrex::Print()<<"\n No rigid bodies present";
+        }
+
 
         if(mpm_ebtools::using_levelset_geometry)
         {
@@ -149,33 +154,41 @@ int main (int argc, char* argv[])
         }
 
         //Setting up rigid particle setups
-        specs.Rb = new Rigid_Bodies[specs.no_of_rigidbodies_present];
-        Array<int,numrigidbodies> position_update_method={-1};
-        Array<int,numrigidbodies> enable_weight={-1};
-        Array<int,numrigidbodies> enable_damping_force={-1};
-        Array<Real,numrigidbodies> Damping_Coefficient={-1};
-        ParmParse pp("mpm");
-        pp.get("position_update_method",position_update_method);
-        pp.get("enable_weight",enable_weight);
-        pp.get("enable_damping_force",enable_damping_force);
-        pp.get("Damping_Coefficient",Damping_Coefficient);
 
-        for(int i=0;i<specs.no_of_rigidbodies_present-1;i++)
+        if(numrigidbodies!=0)
         {
-        	specs.Rb[i].Rigid_Body_Id=i;							//I am assuming that the particle files have rigid_body_ids starting from 0 and are consecutive integers.
-        	specs.Rb[i].gravity=specs.gravity;
-        	specs.Rb[i].position_update_method=position_update_method[i];
-        	specs.Rb[i].enable_weight=enable_weight[i];
-        	specs.Rb[i].enable_damping_force=enable_damping_force[i];
-        	specs.Rb[i].Damping_Coefficient=Damping_Coefficient[i];
-        	specs.Rb[i].force_external={0.0,0.0,0.0};
-        	specs.Rb[i].force_internal={0.0,0.0,0.0};
-        	specs.Rb[i].velocity={0.0,0.0,0.0};
+        	specs.Rb = new Rigid_Bodies[specs.no_of_rigidbodies_present];
+        	Array<int,numrigidbodies> position_update_method;
+        	Array<int,numrigidbodies> enable_weight;
+        	Array<int,numrigidbodies> enable_damping_force;
+        	Array<Real,numrigidbodies> Damping_Coefficient;
+
+        	ParmParse pp("mpm");
+        	pp.get("position_update_method",position_update_method);
+        	pp.get("enable_weight",enable_weight);
+        	pp.get("enable_damping_force",enable_damping_force);
+        	pp.get("Damping_Coefficient",Damping_Coefficient);
+
+        	for(int i=0;i<specs.no_of_rigidbodies_present;i++)
+        	        {
+        	        	specs.Rb[i].Rigid_Body_Id=i;							//I am assuming that the particle files have rigid_body_ids starting from 0 and are consecutive integers.
+        	        	specs.Rb[i].gravity=specs.gravity;
+        	        	specs.Rb[i].position_update_method=position_update_method[i];
+        	        	specs.Rb[i].enable_weight=enable_weight[i];
+        	        	specs.Rb[i].enable_damping_force=enable_damping_force[i];
+        	        	specs.Rb[i].Damping_Coefficient=Damping_Coefficient[i];
+        	        	specs.Rb[i].force_external={0.0,0.0,0.0};
+        	        	specs.Rb[i].force_internal={0.0,0.0,0.0};
+        	        	specs.Rb[i].velocity={0.0,0.0,0.0};
+        	        	specs.Rb[i].imposed_velocity={0.0,0.0,0.0};
+        	        }
+        	mpm_pc.Calculate_Total_Mass_RigidParticles(0,specs.Rb[0].total_mass);
+        	mpm_pc.Calculate_Total_Mass_RigidParticles(1,specs.Rb[1].total_mass);
+
+        	amrex::Print()<<"\n Total mass = "<<specs.Rb[0].total_mass<<" "<<specs.Rb[1].total_mass;
         }
-        mpm_pc.Calculate_Total_Mass_RigidParticles(0,specs.Rb[0].total_mass);
-        mpm_pc.Calculate_Total_Mass_RigidParticles(1,specs.Rb[1].total_mass);
-        mpm_pc.Calculate_Total_Mass_RigidParticles(0,specs.Rb[0].total_volume);
-        mpm_pc.Calculate_Total_Mass_RigidParticles(1,specs.Rb[1].total_volume);
+
+
 
         //Set background grid properties
         msg="\n Setting up background grid";
@@ -390,6 +403,10 @@ int main (int argc, char* argv[])
         nodaldata_names.push_back("VELZ_RIGID_INDEX");
         nodaldata_names.push_back("MASS_RIGID_INDEX");
         nodaldata_names.push_back("STRESS_INDEX");
+        nodaldata_names.push_back("RIGID_BODY_ID");
+        nodaldata_names.push_back("NX");
+        nodaldata_names.push_back("NY");
+        nodaldata_names.push_back("NZ");
         PrintMessage(msg,print_length,false);
 
 
@@ -468,6 +485,9 @@ int main (int argc, char* argv[])
                                      specs.order_scheme_directional,
                                      specs.periodic);
 
+            //update velocity on nodes
+            nodal_update(nodaldata,dt,specs.mass_tolerance);
+
             //Performing rigid body operations
             if(specs.ifrigidnodespresent==1)
             {
@@ -492,18 +512,27 @@ int main (int argc, char* argv[])
 
                 //Calculate internal force on rigid bodies
                 //The following method is not generic. It is an approximation.
-                specs.Rb[0].force_external[0]=0.0;
-                specs.Rb[0].force_external[1]=mpm_pc.CalculateEffectiveSpringConstant(specs.mem_compaction_area,specs.mem_compaction_L0);
-                specs.Rb[0].force_external[2]=0.0;
+                specs.Rb[0].force_internal[0]=0.0;
+                specs.Rb[0].force_internal[1]=-mpm_pc.CalculateEffectiveSpringConstant(specs.mem_compaction_area,specs.mem_compaction_L0);
+                specs.Rb[0].force_internal[2]=0.0;
 
                 for(int k=0;k<AMREX_SPACEDIM;k++)
                 {
-                	specs.Rb[1].force_external[k]=0.0;
+                	specs.Rb[1].force_internal[k]=0.0;
                 }
 
                 //3-DOF solver to get updated velocities
                 specs.ThreeDOF_Solver(dt);
-                nodal_detect_contact(nodaldata,geom,specs.mass_tolerance,specs.mem_compaction_vnew);
+                amrex::GpuArray<amrex::GpuArray<amrex::Real,AMREX_SPACEDIM>,numrigidbodies> velocity;
+                for(int j=0;j<numrigidbodies;j++)
+                {
+                	for(int k=0;k<AMREX_SPACEDIM;k++)
+                	{
+                		velocity[j][k]=specs.Rb[j].velocity[k];
+                	}
+                }
+                mpm_pc.calculate_nodal_normal(nodaldata,specs.mass_tolerance,specs.order_scheme_directional,specs.periodic);
+                nodal_detect_contact(nodaldata,geom,specs.mass_tolerance,velocity);
                 for(int j=0;j<specs.no_of_rigidbodies_present;j++)
                 {
                 	mpm_pc.UpdateRigidParticleVelocities(j,specs.Rb[j].velocity);
@@ -515,8 +544,7 @@ int main (int argc, char* argv[])
 
             }
 
-            //update velocity on nodes
-            nodal_update(nodaldata,dt,specs.mass_tolerance);
+
 
             //impose bcs at nodes
             nodal_bcs(	geom,nodaldata,
@@ -701,26 +729,7 @@ int main (int argc, char* argv[])
                             break;
                         case(8):    CalculateInterpolationError(geom, nodaldata,STRESS_INDEX);
                                     break;
-                        case(9):	/*mpm_pc.deposit_onto_grid(nodaldata,
-                                          specs.gravity,
-                                          specs.external_loads_present,
-                                          specs.force_slab_lo,
-                                          specs.force_slab_hi,
-                                          specs.extforce,
-                                          0,
-                                          2,
-                                          specs.mass_tolerance,
-                                          order_surface_integral,
-                                          specs.periodic);
-                                          CalculateSurfaceIntegralOnBG(geom, nodaldata,STRESS_INDEX,Fy_bottom);
-                                          Fy_bottom=-1*Fy_bottom;
-                                          amrex::Print()<<"\n Fy = "<<Fy_bottom;
-                                          mpm_pc.CalculateSurfaceIntegralTop(specs.gravity,Fy_top,Fy_bottom);
-                                          specs.mem_compaction_vnew = mpm_pc.GetVelPiston(dt,specs.mem_compaction_vold,specs.gravity,Fy_top);
-                                          nodal_detect_contact(nodaldata,specs.mass_tolerance,specs.mem_compaction_vnew);
-                                          specs.mem_compaction_vold=specs.mem_compaction_vnew;
-                                          ymin = mpm_pc.GetPosPiston();
-                                          PrintToFile("Spring.out")<<time<<"\t"<<ymin<<"\n";*/
+                        case(9):
                                     break;
                         case(10):	//Get oscillations of a single spring under self weight
                                     ymax = mpm_pc.GetPosSpring()+specs.spring_alone_exact_delta;
@@ -779,7 +788,7 @@ int main (int argc, char* argv[])
         }
 
         mpm_pc.Redistribute();
-        //mpm_pc.fillNeighbors();
+        mpm_pc.fillNeighbors();
         mpm_pc.writeParticles(specs.prefix_particlefilename, specs.num_of_digits_in_filenames,output_it+1);
 
         pltfile = amrex::Concatenate(specs.prefix_gridfilename, output_it+1, specs.num_of_digits_in_filenames);

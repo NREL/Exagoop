@@ -24,7 +24,7 @@
 #define NCOMP_TENSOR 6
 #define NCOMP_FULLTENSOR 9
 
-#define NUM_STATES 16
+#define NUM_STATES 20
 #define MASS_INDEX 0
 #define VELX_INDEX 1
 #define VELY_INDEX 2
@@ -41,6 +41,11 @@
 #define VELZ_RIGID_INDEX 13
 #define MASS_RIGID_INDEX 14
 #define STRESS_INDEX 15
+#define RIGID_BODY_ID 16
+#define NORMALX 17
+#define NORMALY 18
+#define NORMALZ 19
+
 
 
 #define XX 0

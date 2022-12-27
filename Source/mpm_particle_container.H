@@ -22,7 +22,7 @@ public:
     
     }
 
-    void InitParticles (const std::string & filename,Real &total_mass, Real &total_vol, Real &total_rigid_mass, int &index_rigid_body_read_so_far);
+    void InitParticles (const std::string & filename,Real &total_mass, Real &total_vol, Real &total_rigid_mass, int &index_rigid_body_read_so_far, int &ifrigidnodespresent);
 
     void InitParticles (Real mincoords[AMREX_SPACEDIM],Real maxcoords[AMREX_SPACEDIM], 
         Real vel[AMREX_SPACEDIM],
@@ -47,7 +47,7 @@ public:
     void WriteHeader(const std::string& name, bool is_checkpoint, amrex::Real cur_time, int nstep, int EB_generate_max_level, int output_it) const;
     void readCheckpointFile(std::string & restart_chkfile, int &nstep, double &cur_time, int &output_it);
     int checkifrigidnodespresent();
-    void  Calculate_Total_Mass_RigidParticles(int body_id, amrex::Real total_mass);
+    void  Calculate_Total_Mass_RigidParticles(int body_id, amrex::Real &total_mass);
     amrex::Real Calculate_Total_Vol_RigidParticles(int body_id);
     amrex::Real GetPosPiston();
     amrex::Real GetPosSpring();
@@ -62,6 +62,11 @@ public:
                            amrex::Real mass_tolerance,
 			   GpuArray<int, AMREX_SPACEDIM> order_scheme_directional,
 			   GpuArray<int, AMREX_SPACEDIM> periodic);
+
+    void calculate_nodal_normal (	MultiFab& nodaldata,
+			 	 	 	 	 	 	 	amrex::Real mass_tolerance,
+										GpuArray<int,AMREX_SPACEDIM> order_scheme_directional,
+										GpuArray<int,AMREX_SPACEDIM> periodic);
 
     void deposit_onto_grid_rigidnodesonly(MultiFab& nodaldata,
                                Array<Real,AMREX_SPACEDIM> gravity,
