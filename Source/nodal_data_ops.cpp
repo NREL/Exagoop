@@ -159,7 +159,7 @@ void nodal_update(MultiFab &nodaldata,const amrex::Real& dt, const amrex::Real& 
     }
 }
 
-void nodal_detect_contact(MultiFab &nodaldata,const Geometry geom,amrex::Real& contact_tolerance,amrex::Real vely)
+void nodal_detect_contact(MultiFab &nodaldata,const Geometry geom,amrex::Real& contact_tolerance,amrex::GpuArray<amrex::GpuArray<amrex::Real,AMREX_SPACEDIM>,numrigidbodies> velocity)
 {
 	const auto plo = geom.ProbLoArray();
 	const auto phi = geom.ProbHiArray();
@@ -172,34 +172,34 @@ void nodal_detect_contact(MultiFab &nodaldata,const Geometry geom,amrex::Real& c
 
         Array4<Real> nodal_data_arr=nodaldata.array(mfi);
 
-        amrex::Real normaly=1.0;
 
         amrex::ParallelFor(nodalbox,[=]
         AMREX_GPU_DEVICE (int i,int j,int k) noexcept
         {
-            if(nodal_data_arr(i,j,k,MASS_INDEX) >contact_tolerance and nodal_data_arr(i,j,k,MASS_RIGID_INDEX)>contact_tolerance)
+            if(nodal_data_arr(i,j,k,MASS_INDEX) >contact_tolerance and nodal_data_arr(i,j,k,MASS_RIGID_INDEX)>contact_tolerance and int(nodal_data_arr(i,j,k,RIGID_BODY_ID))!=-1)
             {
-            	amrex::Real y_coordinate=plo[1]+j*dx[1];
-            	amrex::Real contact_alpha;
-            	if(y_coordinate>0.000235)
+            	amrex::Real contact_alpha=0.0;
+            	for(int d=0;d<AMREX_SPACEDIM;d++)
             	{
-            		contact_alpha = (nodal_data_arr(i,j,k,VELX_INDEX+1)-vely)*normaly;
-            	}
-            	else
-            	{
-            		contact_alpha = (nodal_data_arr(i,j,k,VELX_INDEX+1)-0.0)*-normaly;
+            		contact_alpha+= (nodal_data_arr(i,j,k,VELX_INDEX+d)-velocity[int(nodal_data_arr(i,j,k,RIGID_BODY_ID))][d])*nodal_data_arr(i,j,k,NORMALX+d);
             	}
 
            		if(contact_alpha>=0)
            		{
-           			if(y_coordinate>0.000235)
+           			amrex::Real V_relative=0.0;
+           			for(int d=0;d<AMREX_SPACEDIM;d++)
            			{
-           				nodal_data_arr(i,j,k,VELX_INDEX+1) =vely;
+           				V_relative+=(nodal_data_arr(i,j,k,VELX_INDEX+d)-velocity[int(nodal_data_arr(i,j,k,RIGID_BODY_ID))][d])*nodal_data_arr(i,j,k,NORMALX+d);
            			}
-           			else
+           			for(int d=0;d<AMREX_SPACEDIM;d++)
            			{
-           				nodal_data_arr(i,j,k,VELX_INDEX+1) =0.0;
+           				nodal_data_arr(i,j,k,VELX_INDEX+d)-= V_relative*(nodal_data_arr(i,j,k,NORMALX+d));
            			}
+           		}
+           		else
+           		{
+           			//nodal_data_arr(i,j,k,VELX_INDEX+1)=0.0;
+
            		}
             }
         });

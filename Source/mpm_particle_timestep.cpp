@@ -99,7 +99,9 @@ void MPMParticleContainer::updateVolume(const amrex::Real& dt)
 }
 
 void MPMParticleContainer::moveParticles(const amrex::Real& dt,
-        int bclo[AMREX_SPACEDIM],int bchi[AMREX_SPACEDIM],int lsetbc,
+        int bclo[AMREX_SPACEDIM],
+		int bchi[AMREX_SPACEDIM],
+		int lsetbc,
         amrex::Real wall_mu_lo[AMREX_SPACEDIM],
         amrex::Real wall_mu_hi[AMREX_SPACEDIM],
         amrex::Real wall_vel_lo[AMREX_SPACEDIM*AMREX_SPACEDIM],
@@ -117,6 +119,34 @@ void MPMParticleContainer::moveParticles(const amrex::Real& dt,
 
     bool using_levsets=mpm_ebtools::using_levelset_geometry;
     int lsref=mpm_ebtools::ls_refinement;
+
+    //Some GPU stuff again (Sreejith)
+    GpuArray<int,AMREX_SPACEDIM> bc_lo_arr;
+    GpuArray<int,AMREX_SPACEDIM> bc_hi_arr;
+
+    for(int d=0;d<AMREX_SPACEDIM;d++)
+    {
+    	bc_lo_arr[d]=bclo[d];
+    	bc_hi_arr[d]=bchi[d];
+    }
+
+    GpuArray<Real,AMREX_SPACEDIM*AMREX_SPACEDIM> wall_vel_lo_arr;
+    GpuArray<Real,AMREX_SPACEDIM*AMREX_SPACEDIM> wall_vel_hi_arr;
+
+    for(int d=0;d<AMREX_SPACEDIM*AMREX_SPACEDIM;d++)
+    {
+    	wall_vel_lo_arr[d]=wall_vel_lo[d];
+    	wall_vel_hi_arr[d]=wall_vel_hi[d];
+    }
+
+    GpuArray<Real,AMREX_SPACEDIM*AMREX_SPACEDIM> wall_mu_lo_arr;
+    GpuArray<Real,AMREX_SPACEDIM*AMREX_SPACEDIM> wall_mu_hi_arr;
+
+    for(int d=0;d<AMREX_SPACEDIM*AMREX_SPACEDIM;d++)
+    {
+    	wall_mu_lo_arr[d]=wall_mu_lo[d];
+    	wall_mu_hi_arr[d]=wall_mu_hi[d];
+    }
 
     int periodic[AMREX_SPACEDIM]={Geom(lev).isPeriodic(XDIR),
         Geom(lev).isPeriodic(YDIR),
@@ -145,7 +175,7 @@ void MPMParticleContainer::moveParticles(const amrex::Real& dt,
         {
             ParticleType& p = pstruct[i];
 
-            if(p.idata(intData::phase)==1 and p.idata(intData::rigid_body_id)==0)
+            if(p.idata(intData::phase)==1)
             {
             	p.pos(XDIR) += p.rdata(realData::xvel_prime) * dt;
             	p.pos(YDIR) += p.rdata(realData::yvel_prime) * dt;
@@ -212,13 +242,13 @@ void MPMParticleContainer::moveParticles(const amrex::Real& dt,
                 int dir=XDIR;
                 for(int d=0;d<AMREX_SPACEDIM;d++)
                 {
-                    wallvel[d]=wall_vel_lo[dir*AMREX_SPACEDIM+d];
+                    wallvel[d]=wall_vel_lo_arr[dir*AMREX_SPACEDIM+d];
                     relvel_in[d] -= wallvel[d];
                 }
                 
                 Real normaldir[AMREX_SPACEDIM]={1.0,0.0,0.0};
-                int modify_pos=applybc(relvel_in,relvel_out,wall_mu_lo[XDIR],
-                        normaldir,bclo[XDIR]);
+                //int modify_pos=applybc(relvel_in,relvel_out,wall_mu_lo[XDIR],normaldir,bclo[XDIR]);
+                int modify_pos=applybc(relvel_in,relvel_out,wall_mu_lo_arr[XDIR],normaldir,bc_lo_arr[XDIR]);
                 if(modify_pos)
                 {
                     p.pos(XDIR) = two*plo[XDIR] - p.pos(XDIR);
@@ -229,13 +259,13 @@ void MPMParticleContainer::moveParticles(const amrex::Real& dt,
                 int dir=XDIR;
                 for(int d=0;d<AMREX_SPACEDIM;d++)
                 {
-                    wallvel[d]=wall_vel_hi[dir*AMREX_SPACEDIM+d];
+                    wallvel[d]=wall_vel_hi_arr[dir*AMREX_SPACEDIM+d];
                     relvel_in[d] -= wallvel[d];
                 }
 
                 Real normaldir[AMREX_SPACEDIM]={-1.0,0.0,0.0};
-                int modify_pos=applybc(relvel_in,relvel_out,wall_mu_hi[XDIR],
-                        normaldir,bchi[XDIR]);
+                //int modify_pos=applybc(relvel_in,relvel_out,wall_mu_hi[XDIR],normaldir,bchi[XDIR]);
+                int modify_pos=applybc(relvel_in,relvel_out,wall_mu_hi_arr[XDIR],normaldir,bc_hi_arr[XDIR]);
                 if(modify_pos)
                 {
                     p.pos(XDIR) = two*phi[XDIR] - p.pos(XDIR);
@@ -246,13 +276,13 @@ void MPMParticleContainer::moveParticles(const amrex::Real& dt,
                 int dir=YDIR;
                 for(int d=0;d<AMREX_SPACEDIM;d++)
                 {
-                    wallvel[d]=wall_vel_lo[dir*AMREX_SPACEDIM+d];
+                    wallvel[d]=wall_vel_lo_arr[dir*AMREX_SPACEDIM+d];
                     relvel_in[d] -= wallvel[d];
                 }
                 
                 Real normaldir[AMREX_SPACEDIM]={0.0,1.0,0.0};
-                int modify_pos=applybc(relvel_in,relvel_out,wall_mu_lo[YDIR],
-                        normaldir,bclo[YDIR]);
+                //int modify_pos=applybc(relvel_in,relvel_out,wall_mu_lo[YDIR],normaldir,bclo[YDIR]);
+                int modify_pos=applybc(relvel_in,relvel_out,wall_mu_lo_arr[YDIR],normaldir,bc_lo_arr[YDIR]);
                 if(modify_pos)
                 {
                     p.pos(YDIR) = two*plo[YDIR] - p.pos(YDIR);
@@ -263,13 +293,13 @@ void MPMParticleContainer::moveParticles(const amrex::Real& dt,
                 int dir=YDIR;
                 for(int d=0;d<AMREX_SPACEDIM;d++)
                 {
-                    wallvel[d]=wall_vel_hi[dir*AMREX_SPACEDIM+d];
+                    wallvel[d]=wall_vel_hi_arr[dir*AMREX_SPACEDIM+d];
                     relvel_in[d] -= wallvel[d];
                 }
             
                 Real normaldir[AMREX_SPACEDIM]={0.0,-1.0,0.0};
-                int modify_pos=applybc(relvel_in,relvel_out,wall_mu_hi[YDIR],
-                        normaldir,bchi[YDIR]);
+                //int modify_pos=applybc(relvel_in,relvel_out,wall_mu_hi[YDIR],normaldir,bchi[YDIR]);
+                int modify_pos=applybc(relvel_in,relvel_out,wall_mu_hi[YDIR],normaldir,bc_hi_arr[YDIR]);
                 if(modify_pos)
                 {
                     p.pos(YDIR) = two*phi[YDIR] - p.pos(YDIR);
@@ -280,13 +310,13 @@ void MPMParticleContainer::moveParticles(const amrex::Real& dt,
                 int dir=ZDIR;
                 for(int d=0;d<AMREX_SPACEDIM;d++)
                 {
-                    wallvel[d]=wall_vel_lo[dir*AMREX_SPACEDIM+d];
+                    wallvel[d]=wall_vel_lo_arr[dir*AMREX_SPACEDIM+d];
                     relvel_in[d] -= wallvel[d];
                 }
             
                 Real normaldir[AMREX_SPACEDIM]={0.0,0.0,1.0};
-                int modify_pos=applybc(relvel_in,relvel_out,wall_mu_lo[ZDIR],
-                        normaldir,bclo[ZDIR]);
+                //int modify_pos=applybc(relvel_in,relvel_out,wall_mu_lo[ZDIR],normaldir,bclo[ZDIR]);
+                int modify_pos=applybc(relvel_in,relvel_out,wall_mu_lo_arr[ZDIR],normaldir,bc_lo_arr[ZDIR]);
                 if(modify_pos)
                 {
                     p.pos(ZDIR) = two*plo[ZDIR] - p.pos(ZDIR);
@@ -297,13 +327,13 @@ void MPMParticleContainer::moveParticles(const amrex::Real& dt,
                 int dir=ZDIR;
                 for(int d=0;d<AMREX_SPACEDIM;d++)
                 {
-                    wallvel[d]=wall_vel_hi[dir*AMREX_SPACEDIM+d];
+                    wallvel[d]=wall_vel_hi_arr[dir*AMREX_SPACEDIM+d];
                     relvel_in[d] -= wallvel[d];
                 }
             
                 Real normaldir[AMREX_SPACEDIM]={0.0,0.0,-1.0};
-                int modify_pos=applybc(relvel_in,relvel_out,wall_mu_hi[ZDIR],
-                        normaldir,bchi[ZDIR]);
+                //int modify_pos=applybc(relvel_in,relvel_out,wall_mu_hi[ZDIR],normaldir,bchi[ZDIR]);
+                int modify_pos=applybc(relvel_in,relvel_out,wall_mu_hi_arr[ZDIR],normaldir,bc_hi_arr[ZDIR]);
                 if(modify_pos)
                 {
                     p.pos(ZDIR) = two*phi[ZDIR] - p.pos(ZDIR);
@@ -370,7 +400,8 @@ amrex::Real MPMParticleContainer::GetPosPiston()
 
 }
 
-amrex::Real MPMParticleContainer::GetVelPiston(const amrex::Real& dt,amrex::Real v_old,amrex::Real damping_coeff,Array<Real,AMREX_SPACEDIM> gravity, amrex::Real Fy_top)
+
+void MPMParticleContainer::UpdateRigidParticleVelocities(int rigid_body_id,Array <amrex::Real,AMREX_SPACEDIM> velocity)
 {
     BL_PROFILE("MPMParticleContainer::GetVelPiston");
 
@@ -380,34 +411,6 @@ amrex::Real MPMParticleContainer::GetVelPiston(const amrex::Real& dt,amrex::Real
     const auto phi = Geom(lev).ProbHiArray();
     const auto dx = Geom(lev).CellSizeArray();
     auto& plev  = GetParticles(lev);
-    amrex::Real ymin = std::numeric_limits<amrex::Real>::max();
-    amrex::Real v_new;
-    amrex::Real m_tot;
-
-
-
-    using PType = typename MPMParticleContainer::SuperParticleType;
-    m_tot = amrex::ReduceSum(*this, [=]
-		AMREX_GPU_HOST_DEVICE (const PType& p) -> Real
-        {
-        	Real mscale;
-        	if(p.idata(intData::phase)==1)
-            {
-        		mscale = p.rdata(realData::mass);
-            }
-        	else
-        	{
-        		mscale = 0.0;
-        	}
-        	return(mscale);
-         });
-
-
-    //ymin = GetPosPiston();	Uncomment this only when using with a user specified spring constant
-
-    v_new=v_old+(fabs(Fy_top)-m_tot*fabs(gravity[YDIR])-damping_coeff*v_old)/m_tot*dt;
-    //v_new=v_old+(392699*(0.5-ymin)-m_tot*fabs(gravity[YDIR]))/m_tot*dt; //Testing the code by putting a spring const
-    //amrex::Print()<<"\n Fy_top weight = "<<m_tot<<" "<<fabs(Fy_top)<<" "<<v_new<<" "<<v_old;
 
     for(MFIter mfi = MakeMFIter(lev); mfi.isValid(); ++mfi)
         {
@@ -420,25 +423,19 @@ amrex::Real MPMParticleContainer::GetVelPiston(const amrex::Real& dt,amrex::Real
             const size_t np = aos.numParticles();
             ParticleType* pstruct = aos().dataPtr();
 
-            amrex::Array4<amrex::Real> lsetarr;
-
-
             // now we move the particles
             amrex::ParallelFor(np,[=]
             AMREX_GPU_DEVICE (int i) noexcept
             {
                 ParticleType& p = pstruct[i];
-                if(p.idata(intData::phase)==1)
+                if(p.idata(intData::phase)==1 and p.idata(intData::rigid_body_id)==rigid_body_id)
                 {
-                	p.rdata(realData::xvel_prime) =0.0;
-                	p.rdata(realData::yvel_prime) =v_new;
-                	p.rdata(realData::zvel_prime) =0.0;
+                	p.rdata(realData::xvel_prime) =velocity[0];
+                	p.rdata(realData::yvel_prime) =velocity[1];
+                	p.rdata(realData::zvel_prime) =velocity[2];
                 }
             });
         }
-
-
-    return(v_new);
 
 }
 

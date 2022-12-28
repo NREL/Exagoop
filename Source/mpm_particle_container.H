@@ -22,7 +22,7 @@ public:
     
     }
 
-    void InitParticles (const std::string & filename,Real &total_mass, Real &total_vol, Real &total_rigid_mass);
+    void InitParticles (const std::string & filename,Real &total_mass, Real &total_vol, Real &total_rigid_mass, int &index_rigid_body_read_so_far, int &ifrigidnodespresent);
 
     void InitParticles (Real mincoords[AMREX_SPACEDIM],Real maxcoords[AMREX_SPACEDIM], 
         Real vel[AMREX_SPACEDIM],
@@ -47,6 +47,8 @@ public:
     void WriteHeader(const std::string& name, bool is_checkpoint, amrex::Real cur_time, int nstep, int EB_generate_max_level, int output_it) const;
     void readCheckpointFile(std::string & restart_chkfile, int &nstep, double &cur_time, int &output_it);
     int checkifrigidnodespresent();
+    void  Calculate_Total_Mass_RigidParticles(int body_id, amrex::Real &total_mass);
+    amrex::Real Calculate_Total_Vol_RigidParticles(int body_id);
     amrex::Real GetPosPiston();
     amrex::Real GetPosSpring();
     void CalculateSurfaceIntegralTop(Array<Real,AMREX_SPACEDIM> gravity, Real &Fy_top, Real &Fy_bottom);
@@ -61,6 +63,11 @@ public:
 			   GpuArray<int, AMREX_SPACEDIM> order_scheme_directional,
 			   GpuArray<int, AMREX_SPACEDIM> periodic);
 
+    void calculate_nodal_normal (	MultiFab& nodaldata,
+			 	 	 	 	 	 	 	amrex::Real mass_tolerance,
+										GpuArray<int,AMREX_SPACEDIM> order_scheme_directional,
+										GpuArray<int,AMREX_SPACEDIM> periodic);
+
     void deposit_onto_grid_rigidnodesonly(MultiFab& nodaldata,
                                Array<Real,AMREX_SPACEDIM> gravity,
                                int external_loads_present,
@@ -73,7 +80,7 @@ public:
     			       GpuArray<int, AMREX_SPACEDIM> periodic);
 
     void checkifallparticlesinsidedomain();
-    amrex::Real GetVelPiston(const amrex::Real& dt,amrex::Real v_old,amrex::Real damping_coeff, Array<Real,AMREX_SPACEDIM> gravity,amrex::Real Fy_top);
+    void UpdateRigidParticleVelocities(int rigid_body_id,Array <amrex::Real,AMREX_SPACEDIM> velocity);
     void CalculateErrorP2G(MultiFab& nodaldata,amrex::Real p2g_L,amrex::Real p2g_f,int ncell);
 
     void interpolate_from_grid(MultiFab& nodaldata,
@@ -91,6 +98,10 @@ public:
     amrex::Real CalculateEffectiveSpringConstant(amrex::Real Area,amrex::Real L0);
     void CalculateVelocity(Real &Vcm);
     void CalculateVelocityCantilever(Real &Vcm);
+    void Calculate_Total_Number_of_rigid_particles(int body_id,int &total_num);
+    void Calculate_Total_Number_of_MaterialParticles(int &total_num);
+    void Calculate_Total_Mass_MaterialPoints(Real &total_mass);
+    void Calculate_Total_Vol_MaterialPoints(Real &total_vol);
     void CalculateErrorTVB(Real tvb_E,Real tvb_v0,Real tvb_L,Real tvb_rho,Real err);
     void WriteDeflectionTVB(Real tvb_E,Real tvb_v0,Real tvb_L,Real tvb_rho, Real time, int output_it);
     void WriteDeflectionCantilever();
