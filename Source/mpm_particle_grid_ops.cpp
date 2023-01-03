@@ -30,7 +30,37 @@ int MPMParticleContainer::checkifrigidnodespresent()
 
 }
 
-void MPMParticleContainer::Calculate_Total_Number_of_rigid_particles(int body_id,int &total_num)
+int MPMParticleContainer::get_num_of_bodies()
+{
+	int rigidnodespresent=0;
+	const int lev = 0;
+	auto& plev  = GetParticles(lev);
+
+	int num_of_body=0;
+	using PType = typename MPMParticleContainer::SuperParticleType;
+	num_of_body = amrex::ReduceMax(*this, [=]
+	    AMREX_GPU_HOST_DEVICE (const PType& p) -> Real
+	    {
+	        if(p.idata(intData::phase)==1)
+	        {
+	        	int rigidnodespresenttmp=p.idata(intData::rigid_body_id);
+				return(rigidnodespresenttmp);
+	        }
+	        else
+	        {
+	        	int rigidnodespresenttmp=0;
+	        	return(rigidnodespresenttmp);
+	        }
+	    });
+
+	#ifdef BL_USE_MPI
+	    ParallelDescriptor::ReduceIntMax(num_of_body);
+	#endif
+	return(num_of_body);
+
+}
+
+int MPMParticleContainer::Calculate_Total_Number_of_rigid_particles(int body_id)
 {
     const int lev = 0;
     const Geometry& geom = Geom(lev);
@@ -40,7 +70,7 @@ void MPMParticleContainer::Calculate_Total_Number_of_rigid_particles(int body_id
     const auto plo = geom.ProbLoArray();
     const auto domain = geom.Domain();
 
-    total_num=0;
+    int total_num=0;
 
     using PType = typename MPMParticleContainer::SuperParticleType;
     total_num = amrex::ReduceSum(*this, [=]
@@ -48,17 +78,21 @@ void MPMParticleContainer::Calculate_Total_Number_of_rigid_particles(int body_id
         {
     		if(p.idata(intData::phase)==1 and p.idata(intData::rigid_body_id)==body_id)
     		{
-    			return(1);
+    			int num=1;
+    			return(num);
     		}
     		else
     		{
-    			return(0);
+    			int num=0;
+    			return(num);
     		}
         });
 
 	#ifdef BL_USE_MPI
 	    ParallelDescriptor::ReduceIntSum(total_num);
 	#endif
+
+	    return(total_num);
 }
 
 void MPMParticleContainer::Calculate_Total_Number_of_MaterialParticles(int &total_num)

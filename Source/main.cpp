@@ -72,6 +72,7 @@ int main (int argc, char* argv[])
         Real output_time=zero;
         Real output_timePrint=zero;
         GpuArray <int,AMREX_SPACEDIM> order_surface_integral={3,3,3};
+        GpuArray<amrex::Real,AMREX_SPACEDIM> velocity_upper_jaw={0.0,0.0,0.0};
 
         //A few aesthetics
         int print_length=60;
@@ -124,8 +125,11 @@ int main (int argc, char* argv[])
         {
         	msg="\n Acquiring particle data (restarting from checkpoint file)";
         	PrintMessage(msg,print_length,true);
-            mpm_pc.readCheckpointFile(specs.restart_checkfile, steps,time,output_it);
-            PrintMessage(msg,print_length,true);
+            mpm_pc.readCheckpointFile(specs.restart_checkfile, steps,time,output_it,velocity_upper_jaw);
+            specs.ifrigidnodespresent=mpm_pc.checkifrigidnodespresent();
+            specs.no_of_rigidbodies_present = mpm_pc.get_num_of_bodies()+1;
+            mpm_pc.Calculate_Total_Vol_MaterialPoints(specs.total_vol);
+            PrintMessage(msg,print_length,false);
         }
         else if(!specs.use_autogen)
         {
@@ -198,11 +202,11 @@ int main (int argc, char* argv[])
         	        	specs.Rb[i].velocity={0.0,0.0,0.0};
         	        	specs.Rb[i].imposed_velocity={imposed_velocity[0],imposed_velocity[1],imposed_velocity[2]};
         	        }
-        	specs.Rb[0].velocity={0.0,0.0,0.0};
+        	specs.Rb[0].velocity={velocity_upper_jaw[0],velocity_upper_jaw[1],velocity_upper_jaw[2]};
         	mpm_pc.Calculate_Total_Mass_RigidParticles(0,specs.Rb[0].total_mass);
         	mpm_pc.Calculate_Total_Mass_RigidParticles(1,specs.Rb[1].total_mass);
-        	mpm_pc.Calculate_Total_Number_of_rigid_particles(0,specs.Rb[0].num_of_mp);
-        	mpm_pc.Calculate_Total_Number_of_rigid_particles(1,specs.Rb[1].num_of_mp);
+        	specs.Rb[0].num_of_mp=mpm_pc.Calculate_Total_Number_of_rigid_particles(0);
+        	specs.Rb[1].num_of_mp=mpm_pc.Calculate_Total_Number_of_rigid_particles(1);
         }
 
 
@@ -334,31 +338,31 @@ int main (int argc, char* argv[])
                     case(1):	//Axial vibration of continuum bar
                         mpm_pc.CalculateVelocity(Vmnum);
                         Vmex = mpm_pc.CalculateExactVelocity(specs.axial_bar_modenumber,specs.axial_bar_E,specs.axial_bar_rho,specs.axial_bar_v0,specs.axial_bar_L,time);
-                        PrintToFile("AxialBarVel.out")<<time<<"\t"<<Vmex<<"\t"<<Vmnum<<"\n";
+                        //PrintToFile("AxialBarVel.out")<<time<<"\t"<<Vmex<<"\t"<<Vmnum<<"\n";
                         mpm_pc.CalculateEnergies(TKE,TSE);
                         TE=TKE+TSE;
                         PrintToFile("AxialBarEnergy.out")<<time<<"\t"<<TKE<<"\t"<<TSE<<"\t"<<TE<<"\n";
                         break;
                     case(2):	//Dam break
                         mpm_pc.FindWaterFront(Xwf);
-                        PrintToFile("DamBreakWaterfront.out")<<time/sqrt(specs.dam_break_H1/specs.dam_break_g)<<"\t"<<Xwf/specs.dam_break_H1<<"\n";
+                        //PrintToFile("DamBreakWaterfront.out")<<time/sqrt(specs.dam_break_H1/specs.dam_break_g)<<"\t"<<Xwf/specs.dam_break_H1<<"\n";
                         break;
                     case(3):	//Elastic collision of disks
                         mpm_pc.CalculateEnergies(TKE,TSE);
                         TE=TKE+TSE;
-                        PrintToFile("ElasticDiskCollisionEnergy.out")<<time<<"\t"<<TKE<<"\t"<<TSE<<"\t"<<TE<<"\n";
+                        //PrintToFile("ElasticDiskCollisionEnergy.out")<<time<<"\t"<<TKE<<"\t"<<TSE<<"\t"<<TE<<"\n";
                         break;
                     case(4):	//Static deflection of beam under gravity
                         mpm_pc.CalculateVelocityCantilever(Vmnum);
                         Vmex = 0.0;
-                        PrintToFile("CantileverVel.out")<<time<<"\t"<<Vmex<<"\t"<<Vmnum<<"\n";
+                        //PrintToFile("CantileverVel.out")<<time<<"\t"<<Vmex<<"\t"<<Vmnum<<"\n";
                         mpm_pc.CalculateEnergies(TKE,TSE);
                         TE=TKE+TSE;
-                        PrintToFile("CantileverEnergy.out")<<time<<"\t"<<TKE<<"\t"<<TSE<<"\t"<<TE<<"\n";
+                        //PrintToFile("CantileverEnergy.out")<<time<<"\t"<<TKE<<"\t"<<TSE<<"\t"<<TE<<"\n";
                         break;
                     case(5):	//Transverse vibration of a bar
                         mpm_pc.CalculateErrorTVB(specs.tvb_E,specs.tvb_v0,specs.tvb_L,specs.tvb_rho,err);
-                        PrintToFile("TVB_Error.out")<<time<<"\t"<<TKE<<"\t"<<TSE<<"\t"<<TE<<"\n";
+                        //PrintToFile("TVB_Error.out")<<time<<"\t"<<TKE<<"\t"<<TSE<<"\t"<<TE<<"\n";
                         break;
                     case(6):    //Check function reconstruction and convergence
                         mpm_pc.CalculateErrorP2G(nodaldata,specs.p2g_L,specs.p2g_f,specs.p2g_ncell);
@@ -373,11 +377,11 @@ int main (int argc, char* argv[])
                                                  specs.order_scheme_directional,
                                                  specs.periodic);
                         CalculateSurfaceIntegralOnBG(geom, nodaldata,STRESS_INDEX,err);
-                        PrintToFile("Weight.out")<<time<<"\t"<<err<<"\t"<<-specs.total_mass*9.81<<"\n";
+                        //PrintToFile("Weight.out")<<time<<"\t"<<err<<"\t"<<-specs.total_mass*9.81<<"\n";
                         break;
                     case(8): 	CalculateInterpolationError(geom, nodaldata,STRESS_INDEX);
                                 break;
-                    case(9):    specs.mem_compaction_L0=specs.total_vol/specs.mem_compaction_area;
+                    case(9):    specs.mem_compaction_L0=specs.mem_compaction_volume/specs.mem_compaction_area;
                                 break;
                     case(10):   //Spring alone deflection problem.
                                 //Calculate the eaxct steady state deflection
@@ -394,7 +398,7 @@ int main (int argc, char* argv[])
             {
                 mpm_pc.CalculateEnergies(TKE,TSE);
                 TE=TKE+TSE;
-                PrintToFile("Energy.out")<<time<<"\t"<<TKE<<"\t"<<TSE<<"\t"<<TE<<"\n";
+                //PrintToFile("Energy.out")<<time<<"\t"<<TKE<<"\t"<<TSE<<"\t"<<TE<<"\n";
             }
         }
         PrintMessage(msg,print_length,false);
@@ -497,6 +501,7 @@ int main (int argc, char* argv[])
 
         amrex::Real vel_piston_old=0.0;
 
+
         while((steps < specs.maxsteps) and (time < specs.final_time))
         {
         	auto iter_time_start = amrex::second();
@@ -595,6 +600,10 @@ int main (int argc, char* argv[])
                 		velocity[j][k]=specs.Rb[j].velocity[k];
                 	}
                 }
+                velocity_upper_jaw[0]=velocity[0][0];
+                velocity_upper_jaw[1]=velocity[0][1];
+                velocity_upper_jaw[2]=velocity[0][2];
+
                 mpm_pc.calculate_nodal_normal(nodaldata,specs.mass_tolerance,specs.order_scheme_directional,specs.periodic);
                 nodal_detect_contact(nodaldata,geom,specs.mass_tolerance,velocity);
                 for(int j=0;j<specs.no_of_rigidbodies_present;j++)
@@ -605,7 +614,7 @@ int main (int argc, char* argv[])
 
                 Real ymin;
                 ymin = mpm_pc.GetPosPiston();
-                PrintToFile("Spring.out")<<time<<"\t"<<ymin<<" "<<specs.Rb[0].velocity[1]<<" "<<specs.Rb[0].force_internal[1]<<"\n";
+                //PrintToFile("Spring.out")<<time<<"\t"<<ymin<<" "<<specs.Rb[0].velocity[1]<<" "<<specs.Rb[0].force_internal[1]<<"\n";
 
             }
 
@@ -750,31 +759,31 @@ int main (int argc, char* argv[])
                         case(1):	//Axial vibration of continuum bar
                             mpm_pc.CalculateVelocity(Vmnum);
                             Vmex = mpm_pc.CalculateExactVelocity(specs.axial_bar_modenumber,specs.axial_bar_E,specs.axial_bar_rho,specs.axial_bar_v0,specs.axial_bar_L,time);
-                            PrintToFile("AxialBarVel.out")<<time<<"\t"<<Vmex<<"\t"<<Vmnum<<"\n";
+                            //PrintToFile("AxialBarVel.out")<<time<<"\t"<<Vmex<<"\t"<<Vmnum<<"\n";
                             mpm_pc.CalculateEnergies(TKE,TSE);
                             TE=TKE+TSE;
                             PrintToFile("AxialBarEnergy.out")<<time<<"\t"<<TKE<<"\t"<<TSE<<"\t"<<TE<<"\n";
                             break;
                         case(2):	//Dam break
                             mpm_pc.FindWaterFront(Xwf);
-                            PrintToFile("DamBreakWaterfront.out")<<time/sqrt(specs.dam_break_H1/specs.dam_break_g)<<"\t"<<Xwf/specs.dam_break_H1<<"\n";
+                            //PrintToFile("DamBreakWaterfront.out")<<time/sqrt(specs.dam_break_H1/specs.dam_break_g)<<"\t"<<Xwf/specs.dam_break_H1<<"\n";
                             break;
                         case(3):	//Elastic collision of disks
                             mpm_pc.CalculateEnergies(TKE,TSE);
                             TE=TKE+TSE;
-                            PrintToFile("ElasticDiskCollisionEnergy.out")<<time<<"\t"<<TKE<<"\t"<<TSE<<"\t"<<TE<<"\n";
+                            //PrintToFile("ElasticDiskCollisionEnergy.out")<<time<<"\t"<<TKE<<"\t"<<TSE<<"\t"<<TE<<"\n";
                             break;
                         case(4):	//Static deflection of a beam under gravity
                             mpm_pc.CalculateVelocityCantilever(Vmnum);
                             Vmex = 0.0;
-                            PrintToFile("CantileverVel.out")<<time<<"\t"<<Vmex<<"\t"<<Vmnum<<"\n";
+                            //PrintToFile("CantileverVel.out")<<time<<"\t"<<Vmex<<"\t"<<Vmnum<<"\n";
                             mpm_pc.CalculateEnergies(TKE,TSE);
                             TE=TKE+TSE;
-                            PrintToFile("CantileverEnergy.out")<<time<<"\t"<<TKE<<"\t"<<TSE<<"\t"<<TE<<"\n";
+                            //PrintToFile("CantileverEnergy.out")<<time<<"\t"<<TKE<<"\t"<<TSE<<"\t"<<TE<<"\n";
                             break;
                         case(5):	//Transverse vibration of a bar
                             mpm_pc.CalculateErrorTVB(specs.tvb_E,specs.tvb_v0,specs.tvb_L,specs.tvb_rho,err);
-                            PrintToFile("TVB_Error.out")<<time<<"\t"<<TKE<<"\t"<<TSE<<"\t"<<TE<<"\n";
+                            //PrintToFile("TVB_Error.out")<<time<<"\t"<<TKE<<"\t"<<TSE<<"\t"<<TE<<"\n";
                             break;
                         case(6):    //Check function reconstruction and convergence
                             mpm_pc.CalculateErrorP2G(nodaldata,specs.p2g_L,specs.p2g_f,specs.p2g_ncell);
@@ -789,7 +798,7 @@ int main (int argc, char* argv[])
                                                      order_surface_integral,
                                                      specs.periodic);
                             CalculateSurfaceIntegralOnBG(geom, nodaldata,STRESS_INDEX,err);
-                            PrintToFile("Weight.out")<<time<<"\t"<<err<<"\t"<<-specs.total_mass*9.81<<"\n";
+                            //PrintToFile("Weight.out")<<time<<"\t"<<err<<"\t"<<-specs.total_mass*9.81<<"\n";
                             break;
                         case(8):    CalculateInterpolationError(geom, nodaldata,STRESS_INDEX);
                                     break;
@@ -797,7 +806,7 @@ int main (int argc, char* argv[])
                                     break;
                         case(10):	//Get oscillations of a single spring under self weight
                                     ymax = mpm_pc.GetPosSpring()+specs.spring_alone_exact_delta;
-                                    PrintToFile("Spring.out")<<time<<"\t"<<ymax<<"\t"<<specs.spring_alone_exact_deflection<<"\n";
+                                    //PrintToFile("Spring.out")<<time<<"\t"<<ymax<<"\t"<<specs.spring_alone_exact_deflection<<"\n";
                                     break;
                         default:	//
                                     amrex::Print()<<"\nTest number = "<<specs.test_number;
@@ -809,7 +818,7 @@ int main (int argc, char* argv[])
                 {
                     mpm_pc.CalculateEnergies(TKE,TSE);
                     TE=TKE+TSE;
-                    PrintToFile("Energy.out")<<time<<"\t"<<TKE<<"\t"<<TSE<<"\t"<<TE<<"\n";
+                    //PrintToFile("Energy.out")<<time<<"\t"<<TKE<<"\t"<<TSE<<"\t"<<TE<<"\n";
                 }
             }
 
@@ -822,7 +831,7 @@ int main (int argc, char* argv[])
 
                 output_it++;
                 mpm_pc.writeParticles(specs.prefix_particlefilename, specs.num_of_digits_in_filenames, output_it);
-                mpm_pc.writeParticlesTecplot(specs.prefix_particlefilename, specs.num_of_digits_in_filenames, output_it);
+                //mpm_pc.writeParticlesTecplot(specs.prefix_particlefilename, specs.num_of_digits_in_filenames, output_it);
 
 
                 pltfile = amrex::Concatenate(specs.prefix_gridfilename, output_it,specs.num_of_digits_in_filenames );
@@ -842,7 +851,7 @@ int main (int argc, char* argv[])
                 output_time=zero;
                 BL_PROFILE_VAR_STOP(outputs);
 
-                mpm_pc.writeCheckpointFile(specs.prefix_checkpointfilename, specs.num_of_digits_in_filenames, time,steps,output_it);
+                mpm_pc.writeCheckpointFile(specs.prefix_checkpointfilename, specs.num_of_digits_in_filenames, time,steps,output_it, velocity_upper_jaw);
             }
             auto time_per_iter=amrex::second()-iter_time_start;
             if (output_timePrint >= specs.screen_output_time)

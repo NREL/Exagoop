@@ -168,6 +168,7 @@ class MPMspecs
         Real total_vol = 0.0;
         Real mem_compaction_vnew=0.0;
         Real mem_compaction_vold=0.0;
+        Real mem_compaction_volume=0.0;
         int stress_update_scheme=1;
         int calculate_strain_based_on_delta=0;
         
@@ -269,6 +270,7 @@ class MPMspecs
             pp.query("p2g_ncell",p2g_ncell);
 
             pp.query("mem_compaction_area",mem_compaction_area);
+            pp.query("mem_compaction_volume",mem_compaction_volume);
             pp.query("mem_compaction_dampcoeff",mem_compaction_dampcoeff);
             pp.query("mem_compaction_restoring_force_calc_method",mem_compaction_restoring_force_calc_method);
 

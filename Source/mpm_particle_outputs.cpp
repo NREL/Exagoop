@@ -101,7 +101,7 @@ void MPMParticleContainer::writeParticlesTecplot(std::string prefix_particlefile
 	const auto plo = geom.ProbLoArray();
 	std::string pltfile = amrex::Concatenate(prefix_particlefilename, n, num_of_digits_in_filenames);
 	pltfile=pltfile+".dat";
-	PrintToFile(pltfile)<<"variables=x,y,z";
+	//PrintToFile(pltfile)<<"variables=x,y,z";
 
 	for(MFIter mfi = MakeMFIter(lev); mfi.isValid(); ++mfi)
 	{
@@ -127,7 +127,7 @@ void MPMParticleContainer::writeParticlesTecplot(std::string prefix_particlefile
 			xp[XDIR]=p.pos(XDIR);
 			xp[YDIR]=p.pos(YDIR);
 			xp[ZDIR]=p.pos(ZDIR);
-			PrintToFile(pltfile)<<"\n"<<xp[XDIR]<<" "<<xp[YDIR]<<" "<<xp[ZDIR];
+			//PrintToFile(pltfile)<<"\n"<<xp[XDIR]<<" "<<xp[YDIR]<<" "<<xp[ZDIR];
 		});
 	}
 
@@ -208,7 +208,7 @@ void MPMParticleContainer::writeParticles(std::string prefix_particlefilename, i
                   writeflags_int, real_data_names, int_data_names);
 }
 
-void MPMParticleContainer::WriteHeader(const std::string& name, bool is_checkpoint, amrex::Real cur_time, int nstep, int EB_generate_max_level, int output_it) const
+void MPMParticleContainer::WriteHeader(const std::string& name, bool is_checkpoint, amrex::Real cur_time, int nstep, int EB_generate_max_level, int output_it, GpuArray<amrex::Real,AMREX_SPACEDIM> vel) const
 {
     if(ParallelDescriptor::IOProcessor())
     {
@@ -241,12 +241,15 @@ void MPMParticleContainer::WriteHeader(const std::string& name, bool is_checkpoi
 #endif
 
         HeaderFile << cur_time << "\n";
+        HeaderFile << vel[0] << "\n";
+        HeaderFile << vel[1] << "\n";
+        HeaderFile << vel[2] << "\n";
 
 
     }
 }
 
-void MPMParticleContainer::writeCheckpointFile(std::string prefix_particlefilename, int num_of_digits_in_filenames, amrex::Real cur_time, int nstep, int output_it)
+void MPMParticleContainer::writeCheckpointFile(std::string prefix_particlefilename, int num_of_digits_in_filenames, amrex::Real cur_time, int nstep, int output_it, GpuArray<amrex::Real,AMREX_SPACEDIM> vel)
 {
 	BL_PROFILE("MPMParticleContainer::writeCheckpointFile");
 	const int m_nstep = output_it;
@@ -256,7 +259,7 @@ void MPMParticleContainer::writeCheckpointFile(std::string prefix_particlefilena
 	const std::string& checkpointname = amrex::Concatenate(prefix_particlefilename, m_nstep, num_of_digits_in_filenames);
 	amrex::PreBuildDirectorHierarchy(checkpointname, level_prefix, finest_level + 1, true);
 	bool is_checkpoint = true;
-	WriteHeader(checkpointname, is_checkpoint, cur_time, nstep, EB_generate_max_level,output_it);
+	WriteHeader(checkpointname, is_checkpoint, cur_time, nstep, EB_generate_max_level,output_it,vel);
 
 	amrex::Vector<std::string> real_data_names;
 	real_data_names.push_back("radius");
@@ -309,7 +312,7 @@ void GotoNextLine(std::istream& is)
            is.ignore(bl_ignore_max, '\n');
 }
 
-void MPMParticleContainer::readCheckpointFile(std::string & restart_chkfile, int &nstep, double &cur_time, int &output_it)
+void MPMParticleContainer::readCheckpointFile(std::string & restart_chkfile, int &nstep, double &cur_time, int &output_it, GpuArray<amrex::Real,AMREX_SPACEDIM> &vel )
 {
 	BL_PROFILE("MPMParticleContainer::readCheckpointFile");
 
@@ -367,12 +370,34 @@ void MPMParticleContainer::readCheckpointFile(std::string & restart_chkfile, int
 	      // Skip line and read current time
 	      is >> cur_time;
 	      GotoNextLine(is);
+
+	      is>>vel[0];
+	      GotoNextLine(is);
+
+	      is>>vel[1];
+	      GotoNextLine(is);
+
+	      is>>vel[2];
+	      GotoNextLine(is);
+
+
+
 	   }
 	#else
 
 	   // Current time
 	   is >> cur_time;
 	   GotoNextLine(is);
+
+	   is>>vel[0];
+	   	      GotoNextLine(is);
+
+	   	      is>>vel[1];
+	   	      GotoNextLine(is);
+
+	   	      is>>vel[2];
+	   	      GotoNextLine(is);
+
 	#endif
 
 	   Restart(restart_chkfile,"particles", true);
