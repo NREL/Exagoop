@@ -93,6 +93,46 @@ void MPMParticleContainer::update_density_field(MultiFab& densdata,int refratio,
     densdata.SumBoundary(geom.periodicity());
 }
 
+void MPMParticleContainer::writeParticlesTecplot(std::string prefix_particlefilename, int num_of_digits_in_filenames, const int n)
+{
+	const int lev = 0;
+	const Geometry& geom = Geom(lev);
+	auto& plev  = GetParticles(lev);
+	const auto plo = geom.ProbLoArray();
+	std::string pltfile = amrex::Concatenate(prefix_particlefilename, n, num_of_digits_in_filenames);
+	pltfile=pltfile+".dat";
+	PrintToFile(pltfile)<<"variables=x,y,z";
+
+	for(MFIter mfi = MakeMFIter(lev); mfi.isValid(); ++mfi)
+	{
+		const amrex::Box& box = mfi.tilebox();
+	    Box nodalbox = convert(box, {1, 1, 1});
+
+	    int gid = mfi.index();
+	    int tid = mfi.LocalTileIndex();
+	    auto index = std::make_pair(gid, tid);
+
+	    auto& ptile = plev[index];
+	    auto& aos   = ptile.GetArrayOfStructs();
+	    int np = aos.numRealParticles();
+	    int ng =aos.numNeighborParticles();
+	    int nt = np+ng;
+
+	    ParticleType* pstruct = aos().dataPtr();
+	    amrex::ParallelFor(nt,[=]
+				AMREX_GPU_DEVICE (int i) noexcept
+	    {
+	    	ParticleType& p = pstruct[i];
+	    	amrex::Real xp[AMREX_SPACEDIM];
+			xp[XDIR]=p.pos(XDIR);
+			xp[YDIR]=p.pos(YDIR);
+			xp[ZDIR]=p.pos(ZDIR);
+			PrintToFile(pltfile)<<"\n"<<xp[XDIR]<<" "<<xp[YDIR]<<" "<<xp[ZDIR];
+		});
+	}
+
+}
+
 void MPMParticleContainer::writeParticles(std::string prefix_particlefilename, int num_of_digits_in_filenames, const int n)
 {
     BL_PROFILE("MPMParticleContainer::writeParticles");

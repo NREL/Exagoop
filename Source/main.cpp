@@ -176,12 +176,14 @@ int main (int argc, char* argv[])
         	Array<int,numrigidbodies> enable_weight;
         	Array<int,numrigidbodies> enable_damping_force;
         	Array<Real,numrigidbodies> Damping_Coefficient;
+        	Array<Real,numrigidbodies> imposed_velocity;
 
         	ParmParse pp("mpm");
         	pp.get("position_update_method",position_update_method);
         	pp.get("enable_weight",enable_weight);
         	pp.get("enable_damping_force",enable_damping_force);
         	pp.get("Damping_Coefficient",Damping_Coefficient);
+        	pp.get("imposed_velocity",imposed_velocity);
 
         	for(int i=0;i<specs.no_of_rigidbodies_present;i++)
         	        {
@@ -194,8 +196,9 @@ int main (int argc, char* argv[])
         	        	specs.Rb[i].force_external={0.0,0.0,0.0};
         	        	specs.Rb[i].force_internal={0.0,0.0,0.0};
         	        	specs.Rb[i].velocity={0.0,0.0,0.0};
-        	        	specs.Rb[i].imposed_velocity={0.0,0.0,0.0};
+        	        	specs.Rb[i].imposed_velocity={imposed_velocity[0],imposed_velocity[1],imposed_velocity[2]};
         	        }
+        	specs.Rb[0].velocity={0.0,0.0,0.0};
         	mpm_pc.Calculate_Total_Mass_RigidParticles(0,specs.Rb[0].total_mass);
         	mpm_pc.Calculate_Total_Mass_RigidParticles(1,specs.Rb[1].total_mass);
         	mpm_pc.Calculate_Total_Number_of_rigid_particles(0,specs.Rb[0].num_of_mp);
@@ -597,11 +600,12 @@ int main (int argc, char* argv[])
                 for(int j=0;j<specs.no_of_rigidbodies_present;j++)
                 {
                 	mpm_pc.UpdateRigidParticleVelocities(j,specs.Rb[j].velocity);
+                	//amrex::Print()<<"\n Vel in update rigid particle "<<specs.Rb[j].velocity[0]<<" "<<specs.Rb[j].velocity[1]<<" "<<specs.Rb[j].velocity[2];
                 }
 
                 Real ymin;
                 ymin = mpm_pc.GetPosPiston();
-                PrintToFile("Spring.out")<<time<<"\t"<<ymin<<"\n";
+                PrintToFile("Spring.out")<<time<<"\t"<<ymin<<" "<<specs.Rb[0].velocity[1]<<" "<<specs.Rb[0].force_internal[1]<<"\n";
 
             }
 
@@ -672,7 +676,6 @@ int main (int argc, char* argv[])
                           specs.wall_vel_lo.data(),
                           specs.wall_vel_hi.data(),
                           dt);
-                //nodal_bcs(	geom, nodaldata, dt);
 
                 if(mpm_ebtools::using_levelset_geometry)
                 {
@@ -819,6 +822,8 @@ int main (int argc, char* argv[])
 
                 output_it++;
                 mpm_pc.writeParticles(specs.prefix_particlefilename, specs.num_of_digits_in_filenames, output_it);
+                mpm_pc.writeParticlesTecplot(specs.prefix_particlefilename, specs.num_of_digits_in_filenames, output_it);
+
 
                 pltfile = amrex::Concatenate(specs.prefix_gridfilename, output_it,specs.num_of_digits_in_filenames );
                 write_plot_file(pltfile,nodaldata,nodaldata_names,geom,ba,dm,time);
@@ -842,7 +847,19 @@ int main (int argc, char* argv[])
             auto time_per_iter=amrex::second()-iter_time_start;
             if (output_timePrint >= specs.screen_output_time)
             {
-            	Print()<<"\nIteration: "<<std::setw(10)<<steps<<",\t"<<"Time: "<<std::fixed<<std::setprecision(10)<<time<<",\tDt = "<<std::scientific<<std::setprecision(5)<<dt<<std::fixed<<std::setprecision(10)<<",\t Time/Iter = "<<time_per_iter;
+            	Print()<<"\nIteration: "<<std::setw(10)<<steps;
+            	if(time>=0.001)
+            	{
+            		Print()<<",\t"<<"Time: "<<std::fixed<<std::setprecision(10)<<time;
+            	}
+            	else
+            	{
+            		Print()<<",\t"<<"Time: "<<std::scientific<<std::setprecision(5)<<time;
+            	}
+            	Print()<<",\tDt = "<<std::scientific<<std::setprecision(5)<<dt;
+            	Print()<<std::fixed<<std::setprecision(10)<<",\t Time/Iter = "<<time_per_iter;
+
+            	//Print()<<"\nIteration: "<<std::setw(10)<<steps<<",\t"<<"Time: "<<std::fixed<<std::setprecision(10)<<time<<",\tDt = "<<std::scientific<<std::setprecision(5)<<dt<<std::fixed<<std::setprecision(10)<<",\t Time/Iter = "<<time_per_iter;
             	output_timePrint=zero;
             }
 

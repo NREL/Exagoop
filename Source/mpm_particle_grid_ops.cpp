@@ -44,7 +44,7 @@ void MPMParticleContainer::Calculate_Total_Number_of_rigid_particles(int body_id
 
     using PType = typename MPMParticleContainer::SuperParticleType;
     total_num = amrex::ReduceSum(*this, [=]
-        AMREX_GPU_HOST_DEVICE (const PType& p) -> Real
+        AMREX_GPU_HOST_DEVICE (const PType& p) -> int
         {
     		if(p.idata(intData::phase)==1 and p.idata(intData::rigid_body_id)==body_id)
     		{
@@ -75,7 +75,7 @@ void MPMParticleContainer::Calculate_Total_Number_of_MaterialParticles(int &tota
 
     using PType = typename MPMParticleContainer::SuperParticleType;
     total_num = amrex::ReduceSum(*this, [=]
-        AMREX_GPU_HOST_DEVICE (const PType& p) -> Real
+        AMREX_GPU_HOST_DEVICE (const PType& p) -> int
         {
     		if(p.idata(intData::phase)==0)
     		{

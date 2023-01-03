@@ -44,6 +44,7 @@ public:
     amrex::Real CalculateExactVelocity(int modenumber,amrex::Real E, amrex::Real rho, amrex::Real v0,amrex::Real L, amrex::Real time);
     void writeParticles (std::string prefix_particlefilename, int num_of_digits_in_filenames, const int n);
     void writeCheckpointFile(std::string prefix_particlefilename, int num_of_digits_in_filenames, amrex::Real cur_time,  int nstep, int output_it);
+    void writeParticlesTecplot (std::string prefix_particlefilename, int num_of_digits_in_filenames, const int n);
     void WriteHeader(const std::string& name, bool is_checkpoint, amrex::Real cur_time, int nstep, int EB_generate_max_level, int output_it) const;
     void readCheckpointFile(std::string & restart_chkfile, int &nstep, double &cur_time, int &output_it);
     int checkifrigidnodespresent();
