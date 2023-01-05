@@ -407,6 +407,10 @@ amrex::Real MPMParticleContainer::CalculateEffectiveSpringConstant(amrex::Real A
 		return(p.rdata(realData::volume));
 	});
 
+#ifdef BL_USE_MPI
+    ParallelDescriptor::ReduceRealSum(Total_vol);
+#endif
+
 	//Calculate the deflection
 	deflection = L0-Total_vol/Area;
 

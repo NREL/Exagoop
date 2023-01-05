@@ -574,7 +574,7 @@ int main (int argc, char* argv[])
                 {
                 	for(int k=0;k<AMREX_SPACEDIM;k++)
                 	{
-                		specs.Rb[j].force_external[k]=specs.Rb[j].total_mass*specs.Rb[j].gravity[k]+specs.Rb[j].Damping_Coefficient*specs.Rb[j].velocity[k];
+                		specs.Rb[j].force_external[k]=specs.Rb[j].total_mass*specs.Rb[j].gravity[k]-specs.Rb[j].Damping_Coefficient*specs.Rb[j].velocity[k];
                 	}
 
                 }
@@ -614,7 +614,7 @@ int main (int argc, char* argv[])
 
                 Real ymin;
                 ymin = mpm_pc.GetPosPiston();
-                //PrintToFile("Spring.out")<<time<<"\t"<<ymin<<" "<<specs.Rb[0].velocity[1]<<" "<<specs.Rb[0].force_internal[1]<<"\n";
+                PrintToFile("Spring.out")<<time<<"\t"<<ymin<<" "<<specs.Rb[0].velocity[1]<<" "<<specs.Rb[0].force_internal[1]<<"\n";
 
             }
 
@@ -831,7 +831,7 @@ int main (int argc, char* argv[])
 
                 output_it++;
                 mpm_pc.writeParticles(specs.prefix_particlefilename, specs.num_of_digits_in_filenames, output_it);
-                //mpm_pc.writeParticlesTecplot(specs.prefix_particlefilename, specs.num_of_digits_in_filenames, output_it);
+                mpm_pc.writeParticlesTecplot(specs.prefix_particlefilename, specs.num_of_digits_in_filenames, output_it);
 
 
                 pltfile = amrex::Concatenate(specs.prefix_gridfilename, output_it,specs.num_of_digits_in_filenames );
