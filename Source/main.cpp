@@ -142,9 +142,9 @@ int main (int argc, char* argv[])
 								 specs.no_of_rigidbodies_present,
 								 specs.ifrigidnodespresent);
             PrintMessage(msg,print_length,false);
-            if(specs.no_of_rigidbodies_present!=numrigidbodies)
+            if(specs.no_of_rigidbodies_present!=specs.num_of_rigid_bodies)
             {
-            	amrex::Print()<<"\n specs.no_of_rigidbodies_present= "<<specs.no_of_rigidbodies_present<<" "<<numrigidbodies;
+            	amrex::Print()<<"\n specs.no_of_rigidbodies_present= "<<specs.no_of_rigidbodies_present<<" "<<specs.num_of_rigid_bodies;
             	//amrex::Abort("\n Sorry! The number of rigid bodies defined in particles file and in constants.H file do not match. Aborting..");
             }
         }
@@ -160,9 +160,9 @@ int main (int argc, char* argv[])
             PrintMessage(msg,print_length,false);
         }
 
-        if(specs.ifrigidnodespresent==0)
+        if(specs.no_of_rigidbodies_present!=specs.num_of_rigid_bodies)
         {
-        	amrex::Print()<<"\n No rigid bodies present";
+        	amrex::Abort("\nThere seems to be a discrepancy between the number of rigid bodies specified in the input file and the number of rigid bodies in the particle input file. Please correct and continue the run\n");
         }
 
 
@@ -173,35 +173,56 @@ int main (int argc, char* argv[])
 
         //Setting up rigid particle setups
 
-        if(numrigidbodies!=0)
+        if(specs.num_of_rigid_bodies!=0)
         {
         	specs.Rb = new Rigid_Bodies[specs.no_of_rigidbodies_present];
-        	Array<int,numrigidbodies> position_update_method;
-        	Array<int,numrigidbodies> enable_weight;
-        	Array<int,numrigidbodies> enable_damping_force;
-        	Array<Real,numrigidbodies> Damping_Coefficient;
-        	Array<Real,numrigidbodies> imposed_velocity;
+
+        	Vector<int> input_flags;
+        	Vector<int> position_update_method;
+        	Vector<int> enable_weight;
+        	Vector<int> enable_damping_force;
+        	Vector<Real> Damping_Coefficient;
+        	Vector<Real> imposed_velocity;
 
         	ParmParse pp("mpm");
-        	pp.get("position_update_method",position_update_method);
-        	pp.get("enable_weight",enable_weight);
-        	pp.get("enable_damping_force",enable_damping_force);
-        	pp.get("Damping_Coefficient",Damping_Coefficient);
-        	pp.get("imposed_velocity",imposed_velocity);
+        	pp.queryarr("position_update_method",position_update_method);
+        	pp.queryarr("enable_weight",enable_weight);
+        	pp.queryarr("enable_damping_force",enable_damping_force);
+        	pp.queryarr("Damping_Coefficient",Damping_Coefficient);
+        	pp.queryarr("imposed_velocity",imposed_velocity);
+
+        	imposed_velocity.resize(AMREX_SPACEDIM*specs.num_of_rigid_bodies);
+        	position_update_method.resize(AMREX_SPACEDIM*specs.num_of_rigid_bodies);
+        	enable_weight.resize(AMREX_SPACEDIM*specs.num_of_rigid_bodies);
+        	enable_damping_force.resize(AMREX_SPACEDIM*specs.num_of_rigid_bodies);
+        	Damping_Coefficient.resize(AMREX_SPACEDIM*specs.num_of_rigid_bodies);
 
         	for(int i=0;i<specs.no_of_rigidbodies_present;i++)
-        	        {
-        	        	specs.Rb[i].Rigid_Body_Id=i;							//I am assuming that the particle files have rigid_body_ids starting from 0 and are consecutive integers.
-        	        	specs.Rb[i].gravity=specs.gravity;
-        	        	specs.Rb[i].position_update_method=position_update_method[i];
-        	        	specs.Rb[i].enable_weight=enable_weight[i];
-        	        	specs.Rb[i].enable_damping_force=enable_damping_force[i];
-        	        	specs.Rb[i].Damping_Coefficient=Damping_Coefficient[i];
-        	        	specs.Rb[i].force_external={0.0,0.0,0.0};
-        	        	specs.Rb[i].force_internal={0.0,0.0,0.0};
-        	        	specs.Rb[i].velocity={0.0,0.0,0.0};
-        	        	specs.Rb[i].imposed_velocity={imposed_velocity[0],imposed_velocity[1],imposed_velocity[2]};
-        	        }
+        	{
+        		for(int k=0;k<AMREX_SPACEDIM;k++)
+        		{
+        			specs.Rb[i].gravity[k]=specs.gravity[k];
+        			specs.Rb[i].imposed_velocity[k]=imposed_velocity[i*AMREX_SPACEDIM+k];
+
+        		}
+
+        		specs.Rb[i].Rigid_Body_Id=i;							//I am assuming that the particle files have rigid_body_ids starting from 0 and are consecutive integers.
+        		specs.Rb[i].position_update_method=position_update_method[i];
+        	    specs.Rb[i].enable_weight=enable_weight[i];
+        	    specs.Rb[i].enable_damping_force=enable_damping_force[i];
+        	    specs.Rb[i].Damping_Coefficient=Damping_Coefficient[i];
+        	   	specs.Rb[i].force_external={0.0,0.0,0.0};
+        	   	specs.Rb[i].force_internal={0.0,0.0,0.0};
+        	   	if(specs.Rb[i].position_update_method==0)
+        	   	{
+        	   		specs.Rb[i].velocity={0.0,0.0,0.0};
+        	   	}
+        	   	else
+        	   	{
+        	   		specs.Rb[i].velocity={specs.Rb[i].imposed_velocity[0],specs.Rb[i].imposed_velocity[1],specs.Rb[i].imposed_velocity[2]};
+        	   	}
+
+        	}
         	specs.Rb[0].velocity={velocity_upper_jaw[0],velocity_upper_jaw[1],velocity_upper_jaw[2]};
         	mpm_pc.Calculate_Total_Mass_RigidParticles(0,specs.Rb[0].total_mass);
         	mpm_pc.Calculate_Total_Mass_RigidParticles(1,specs.Rb[1].total_mass);
@@ -481,6 +502,8 @@ int main (int argc, char* argv[])
 
         	for(int i=0;i<specs.no_of_rigidbodies_present;i++)
         	{
+        		msg="\n        ";
+        		PrintMessage(msg,print_length,true,'=');	//* line
 
 				msg="\n        Total number of rigid body particles in body "+std::to_string(i)+":";
         		PrintMessage(msg,print_length,true);
@@ -489,6 +512,44 @@ int main (int argc, char* argv[])
         		msg="\n        Total mass of rigid body "+std::to_string(i)+":";
         		PrintMessage(msg,print_length,true);
         		amrex::Print()<<" "<<specs.Rb[i].total_mass;
+
+        		msg="\n        Position update method of rigid body "+std::to_string(i)+":";
+        		PrintMessage(msg,print_length,true);
+        		if(specs.Rb[i].position_update_method==1)
+        		{
+        			amrex::Print()<<" 3-DOF Solver";
+        		}
+        		else if(specs.Rb[i].position_update_method==0)
+        		{
+        			amrex::Print()<<" Imposed constant velocity";
+        		}
+
+
+        		msg="\n        Enable weight of rigid body "+std::to_string(i)+":";
+        		PrintMessage(msg,print_length,true);
+        		if(specs.Rb[i].enable_weight==1)
+        		{
+        			amrex::Print()<<" True";
+        		}
+        		else if(specs.Rb[i].enable_weight==0)
+        		{
+        			amrex::Print()<<" False";
+        		}
+
+        		msg="\n        Enable damping of rigid body "+std::to_string(i)+":";
+        		PrintMessage(msg,print_length,true);
+        		if(specs.Rb[i].enable_damping_force==1)
+        		{
+        			amrex::Print()<<" True"<<" ("<<specs.Rb[i].Damping_Coefficient<<")";
+        		}
+        		else if(specs.Rb[i].enable_damping_force==0)
+        		{
+        			amrex::Print()<<" False";
+        		}
+
+        		msg="\n        Velocity of rigid body "+std::to_string(i)+":";
+        		PrintMessage(msg,print_length,true);
+        		amrex::Print()<<" "<<specs.Rb[i].velocity[XDIR]<<" "<<specs.Rb[i].velocity[YDIR]<<" "<<specs.Rb[i].velocity[ZDIR];
         	}
 
         	msg="\n     ";

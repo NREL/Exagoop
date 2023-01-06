@@ -173,6 +173,9 @@ class MPMspecs
         int calculate_strain_based_on_delta=0;
         
 
+        //Rigid body params
+        int num_of_rigid_bodies=0;
+
         Vector<int> bclo;
         Vector<int> bchi;
 
@@ -227,6 +230,8 @@ class MPMspecs
             periodic={AMREX_D_DECL(periodicarr[XDIR],periodicarr[YDIR],periodicarr[ZDIR])};
             pp.get("max_grid_size", max_grid_size);
 
+
+
             pp.get("max_steps", maxsteps);
             pp.get("final_time",final_time);
 
@@ -278,6 +283,9 @@ class MPMspecs
             pp.query("spring_alone_length",spring_alone_length);
             pp.query("spring_alone_E",spring_alone_E);
 
+
+            //Rigid body params
+            pp.get("num_of_rigid_bodies", num_of_rigid_bodies);
 
 
             if(!use_autogen)
