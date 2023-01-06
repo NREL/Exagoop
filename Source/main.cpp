@@ -556,10 +556,6 @@ int main (int argc, char* argv[])
         	PrintMessage(msg,print_length,true,'*');	//* line
         }
 
-
-
-
-
         amrex::Real vel_piston_old=0.0;
 
 
@@ -653,20 +649,23 @@ int main (int argc, char* argv[])
 
                 //3-DOF solver to get updated velocities
                 specs.ThreeDOF_Solver(dt);
-                amrex::GpuArray<amrex::GpuArray<amrex::Real,AMREX_SPACEDIM>,numrigidbodies> velocity;
-                for(int j=0;j<numrigidbodies;j++)
+                Vector<Real> velocity;
+                velocity.resize(AMREX_SPACEDIM*specs.num_of_rigid_bodies);
+
+
+                for(int j=0;j<specs.num_of_rigid_bodies;j++)
                 {
                 	for(int k=0;k<AMREX_SPACEDIM;k++)
                 	{
-                		velocity[j][k]=specs.Rb[j].velocity[k];
+                		velocity[j*AMREX_SPACEDIM+k]=specs.Rb[j].velocity[k];
                 	}
                 }
-                velocity_upper_jaw[0]=velocity[0][0];
-                velocity_upper_jaw[1]=velocity[0][1];
-                velocity_upper_jaw[2]=velocity[0][2];
+                velocity_upper_jaw[0]=velocity[0*AMREX_SPACEDIM+0];
+                velocity_upper_jaw[1]=velocity[0*AMREX_SPACEDIM+1];
+                velocity_upper_jaw[2]=velocity[0*AMREX_SPACEDIM+2];
 
                 mpm_pc.calculate_nodal_normal(nodaldata,specs.mass_tolerance,specs.order_scheme_directional,specs.periodic);
-                nodal_detect_contact(nodaldata,geom,specs.mass_tolerance,velocity);
+                nodal_detect_contact(nodaldata,geom,specs.mass_tolerance,velocity,specs.num_of_rigid_bodies);
                 for(int j=0;j<specs.no_of_rigidbodies_present;j++)
                 {
                 	mpm_pc.UpdateRigidParticleVelocities(j,specs.Rb[j].velocity);

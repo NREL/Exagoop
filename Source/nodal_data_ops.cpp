@@ -159,11 +159,13 @@ void nodal_update(MultiFab &nodaldata,const amrex::Real& dt, const amrex::Real& 
     }
 }
 
-void nodal_detect_contact(MultiFab &nodaldata,const Geometry geom,amrex::Real& contact_tolerance,amrex::GpuArray<amrex::GpuArray<amrex::Real,AMREX_SPACEDIM>,numrigidbodies> velocity)
+void nodal_detect_contact(MultiFab &nodaldata,const Geometry geom,amrex::Real& contact_tolerance,Vector<Real> velocity, int num_of_bodies)
 {
 	const auto plo = geom.ProbLoArray();
 	const auto phi = geom.ProbHiArray();
 	const auto dx = geom.CellSizeArray();
+
+	velocity.resize(AMREX_SPACEDIM*num_of_bodies);
 
     for (MFIter mfi(nodaldata); mfi.isValid(); ++mfi)
     {
@@ -181,7 +183,7 @@ void nodal_detect_contact(MultiFab &nodaldata,const Geometry geom,amrex::Real& c
             	amrex::Real contact_alpha=0.0;
             	for(int d=0;d<AMREX_SPACEDIM;d++)
             	{
-            		contact_alpha+= (nodal_data_arr(i,j,k,VELX_INDEX+d)-velocity[int(nodal_data_arr(i,j,k,RIGID_BODY_ID))][d])*nodal_data_arr(i,j,k,NORMALX+d);
+            		contact_alpha+= (nodal_data_arr(i,j,k,VELX_INDEX+d)-velocity[int(nodal_data_arr(i,j,k,RIGID_BODY_ID))*AMREX_SPACEDIM+d])*nodal_data_arr(i,j,k,NORMALX+d);
             	}
 
            		if(contact_alpha>=0)
@@ -189,7 +191,7 @@ void nodal_detect_contact(MultiFab &nodaldata,const Geometry geom,amrex::Real& c
            			amrex::Real V_relative=0.0;
            			for(int d=0;d<AMREX_SPACEDIM;d++)
            			{
-           				V_relative+=(nodal_data_arr(i,j,k,VELX_INDEX+d)-velocity[int(nodal_data_arr(i,j,k,RIGID_BODY_ID))][d])*nodal_data_arr(i,j,k,NORMALX+d);
+           				V_relative+=(nodal_data_arr(i,j,k,VELX_INDEX+d)-velocity[int(nodal_data_arr(i,j,k,RIGID_BODY_ID))*AMREX_SPACEDIM+d])*nodal_data_arr(i,j,k,NORMALX+d);
            			}
            			for(int d=0;d<AMREX_SPACEDIM;d++)
            			{
@@ -466,7 +468,7 @@ void CalculateSurfaceIntegralOnBG(const amrex::Geometry geom, amrex::MultiFab &n
 
         amrex::ParallelFor(nodalbox,[=,&integral_value]AMREX_GPU_DEVICE (int i,int j,int k) noexcept
         {
-        	integral_value=integral_value+(nodal_data_arr(i,j,k,nodaldataindex)+nodal_data_arr(i+1,j,k,nodaldataindex)+nodal_data_arr(i,j,k+1,nodaldataindex)+nodal_data_arr(i+1,j,k+1,nodaldataindex))/4.0*dx[0]*dx[2];
+        	//integral_value=integral_value+(nodal_data_arr(i,j,k,nodaldataindex)+nodal_data_arr(i+1,j,k,nodaldataindex)+nodal_data_arr(i,j,k+1,nodaldataindex)+nodal_data_arr(i+1,j,k+1,nodaldataindex))/4.0*dx[0]*dx[2];
         	});
     }
 #ifdef BL_USE_MPI
