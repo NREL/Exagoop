@@ -362,7 +362,7 @@ int main (int argc, char* argv[])
                         //PrintToFile("AxialBarVel.out")<<time<<"\t"<<Vmex<<"\t"<<Vmnum<<"\n";
                         mpm_pc.CalculateEnergies(TKE,TSE);
                         TE=TKE+TSE;
-                        PrintToFile("AxialBarEnergy.out")<<time<<"\t"<<TKE<<"\t"<<TSE<<"\t"<<TE<<"\n";
+                        //PrintToFile("AxialBarEnergy.out")<<time<<"\t"<<TKE<<"\t"<<TSE<<"\t"<<TE<<"\n";
                         break;
                     case(2):	//Dam break
                         mpm_pc.FindWaterFront(Xwf);
@@ -675,7 +675,7 @@ int main (int argc, char* argv[])
 
                 Real ymin;
                 ymin = mpm_pc.GetPosPiston();
-                PrintToFile("Spring.out")<<time<<"\t"<<ymin<<" "<<specs.Rb[0].velocity[1]<<" "<<specs.Rb[0].force_internal[1]<<"\n";
+                //PrintToFile("Spring.out")<<time<<"\t"<<ymin<<" "<<specs.Rb[0].velocity[1]<<" "<<specs.Rb[0].force_internal[1]<<"\n";
 
             }
 
@@ -823,7 +823,7 @@ int main (int argc, char* argv[])
                             //PrintToFile("AxialBarVel.out")<<time<<"\t"<<Vmex<<"\t"<<Vmnum<<"\n";
                             mpm_pc.CalculateEnergies(TKE,TSE);
                             TE=TKE+TSE;
-                            PrintToFile("AxialBarEnergy.out")<<time<<"\t"<<TKE<<"\t"<<TSE<<"\t"<<TE<<"\n";
+                            //PrintToFile("AxialBarEnergy.out")<<time<<"\t"<<TKE<<"\t"<<TSE<<"\t"<<TE<<"\n";
                             break;
                         case(2):	//Dam break
                             mpm_pc.FindWaterFront(Xwf);

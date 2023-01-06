@@ -426,7 +426,7 @@ amrex::Real MPMParticleContainer::CalculateEffectiveSpringConstant(amrex::Real A
 
 	}
 
-	PrintToFile("SpringConst.out")<<Calculated_Spring_Const<<"\n";
+	//PrintToFile("SpringConst.out")<<Calculated_Spring_Const<<"\n";
 
 	//Calculate and return the restoring force
 	return(Restoring_force);

@@ -101,7 +101,7 @@ void MPMParticleContainer::writeParticlesTecplot(std::string prefix_particlefile
 	const auto plo = geom.ProbLoArray();
 	std::string pltfile = amrex::Concatenate(prefix_particlefilename, n, num_of_digits_in_filenames);
 	pltfile=pltfile+".dat";
-	PrintToFile(pltfile)<<"variables=x,y,z";
+	//PrintToFile(pltfile)<<"variables=x,y,z";
 
 	for(MFIter mfi = MakeMFIter(lev); mfi.isValid(); ++mfi)
 	{
@@ -127,7 +127,7 @@ void MPMParticleContainer::writeParticlesTecplot(std::string prefix_particlefile
 			xp[XDIR]=p.pos(XDIR);
 			xp[YDIR]=p.pos(YDIR);
 			xp[ZDIR]=p.pos(ZDIR);
-			PrintToFile(pltfile)<<"\n"<<xp[XDIR]<<" "<<xp[YDIR]<<" "<<xp[ZDIR]<<" "<<p.rdata(realData::stress+YY);
+			//PrintToFile(pltfile)<<"\n"<<xp[XDIR]<<" "<<xp[YDIR]<<" "<<xp[ZDIR]<<" "<<p.rdata(realData::stress+YY);
 		});
 	}
 
