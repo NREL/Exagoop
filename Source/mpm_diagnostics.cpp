@@ -2,6 +2,38 @@
 #include <interpolants.H>
 
 
+void MPMParticleContainer::CalculateSurfaceLoads(Real &Load,int rigidbodyid)
+{
+    const int lev = 0;
+    const Geometry& geom = Geom(lev);
+    auto& plev  = GetParticles(lev);
+    const auto dxi = geom.InvCellSizeArray();
+    const auto dx = geom.CellSizeArray();
+    const auto plo = geom.ProbLoArray();
+    const auto domain = geom.Domain();
+
+    Load=0.0;
+
+    using PType = typename MPMParticleContainer::SuperParticleType;
+    Load = amrex::ReduceSum(*this, [=]
+    AMREX_GPU_HOST_DEVICE (const PType& p) -> Real 
+    {
+      if(p.idata(intData::phase)==1 and  p.idata(intData::rigid_body_id)==rigidbodyid)
+        {
+          return(p.rdata(realData::stress+YY));
+        }
+      else
+        {
+          return(0.0);
+        }
+    });
+
+#ifdef BL_USE_MPI
+    ParallelDescriptor::ReduceRealSum(Load);
+#endif
+
+}
+
 void MPMParticleContainer::CalculateEnergies(Real &TKE,Real &TSE)
 {
     const int lev = 0;
@@ -16,8 +48,8 @@ void MPMParticleContainer::CalculateEnergies(Real &TKE,Real &TSE)
     TSE=0.0;
 
     using PType = typename MPMParticleContainer::SuperParticleType;
-    TKE = amrex::ReduceSum(*this, [=] 
-    AMREX_GPU_HOST_DEVICE (const PType& p) -> Real 
+    TKE = amrex::ReduceSum(*this, [=]
+    AMREX_GPU_HOST_DEVICE (const PType& p) -> Real
     {
         return(0.5*p.rdata(realData::mass)*
                (p.rdata(realData::xvel)*p.rdata(realData::xvel)+
@@ -25,8 +57,8 @@ void MPMParticleContainer::CalculateEnergies(Real &TKE,Real &TSE)
                 p.rdata(realData::zvel)*p.rdata(realData::zvel)) );
     });
 
-    TSE = amrex::ReduceSum(*this, [=] 
-    AMREX_GPU_HOST_DEVICE (const PType& p) -> Real 
+    TSE = amrex::ReduceSum(*this, [=]
+    AMREX_GPU_HOST_DEVICE (const PType& p) -> Real
     {
         return(0.5*p.rdata(realData::volume)*
                (p.rdata(realData::stress+XX)*p.rdata(realData::strain+XX)+

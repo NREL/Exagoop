@@ -13,7 +13,7 @@ void write_plot_file(std::string fname, amrex::MultiFab &nodaldata, amrex::Vecto
 void backup_current_velocity(amrex::MultiFab &nodaldata);
 void store_delta_velocity(amrex::MultiFab &nodaldata);
 void nodal_update(amrex::MultiFab &nodaldata,const amrex::Real& dt, const amrex::Real& mass_tolerance);
-void nodal_detect_contact(amrex::MultiFab &nodaldata,const amrex::Geometry geom,amrex::Real& contact_tolerance,amrex::GpuArray<amrex::GpuArray<amrex::Real,AMREX_SPACEDIM>,numrigidbodies>);
+void nodal_detect_contact(amrex::MultiFab &nodaldata,const amrex::Geometry geom,amrex::Real& contact_tolerance,amrex::Vector<amrex::Real> velocity,int num);
 void initialise_shape_function_indices(amrex::iMultiFab &shapefunctionindex,const amrex::Geometry geom);
 
 

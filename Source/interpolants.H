@@ -166,7 +166,102 @@ AMREX_GPU_DEVICE AMREX_FORCE_INLINE
 }
 
 AMREX_GPU_DEVICE AMREX_FORCE_INLINE
-        amrex::Real cubicspline_1d(int shapefunctiontype,amrex:: Real zi,int dir)
+        amrex::Real quadraticspline_1d_der(int shapefunctiontype,amrex:: Real zi)
+{
+	amrex::Real value=0.0;
+	if(shapefunctiontype==1)	//Boundary node
+	{
+		if(zi>=-1.5 && zi<=-0.5)
+		{
+			value=4.0*zi/3.0+2.0;
+		}
+		else if(zi>=-0.5 && zi<=0)
+		{
+			value=-8.0*zi/3.0;
+		}
+		else if(zi>=0 && zi<=0.5)
+		{
+			value=-8.0*zi/3.0;
+		}
+		else if(zi>=0.5 && zi<=1.5)
+		{
+			value=4.0*zi/3.0-2.0;
+		}
+		else
+		{
+			//value=0.0;
+		}
+	}
+	else if(shapefunctiontype==2)	//Near Boundary node
+	{
+		if(zi>=-1.0 && zi<=-0.5)
+		{
+			value=8.0*(zi+1.0)/3.0;
+		}
+		else if(zi>=-0.5 && zi<=0.5)
+		{
+			value=1.0/6.0-14.0*zi/6.0;
+		}
+		else if(zi>=0.5 && zi<=1.5)
+		{
+			value=zi-3.0/2.0;
+		}
+		else
+		{
+			//value=0.0;
+		}
+	}
+	else if(shapefunctiontype==3)	//Interior node
+	{
+		if(zi>=-1.5 && zi<=-0.5)
+		{
+			value=(2.0*zi+3.0)/2.0;
+		}
+		else if(zi>=-0.5 && zi<=0.5)
+		{
+			value=-2.0*zi;
+		}
+		else if(zi>=0.5 && zi<=1.5)
+		{
+			value=(2.0*zi-3.0)/2.0;
+		}
+		else
+		{
+			//value=0.0;
+		}
+	}
+	else if(shapefunctiontype==4)	//Interior node
+	{
+		if(zi>=-1.5 && zi<=-0.5)
+		{
+			value=zi+6.0/4.0;
+		}
+		else if(zi>=-0.5 && zi<=0.5)
+		{
+			value=-14.0*zi/6.0-1.0/6.0;
+		}
+		else if(zi>=0.5 && zi<=1.0)
+		{
+			value=8.0*(zi-1.0)/3.0;
+		}
+		else
+		{
+			//value=0.0;
+		}
+	}
+	else
+	{
+		#ifndef AMREX_USE_GPU
+			amrex::Print()<<"\n Shapefunction = "<<shapefunctiontype;
+		#endif
+		amrex::Abort("\n Incorrect shape function type in Quadraticspline_1d_der");
+	}
+	return value;
+
+}
+
+AMREX_GPU_DEVICE AMREX_FORCE_INLINE
+        amrex::Real cubicspline_1d(int shapefunctiontype,amrex:: Real zi)
 {
 	amrex::Real value=0.0;
 	if(shapefunctiontype==1)	//Boundary node
@@ -211,9 +306,6 @@ AMREX_GPU_DEVICE AMREX_FORCE_INLINE
 		}
 		else
 		{
-			#ifndef AMREX_USE_GPU
-			amrex::Print()<<"\n Error in shape func 2: "<<zi<<" dir = "<<dir;
-			#endif
 
 		}
 	}
@@ -258,9 +350,103 @@ AMREX_GPU_DEVICE AMREX_FORCE_INLINE
 		}
 		else
 		{
-			#ifndef AMREX_USE_GPU
-			amrex::Print()<<"\n Error in shape func 4: "<<zi<<" dir= "<<dir;
-			#endif
+
+		}
+	}
+	else
+	{
+#ifndef AMREX_USE_GPU
+		amrex::Print()<<"\n Shapefunction = "<<shapefunctiontype;
+#endif
+		amrex::Abort("\n Incorrect shape function type in cubicspline_1d");
+	}
+	return value;
+
+}
+
+AMREX_GPU_DEVICE AMREX_FORCE_INLINE
+        amrex::Real quadraticspline_1d(int shapefunctiontype,amrex:: Real zi)
+{
+	amrex::Real value=0.0;
+	if(shapefunctiontype==1)	//Boundary node, low end and high end
+	{
+		if(zi>=-1.5 && zi<=-0.5)
+		{
+			value=(2.0*zi/3.0+1.0)*(zi+3.0/2.0);
+		}
+		else if(zi>=-0.5 && zi<=0)
+		{
+			value=1-zi*zi*4.0/3.0;
+		}
+		else if(zi>=0 && zi<=0.5)
+		{
+			value=1-zi*zi*4.0/3.0;
+		}
+		else if(zi>=0.5 && zi<=1.5)
+		{
+			value=(2.0*zi/3.0-1.0)*(zi-1.5);
+		}
+		else
+		{
+			value=0.0;
+
+		}
+	}
+	else if(shapefunctiontype==2)	//Near Boundary node, low end
+	{
+		if(zi>=-1.0 && zi<=-0.5)
+		{
+			value=4.0*(zi+1.0)*(zi+1.0)/3.0;
+		}
+		else if(zi>=-0.5 && zi<=0.5)
+		{
+			value=(zi/6.0-7.0*zi*zi/6.0+17.0/24.0);
+		}
+		else if(zi>=0.5 && zi<=1.5)
+		{
+			value=(zi/2.0-3.0/4.0)*(zi-3.0/2.0);
+		}
+		else
+		{
+			value=0.0;
+		}
+	}
+	else if(shapefunctiontype==3)	//Interior node
+	{
+		if(zi>=-1.5 && zi<=-0.5)
+		{
+			value=(2.0*zi+3.0)*(2.0*zi+3.0)/8.0;
+		}
+		else if(zi>=-0.5 && zi<=0.5)
+		{
+			value=(-8.0*zi*zi+6.0)/8.0;
+		}
+		else if(zi>=0.5 && zi<=1.5)
+		{
+			value=(2.0*zi-3.0)*(2.0*zi-3.0)/8.0;
+		}
+		else
+		{
+			value=0.0;
+		}
+	}
+	else if(shapefunctiontype==4)	//near boundary node, high end
+	{
+		if(zi>=-1.5 && zi<=-0.5)
+		{
+			value=(zi/2.0+3.0/4.0)*(zi+3.0/2.0);
+		}
+		else if(zi>=-0.5 && zi<=0.5)
+		{
+			value=17.0/24.0-7.0*zi*zi/6.0-zi/6;
+		}
+		else if(zi>=0.5 && zi<=1.0)
+		{
+			value=(2.0*zi-2.0)*(2.0*zi/3.0-2.0/3.0);
+		}
+		else
+		{
+			value=0.0;
 		}
 	}
 	else
@@ -319,9 +505,64 @@ AMREX_GPU_DEVICE AMREX_FORCE_INLINE
 
     			//amrex::Print()<<"\n dx = "<<dx[XDIR]<<" "<<dx[YDIR]<<" "<<dx[ZDIR];
 
-    			lval=cubicspline_1d(shapetypex,rx,0);
-    			mval=cubicspline_1d(shapetypey,ry,1);
-    			nval=cubicspline_1d(shapetypez,rz,2);
+    			lval=cubicspline_1d(shapetypex,rx);
+    			mval=cubicspline_1d(shapetypey,ry);
+    			nval=cubicspline_1d(shapetypez,rz);
+    			value += lval*mval*nval* nodaldata(i+l,j+m,k+n,comp);
+
+    		}
+    	}
+    }
+
+    return(value);
+}
+
+AMREX_GPU_DEVICE AMREX_FORCE_INLINE
+        amrex::Real quadratic_interp(amrex::Real xp[AMREX_SPACEDIM],
+        		int i, int j, int k,
+        		int lmin,int mmin,int nmin,int lmax,int mmax, int nmax,
+                const amrex::GpuArray<amrex::Real, AMREX_SPACEDIM> plo,
+                const amrex::GpuArray<amrex::Real, AMREX_SPACEDIM> dx,
+                amrex::Array4<amrex::Real> nodaldata,
+				int comp,const int* lo,const int* hi)
+{
+
+    amrex::Real rx,ry,rz;
+    amrex::Real lval,mval,nval;
+    amrex::Real value=zero;
+    int shapetypex,shapetypey,shapetypez;
+
+    for(int n=nmin;n<nmax;n++)
+    {
+    	for(int m=mmin;m<mmax;m++)
+    	{
+    		for(int l=lmin;l<lmax;l++)
+    		{
+    			if(i+l==lo[0]) shapetypex=1;
+    			else if(i+l==lo[0]+1) shapetypex=2;
+    			else if(i+l==hi[0]+1) shapetypex=1;
+    			else if(i+l==hi[0]) shapetypex=4;
+    			else shapetypex=3;
+
+    			if(j+m==lo[1]) shapetypey=1;
+    			else if(j+m==lo[1]+1) shapetypey=2;
+    			else if(j+m==hi[1]+1) shapetypey=1;
+    			else if(j+m==hi[1]) shapetypey=4;
+    			else shapetypey=3;
+
+    			if(k+n==lo[2]) shapetypez=1;
+    			else if(k+n==lo[2]+1) shapetypez=2;
+    			else if(k+n==hi[2]+1) shapetypez=1;
+    			else if(k+n==hi[2]) shapetypez=4;
+    			else shapetypez=3;
+
+    			rx = (xp[XDIR]-(plo[XDIR]+(i+l)*dx[XDIR]))/dx[XDIR];
+    			ry  = (xp[YDIR]-(plo[YDIR]+(j+m)*dx[YDIR]))/dx[YDIR];
+    			rz  = (xp[ZDIR]-(plo[ZDIR]+(k+n)*dx[ZDIR]))/dx[ZDIR];
+
+    			lval=quadraticspline_1d(shapetypex,rx);
+    			mval=quadraticspline_1d(shapetypey,ry);
+    			nval=quadraticspline_1d(shapetypez,rz);
     			value += lval*mval*nval* nodaldata(i+l,j+m,k+n,comp);
 
     		}
@@ -357,64 +598,118 @@ AMREX_GPU_DEVICE AMREX_FORCE_INLINE
     ry  = (xp[YDIR]-(plo[YDIR]+j*dx[YDIR]))/dx[YDIR];
     rz  = (xp[ZDIR]-(plo[ZDIR]+k*dx[ZDIR]))/dx[ZDIR];
 
-    if(order_scheme_dir[0]==1)
+    int dir;
+
+    //X-direction
+    dir=XDIR;
+    if(order_scheme_dir[dir]==1)
     {
     	lval=(l==0)?(one-rx):rx;
     }
-    else
+    else if (order_scheme_dir[dir]==2)
     {
-    	if(periodic[0]==0)
+    	if(periodic[dir]==0)
     	{
     		shapefunctype = ((i+l)==lo[XDIR] || (i+l)==hi[XDIR]+1)?1:((i+l==lo[XDIR]+1)?2:((i+l==hi[XDIR]))?4:3);
     		rx = (xp[XDIR]-(plo[XDIR]+(i+l)*dx[XDIR]))/dx[XDIR];
-    		lval=cubicspline_1d(shapefunctype,rx,0);
+    		lval=(rx<-1.5 || rx>1.5)?0:quadraticspline_1d(shapefunctype,rx);
     	}
     	else
     	{
     		shapefunctype = 3;
     		rx = (xp[XDIR]-(plo[XDIR]+(i+l)*dx[XDIR]))/dx[XDIR];
-    		lval=cubicspline_1d(shapefunctype,rx,0);
+    		lval=quadraticspline_1d(shapefunctype,rx);
+    	}
+    }
+    else if (order_scheme_dir[dir]==3)
+    {
+    	if(periodic[dir]==0)
+    	{
+    		shapefunctype = ((i+l)==lo[XDIR] || (i+l)==hi[XDIR]+1)?1:((i+l==lo[XDIR]+1)?2:((i+l==hi[XDIR]))?4:3);
+    		rx = (xp[XDIR]-(plo[XDIR]+(i+l)*dx[XDIR]))/dx[XDIR];
+    		lval=cubicspline_1d(shapefunctype,rx);
+    	}
+    	else
+    	{
+    		shapefunctype = 3;
+    		rx = (xp[XDIR]-(plo[XDIR]+(i+l)*dx[XDIR]))/dx[XDIR];
+    		lval=cubicspline_1d(shapefunctype,rx);
     	}
     }
 
-    if(order_scheme_dir[1]==1)
+    //Y-direction
+    dir=YDIR;
+    if(order_scheme_dir[dir]==1)
     {
     	mval=(m==0)?(one-ry):ry;
     }
-    else
+    else if (order_scheme_dir[dir]==2)
     {
-    	if(periodic[1]==0)
+    	if(periodic[dir]==0)
     	{
     		shapefunctype = ((j+m)==lo[YDIR] || (j+m)==hi[YDIR]+1)?1:((j+m==lo[YDIR]+1)?2:((j+m==hi[YDIR]))?4:3);
     		ry = (xp[YDIR]-(plo[YDIR]+(j+m)*dx[YDIR]))/dx[YDIR];
-    		mval=cubicspline_1d(shapefunctype,ry,1);
+    		mval=quadraticspline_1d(shapefunctype,ry);
+    	}
+    	else
+    	{
+    		shapefunctype = 3;
+    		ry = (xp[YDIR]-(plo[YDIR]+(j+m)*dx[YDIR]))/dx[YDIR];
+    		mval=quadraticspline_1d(shapefunctype,ry);
+    	}
+    }
+    else if (order_scheme_dir[dir]==3)
+    {
+    	if(periodic[dir]==0)
+    	{
+    		shapefunctype = ((j+m)==lo[YDIR] || (j+m)==hi[YDIR]+1)?1:((j+m==lo[YDIR]+1)?2:((j+m==hi[YDIR]))?4:3);
+    		ry = (xp[YDIR]-(plo[YDIR]+(j+m)*dx[YDIR]))/dx[YDIR];
+    		mval=cubicspline_1d(shapefunctype,ry);
 
     	}
     	else
     	{
     		shapefunctype = 3;
     		ry = (xp[YDIR]-(plo[YDIR]+(j+m)*dx[YDIR]))/dx[YDIR];
-    		mval=cubicspline_1d(shapefunctype,ry,1);
+    		mval=cubicspline_1d(shapefunctype,ry);
     	}
     }
 
-    if(order_scheme_dir[2]==1)
+    //Z-direction
+    dir=ZDIR;
+    if(order_scheme_dir[dir]==1)
     {
     	nval=(n==0)?(one-rz):rz;
     }
-    else
+    else if (order_scheme_dir[dir]==2)
     {
-    	if(periodic[2]==0)
+    	if(periodic[dir]==0)
     	{
     		shapefunctype = ((k+n)==lo[ZDIR] || (k+n)==hi[ZDIR]+1)?1:((k+n==lo[ZDIR]+1)?2:((k+n==hi[ZDIR]))?4:3);
     		rz = (xp[ZDIR]-(plo[ZDIR]+(k+n)*dx[ZDIR]))/dx[ZDIR];
-    		nval=cubicspline_1d(shapefunctype,rz,2);
+    		nval=quadraticspline_1d(shapefunctype,rz);
+    	}
+    	else
+    	{
+    		shapefunctype = 3;
+    		rz = (xp[ZDIR]-(plo[ZDIR]+(k+n)*dx[ZDIR]))/dx[ZDIR];
+    		nval=quadraticspline_1d(shapefunctype,rz);
+
+    	}
+    }
+    else if (order_scheme_dir[dir]==3)
+    {
+    	if(periodic[dir]==0)
+    	{
+    		shapefunctype = ((k+n)==lo[ZDIR] || (k+n)==hi[ZDIR]+1)?1:((k+n==lo[ZDIR]+1)?2:((k+n==hi[ZDIR]))?4:3);
+    		rz = (xp[ZDIR]-(plo[ZDIR]+(k+n)*dx[ZDIR]))/dx[ZDIR];
+    		nval=cubicspline_1d(shapefunctype,rz);
     	}
         else
         {
         	shapefunctype = 3;
         	rz = (xp[ZDIR]-(plo[ZDIR]+(k+n)*dx[ZDIR]))/dx[ZDIR];
-        	nval=cubicspline_1d(shapefunctype,rz,2);
+        	nval=cubicspline_1d(shapefunctype,rz);
         }
     }
     return(lval*mval*nval);
@@ -444,63 +739,118 @@ AMREX_GPU_DEVICE AMREX_FORCE_INLINE
     ry  = (xp[YDIR]-(plo[YDIR]+j*dx[YDIR]))/dx[YDIR];
     rz  = (xp[ZDIR]-(plo[ZDIR]+k*dx[ZDIR]))/dx[ZDIR];
 
-    if(order_scheme_directional[0]==1)
+    int direction;
+
+    //X-direction
+    direction=0;
+    if(order_scheme_directional[direction]==1)
     {
     	lval=(l==0)?(one-rx):rx;
     }
-    else if(order_scheme_directional[0]==3)
+    else if(order_scheme_directional[direction]==2)
     {
-    	if(periodic[0]==0)
+    	if(periodic[direction]==0)
     	{
     		shapefunctype = ((i+l)==lo[XDIR] || (i+l)==hi[XDIR]+1)?1:((i+l==lo[XDIR]+1)?2:((i+l==hi[XDIR]))?4:3);
     		rx = (xp[XDIR]-(plo[XDIR]+(i+l)*dx[XDIR]))/dx[XDIR];
-    		lval=cubicspline_1d(shapefunctype,rx,0);
+    		lval=quadraticspline_1d(shapefunctype,rx);
     	}
     	else
     	{
     		shapefunctype = 3;
     		rx = (xp[XDIR]-(plo[XDIR]+(i+l)*dx[XDIR]))/dx[XDIR];
-    		lval=cubicspline_1d(shapefunctype,rx,0);
+    		lval=quadraticspline_1d(shapefunctype,rx);
+    	}
+    }
+    else if(order_scheme_directional[direction]==3)
+    {
+    	if(periodic[direction]==0)
+    	{
+    		shapefunctype = ((i+l)==lo[XDIR] || (i+l)==hi[XDIR]+1)?1:((i+l==lo[XDIR]+1)?2:((i+l==hi[XDIR]))?4:3);
+    		rx = (xp[XDIR]-(plo[XDIR]+(i+l)*dx[XDIR]))/dx[XDIR];
+    		lval=cubicspline_1d(shapefunctype,rx);
+    	}
+    	else
+    	{
+    		shapefunctype = 3;
+    		rx = (xp[XDIR]-(plo[XDIR]+(i+l)*dx[XDIR]))/dx[XDIR];
+    		lval=cubicspline_1d(shapefunctype,rx);
     	}
     }
 
-    if(order_scheme_directional[1]==1)
+    //Y-direction
+    direction=1;
+
+    if(order_scheme_directional[direction]==1)
     {
     	mval=(m==0)?(one-ry):ry;
     }
-    else if(order_scheme_directional[1]==3)
+    else if(order_scheme_directional[direction]==2)
     {
-    	if(periodic[1]==0)
+    	if(periodic[direction]==0)
     	{
     		shapefunctype = ((j+m)==lo[YDIR] || (j+m)==hi[YDIR]+1)?1:((j+m==lo[YDIR]+1)?2:((j+m==hi[YDIR]))?4:3);
     		ry = (xp[YDIR]-(plo[YDIR]+(j+m)*dx[YDIR]))/dx[YDIR];
-    		mval=cubicspline_1d(shapefunctype,ry,1);
+    		mval=quadraticspline_1d(shapefunctype,ry);
     	}
     	else
     	{
     		shapefunctype = 3;
     		ry = (xp[YDIR]-(plo[YDIR]+(j+m)*dx[YDIR]))/dx[YDIR];
-    		mval=cubicspline_1d(shapefunctype,ry,1);
+    		mval=quadraticspline_1d(shapefunctype,ry);
+    	}
+    }
+    else if(order_scheme_directional[direction]==3)
+    {
+    	if(periodic[direction]==0)
+    	{
+    		shapefunctype = ((j+m)==lo[YDIR] || (j+m)==hi[YDIR]+1)?1:((j+m==lo[YDIR]+1)?2:((j+m==hi[YDIR]))?4:3);
+    		ry = (xp[YDIR]-(plo[YDIR]+(j+m)*dx[YDIR]))/dx[YDIR];
+    		mval=cubicspline_1d(shapefunctype,ry);
+    	}
+    	else
+    	{
+    		shapefunctype = 3;
+    		ry = (xp[YDIR]-(plo[YDIR]+(j+m)*dx[YDIR]))/dx[YDIR];
+    		mval=cubicspline_1d(shapefunctype,ry);
     	}
     }
 
-    if(order_scheme_directional[2]==1)
+    //Z-direction
+    direction=2;
+
+    if(order_scheme_directional[direction]==1)
     {
     	nval=(n==0)?(one-rz):rz;
     }
-    else if(order_scheme_directional[2]==3)
+    else if(order_scheme_directional[direction]==2)
     {
-    	if(periodic[2]==0)
+    	if(periodic[direction]==0)
     	{
     		shapefunctype = ((k+n)==lo[ZDIR] || (k+n)==hi[ZDIR]+1)?1:((k+n==lo[ZDIR]+1)?2:((k+n==hi[ZDIR]))?4:3);
     		rz = (xp[ZDIR]-(plo[ZDIR]+(k+n)*dx[ZDIR]))/dx[ZDIR];
-    		nval=cubicspline_1d(shapefunctype,rz,2);
+    		nval=quadraticspline_1d(shapefunctype,rz);
     	}
     	else
     	{
     		shapefunctype = 3;
     		rz = (xp[ZDIR]-(plo[ZDIR]+(k+n)*dx[ZDIR]))/dx[ZDIR];
-    		nval=cubicspline_1d(shapefunctype,rz,2);
+    		nval=quadraticspline_1d(shapefunctype,rz);
+    	}
+    }
+    else if(order_scheme_directional[direction]==3)
+    {
+    	if(periodic[direction]==0)
+    	{
+    		shapefunctype = ((k+n)==lo[ZDIR] || (k+n)==hi[ZDIR]+1)?1:((k+n==lo[ZDIR]+1)?2:((k+n==hi[ZDIR]))?4:3);
+    		rz = (xp[ZDIR]-(plo[ZDIR]+(k+n)*dx[ZDIR]))/dx[ZDIR];
+    		nval=cubicspline_1d(shapefunctype,rz);
+    	}
+    	else
+    	{
+    		shapefunctype = 3;
+    		rz = (xp[ZDIR]-(plo[ZDIR]+(k+n)*dx[ZDIR]))/dx[ZDIR];
+    		nval=cubicspline_1d(shapefunctype,rz);
     	}
     }
 
@@ -510,7 +860,13 @@ AMREX_GPU_DEVICE AMREX_FORCE_INLINE
     	{
     		lval=(l==0)?-dxinv[XDIR]:dxinv[XDIR];
     	}
-    	else
+    	else if (order_scheme_directional[0]==2)
+    	{
+    		shapefunctype = ((i+l)==lo[XDIR] || (i+l)==hi[XDIR]+1)?1:((i+l==lo[XDIR]+1)?2:((i+l==hi[XDIR]))?4:3);
+    		rx = (xp[XDIR]-(plo[XDIR]+(i+l)*dx[XDIR]))/dx[XDIR];
+    		lval=quadraticspline_1d_der(shapefunctype,rx)*dxinv[XDIR];
+    	}
+    	else if (order_scheme_directional[0]==3)
     	{
     		shapefunctype = ((i+l)==lo[XDIR] || (i+l)==hi[XDIR]+1)?1:((i+l==lo[XDIR]+1)?2:((i+l==hi[XDIR]))?4:3);
     		rx = (xp[XDIR]-(plo[XDIR]+(i+l)*dx[XDIR]))/dx[XDIR];
@@ -523,7 +879,13 @@ AMREX_GPU_DEVICE AMREX_FORCE_INLINE
     	{
     		mval=(m==0)?-dxinv[YDIR]:dxinv[YDIR];
     	}
-    	else
+    	else if(order_scheme_directional[1]==2)
+		{
+    		shapefunctype = ((j+m)==lo[YDIR] || (j+m)==hi[YDIR]+1)?1:((j+m==lo[YDIR]+1)?2:((j+m==hi[YDIR]))?4:3);
+    		ry = (xp[YDIR]-(plo[YDIR]+(j+m)*dx[YDIR]))/dx[YDIR];
+    		mval=quadraticspline_1d_der(shapefunctype,ry)*dxinv[YDIR];
+		}
+    	else if(order_scheme_directional[1]==3)
     	{
     		shapefunctype = ((j+m)==lo[YDIR] || (j+m)==hi[YDIR]+1)?1:((j+m==lo[YDIR]+1)?2:((j+m==hi[YDIR]))?4:3);
     		ry = (xp[YDIR]-(plo[YDIR]+(j+m)*dx[YDIR]))/dx[YDIR];
@@ -536,7 +898,13 @@ AMREX_GPU_DEVICE AMREX_FORCE_INLINE
     	{
     		nval=(n==0)?-dxinv[ZDIR]:dxinv[ZDIR];
     	}
-    	else
+    	else if(order_scheme_directional[2]==2)
+    	{
+    		shapefunctype = ((k+n)==lo[ZDIR] || (k+n)==hi[ZDIR]+1)?1:((k+n==lo[ZDIR]+1)?2:((k+n==hi[ZDIR]))?4:3);
+    		rz = (xp[ZDIR]-(plo[ZDIR]+(k+n)*dx[ZDIR]))/dx[ZDIR];
+    		nval=quadraticspline_1d_der(shapefunctype,rz)*dxinv[ZDIR];
+    	}
+    	else if(order_scheme_directional[2]==3)
     	{
     		shapefunctype = ((k+n)==lo[ZDIR] || (k+n)==hi[ZDIR]+1)?1:((k+n==lo[ZDIR]+1)?2:((k+n==hi[ZDIR]))?4:3);
     		rz = (xp[ZDIR]-(plo[ZDIR]+(k+n)*dx[ZDIR]))/dx[ZDIR];
