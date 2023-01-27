@@ -34,7 +34,11 @@ struct realData
         Bulk_modulus=42,			//39
         Gama_pressure=43,			//40
         Dynamic_viscosity=44,		//41
-		yacceleration=45,			//45	This is for storing the acceleration of each particle in the y-direction. This variable is not generic and used only for the spring-mass and membrane simulations only
+        // yli add for gbhypo
+        spinrate=45,//33 //rate of rotation; this tensor is anti-symmetric, to better utilize existing code, we store the upper half matrix [XX, XY, XZ, YY, YZ, ZZ] (XX YY ZZ === 0)
+        void_ratio=51,// 39 // for hypoplastic model
+        // end yli add
+        yacceleration=52      //This is for storing the acceleration of each particle in the y-direction. This variable is not generic and used only for the spring-mass and membrane simulations only
         count
     };
 };
@@ -203,6 +207,23 @@ class MPMspecs
         
         Real levset_mu=0.1;
 
+        // yli add for gbhypo
+        // material properties for granular material, default to sand.
+        struct GBHypoParameters{
+            Real phi_c = 0.5236; // critical state internal friction angle, unit: radian
+            Real h_s = 5800000000.0; // granular hardness, unit: Pa
+            Real n = 0.28; // pressure sensitive exponent : G paper says range (0.3, 0.5)
+            Real e_d0 = 0.53; // material constant for minimum void ratio
+            Real e_c0 = 0.84; // material constant for critical void ratio
+            Real e_i0 = 1.0; // material constant for maximum void ratio
+            Real alpha = 0.13; //material constant (0.1, 0.3)  
+            Real beta = 1.0; //material constant (1.0, 1.1)
+            Real stress_cutoff = -10.0; //stress cutoff to ensure compressive stress on material points
+        } GBparameters;
+        int print_GBHypoParameters = 0;
+        Real initial_void_ratio = 0.55; // initial void ratio for hypoplastic model
+        //end yli gbhypo
+
         void read_mpm_specs()
         {
             bclo.resize(AMREX_SPACEDIM);
@@ -361,6 +382,33 @@ class MPMspecs
 
             pp.query("wall_vel_lo",wall_vel_lo);
             pp.query("wall_vel_hi",wall_vel_hi);
+
+            // yli add read gbhypo
+            ParmParse gbhp("GBHypoPlastic");
+            gbhp.query("critical_state_internal_friction_angle",GBparameters.phi_c);
+            gbhp.query("granular_hardness",GBparameters.h_s);
+            gbhp.query("n",GBparameters.n);
+            gbhp.query("min_void_ratio_0",GBparameters.e_d0);
+            gbhp.query("critical_void_ratio_0",GBparameters.e_c0);
+            gbhp.query("max_void_ratio_0",GBparameters.e_i0);
+            gbhp.query("alpha",GBparameters.alpha); 
+            gbhp.query("beta",GBparameters.beta);
+            gbhp.query("stress_cutoff",GBparameters.stress_cutoff);
+            gbhp.query("print_parameters",print_GBHypoParameters);
+            gbhp.query("initial_void_ratio",initial_void_ratio);
+            if(print_GBHypoParameters == 1){
+                amrex::Print()<<"\nGBhypoplastic parameters: friction angle = "<<GBparameters.phi_c<<";";
+                amrex::Print()<<"\nGBhypoplastic parameters: h_s = "<<GBparameters.h_s<<";";
+                amrex::Print()<<"\nGBhypoplastic parameters: n = "<<GBparameters.n<<";";
+                amrex::Print()<<"\nGBhypoplastic parameters: e_d0 = "<<GBparameters.e_d0<<";";
+                amrex::Print()<<"\nGBhypoplastic parameters: e_c0 = "<<GBparameters.e_c0<<";";
+                amrex::Print()<<"\nGBhypoplastic parameters: e_i0 = "<<GBparameters.e_i0<<";";
+                amrex::Print()<<"\nGBhypoplastic parameters: alpha = "<<GBparameters.alpha<<";";
+                amrex::Print()<<"\nGBhypoplastic parameters: beta = "<<GBparameters.beta<<";";
+                amrex::Print()<<"\nGBhypoplastic parameters: stress_cutoff = "<<GBparameters.stress_cutoff<<";";
+                amrex::Print()<<"\nGBhypoplastic initial void ratio e0 = "<<initial_void_ratio<<";";
+            }
+            // end yli add    
         }
 
         std::string Convert_arr_string(Array<Real,AMREX_SPACEDIM>arr)

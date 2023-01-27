@@ -145,15 +145,16 @@ int main (int argc, char* argv[])
             }
         }
         else
-        {
-        	msg="\n Acquiring particle data (using autogen)";
+        {   //yli edit for gbhypo
+            msg="\n Acquiring particle data (using autogen)";
         	PrintMessage(msg,print_length,true);
             mpm_pc.InitParticles(specs.autogen_mincoords.data(),specs.autogen_maxcoords.data(),
                                  specs.autogen_vel.data(),specs.autogen_dens,specs.autogen_constmodel,
                                  specs.autogen_E,specs.autogen_nu,
                                  specs.autogen_bulkmod,specs.autogen_Gama_pres,specs.autogen_visc,
-                                 specs.autogen_multi_part_per_cell,specs.total_mass,specs.total_vol);
+                                 specs.autogen_multi_part_per_cell,specs.total_mass,specs.total_vol,specs.initial_void_ratio);
             PrintMessage(msg,print_length,false);
+            //end yli edit
         }
 
         if(specs.ifrigidnodespresent==0)
@@ -268,7 +269,6 @@ int main (int argc, char* argv[])
         mpm_pc.RedistributeLocal();
         mpm_pc.fillNeighbors();
 
-
         //Calculate time step
         msg="\n Calculating initial time step";
         PrintMessage(msg,print_length,true);
@@ -295,8 +295,11 @@ int main (int argc, char* argv[])
                                      specs.alpha_pic_flip,
                                      dt);	//Calculate strainrate at each mp
 
+        //yli edit for gbhypo
+        mpm_pc.apply_constitutive_model(specs,dt,specs.applied_strainrate);
+        //end yli edit
 
-        mpm_pc.apply_constitutive_model(dt,specs.applied_strainrate);
+        //mpm_pc.apply_constitutive_model(dt,specs.applied_strainrate);
         PrintMessage(msg,print_length,false);
 
         msg="\n Updating density field";
@@ -700,9 +703,10 @@ int main (int argc, char* argv[])
                 }
                 else
                 {
-                    mpm_pc.apply_constitutive_model(dt,specs.applied_strainrate);
-
-                }
+                    //yli edit for gbhypo1
+            		mpm_pc.apply_constitutive_model(specs,dt,specs.applied_strainrate);
+                    //end yli edit
+            	}
             }
             else
             {
@@ -712,8 +716,10 @@ int main (int argc, char* argv[])
                 }
                 else
                 {
-                    mpm_pc.apply_constitutive_model(dt,0.0);
-                }
+                    //yli edit for gbhypo
+            		mpm_pc.apply_constitutive_model(specs,dt,0.0);
+                    //end yli edit
+            	}
 
             }
 
