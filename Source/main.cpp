@@ -680,13 +680,6 @@ int main (int argc, char* argv[])
                 Gpu::copy(Gpu::hostToDevice,h_velocity.begin(),h_velocity.end(),d_velocity.begin());
                 auto *vec_d_ptr = d_velocity.dataPtr();
 
-                for(int j=0;j<specs.num_of_rigid_bodies;j++)
-                {
-                	for(int k=0;k<AMREX_SPACEDIM;k++)
-                	{
-                		velocity[j*AMREX_SPACEDIM+k]=specs.Rb[j].velocity[k];
-                	}
-                }
                 /*velocity_upper_jaw[0]=velocity[0*AMREX_SPACEDIM+0];
                 velocity_upper_jaw[1]=velocity[0*AMREX_SPACEDIM+1];
                 velocity_upper_jaw[2]=velocity[0*AMREX_SPACEDIM+2];*/
