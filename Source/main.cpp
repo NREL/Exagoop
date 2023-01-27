@@ -665,9 +665,20 @@ int main (int argc, char* argv[])
 
                 //3-DOF solver to get updated velocities
                 specs.ThreeDOF_Solver(dt);
-                Real *velocity;
+                //Real *velocity;
                 //velocity.resize(AMREX_SPACEDIM*specs.num_of_rigid_bodies);
 
+		Vector<Real> h_velocity(specs.num_of_rigid_bodies*AMREX_SPACEDIM,0.0);
+                Gpu::DeviceVector<Real> d_velocity(specs.num_of_rigid_bodies*AMREX_SPACEDIM,0.0);
+                for(int j=0;j<specs.num_of_rigid_bodies;j++)
+                {
+                        for(int k=0;k<AMREX_SPACEDIM;k++)
+                        {
+                                h_velocity[j*AMREX_SPACEDIM+k]=specs.Rb[j].velocity[k];
+                        }
+                }
+                Gpu::copy(Gpu::hostToDevice,h_velocity.begin(),h_velocity.end(),d_velocity.begin());
+                auto *vec_d_ptr = d_velocity.dataPtr();
 
                 for(int j=0;j<specs.num_of_rigid_bodies;j++)
                 {
@@ -681,7 +692,7 @@ int main (int argc, char* argv[])
                 velocity_upper_jaw[2]=velocity[0*AMREX_SPACEDIM+2];
 
                 mpm_pc.calculate_nodal_normal(nodaldata,specs.mass_tolerance,specs.order_scheme_directional,specs.periodic);
-                nodal_detect_contact(nodaldata,geom,specs.mass_tolerance,velocity,specs.num_of_rigid_bodies);
+                nodal_detect_contact(nodaldata,geom,specs.mass_tolerance,vec_d_ptr,specs.num_of_rigid_bodies);
 
                 //Calculate loads on rigid particles
                 mpm_pc.CalculateStressOnRigidParticles(nodaldata,0,1,specs.order_scheme_directional,specs.periodic,specs.alpha_pic_flip,dt);
