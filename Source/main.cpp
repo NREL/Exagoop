@@ -665,8 +665,8 @@ int main (int argc, char* argv[])
 
                 //3-DOF solver to get updated velocities
                 specs.ThreeDOF_Solver(dt);
-                Vector<Real> velocity;
-                velocity.resize(AMREX_SPACEDIM*specs.num_of_rigid_bodies);
+                Real *velocity;
+                //velocity.resize(AMREX_SPACEDIM*specs.num_of_rigid_bodies);
 
 
                 for(int j=0;j<specs.num_of_rigid_bodies;j++)

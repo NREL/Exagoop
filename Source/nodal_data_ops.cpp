@@ -159,7 +159,7 @@ void nodal_update(MultiFab &nodaldata,const amrex::Real& dt, const amrex::Real& 
     }
 }
 
-void nodal_detect_contact(MultiFab &nodaldata,const Geometry geom,amrex::Real& contact_tolerance,Vector<Real> velocity, int num_of_bodies)
+void nodal_detect_contact(MultiFab &nodaldata,const Geometry geom,amrex::Real& contact_tolerance,Real *velocity, int num_of_bodies)
 {
 	const auto plo = geom.ProbLoArray();
 	const auto phi = geom.ProbHiArray();
