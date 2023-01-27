@@ -687,9 +687,9 @@ int main (int argc, char* argv[])
                 		velocity[j*AMREX_SPACEDIM+k]=specs.Rb[j].velocity[k];
                 	}
                 }
-                velocity_upper_jaw[0]=velocity[0*AMREX_SPACEDIM+0];
+                /*velocity_upper_jaw[0]=velocity[0*AMREX_SPACEDIM+0];
                 velocity_upper_jaw[1]=velocity[0*AMREX_SPACEDIM+1];
-                velocity_upper_jaw[2]=velocity[0*AMREX_SPACEDIM+2];
+                velocity_upper_jaw[2]=velocity[0*AMREX_SPACEDIM+2];*/
 
                 mpm_pc.calculate_nodal_normal(nodaldata,specs.mass_tolerance,specs.order_scheme_directional,specs.periodic);
                 nodal_detect_contact(nodaldata,geom,specs.mass_tolerance,vec_d_ptr,specs.num_of_rigid_bodies);
