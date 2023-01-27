@@ -38,7 +38,7 @@ struct realData
         spinrate=45,//33 //rate of rotation; this tensor is anti-symmetric, to better utilize existing code, we store the upper half matrix [XX, XY, XZ, YY, YZ, ZZ] (XX YY ZZ === 0)
         void_ratio=51,// 39 // for hypoplastic model
         // end yli add
-        yacceleration=52      //This is for storing the acceleration of each particle in the y-direction. This variable is not generic and used only for the spring-mass and membrane simulations only
+        yacceleration=52,      //This is for storing the acceleration of each particle in the y-direction. This variable is not generic and used only for the spring-mass and membrane simulations only
         count
     };
 };

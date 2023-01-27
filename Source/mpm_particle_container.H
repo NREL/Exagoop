@@ -22,7 +22,8 @@ public:
     
     }
 
-    void InitParticles (const std::string & filename,Real &total_mass, Real &total_vol);
+    //void InitParticles (const std::string & filename,Real &total_mass, Real &total_vol);
+    void InitParticles (const std::string & filename,Real &total_mass, Real &total_vol, Real &total_rigid_mass, int &index_rigid_body_read_so_far, int &ifrigidnodespresent);
 
     void InitParticles (Real mincoords[AMREX_SPACEDIM],Real maxcoords[AMREX_SPACEDIM], 
         Real vel[AMREX_SPACEDIM],

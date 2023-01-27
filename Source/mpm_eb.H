@@ -50,8 +50,8 @@ amrex::Real get_levelset_value(amrex::Array4<amrex::Real> phi,
     amrex::GpuArray<amrex::Real,AMREX_SPACEDIM> ls_dx;
     const int lo[AMREX_SPACEDIM]={0};
     const int hi[AMREX_SPACEDIM]={0};
-    const Array<int, AMREX_SPACEDIM> order_scheme_pseudo={1,1,1};
-    const Array<int, AMREX_SPACEDIM> periodic_pseudo={1,1,1};
+    const GpuArray<int, AMREX_SPACEDIM> order_scheme_pseudo={1,1,1};
+    const GpuArray<int, AMREX_SPACEDIM> periodic_pseudo={1,1,1};
 
     ls_dx[XDIR]=dx[XDIR]/lsref;
     ls_dx[YDIR]=dx[YDIR]/lsref;
@@ -90,8 +90,8 @@ void get_levelset_grad(amrex::Array4<amrex::Real> phi,
     amrex::GpuArray<amrex::Real,AMREX_SPACEDIM> ls_dx;
     const int lo[AMREX_SPACEDIM]={0};
     const int hi[AMREX_SPACEDIM]={0};
-    const Array<int, AMREX_SPACEDIM> order_scheme_pseudo={1,1,1};
-    const Array<int, AMREX_SPACEDIM> periodic_pseudo={1,1,1};
+    const GpuArray<int, AMREX_SPACEDIM> order_scheme_pseudo={1,1,1};
+    const GpuArray<int, AMREX_SPACEDIM> periodic_pseudo={1,1,1};
 
     ls_dx[XDIR]=dx[XDIR]/lsref;
     ls_dx[YDIR]=dx[YDIR]/lsref;
