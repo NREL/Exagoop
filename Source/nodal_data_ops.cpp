@@ -165,7 +165,6 @@ void nodal_detect_contact(MultiFab &nodaldata,const Geometry geom,amrex::Real& c
 	const auto phi = geom.ProbHiArray();
 	const auto dx = geom.CellSizeArray();
 
-	velocity.resize(AMREX_SPACEDIM*num_of_bodies);
 
     for (MFIter mfi(nodaldata); mfi.isValid(); ++mfi)
     {
