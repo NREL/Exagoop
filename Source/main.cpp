@@ -169,6 +169,7 @@ int main (int argc, char* argv[])
         }
 
         //Setting up rigid particle setups
+/*
 
         if(numrigidbodies!=0)
         {
@@ -202,7 +203,7 @@ int main (int argc, char* argv[])
         	mpm_pc.Calculate_Total_Number_of_rigid_particles(0,specs.Rb[0].num_of_mp);
         	mpm_pc.Calculate_Total_Number_of_rigid_particles(1,specs.Rb[1].num_of_mp);
         }
-
+*/
 
 
         //Set background grid properties

@@ -167,13 +167,27 @@ void GB_hypoplastic(amrex::Real eps_dot[NCOMP_TENSOR],
         }
 
         // Pycnotropy factors
-        amrex::Real f_d = pow((e-e_d)/(e_c-e_d),alpha);
+        // amrex::Real f_d = pow((e-e_d)/(e_c-e_d),alpha);
+        amrex::Real f_d = (e-e_d)/(e_c-e_d);
+        if(f_d>0){
+            f_d = pow(f_d,alpha);
+        } else {
+            f_d = 0;
+        }
         amrex::Real f_e = pow(e_c/e, beta);
         amrex::Real f_b = pow(e_i0/e_c0, beta)*(h_s/(n*h_i))*((1+e_i)/e_i)*pow(-trace_sigma/h_s,1-n);
         amrex::Real f_s = f_b*f_e;
 
         // compute lode angle
-        amrex::Real cos3theta = -sqrt(6.0)*trace_sigma_hat_star_cube/pow(trace_sigma_hat_star_square,1.5);
+        // amrex::Real cos3theta = -sqrt(6.0)*trace_sigma_hat_star_cube/pow(trace_sigma_hat_star_square,1.5);
+        amrex::Real cos3theta;
+        if(trace_sigma_hat_star_square<=1e-10){
+            cos3theta = 1.0;
+        } else {
+            cos3theta = -sqrt(6.0)*trace_sigma_hat_star_cube/pow(trace_sigma_hat_star_square,1.5);
+            if(cos3theta>1.0) cos3theta = 1.0;
+            if(cos3theta<-1.0) cos3theta = -1.0;
+        }
 
         amrex::Real a_1 = 1.0/(c_1+c_2*modulus_sigma_hat_star*(1+cos3theta));
         
@@ -203,9 +217,25 @@ void GB_hypoplastic(amrex::Real eps_dot[NCOMP_TENSOR],
             }   
         }
         //limit stress to be compressive
-        sigma[XX] = (sigma[XX]<=stress_cutoff)?sigma[XX]:stress_cutoff;
-        sigma[YY] = (sigma[YY]<=stress_cutoff)?sigma[YY]:stress_cutoff;
-        sigma[ZZ] = (sigma[ZZ]<=stress_cutoff)?sigma[ZZ]:stress_cutoff;
+        if(sigma[XX]>0){
+            sigma[XX] = -10.0;
+            sigma[XY] = 0.0;
+            sigma[XZ] = 0.0;
+        }
+        if(sigma[YY]>0){
+            sigma[YY] = -10.0;
+            sigma[YZ] = 0.0;
+        }
+        if(sigma[ZZ]>0){
+            sigma[ZZ] = -10.0;
+        }
+
+        // update void ratio here
+        //amrex::Print()<<"strain rate XX = " << p.rdata(realData::strainrate+XX);
+        //e += (p.rdata(realData::strainrate+XX)+p.rdata(realData::strainrate+YY) +p.rdata(realData::strainrate+ZZ)) * (1 +e)* dt;
+        //sigma[XX] = (sigma[XX]<=stress_cutoff)?sigma[XX]:stress_cutoff;
+        //sigma[YY] = (sigma[YY]<=stress_cutoff)?sigma[YY]:stress_cutoff;
+        //sigma[ZZ] = (sigma[ZZ]<=stress_cutoff)?sigma[ZZ]:stress_cutoff;
     }
     else{
         if(e>e_i0){
