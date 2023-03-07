@@ -104,14 +104,14 @@ void MPMParticleContainer::updateVolume(const amrex::Real& dt)
             {
                 //yli add for gbhypo
                 if(p.idata(intData::constitutive_model)==2){
-                    old_void_ratio = p.rdata(realData::void_ratio);
-                    new_void_ratio = old_void_ratio + (p.rdata(realData::strainrate+XX)
-                                                    +p.rdata(realData::strainrate+YY)
-                                                    +p.rdata(realData::strainrate+ZZ))
-                                                    * (1 +old_void_ratio)* dt;
-                    p.rdata(realData::void_ratio) = new_void_ratio;
-                    p.rdata(realData::volume)	= (1+new_void_ratio)/(1+old_void_ratio)*p.rdata(realData::vol_init); // use order_of_scheme=1 to update vol_init
-                    p.rdata(realData::density)	= p.rdata(realData::mass)/p.rdata(realData::volume);
+                    // old_void_ratio = p.rdata(realData::void_ratio);
+                    // new_void_ratio = old_void_ratio + (p.rdata(realData::strainrate+XX)
+                    //                                 +p.rdata(realData::strainrate+YY)
+                    //                                 +p.rdata(realData::strainrate+ZZ))
+                    //                                 * (1 +old_void_ratio)* dt;
+                    // p.rdata(realData::void_ratio) = new_void_ratio;
+                    // p.rdata(realData::volume)	= (1+new_void_ratio)/(1+old_void_ratio)*p.rdata(realData::vol_init); // use order_of_scheme=1 to update vol_init
+                    // p.rdata(realData::density)	= p.rdata(realData::mass)/p.rdata(realData::volume);
                 }
                 //end yli add
                 else{

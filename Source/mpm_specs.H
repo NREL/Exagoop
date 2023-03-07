@@ -5,6 +5,7 @@
 #include <AMReX_REAL.H>
 #include <AMReX_ParmParse.H>
 #include <constants.H>
+#include<cmath>
 
 using namespace amrex;
 
@@ -34,11 +35,18 @@ struct realData
         Bulk_modulus=42,			//39
         Gama_pressure=43,			//40
         Dynamic_viscosity=44,		//41
+        yacceleration=45,      //This is for storing the acceleration of each particle in the y-direction. This variable is not generic and used only for the spring-mass and membrane simulations only
         // yli add for gbhypo
-        spinrate=45,//33 //rate of rotation; this tensor is anti-symmetric, to better utilize existing code, we store the upper half matrix [XX, XY, XZ, YY, YZ, ZZ] (XX YY ZZ === 0)
-        void_ratio=51,// 39 // for hypoplastic model
+        spinrate=46,//33 //rate of rotation; this tensor is anti-symmetric, to better utilize existing code, we store the upper half matrix [XX, XY, XZ, YY, YZ, ZZ] (XX YY ZZ === 0)
+        void_ratio=52,// 39 // for hypoplastic model
+        min_void_ratio=53,
+        max_void_ratio=54,
+        critical_void_ratio=55,
+        inertial_number=56,
+        miu_I=57,
+        tau=58, //reserve NCOMP_TENSOR (6) space
+        dummy=64,
         // end yli add
-        yacceleration=52,      //This is for storing the acceleration of each particle in the y-direction. This variable is not generic and used only for the spring-mass and membrane simulations only
         count
     };
 };
@@ -223,6 +231,16 @@ class MPMspecs
         int print_GBHypoParameters = 0;
         Real initial_void_ratio = 0.55; // initial void ratio for hypoplastic model
         //end yli gbhypo
+        // yli add miu I
+        struct miuIParameters{
+            Real d = 1;
+            Real rou_s = 1;
+            Real miu_s = tan(20.9);
+            Real miu_2 = tan(32.76);
+            Real I_0 = 0.279;
+        } miu_I_Parameters;
+        int print_miuIParameters = 0;
+        //end yli add
 
         void read_mpm_specs()
         {
@@ -407,6 +425,21 @@ class MPMspecs
                 amrex::Print()<<"\nGBhypoplastic parameters: beta = "<<GBparameters.beta<<";";
                 amrex::Print()<<"\nGBhypoplastic parameters: stress_cutoff = "<<GBparameters.stress_cutoff<<";";
                 amrex::Print()<<"\nGBhypoplastic initial void ratio e0 = "<<initial_void_ratio<<";";
+            }
+
+            ParmParse miuIp("miuIRheology");
+            miuIp.query("particle_diameter",miu_I_Parameters.d);
+            miuIp.query("particle_density",miu_I_Parameters.rou_s);
+            miuIp.query("miu_s",miu_I_Parameters.miu_s);
+            miuIp.query("miu_2",miu_I_Parameters.miu_2);
+            miuIp.query("I0",miu_I_Parameters.I_0);
+            miuIp.query("print_parameters",print_miuIParameters);
+            if(print_miuIParameters == 1){
+                amrex::Print()<<"\nmiuI rheology parameters: d = "<<miu_I_Parameters.d<<";";
+                amrex::Print()<<"\nmiuI rheology parameters: rou_s = "<<miu_I_Parameters.rou_s<<";";
+                amrex::Print()<<"\nmiuI rheology parameters: miu_s = "<<miu_I_Parameters.miu_s<<";";
+                amrex::Print()<<"\nmiuI rheology parameters: miu_2 = "<<miu_I_Parameters.miu_2<<";";
+                amrex::Print()<<"\nmiuI rheology parameters: I_0 = "<<miu_I_Parameters.I_0<<";";
             }
             // end yli add    
         }

@@ -147,6 +147,16 @@ void MPMParticleContainer::writeParticles(std::string prefix_particlefilename, i
         real_data_names.push_back(amrex::Concatenate("spinrate_", i, 1));
     }
     real_data_names.push_back("void_ratio");
+    real_data_names.push_back("min_void_ratio");
+    real_data_names.push_back("max_void_ratio");
+    real_data_names.push_back("critical_void_ratio");
+    real_data_names.push_back("inertial_number");
+    real_data_names.push_back("miu_I");
+    for(int i=0;i<6;i++)
+    {
+        real_data_names.push_back(amrex::Concatenate("tau_", i, 1));
+    }
+    real_data_names.push_back("dummy");
     //end yli add
     int_data_names.push_back("phase");
     int_data_names.push_back("rigid_body_id");
@@ -172,6 +182,16 @@ void MPMParticleContainer::writeParticles(std::string prefix_particlefilename, i
     writeflags_real[realData::Dynamic_viscosity]=0;
     //yli add for gbhypo
     writeflags_real[realData::void_ratio]=1;
+    writeflags_real[realData::min_void_ratio]=1;
+    writeflags_real[realData::max_void_ratio]=1;
+    writeflags_real[realData::critical_void_ratio]=1;
+    writeflags_real[realData::inertial_number]=1;
+    writeflags_real[realData::miu_I]=1;
+    for(int i=0;i<6;i++)
+    {
+        writeflags_real[realData::tau+i]=1;
+    }
+    writeflags_real[realData::miu_I]=0;
     //end yli add
     
     WritePlotFile(pltfile, "particles",writeflags_real, 
@@ -270,6 +290,16 @@ void MPMParticleContainer::writeCheckpointFile(std::string prefix_particlefilena
         real_data_names.push_back(amrex::Concatenate("spinrate_", i, 1));
     }
     real_data_names.push_back("void_ratio");
+    real_data_names.push_back("min_void_ratio");
+    real_data_names.push_back("max_void_ratio");
+    real_data_names.push_back("critical_void_ratio");
+    real_data_names.push_back("inertial_number");
+    real_data_names.push_back("miu_I");
+    for(int i=0;i<6;i++)
+    {
+        real_data_names.push_back(amrex::Concatenate("tau_", i, 1));
+    }
+    real_data_names.push_back("dummy");
     //end yli add
 
 	amrex::Vector<std::string> int_data_names;

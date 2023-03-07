@@ -1,6 +1,8 @@
 #include <mpm_particle_container.H>
 #include <interpolants.H>
 #include <constitutive_models.H>
+#include <gb_hypoplastic.H>
+#include <miuIrheology.H>
 
 using namespace amrex;
 
@@ -238,11 +240,17 @@ void MPMParticleContainer::apply_constitutive_model(MPMspecs specs,
 				else if(p.idata(intData::constitutive_model)==2)		//Yudong: GB hypoplastic model for granular flow
             	{
 					//GB hypoplastic model here.
-					amrex::Real e = p.rdata(realData::void_ratio);
-					amrex::Real e_before = e;
-					GB_hypoplastic(strainrate,spinrate,stress,dt, e,specs);
-					p.rdata(realData::void_ratio) = e;
+					//amrex::Real e = p.rdata(realData::void_ratio);
+					//amrex::Real e_before = e;
+
+					//GB_hypoplastic(strainrate,spinrate,stress,dt, e,specs);
+                    GB_hypoplastic(strainrate,spinrate,stress,dt, p,specs);
+					//p.rdata(realData::void_ratio) = e;
             	}
+                else if(p.idata(intData::constitutive_model)==3) //miu-I rheology
+                {
+                    miuI(strainrate,stress,p,specs);
+                }
 				//end yli add
 
 				for(int d=0;d<NCOMP_TENSOR;d++)

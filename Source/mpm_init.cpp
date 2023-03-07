@@ -113,6 +113,14 @@ void MPMParticleContainer::InitParticles (const std::string& filename,
             	p.rdata(realData::Dynamic_viscosity)=0.0;
             	ifs >> p.rdata(realData::void_ratio);
             }
+            else if(p.idata(intData::constitutive_model)==3) //miu_I rheology
+            {
+                p.rdata(realData::E)=0.0;
+            	p.rdata(realData::nu)=0.0;
+                p.rdata(realData::Bulk_modulus)=0.0;
+            	p.rdata(realData::Gama_pressure)=0.0;
+            	p.rdata(realData::Dynamic_viscosity)=0.0;
+            }
             // end yli add
             else
             {
@@ -174,7 +182,15 @@ void MPMParticleContainer::InitParticles (const std::string& filename,
                 p.rdata(realData::strain+comp)     = initial_strain;
                 p.rdata(realData::stress+comp)     = initial_stress;
             }
+            p.rdata(realData::inertial_number)=0.279;
+            p.rdata(realData::miu_I)=-1.92;
+            for(int comp=0;comp<NCOMP_TENSOR;comp++)
+            {
+                p.rdata(realData::tau+comp)=0;
+            }
+            p.rdata(realData::dummy)=0;
             // end yli add
+            
             
             host_particles.push_back(p);
 
@@ -484,6 +500,14 @@ MPMParticleContainer::ParticleType MPMParticleContainer::generate_particle
         p.rdata(realData::stress+comp)     = initial_stress; 
     }
 
+    p.rdata(realData::inertial_number)=0.279;
+    p.rdata(realData::miu_I)=-1.92;
+    for(int comp=0;comp<NCOMP_TENSOR;comp++)
+    {
+        p.rdata(realData::tau+comp)=0;
+    }
+    p.rdata(realData::dummy)=0;
+
     return(p);
 }
 
@@ -530,7 +554,13 @@ MPMParticleContainer::ParticleType MPMParticleContainer::generate_particle
         p.rdata(realData::strain+comp)     = zero;
         p.rdata(realData::stress+comp)     = zero;
     }
-
+    p.rdata(realData::inertial_number)=0;
+    p.rdata(realData::miu_I)=0;
+    for(int comp=0;comp<NCOMP_TENSOR;comp++)
+    {
+        p.rdata(realData::tau+comp)=0;
+    }
+    p.rdata(realData::dummy)=0;
     return(p);
 }
 
