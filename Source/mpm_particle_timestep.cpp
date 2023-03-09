@@ -367,7 +367,11 @@ amrex::Real MPMParticleContainer::GetPosSpring()
 	        	yscale = p.pos(YDIR);
 	        	return(yscale);
 	         });
-	return(ymin);
+
+#ifdef BL_USE_MPI
+    ParallelDescriptor::ReduceRealMax(ymin);
+#endif
+    return(ymin);
 
 }
 

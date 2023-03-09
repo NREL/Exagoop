@@ -390,7 +390,7 @@ void MPMParticleContainer::WriteDeflectionTVB(Real tvb_E,Real tvb_v0,Real tvb_L,
 	            xp[XDIR]=p.pos(XDIR);
 	            xp[YDIR]=p.pos(YDIR);
 	            y_exact = Amplitude*sin(pi*xp[XDIR]/tvb_L);
-	            //PrintToFile(outputfile)<<xp[XDIR]<<"\t"<<xp[YDIR]<<"\t"<<y_exact<<"\n";
+	            PrintToFile(outputfile)<<xp[XDIR]<<"\t"<<xp[YDIR]<<"\t"<<y_exact<<"\n";
 	        });
 	    }
 

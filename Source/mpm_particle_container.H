@@ -64,6 +64,16 @@ public:
 			   GpuArray<int, AMREX_SPACEDIM> order_scheme_directional,
 			   GpuArray<int, AMREX_SPACEDIM> periodic);
 
+    void deposit_stressyy_onto_lowyboundary(MultiFab& nodaldata,
+                           Array<Real,AMREX_SPACEDIM> gravity,
+                           int external_loads_present,
+                           Array<Real,AMREX_SPACEDIM> force_slab_lo,
+                           Array<Real,AMREX_SPACEDIM> force_slab_hi,
+                           Array<Real,AMREX_SPACEDIM> extforce,
+                           amrex::Real mass_tolerance,
+                           GpuArray<int, AMREX_SPACEDIM> order_scheme_directional,
+                           GpuArray<int, AMREX_SPACEDIM> periodic);
+
     void calculate_nodal_normal (	MultiFab& nodaldata,
 			 	 	 	 	 	 	 	amrex::Real mass_tolerance,
 										GpuArray<int,AMREX_SPACEDIM> order_scheme_directional,

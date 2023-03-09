@@ -131,7 +131,10 @@ int main (int argc, char* argv[])
         	PrintMessage(msg,print_length,true);
             mpm_pc.readCheckpointFile(specs.restart_checkfile, steps,time,output_it,velocity_upper_jaw);
             specs.ifrigidnodespresent=mpm_pc.checkifrigidnodespresent();
-            specs.no_of_rigidbodies_present = mpm_pc.get_num_of_bodies()+1;
+            if(specs.ifrigidnodespresent==1)
+              {
+                specs.no_of_rigidbodies_present = mpm_pc.get_num_of_bodies()+1;
+              }
             mpm_pc.Calculate_Total_Vol_MaterialPoints(specs.total_vol);
             PrintMessage(msg,print_length,false);
         }
@@ -401,12 +404,12 @@ int main (int argc, char* argv[])
                         mpm_pc.CalculateErrorP2G(nodaldata,specs.p2g_L,specs.p2g_f,specs.p2g_ncell);
                         break;
                     case(7):	//Checks the weight of a block of elastic solid. Used to validate functionality to evaluate surface forces
-                        mpm_pc.deposit_onto_grid(nodaldata,
+                        mpm_pc.deposit_stressyy_onto_lowyboundary(nodaldata,
                                                  specs.gravity,
                                                  specs.external_loads_present,
                                                  specs.force_slab_lo,
                                                  specs.force_slab_hi,
-                                                 specs.extforce,0,2,specs.mass_tolerance,
+                                                 specs.extforce,specs.mass_tolerance,
                                                  specs.order_scheme_directional,
                                                  specs.periodic);
                         CalculateSurfaceIntegralOnBG(geom, nodaldata,STRESS_INDEX,err);
@@ -420,7 +423,7 @@ int main (int argc, char* argv[])
                                 //Calculate the eaxct steady state deflection
                                 specs.spring_alone_exact_deflection = specs.spring_alone_length-specs.total_mass*fabs(specs.gravity[YDIR])/(2.0*specs.spring_alone_E*specs.spring_alone_area/specs.spring_alone_length);
                                 specs.spring_alone_exact_delta = specs.spring_alone_length-mpm_pc.GetPosSpring();
-                                amrex::Print()<<"\n"<<specs.total_mass<<" "<<specs.gravity[YDIR]<<" "<<specs.spring_alone_length<<" "<<specs.spring_alone_area<<" "<<specs.spring_alone_E;
+                                //amrex::Print()<<"\n"<<specs.total_mass<<" "<<specs.gravity[YDIR]<<" "<<specs.spring_alone_length<<" "<<specs.spring_alone_area<<" "<<specs.spring_alone_E;
                                 break;
                     default:	//
                                 amrex::Abort("\nSorry. The test number does not exist");
@@ -509,8 +512,12 @@ int main (int argc, char* argv[])
         	mpm_pc.Calculate_Total_Vol_MaterialPoints(tmpr);
         	amrex::Print()<<" "<<std::setprecision(4)<<tmpr;
 
-        	msg="\n     Rigid particle details:";
-        	PrintMessage(msg,print_length,true);
+        	if(specs.no_of_rigidbodies_present>=1)
+        	{
+        	    msg="\n     Rigid particle details:";
+        	    PrintMessage(msg,print_length,true);
+        	}
+
 
         	for(int i=0;i<specs.no_of_rigidbodies_present;i++)
         	{
@@ -879,12 +886,12 @@ int main (int argc, char* argv[])
                             mpm_pc.CalculateErrorP2G(nodaldata,specs.p2g_L,specs.p2g_f,specs.p2g_ncell);
                             break;
                         case(7):	//Checks the weight of a block of elastic solid. Used to validate functionality to evaluate surface forces
-                            mpm_pc.deposit_onto_grid(nodaldata,
+                            mpm_pc.deposit_stressyy_onto_lowyboundary(nodaldata,
                                                      specs.gravity,
                                                      specs.external_loads_present,
                                                      specs.force_slab_lo,
                                                      specs.force_slab_hi,
-                                                     specs.extforce,0,2,specs.mass_tolerance,
+                                                     specs.extforce,specs.mass_tolerance,
                                                      order_surface_integral,
                                                      specs.periodic);
                             CalculateSurfaceIntegralOnBG(geom, nodaldata,STRESS_INDEX,err);
@@ -895,8 +902,7 @@ int main (int argc, char* argv[])
                         case(9):
                                     break;
                         case(10):	//Get oscillations of a single spring under self weight
-                                    ymax = mpm_pc.GetPosSpring()+specs.spring_alone_exact_delta;
-                                    PrintToFile("Spring.out")<<time<<"\t"<<ymax<<"\t"<<specs.spring_alone_exact_deflection<<"\n";
+                                    //
                                     break;
                         default:	//
                                     amrex::Print()<<"\nTest number = "<<specs.test_number;
@@ -930,6 +936,8 @@ int main (int argc, char* argv[])
                     mpm_pc.WriteDeflectionTVB(specs.tvb_E,specs.tvb_v0,specs.tvb_L,specs.tvb_rho,time,output_it);
                 }
 
+
+
                 if(specs.dens_field_output)
                 {
                     pltfile = amrex::Concatenate(specs.prefix_densityfilename, output_it, specs.num_of_digits_in_filenames);
@@ -942,8 +950,25 @@ int main (int argc, char* argv[])
                 mpm_pc.writeCheckpointFile(specs.prefix_checkpointfilename, specs.num_of_digits_in_filenames, time,steps,output_it, velocity_upper_jaw);
             }
             auto time_per_iter=amrex::second()-iter_time_start;
-            if (output_timePrint >= specs.screen_output_time)
+            if (fabs(output_timePrint-specs.screen_output_time)<dt*0.5)
             {
+                if(specs.test_number==10)
+                {
+                    amrex::Real ymax,err;
+                    err=0.0;
+                    /*mpm_pc.deposit_onto_grid(nodaldata,
+                                             specs.gravity,
+                                             specs.external_loads_present,
+                                             specs.force_slab_lo,
+                                             specs.force_slab_hi,
+                                             specs.extforce,0,2,specs.mass_tolerance,
+                                             order_surface_integral,
+                                             specs.periodic);
+                    CalculateSurfaceIntegralOnBG(geom, nodaldata,STRESS_INDEX,err);*/
+                    ymax = mpm_pc.GetPosSpring();//+specs.spring_alone_exact_delta;
+                    PrintToFile("Spring.out")<<time<<"\t"<<ymax<<"\t"<<err<<"\n";
+                }
+
             	Print()<<"\nIteration: "<<std::setw(10)<<steps<<",\t"<<"Time: "<<std::fixed<<std::setprecision(10)<<time<<",\tDt = "<<std::scientific<<std::setprecision(5)<<dt<<std::fixed<<std::setprecision(10)<<",\t Time/Iter = "<<time_per_iter;
             	PrintToFile("CompTime.out")<<steps<<"\t"<<time_per_iter<<"\n";
             	output_timePrint=zero;

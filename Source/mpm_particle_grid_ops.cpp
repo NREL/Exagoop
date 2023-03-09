@@ -509,6 +509,169 @@ void MPMParticleContainer::deposit_onto_grid(MultiFab& nodaldata,
 }
 
 
+void MPMParticleContainer::deposit_stressyy_onto_lowyboundary(MultiFab& nodaldata,
+                                             Array<Real,AMREX_SPACEDIM> gravity,
+                                             int external_loads_present,
+                                             Array<Real,AMREX_SPACEDIM> force_slab_lo,
+                                             Array<Real,AMREX_SPACEDIM> force_slab_hi,
+                                             Array<Real,AMREX_SPACEDIM> extforce,
+                                             amrex::Real mass_tolerance,
+                                             GpuArray<int,AMREX_SPACEDIM> order_scheme_directional,
+                                             GpuArray<int,AMREX_SPACEDIM> periodic
+                                             )
+{
+    const int lev = 0;
+    const Geometry& geom = Geom(lev);
+    auto& plev  = GetParticles(lev);
+    const auto dxi = geom.InvCellSizeArray();
+    const auto dx = geom.CellSizeArray();
+    const auto plo = geom.ProbLoArray();
+    const auto domain = geom.Domain();
+    int extloads=external_loads_present;
+
+    Real grav[]={AMREX_D_DECL(gravity[XDIR],gravity[YDIR],gravity[ZDIR])};
+    Real slab_lo[]={AMREX_D_DECL(force_slab_lo[XDIR],force_slab_lo[YDIR],force_slab_lo[ZDIR])};
+    Real slab_hi[]={AMREX_D_DECL(force_slab_hi[XDIR],force_slab_hi[YDIR],force_slab_hi[ZDIR])};
+    Real extpforce[]={AMREX_D_DECL(extforce[XDIR],extforce[YDIR],extforce[ZDIR])};
+
+    const int* loarr = domain.loVect ();
+    const int* hiarr = domain.hiVect ();
+
+    int lo[]={loarr[0],loarr[1],loarr[2]};
+    int hi[]={hiarr[0],hiarr[1],hiarr[2]};
+
+    for (MFIter mfi(nodaldata); mfi.isValid(); ++mfi)
+    {
+        //already nodal as mfi is from nodaldata
+        const Box& nodalbox=mfi.validbox();
+
+        Array4<Real> nodal_data_arr=nodaldata.array(mfi);
+
+        amrex::ParallelFor(nodalbox,[=]
+        AMREX_GPU_DEVICE (int i,int j,int k) noexcept
+        {
+          nodal_data_arr(i,j,k,STRESS_INDEX)=zero;
+        });
+    }
+
+    for(MFIter mfi = MakeMFIter(lev); mfi.isValid(); ++mfi)
+    {
+        const amrex::Box& box = mfi.tilebox();
+        Box nodalbox = convert(box, {1, 1, 1});
+
+        int gid = mfi.index();
+        int tid = mfi.LocalTileIndex();
+        auto index = std::make_pair(gid, tid);
+
+        auto& ptile = plev[index];
+        auto& aos   = ptile.GetArrayOfStructs();
+        int np = aos.numRealParticles();
+        int ng =aos.numNeighborParticles();
+        int nt = np+ng;
+
+        Array4<Real> nodal_data_arr=nodaldata.array(mfi);
+
+        ParticleType* pstruct = aos().dataPtr();
+
+
+        amrex::ParallelFor(nt,[=]
+        AMREX_GPU_DEVICE (int i) noexcept
+        {
+            int lmin,lmax,nmin,nmax,mmin,mmax;
+
+            ParticleType& p = pstruct[i];
+
+            if(p.idata(intData::phase)==0 && p.pos(YDIR)<=plo[1]+dx[1]*3)              //Compute only for standard particles and not rigid particles with phase=1
+            {
+
+                amrex::Real xp[AMREX_SPACEDIM];
+
+                xp[XDIR]=p.pos(XDIR);
+                xp[YDIR]=p.pos(YDIR);
+                xp[ZDIR]=p.pos(ZDIR);
+
+                auto iv = getParticleCell(p, plo, dxi, domain);
+
+
+
+                lmin=(order_scheme_directional[0]==1)?0:((order_scheme_directional[0]==3 or order_scheme_directional[0]==2)?(iv[XDIR]==lo[XDIR])?0:((iv[XDIR]==hi[XDIR])?-1:-1):-1000);
+                lmax=(order_scheme_directional[0]==1)?2:((order_scheme_directional[0]==3 or order_scheme_directional[0]==2)?(iv[XDIR]==lo[XDIR])?lmin+3:((iv[XDIR]==hi[XDIR])?lmin+3:lmin+4):-1000);
+
+                mmin=(order_scheme_directional[1]==1)?0:((order_scheme_directional[1]==3 or order_scheme_directional[1]==2)?(iv[YDIR]==lo[YDIR])?0:((iv[YDIR]==hi[YDIR])?-1:-1):-1000);
+                mmax=(order_scheme_directional[1]==1)?2:((order_scheme_directional[1]==3 or order_scheme_directional[1]==2)?(iv[YDIR]==lo[YDIR])?mmin+3:((iv[YDIR]==hi[YDIR])?mmin+3:mmin+4):-1000);
+
+                nmin=(order_scheme_directional[2]==1)?0:((order_scheme_directional[2]==3 or order_scheme_directional[2]==2)?(iv[ZDIR]==lo[ZDIR])?0:((iv[ZDIR]==hi[ZDIR])?-1:-1):-1000);
+                nmax=(order_scheme_directional[2]==1)?2:((order_scheme_directional[2]==3 or order_scheme_directional[2]==2)?(iv[ZDIR]==lo[ZDIR])?nmin+3:((iv[ZDIR]==hi[ZDIR])?nmin+3:nmin+4):-1000);
+
+
+                if(lmin==-1000 or lmax==-1000 or mmin==-1000 or mmax==-1000 or nmin==-1000 or nmax==-1000)
+                {
+                        amrex::Abort("\nError. Something wrong with min/max index values in deposit onto grid");
+                }
+
+                for(int n=nmin;n<nmax;n++)
+                {
+                        for(int m=mmin;m<mmax;m++)
+                        {
+                                for(int l=lmin;l<lmax;l++)
+                                {
+                                        IntVect ivlocal(iv[XDIR]+l,iv[YDIR]+m,iv[ZDIR]+n);
+
+                                        if(nodalbox.contains(ivlocal))
+                                        {
+                                                amrex::Real basisvalue=basisval(l,m,n,iv[XDIR],iv[YDIR],iv[ZDIR],xp,plo,dx,order_scheme_directional,periodic,lo,hi);
+                                                amrex::Real stress_contrib=p.rdata(realData::stress+3)*p.rdata(realData::mass)*basisvalue;
+                                                amrex::Gpu::Atomic::AddNoRet(&nodal_data_arr(ivlocal,STRESS_INDEX), stress_contrib);
+
+                                        }
+                                }
+                        }
+                }
+            }
+        });
+
+    }
+
+    for(MFIter mfi = MakeMFIter(lev); mfi.isValid(); ++mfi)
+    {
+        const amrex::Box& box = mfi.tilebox();
+        Box nodalbox = convert(box, {1, 1, 1});
+
+        int gid = mfi.index();
+        int tid = mfi.LocalTileIndex();
+        auto index = std::make_pair(gid, tid);
+
+        auto& ptile = plev[index];
+        auto& aos   = ptile.GetArrayOfStructs();
+        int np = aos.numRealParticles();
+        int ng =aos.numNeighborParticles();
+        int nt = np+ng;
+
+        Array4<Real> nodal_data_arr=nodaldata.array(mfi);
+
+        amrex::ParallelFor(
+        nodalbox, [=] AMREX_GPU_DEVICE(int i, int j, int k) noexcept
+        {
+
+
+                if(nodal_data_arr(i,j,k,MASS_INDEX) > 0.0)
+                {
+                        if(nodal_data_arr(i,j,k,MASS_INDEX)>=mass_tolerance)
+                        {
+                                nodal_data_arr(i,j,k,STRESS_INDEX)/=nodal_data_arr(i,j,k,MASS_INDEX);
+                        }
+                        else
+                        {
+                                nodal_data_arr(i,j,k,STRESS_INDEX) = 0.0;
+                        }
+                }
+
+        });
+
+    }
+
+}
+
 
 
 void MPMParticleContainer::deposit_onto_grid_rigidnodesonly(MultiFab& nodaldata,
