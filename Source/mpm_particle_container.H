@@ -53,6 +53,8 @@ public:
     amrex::Real GetPosSpring();
     void CalculateSurfaceIntegralTop(Array<Real,AMREX_SPACEDIM> gravity, Real &Fy_top, Real &Fy_bottom);
     void deposit_onto_grid(MultiFab& nodaldata,
+                           MultiFab& f_ext,
+                           Vector<MultiFab>& v_old,
                            Array<Real,AMREX_SPACEDIM> gravity,
                            int external_loads_present,
                            Array<Real,AMREX_SPACEDIM> force_slab_lo,
@@ -61,7 +63,8 @@ public:
                            int update_massvel,int update_forces, 
                            amrex::Real mass_tolerance,
 			   GpuArray<int, AMREX_SPACEDIM> order_scheme_directional,
-			   GpuArray<int, AMREX_SPACEDIM> periodic);
+			   GpuArray<int, AMREX_SPACEDIM> periodic,
+                           int implicit_solve);
 
     void calculate_nodal_normal (	MultiFab& nodaldata,
 			 	 	 	 	 	 	 	amrex::Real mass_tolerance,
@@ -115,6 +118,21 @@ public:
     void update_density_field(MultiFab& nodaldata,int refratio,amrex::Real smoothfactor);
     amrex::Real Calculate_time_step(amrex::Real CFL, amrex::Real dtmax,amrex::Real dtmin);
     void removeParticlesInsideEB();
+
+    void implicitUpdate(int implicit_solve, 
+                        Vector<MultiFab>& v_old, 
+                        Vector<MultiFab>& v_new, 
+                        MultiFab& fext, 
+                        MultiFab& nodaldata, 
+                        Real mass_tolerance,
+                        Real time, Real dt);
+
+    void implicitSolveM1(Vector<MultiFab>& v_old, 
+                         Vector<MultiFab>& v_new, 
+                         MultiFab& fext, 
+                         MultiFab& nodaldata, 
+                         Real mass_tolerance,
+                         Real time, Real dt);
 
 private:
 

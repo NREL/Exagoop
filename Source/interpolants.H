@@ -22,7 +22,7 @@ AMREX_GPU_DEVICE AMREX_FORCE_INLINE
 {
     amrex::Real zeta=xi-xp;
     amrex::Real halfhatsize=hatsize*half;
-    amrex::Real funcval=zero;
+    amrex::Real funcval=ZERO;
     amrex::Real maxval=one/halfhatsize;
     amrex::Real slope=four/(hatsize*hatsize);
 
@@ -61,7 +61,7 @@ AMREX_GPU_DEVICE AMREX_FORCE_INLINE
 {
 
     amrex::Real alpha,beta,gama;
-    amrex::Real value=zero;
+    amrex::Real value=ZERO;
 
     alpha = (xp[XDIR]-(plo[XDIR]+i*dx[XDIR]))/dx[XDIR];
     beta  = (xp[YDIR]-(plo[YDIR]+j*dx[YDIR]))/dx[YDIR];
@@ -286,7 +286,7 @@ AMREX_GPU_DEVICE AMREX_FORCE_INLINE
 
     amrex::Real rx,ry,rz;
     amrex::Real lval,mval,nval;
-    amrex::Real value=zero;
+    amrex::Real value=ZERO;
     int shapetypex,shapetypey,shapetypez;
 
     for(int n=nmin;n<nmax;n++)
@@ -615,7 +615,7 @@ AMREX_GPU_DEVICE AMREX_FORCE_INLINE
 {
     for(int i=0;i<AMREX_SPACEDIM;i++)
     {
-        tensvect[i]=zero;
+        tensvect[i]=ZERO;
         for(int j=0;j<AMREX_SPACEDIM;j++)
         {
             tensvect[i] += tens[i*AMREX_SPACEDIM+j]*vect[j];

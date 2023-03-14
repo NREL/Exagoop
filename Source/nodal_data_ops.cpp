@@ -24,7 +24,7 @@ void backup_current_velocity(MultiFab &nodaldata)
         amrex::ParallelFor(nodalbox,[=]
                 AMREX_GPU_DEVICE (int i,int j,int k) noexcept
         {
-           if(nodal_data_arr(i,j,k,MASS_INDEX) > zero)
+           if(nodal_data_arr(i,j,k,MASS_INDEX) > ZERO)
            {
         	   	nodal_data_arr(i,j,k,MASS_OLD_INDEX) = nodal_data_arr(i,j,k,MASS_INDEX);
                 for(int d=0;d<AMREX_SPACEDIM;d++)
@@ -64,7 +64,7 @@ void nodal_levelset_bcs(MultiFab &nodaldata,const Geometry geom,
             IntVect refined_nodeid(i*lsref,j*lsref,k*lsref);
 
            if(lsarr(refined_nodeid) < TINYVAL && 
-              nodal_data_arr(nodeid,MASS_INDEX) > zero)
+              nodal_data_arr(nodeid,MASS_INDEX) > ZERO)
            {
                 Real relvel_in[AMREX_SPACEDIM];
                 Real relvel_out[AMREX_SPACEDIM];
@@ -116,7 +116,7 @@ void store_delta_velocity(MultiFab &nodaldata)
         amrex::ParallelFor(nodalbox,[=]
         AMREX_GPU_DEVICE (int i,int j,int k) noexcept
         {
-            if(nodal_data_arr(i,j,k,MASS_INDEX) > zero)
+            if(nodal_data_arr(i,j,k,MASS_INDEX) > ZERO)
             {
                 for(int d=0;d<AMREX_SPACEDIM;d++)
                 {

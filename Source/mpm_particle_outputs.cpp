@@ -6,7 +6,7 @@
 void MPMParticleContainer::update_density_field(MultiFab& densdata,int refratio,Real smoothfactor)
 {
     int ng_dens=3;
-    densdata.setVal(zero,ng_dens);
+    densdata.setVal(ZERO,ng_dens);
     const int lev = 0;
     const Geometry& geom = Geom(lev);
     auto& plev  = GetParticles(lev);

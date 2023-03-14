@@ -3,6 +3,7 @@
 #include <AMReX_MultiFab.H>
 #include <mpm_check_pair.H>
 #include <mpm_particle_container.H>
+#include <mpm_implicit.H>
 #include <AMReX_PlotFileUtil.H>
 #include <nodal_data_ops.H>
 #include <mpm_eb.H>
@@ -69,8 +70,8 @@ int main (int argc, char* argv[])
         int num_of_rigid_bodies=0;
         int output_it=0;
         std::string pltfile;
-        Real output_time=zero;
-        Real output_timePrint=zero;
+        Real output_time=ZERO;
+        Real output_timePrint=ZERO;
         GpuArray <int,AMREX_SPACEDIM> order_surface_integral={3,3,3};
 
         //A few aesthetics
@@ -264,10 +265,23 @@ int main (int argc, char* argv[])
         }
         PrintMessage(msg,print_length,false);
 
+        // Set up MFs for implicit time advancement 
+        // CvodeIntegrator cv_solver;
+        MultiFab f_ext;
+        Vector<MultiFab> v_vect_old, v_vect_new;
+        if(specs.implicit_solve == 1){
+            // cv_solver.init(specs.ncells[XDIR], specs.ncells[YDIR], specs.ncells[ZDIR]);
+            f_ext.define(nodeba, dm, 3, ng_cells_nodaldata);
+            f_ext.setVal(0.0,ng_cells_nodaldata);
+            v_vect_old.push_back(MultiFab(nodeba, dm, 3, ng_cells_nodaldata));
+            v_vect_old[0].setVal(0.0,ng_cells_nodaldata);
+            v_vect_new.push_back(MultiFab(nodeba, dm, 3, ng_cells_nodaldata));
+            v_vect_new[0].setVal(0.0,ng_cells_nodaldata);
+        } 
+
         //mpm_pc.fillNeighbors();
         mpm_pc.RedistributeLocal();
         mpm_pc.fillNeighbors();
-
 
         //Calculate time step
         msg="\n Calculating initial time step";
@@ -277,14 +291,15 @@ int main (int argc, char* argv[])
 
         msg="\n Calculating initial strainrates and stresses";
         PrintMessage(msg,print_length,true);
-        mpm_pc.deposit_onto_grid(nodaldata,
+        mpm_pc.deposit_onto_grid(nodaldata, f_ext, v_vect_old,
                                  specs.gravity,
                                  specs.external_loads_present,
                                  specs.force_slab_lo,
                                  specs.force_slab_hi,
                                  specs.extforce,1,0,specs.mass_tolerance,
                                  specs.order_scheme_directional,
-                                 specs.periodic);
+                                 specs.periodic,
+                                 specs.implicit_solve);
 
         //Calculate strainrate at each material point
         mpm_pc.interpolate_from_grid(nodaldata,
@@ -294,7 +309,6 @@ int main (int argc, char* argv[])
                                      specs.periodic,
                                      specs.alpha_pic_flip,
                                      dt);	//Calculate strainrate at each mp
-
 
         mpm_pc.apply_constitutive_model(dt,specs.applied_strainrate);
         PrintMessage(msg,print_length,false);
@@ -361,14 +375,15 @@ int main (int argc, char* argv[])
                         mpm_pc.CalculateErrorP2G(nodaldata,specs.p2g_L,specs.p2g_f,specs.p2g_ncell);
                         break;
                     case(7):	//Checks the weight of a block of elastic solid. Used to validate functionality to evaluate surface forces
-                        mpm_pc.deposit_onto_grid(nodaldata,
+                        mpm_pc.deposit_onto_grid(nodaldata, f_ext, v_vect_old,
                                                  specs.gravity,
                                                  specs.external_loads_present,
                                                  specs.force_slab_lo,
                                                  specs.force_slab_hi,
                                                  specs.extforce,0,2,specs.mass_tolerance,
                                                  specs.order_scheme_directional,
-                                                 specs.periodic);
+                                                 specs.periodic,
+                                                 specs.implicit_solve);
                         CalculateSurfaceIntegralOnBG(geom, nodaldata,STRESS_INDEX,err);
                         PrintToFile("Weight.out")<<time<<"\t"<<err<<"\t"<<-specs.total_mass*9.81<<"\n";
                         break;
@@ -515,10 +530,10 @@ int main (int argc, char* argv[])
                 mpm_pc.updateNeighbors();
             }
 
-            nodaldata.setVal(zero,ng_cells_nodaldata);
+            nodaldata.setVal(ZERO,ng_cells_nodaldata);
 
             //update_massvel=1, update_forces=0
-            mpm_pc.deposit_onto_grid(	nodaldata,
+            mpm_pc.deposit_onto_grid(	nodaldata, f_ext, v_vect_old,
                                      specs.gravity,
                                      specs.external_loads_present,
                                      specs.force_slab_lo,
@@ -528,13 +543,15 @@ int main (int argc, char* argv[])
                                      0,
                                      specs.mass_tolerance,
                                      specs.order_scheme_directional,
-                                     specs.periodic);
+                                     specs.periodic,
+                                     specs.implicit_solve);
 
             //Store node velocity at time level t to calculate Delta_vel later for flip update
             backup_current_velocity(nodaldata);									
 
+            // NOTE: Why not just one deposite onto grid call with both vel and force flags?
             // Calculate forces on nodes
-            mpm_pc.deposit_onto_grid(	nodaldata,
+            mpm_pc.deposit_onto_grid(	nodaldata, f_ext, v_vect_old,
                                      specs.gravity,
                                      specs.external_loads_present,
                                      specs.force_slab_lo,
@@ -544,11 +561,17 @@ int main (int argc, char* argv[])
 									 1,
                                      specs.mass_tolerance,
                                      specs.order_scheme_directional,
-                                     specs.periodic);
+                                     specs.periodic,
+                                     specs.implicit_solve);
 
             //update velocity on nodes
-            nodal_update(nodaldata,dt,specs.mass_tolerance);
-
+            if(specs.implicit_solve){
+                // cv_solver.solve(time, dt, nodaldata, f_ext, specs.mass_tolerance);
+                mpm_pc.implicitUpdate(specs.implicit_solve, v_vect_old, v_vect_new, f_ext, nodaldata, specs.mass_tolerance, time, dt);
+            } else {
+                nodal_update(nodaldata,dt,specs.mass_tolerance);
+            }
+    
             //Performing rigid body operations
             if(specs.ifrigidnodespresent==1)
             {
@@ -647,11 +670,12 @@ int main (int argc, char* argv[])
                                  specs.wall_vel_hi.data(),
                                  specs.levelset_wall_mu);
 
+            // FIXME: Don't do MUSL when using implicit solve
             if(specs.stress_update_scheme==1)										
             {
                 //MUSL scheme
                 // Calculate velocity on nodes
-                mpm_pc.deposit_onto_grid(	nodaldata,
+                mpm_pc.deposit_onto_grid(	nodaldata, f_ext, v_vect_old,
                                          specs.gravity,
                                          specs.external_loads_present,
                                          specs.force_slab_lo,
@@ -661,7 +685,8 @@ int main (int argc, char* argv[])
                                          0,
                                          specs.mass_tolerance,
                                          specs.order_scheme_directional,
-                                         specs.periodic);
+                                         specs.periodic,
+                                         specs.implicit_solve);
 
                 nodal_bcs(	geom,
                           nodaldata,
@@ -777,14 +802,15 @@ int main (int argc, char* argv[])
                             mpm_pc.CalculateErrorP2G(nodaldata,specs.p2g_L,specs.p2g_f,specs.p2g_ncell);
                             break;
                         case(7):	//Checks the weight of a block of elastic solid. Used to validate functionality to evaluate surface forces
-                            mpm_pc.deposit_onto_grid(nodaldata,
+                            mpm_pc.deposit_onto_grid(nodaldata, f_ext, v_vect_old,
                                                      specs.gravity,
                                                      specs.external_loads_present,
                                                      specs.force_slab_lo,
                                                      specs.force_slab_hi,
                                                      specs.extforce,0,2,specs.mass_tolerance,
                                                      order_surface_integral,
-                                                     specs.periodic);
+                                                     specs.periodic,
+                                                     specs.implicit_solve);
                             CalculateSurfaceIntegralOnBG(geom, nodaldata,STRESS_INDEX,err);
                             PrintToFile("Weight.out")<<time<<"\t"<<err<<"\t"<<-specs.total_mass*9.81<<"\n";
                             break;
@@ -834,7 +860,7 @@ int main (int argc, char* argv[])
                     WriteSingleLevelPlotfile(pltfile, dens_field_data, {"density"}, geom_dens, time, 0);
                 }
 
-                output_time=zero;
+                output_time=ZERO;
                 BL_PROFILE_VAR_STOP(outputs);
 
                 mpm_pc.writeCheckpointFile(specs.prefix_checkpointfilename, specs.num_of_digits_in_filenames, time,steps,output_it);
@@ -843,7 +869,7 @@ int main (int argc, char* argv[])
             if (output_timePrint >= specs.screen_output_time)
             {
             	Print()<<"\nIteration: "<<std::setw(10)<<steps<<",\t"<<"Time: "<<std::fixed<<std::setprecision(10)<<time<<",\tDt = "<<std::scientific<<std::setprecision(5)<<dt<<std::fixed<<std::setprecision(10)<<",\t Time/Iter = "<<time_per_iter;
-            	output_timePrint=zero;
+            	output_timePrint=ZERO;
             }
 
         }

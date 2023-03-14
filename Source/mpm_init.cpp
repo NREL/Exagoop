@@ -137,9 +137,9 @@ void MPMParticleContainer::InitParticles (const std::string& filename,
 
             for(int comp=0;comp<NCOMP_TENSOR;comp++)
             {
-                p.rdata(realData::strainrate+comp) = zero;
-                p.rdata(realData::strain+comp)     = zero;
-                p.rdata(realData::stress+comp)     = zero;
+                p.rdata(realData::strainrate+comp) = ZERO;
+                p.rdata(realData::strain+comp)     = ZERO;
+                p.rdata(realData::stress+comp)     = ZERO;
             }
             
             host_particles.push_back(p);
@@ -307,9 +307,9 @@ MPMParticleContainer::ParticleType MPMParticleContainer::generate_particle
     
     for(int comp=0;comp<NCOMP_TENSOR;comp++)
     {
-        p.rdata(realData::strainrate+comp) = zero;
-        p.rdata(realData::strain+comp)     = zero;
-        p.rdata(realData::stress+comp)     = zero;
+        p.rdata(realData::strainrate+comp) = ZERO;
+        p.rdata(realData::strain+comp)     = ZERO;
+        p.rdata(realData::stress+comp)     = ZERO;
     }
 
     return(p);

@@ -94,6 +94,9 @@ class MPMspecs
         std::string particlefilename;
         std::string restart_checkfile;
 
+        // Implicit integrator parameters
+        int implicit_solve = 0;
+
         //Output parameters
         std::string prefix_particlefilename = "plt";
         std::string prefix_gridfilename =  "nplt";
@@ -241,6 +244,9 @@ class MPMspecs
             pp.query("num_redist", num_redist);
 
             pp.query("use_autogen",use_autogen);
+
+            // Reading implicit solver parameters
+            pp.query("implicit_solve", implicit_solve);
 
             //Read output parameters
             pp.query("prefix_particlefilename",prefix_particlefilename);

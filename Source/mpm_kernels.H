@@ -34,9 +34,9 @@ int  applybc(Real relvel_in[AMREX_SPACEDIM],
     if(bc==BC_NOSLIPWALL)
     {
         modify_pos=true;
-        relvel_out[XDIR]=zero;
-        relvel_out[YDIR]=zero;
-        relvel_out[ZDIR]=zero;
+        relvel_out[XDIR]=ZERO;
+        relvel_out[YDIR]=ZERO;
+        relvel_out[ZDIR]=ZERO;
     }
     else if(bc==BC_SLIPWALL)
     {
@@ -48,15 +48,15 @@ int  applybc(Real relvel_in[AMREX_SPACEDIM],
     }
     else if(bc==BC_PARTIALSLIPWALL)
     {
-    	if(veln<=zero)
+    	if(veln<=ZERO)
     	{
     		modify_pos=true;
 
     		if(veltmag <= -wall_mu*veln)
     		{
-    			relvel_out[XDIR]=zero;
-    			relvel_out[YDIR]=zero;
-    			relvel_out[ZDIR]=zero;
+    			relvel_out[XDIR]=ZERO;
+    			relvel_out[YDIR]=ZERO;
+    			relvel_out[ZDIR]=ZERO;
     		}
     		else
     		{
