@@ -485,7 +485,7 @@ MPMParticleContainer::ParticleType MPMParticleContainer::generate_particle
     double initial_strain = zero;
     double initial_stress = zero;
     
-    if(constmodel==2){
+    if(constmodel==2 || constmodel==3){
         initial_strainrate = zero;
         initial_spinrate = zero;
         initial_strain = zero;

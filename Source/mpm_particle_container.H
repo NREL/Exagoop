@@ -117,7 +117,9 @@ public:
 
     void apply_constitutive_model(const amrex::Real& dt,amrex::Real applied_strainrate);
     //yli add for gbhypo
-    void apply_constitutive_model(MPMspecs specs,const amrex::Real& dt,amrex::Real applied_strainrate);
+    //void apply_constitutive_model(MPMspecs specs,const amrex::Real& dt,amrex::Real applied_strainrate);
+    void apply_constitutive_model(const amrex::Real& dt, amrex::Real phi_c, amrex::Real h_s, amrex::Real n, amrex::Real e_d0, amrex::Real e_c0, amrex::Real e_i0,
+                                    amrex::Real alpha, amrex::Real beta, amrex::Real stress_cutoff,amrex::Real applied_strainrate);
     //end yli add
     void apply_constitutive_model_delta(const amrex::Real& dt,amrex::Real applied_strainrate);
 

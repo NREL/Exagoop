@@ -268,7 +268,7 @@ AMREX_GPU_DEVICE AMREX_FORCE_INLINE
 #ifndef AMREX_USE_GPU
 		amrex::Print()<<"\n Shapefunction = "<<shapefunctiontype;
 #endif
-		amrex::Print()<<"\n Shapefunction = "<<shapefunctiontype;
+		// amrex::Print()<<"\n Shapefunction = "<<shapefunctiontype;
 		amrex::Abort("\n Incorrect shape function type in cubicspline_1d");
 	}
 	return value;

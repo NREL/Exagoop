@@ -14,7 +14,7 @@
  * @param dt : time step for updating stress tensor
  * @return AMREX_GPU_DEVICE 
  */
-AMREX_GPU_DEVICE AMREX_FORCE_INLINE
+AMREX_GPU_HOST_DEVICE AMREX_INLINE
 void GB_hypoplastic(amrex::Real eps_dot[NCOMP_TENSOR],
         amrex::Real omega_dot[NCOMP_TENSOR],
         amrex::Real sigma[NCOMP_TENSOR],

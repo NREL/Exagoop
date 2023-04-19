@@ -297,7 +297,12 @@ int main (int argc, char* argv[])
                                      dt);	//Calculate strainrate at each mp
 
         //yli edit for gbhypo
-        mpm_pc.apply_constitutive_model(specs,dt,specs.applied_strainrate);
+        //mpm_pc.apply_constitutive_model(specs,dt,specs.applied_strainrate);
+        mpm_pc.apply_constitutive_model(dt,specs.GBparameters.phi_c,specs.GBparameters.h_s,
+                                            specs.GBparameters.n,specs.GBparameters.e_d0,
+                                            specs.GBparameters.e_c0,specs.GBparameters.e_i0,
+                                            specs.GBparameters.alpha,specs.GBparameters.beta,
+                                            specs.GBparameters.stress_cutoff,specs.applied_strainrate);
         //end yli edit
 
         //mpm_pc.apply_constitutive_model(dt,specs.applied_strainrate);
@@ -705,7 +710,12 @@ int main (int argc, char* argv[])
                 else
                 {
                     //yli edit for gbhypo1
-            		mpm_pc.apply_constitutive_model(specs,dt,specs.applied_strainrate);
+            		//mpm_pc.apply_constitutive_model(specs,dt,specs.applied_strainrate);
+                    mpm_pc.apply_constitutive_model(dt,specs.GBparameters.phi_c,specs.GBparameters.h_s,
+                                            specs.GBparameters.n,specs.GBparameters.e_d0,
+                                            specs.GBparameters.e_c0,specs.GBparameters.e_i0,
+                                            specs.GBparameters.alpha,specs.GBparameters.beta,
+                                            specs.GBparameters.stress_cutoff,specs.applied_strainrate);
                     //end yli edit
             	}
             }
@@ -718,7 +728,12 @@ int main (int argc, char* argv[])
                 else
                 {
                     //yli edit for gbhypo
-            		mpm_pc.apply_constitutive_model(specs,dt,0.0);
+            		//mpm_pc.apply_constitutive_model(specs,dt,0.0);
+                    mpm_pc.apply_constitutive_model(dt,specs.GBparameters.phi_c,specs.GBparameters.h_s,
+                                            specs.GBparameters.n,specs.GBparameters.e_d0,
+                                            specs.GBparameters.e_c0,specs.GBparameters.e_i0,
+                                            specs.GBparameters.alpha,specs.GBparameters.beta,
+                                            specs.GBparameters.stress_cutoff,specs.applied_strainrate);
                     //end yli edit
             	}
 
