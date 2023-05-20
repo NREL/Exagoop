@@ -347,8 +347,6 @@ void MPMParticleContainer::deposit_onto_grid(MultiFab& nodaldata,
 
             	auto iv = getParticleCell(p, plo, dxi, domain);
 
-
-
             	lmin=(order_scheme_directional[0]==1)?0:((order_scheme_directional[0]==3 or order_scheme_directional[0]==2)?(iv[XDIR]==lo[XDIR])?0:((iv[XDIR]==hi[XDIR])?-1:-1):-1000);
             	lmax=(order_scheme_directional[0]==1)?2:((order_scheme_directional[0]==3 or order_scheme_directional[0]==2)?(iv[XDIR]==lo[XDIR])?lmin+3:((iv[XDIR]==hi[XDIR])?lmin+3:lmin+4):-1000);
 

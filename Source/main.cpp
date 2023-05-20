@@ -4,58 +4,18 @@
 #include <mpm_check_pair.H>
 #include <mpm_particle_container.H>
 #include <AMReX_PlotFileUtil.H>
+#include <mpm_printmessages.H>
 #include <nodal_data_ops.H>
 #include <mpm_eb.H>
 
 using namespace amrex;
 
-void PrintWelcomeMessage()
-{
-	amrex::Print() << " ===============================================\n";
-	amrex::Print() << "        Welcome to EXAGOOP MPM Solver           \n";
-	amrex::Print() << "        Developed by HPACFers at NREL           \n";
-	amrex::Print() << "                 -Hari, Sree and Marc           \n";
-	amrex::Print() << " ===============================================\n";
-}
-
-void PrintMessage(std::string msg,int print_length,bool begin)
-{
-	if(begin==true)
-	{
-		msg.append(print_length - msg.length(), '-');
-		msg.append(1, '>');
-		amrex::Print() <<msg;
-	}
-	else
-	{
-		msg=" Done";
-		amrex::Print() <<msg;
-	}
-}
-
-void PrintMessage(std::string msg,int print_length,bool begin,char c)
-{
-	if(begin==true)
-	{
-		msg.append(print_length - msg.length(), c);
-		amrex::Print() <<msg;
-	}
-	else
-	{
-		msg=" Done";
-		amrex::Print() <<msg;
-	}
-}
-
-
-
 int main (int argc, char* argv[])
 {
-    amrex::Initialize(argc,argv);
-
-    {
-    	//Print the welcome message
-    	PrintWelcomeMessage();
+  amrex::Initialize(argc,argv);
+  {
+        //Print the welcome message
+        PrintWelcomeMessage();
 
         //Initializing and reading input file for the simulation
         MPMspecs specs;
@@ -83,7 +43,7 @@ int main (int argc, char* argv[])
         PrintMessage(msg,print_length,true);
         if(specs.max_grid_size==1)
         {
-            amrex::Abort("\nMax grid size should be greater than or equal to two");		//Check if max_grid_size==1. If yes, Abort.
+            amrex::Abort("\nMax grid size should be greater than or equal to two");		                                //Check if max_grid_size==1. If yes, Abort.
         }
         PrintMessage(msg,print_length,false);
 
@@ -91,8 +51,8 @@ int main (int argc, char* argv[])
         //Setting up problem definitions
         msg="\n Setting up problem variables";
         PrintMessage(msg,print_length,true);
-        int coord = 0; 																	//cartesian
-        RealBox real_box;
+        int coord = 0;                                                                                                          //cartesian
+        RealBox real_box;                                                                                                       //Declaring real box
         for (int n = 0; n < AMREX_SPACEDIM; n++)										//Defining real box
         {
             real_box.setLo(n, specs.plo[n]);
@@ -101,25 +61,25 @@ int main (int argc, char* argv[])
 
         IntVect domain_lo(AMREX_D_DECL(0,0,0));											//Defining index space
         IntVect domain_hi(AMREX_D_DECL(	specs.ncells[XDIR]-1,
-                    					specs.ncells[YDIR]-1,
-										specs.ncells[ZDIR]-1));
+                                       	specs.ncells[YDIR]-1,
+                                       	specs.ncells[ZDIR]-1));
         const Box domain(domain_lo, domain_hi);											//Defining box
-        Geometry geom(domain, &real_box, coord, specs.periodic.data());					//Defining geometry class
+        Geometry geom(domain, &real_box, coord, specs.periodic.data());                                                         //Defining geometry class
 
-        BoxArray ba(domain);															//Defining box array
-        ba.maxSize(specs.max_grid_size);												//Max size for box array chunking
-        DistributionMapping dm(ba);														//Defining distribution mapping
+        BoxArray ba(domain);													//Defining box array
+        ba.maxSize(specs.max_grid_size);											//Max size for box array chunking
+        DistributionMapping dm(ba);												//Defining distribution mapping
 
 
-        int ng_cells = 1;																//Defining number of ghost cells for particle data
+        int ng_cells = 1;													//Defining number of ghost cells for particle data
         if(specs.order_scheme==3)
         {
             ng_cells = 2;
         }
         if(specs.order_scheme==2 )
-                {
-                    ng_cells = 3;
-                }
+        {
+            ng_cells = 3;
+        }
         mpm_ebtools::init_eb(geom,ba,dm);
         MPMParticleContainer mpm_pc(geom, dm, ba, ng_cells);
         PrintMessage(msg,print_length,false);
@@ -178,8 +138,7 @@ int main (int argc, char* argv[])
             mpm_pc.removeParticlesInsideEB();
         }
 
-        //Setting up rigid particle setups
-
+        //Setting up rigid particle parameters
         if(specs.num_of_rigid_bodies!=0)
         {
         	specs.Rb = new Rigid_Bodies[specs.no_of_rigidbodies_present];
@@ -307,7 +266,6 @@ int main (int argc, char* argv[])
         }
         PrintMessage(msg,print_length,false);
 
-        //mpm_pc.fillNeighbors();
         mpm_pc.RedistributeLocal();
         mpm_pc.fillNeighbors();
 
@@ -578,10 +536,17 @@ int main (int argc, char* argv[])
         amrex::Real vel_piston_old=0.0;
         amrex::Real Loads=0.0;
 
+        msg="\n Exagoop iterations";
+        PrintMessage(msg,print_length,true);
+        PrintEndMessage(" Begin");
 
+
+
+        double time_per_iter_sum=0.0;
+        int iter_test=0;
         while((steps < specs.maxsteps) and (time < specs.final_time))
         {
-        	auto iter_time_start = amrex::second();
+            auto iter_time_start = amrex::second();
             dt 	= (specs.fixed_timestep==1)?specs.timestep:mpm_pc.Calculate_time_step(specs.CFL,specs.dt_max_limit,specs.dt_min_limit);
 
             time += dt;
@@ -796,6 +761,7 @@ int main (int argc, char* argv[])
             //mpm_pc.move_particles_from_nodevel(nodaldata,dt,specs.bclo.data(),specs.bchi.data(),1);
             mpm_pc.updateVolume(dt);
 
+
             //update stress at material pointsat time t+dt
             if(time<specs.applied_strainrate_time)
             {
@@ -918,13 +884,18 @@ int main (int argc, char* argv[])
                 }
             }
 
+            auto time_per_iter=amrex::second()-iter_time_start;
+            time_per_iter_sum+=time_per_iter;
+            iter_test=iter_test+1;
+
             if (fabs(output_time-specs.write_output_time)<dt*0.5)
             {
                 BL_PROFILE_VAR("OUTPUT_TIME",outputs);
-                Print()<<"\nWriting outputs at step,time:"<<steps<<"\t"<<time;
+                Print()<<"\nWriting output plotfile at (step,time): ("<<steps<<","<<time<<")";
                 mpm_pc.Redistribute();
                 mpm_pc.fillNeighbors();
 
+                auto time_before_write=amrex::second();
                 output_it++;
                 mpm_pc.writeParticles(specs.prefix_particlefilename, specs.num_of_digits_in_filenames, output_it);
 
@@ -936,8 +907,6 @@ int main (int argc, char* argv[])
                     mpm_pc.WriteDeflectionTVB(specs.tvb_E,specs.tvb_v0,specs.tvb_L,specs.tvb_rho,time,output_it);
                 }
 
-
-
                 if(specs.dens_field_output)
                 {
                     pltfile = amrex::Concatenate(specs.prefix_densityfilename, output_it, specs.num_of_digits_in_filenames);
@@ -946,10 +915,16 @@ int main (int argc, char* argv[])
 
                 output_time=zero;
                 BL_PROFILE_VAR_STOP(outputs);
+                auto time_write_pltfile=amrex::second()-time_before_write;
+                Print()<<" :Time for writing plotfile: "<<time_write_pltfile;
 
+                time_before_write=amrex::second();
                 mpm_pc.writeCheckpointFile(specs.prefix_checkpointfilename, specs.num_of_digits_in_filenames, time,steps,output_it, velocity_upper_jaw);
+                auto time_write_chkfilefile=amrex::second()-time_before_write;
+                Print()<<" :Time for writing checkfile: "<<time_write_chkfilefile;
+
             }
-            auto time_per_iter=amrex::second()-iter_time_start;
+
             if (fabs(output_timePrint-specs.screen_output_time)<dt*0.5)
             {
                 if(specs.test_number==10)
@@ -969,8 +944,10 @@ int main (int argc, char* argv[])
                     PrintToFile("Spring.out")<<time<<"\t"<<ymax<<"\t"<<err<<"\n";
                 }
 
-            	Print()<<"\nIteration: "<<std::setw(10)<<steps<<",\t"<<"Time: "<<std::fixed<<std::setprecision(10)<<time<<",\tDt = "<<std::scientific<<std::setprecision(5)<<dt<<std::fixed<<std::setprecision(10)<<",\t Time/Iter = "<<time_per_iter;
-            	PrintToFile("CompTime.out")<<steps<<"\t"<<time_per_iter<<"\n";
+            	Print()<<"\nIteration: "<<std::setw(10)<<steps<<",\t"<<"Time (s): "<<std::fixed<<std::setprecision(10)<<time<<",\tDt (s) = "<<std::scientific<<std::setprecision(5)<<dt<<std::fixed<<std::setprecision(10)<<",\t Time/Iter (s) = "<<time_per_iter_sum/iter_test;
+            	PrintToFile("CompTime.out")<<steps<<"\t"<<time_per_iter_sum/iter_test<<" "<<time_per_iter<<"\n";
+            	time_per_iter_sum=zero;
+            	iter_test=0;
             	output_timePrint=zero;
             }
 
@@ -992,7 +969,11 @@ int main (int argc, char* argv[])
             pltfile = amrex::Concatenate(specs.prefix_densityfilename, output_it+1, specs.num_of_digits_in_filenames);
             WriteSingleLevelPlotfile(pltfile, dens_field_data, {"density"}, geom_dens, time, 0);
         }
+        msg="\n Exagoop iterations";
+        PrintMessage(msg,print_length,true);
+        PrintEndMessage(" End");
     }
+
 
     amrex::Finalize();
 }
