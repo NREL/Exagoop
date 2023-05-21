@@ -76,6 +76,56 @@ void MPMParticleContainer::CalculateEnergies(Real &TKE,Real &TSE)
 
 }
 
+void MPMParticleContainer::CalculateVelocityDiagnostics(Real &min_vel,Real &max_vel, Real &avg_vel)
+{
+    const int lev = 0;
+    const Geometry& geom = Geom(lev);
+    auto& plev  = GetParticles(lev);
+    const auto dxi = geom.InvCellSizeArray();
+    const auto dx = geom.CellSizeArray();
+    const auto plo = geom.ProbLoArray();
+    const auto domain = geom.Domain();
+
+    min_vel=0.0;
+    max_vel=0.0;
+    avg_vel=0.0;
+
+    using PType = typename MPMParticleContainer::SuperParticleType;
+    min_vel = amrex::ReduceMin(*this, [=]
+    AMREX_GPU_HOST_DEVICE (const PType& p) -> Real
+    {
+        return(sqrt
+               (p.rdata(realData::xvel)*p.rdata(realData::xvel)+
+                p.rdata(realData::yvel)*p.rdata(realData::yvel)+
+                p.rdata(realData::zvel)*p.rdata(realData::zvel)) );
+    });
+
+    max_vel = amrex::ReduceMax(*this, [=]
+        AMREX_GPU_HOST_DEVICE (const PType& p) -> Real
+        {
+            return(sqrt
+                   (p.rdata(realData::xvel)*p.rdata(realData::xvel)+
+                    p.rdata(realData::yvel)*p.rdata(realData::yvel)+
+                    p.rdata(realData::zvel)*p.rdata(realData::zvel)) );
+        });
+
+    avg_vel = amrex::ReduceSum(*this, [=]                                       //This is actually the sum. Divide it by the total number of material points in the main function
+    AMREX_GPU_HOST_DEVICE (const PType& p) -> Real
+    {
+      return(sqrt
+                         (p.rdata(realData::xvel)*p.rdata(realData::xvel)+
+                          p.rdata(realData::yvel)*p.rdata(realData::yvel)+
+                          p.rdata(realData::zvel)*p.rdata(realData::zvel)) );
+    });
+
+#ifdef BL_USE_MPI
+    ParallelDescriptor::ReduceRealMin(min_vel);
+    ParallelDescriptor::ReduceRealMax(max_vel);
+    ParallelDescriptor::ReduceRealSum(avg_vel);
+#endif
+
+}
+
 amrex::Real MPMParticleContainer::CalculateExactVelocity(int modenumber,amrex::Real E, amrex::Real rho, amrex::Real v0,amrex::Real L, amrex::Real time)
 {
 	const amrex::Real pi = 4.0*atan(1.0);

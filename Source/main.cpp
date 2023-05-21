@@ -455,8 +455,8 @@ int main (int argc, char* argv[])
         	msg="\n     Total number of material points:";
         	PrintMessage(msg,print_length,true);
 
-        	mpm_pc.Calculate_Total_Number_of_MaterialParticles(tmpi);
-        	amrex::Print()<<" "<<tmpi;
+        	mpm_pc.Calculate_Total_Number_of_MaterialParticles(specs.total_number_of_material_points);
+        	amrex::Print()<<" "<<specs.total_number_of_material_points;
 
         	msg="\n     Total mass of material points:";
         	PrintMessage(msg,print_length,true);
@@ -822,14 +822,20 @@ int main (int argc, char* argv[])
                         case(1):	//Axial vibration of continuum bar
                             mpm_pc.CalculateVelocity(Vmnum);
                             Vmex = mpm_pc.CalculateExactVelocity(specs.axial_bar_modenumber,specs.axial_bar_E,specs.axial_bar_rho,specs.axial_bar_v0,specs.axial_bar_L,time);
-                            PrintToFile("AxialBarVel.out")<<time<<"\t"<<Vmex<<"\t"<<Vmnum<<"\n";
+                            #ifndef AMREX_USE_GPU
+                              PrintToFile("AxialBarVel.out")<<time<<"\t"<<Vmex<<"\t"<<Vmnum<<"\n";
+                            #endif
                             mpm_pc.CalculateEnergies(TKE,TSE);
                             TE=TKE+TSE;
-                            PrintToFile("AxialBarEnergy.out")<<time<<"\t"<<TKE<<"\t"<<TSE<<"\t"<<TE<<"\n";
+                            #ifndef AMREX_USE_GPU
+                              PrintToFile("AxialBarEnergy.out")<<time<<"\t"<<TKE<<"\t"<<TSE<<"\t"<<TE<<"\n";
+                            #endif
                             break;
                         case(2):	//Dam break
                             mpm_pc.FindWaterFront(Xwf);
+                            #ifndef AMREX_USE_GPU
                             PrintToFile("DamBreakWaterfront.out")<<time/sqrt(specs.dam_break_H1/specs.dam_break_g)<<"\t"<<Xwf/specs.dam_break_H1<<"\n";
+                            #endif
                             break;
                         case(3):	//Elastic collision of disks
                             mpm_pc.CalculateEnergies(TKE,TSE);
@@ -878,9 +884,48 @@ int main (int argc, char* argv[])
                 }
                 else
                 {
-                    mpm_pc.CalculateEnergies(TKE,TSE);
-                    TE=TKE+TSE;
-                    PrintToFile("Energy.out")<<time<<"\t"<<TKE<<"\t"<<TSE<<"\t"<<TE<<"\n";
+                    if(specs.print_total_energy and steps%specs.diagnostic_iteration_frequency==0)
+                      {
+                        mpm_pc.CalculateEnergies(TKE,TSE);
+                        TE=TKE+TSE;
+                        PrintToFile("Energy.out")<<time<<"\t"<<TKE<<"\t"<<TSE<<"\t"<<TE<<"\n";
+                      }
+                    if(specs.print_max_min_avg_stress and steps%specs.diagnostic_iteration_frequency==0)
+                      {
+                        amrex::Real min_Sxx=0.0;
+                        amrex::Real min_Sxy=0.0;
+                        amrex::Real min_Sxz=0.0;
+                        amrex::Real min_Syy=0.0;
+                        amrex::Real min_Syz=0.0;
+                        amrex::Real min_Szz=0.0;
+
+                        amrex::Real max_Sxx=0.0;
+                        amrex::Real max_Sxy=0.0;
+                        amrex::Real max_Sxz=0.0;
+                        amrex::Real max_Syy=0.0;
+                        amrex::Real max_Syz=0.0;
+                        amrex::Real max_Szz=0.0;
+
+                        amrex::Real avg_Sxx=0.0;
+                        amrex::Real avg_Sxy=0.0;
+                        amrex::Real avg_Sxz=0.0;
+                        amrex::Real avg_Syy=0.0;
+                        amrex::Real avg_Syz=0.0;
+                        amrex::Real avg_Szz=0.0;
+
+
+                      }
+                    if(specs.print_max_min_avg_velocity and steps%specs.diagnostic_iteration_frequency==0)
+                      {
+                        amrex::Real min_vel=0.0;
+                        amrex::Real max_vel=0.0;
+                        amrex::Real avg_vel=0.0;
+                        mpm_pc.CalculateVelocityDiagnostics(min_vel,max_vel,avg_vel);
+                        avg_vel=avg_vel/specs.total_number_of_material_points;
+                        PrintToFile("Velocity_Dianostic.out")<<steps<<"\t"<<min_vel<<"\t"<<max_vel<<"\t"<<avg_vel<<"\n";
+                      }
+
+
                 }
             }
 

@@ -107,8 +107,14 @@ class MPMspecs
         bool is_standard_test = true;
         int test_number = 0;	//0->is_standard_test=false,1-->axial vibration of bar, 2-->Dam break, 3--> Elastic collision of disks, 4--> Lateral deflection of beam
         int no_of_rigidbodies_present=0;
+        int total_number_of_material_points=0;          //Includes only the number of normal material points(not the rigid particles)
         amrex::Real total_mass_phase_0=0.0;
         amrex::Real total_vol_phase_0=0.0;
+        int print_max_min_avg_stress=1;
+        int print_max_min_avg_velocity=1;
+        int print_total_energy=1;
+        int diagnostic_iteration_frequency=10;
+
 
         //Rigid body nodes
         Rigid_Bodies *Rb;
@@ -283,6 +289,11 @@ class MPMspecs
             pp.query("spring_alone_length",spring_alone_length);
             pp.query("spring_alone_E",spring_alone_E);
 
+            pp.query("print_max_min_avg_stress",print_max_min_avg_stress);
+            pp.query("print_max_min_avg_velocity",print_max_min_avg_velocity);
+            pp.query("print_total_energy",print_total_energy);
+            pp.query("diagnostic_iteration_frequency",diagnostic_iteration_frequency);
+
 
             //Rigid body params
             pp.get("num_of_rigid_bodies", num_of_rigid_bodies);
@@ -358,7 +369,6 @@ class MPMspecs
 
             pp.query("levelset_bc",levelset_bc);
             pp.query("levelset_wall_mu",levelset_wall_mu);
-
 
             pp.query("wall_mu_lo",wall_mu_lo);
             pp.query("wall_mu_hi",wall_mu_hi);

@@ -106,6 +106,10 @@ public:
             int bclo[AMREX_SPACEDIM],int bchi[AMREX_SPACEDIM],
             int order_scheme);
     
+    //Diagnostic functions
+    void CalculateVelocityDiagnostics(Real &min_vel,Real &max_vel, Real &avg_vel);
+    void CalculateStressDiagnostics(Real &min_stress,Real &max_stress, Real &avg_stress);
+
     void CalculateEnergies(Real &TKE,Real &TSE);
     amrex::Real CalculateEffectiveSpringConstant(amrex::Real Area,amrex::Real L0);
     void CalculateVelocity(Real &Vcm);
