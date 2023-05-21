@@ -332,31 +332,45 @@ int main (int argc, char* argv[])
                     case(1):	//Axial vibration of continuum bar
                         mpm_pc.CalculateVelocity(Vmnum);
                         Vmex = mpm_pc.CalculateExactVelocity(specs.axial_bar_modenumber,specs.axial_bar_E,specs.axial_bar_rho,specs.axial_bar_v0,specs.axial_bar_L,time);
+#ifndef AMREX_USE_GPU
                         PrintToFile("AxialBarVel.out")<<time<<"\t"<<Vmex<<"\t"<<Vmnum<<"\n";
+#endif
                         mpm_pc.CalculateEnergies(TKE,TSE);
                         TE=TKE+TSE;
+#ifndef AMREX_USE_GPU
                         PrintToFile("AxialBarEnergy.out")<<time<<"\t"<<TKE<<"\t"<<TSE<<"\t"<<TE<<"\n";
+#endif
                         break;
                     case(2):	//Dam break
                         mpm_pc.FindWaterFront(Xwf);
+#ifndef AMREX_USE_GPU
                         PrintToFile("DamBreakWaterfront.out")<<time/sqrt(specs.dam_break_H1/specs.dam_break_g)<<"\t"<<Xwf/specs.dam_break_H1<<"\n";
+#endif
                         break;
                     case(3):	//Elastic collision of disks
                         mpm_pc.CalculateEnergies(TKE,TSE);
                         TE=TKE+TSE;
+#ifndef AMREX_USE_GPU
                         PrintToFile("ElasticDiskCollisionEnergy.out")<<time<<"\t"<<TKE<<"\t"<<TSE<<"\t"<<TE<<"\n";
+#endif
                         break;
                     case(4):	//Static deflection of beam under gravity
                         mpm_pc.CalculateVelocityCantilever(Vmnum);
                         Vmex = 0.0;
+#ifndef AMREX_USE_GPU
                         PrintToFile("CantileverVel.out")<<time<<"\t"<<Vmex<<"\t"<<Vmnum<<"\n";
+#endif
                         mpm_pc.CalculateEnergies(TKE,TSE);
                         TE=TKE+TSE;
+#ifndef AMREX_USE_GPU
                         PrintToFile("CantileverEnergy.out")<<time<<"\t"<<TKE<<"\t"<<TSE<<"\t"<<TE<<"\n";
+#endif
                         break;
                     case(5):	//Transverse vibration of a bar
                         mpm_pc.CalculateErrorTVB(specs.tvb_E,specs.tvb_v0,specs.tvb_L,specs.tvb_rho,err);
+#ifndef AMREX_USE_GPU
                         PrintToFile("TVB_Error.out")<<time<<"\t"<<TKE<<"\t"<<TSE<<"\t"<<TE<<"\n";
+#endif
                         break;
                     case(6):    //Check function reconstruction and convergence
                         mpm_pc.CalculateErrorP2G(nodaldata,specs.p2g_L,specs.p2g_f,specs.p2g_ncell);
@@ -371,7 +385,9 @@ int main (int argc, char* argv[])
                                                  specs.order_scheme_directional,
                                                  specs.periodic);
                         CalculateSurfaceIntegralOnBG(geom, nodaldata,STRESS_INDEX,err);
+#ifndef AMREX_USE_GPU
                         PrintToFile("Weight.out")<<time<<"\t"<<err<<"\t"<<-specs.total_mass*9.81<<"\n";
+#endif
                         break;
                     case(8): 	CalculateInterpolationError(geom, nodaldata,STRESS_INDEX);
                                 break;
@@ -392,7 +408,9 @@ int main (int argc, char* argv[])
             {
                 mpm_pc.CalculateEnergies(TKE,TSE);
                 TE=TKE+TSE;
+#ifndef AMREX_USE_GPU
                 PrintToFile("Energy.out")<<time<<"\t"<<TKE<<"\t"<<TSE<<"\t"<<TE<<"\n";
+#endif
             }
         }
         PrintMessage(msg,print_length,false);
@@ -672,7 +690,9 @@ int main (int argc, char* argv[])
 
                 Real ymin;
                 ymin = mpm_pc.GetPosPiston();
+#ifndef AMREX_USE_GPU
                 PrintToFile("Spring.out")<<time<<"\t"<<ymin<<" "<<specs.Rb[0].velocity[1]<<" "<<specs.Rb[0].force_internal[1]<<"\n";
+#endif
 
             }
 
@@ -840,19 +860,27 @@ int main (int argc, char* argv[])
                         case(3):	//Elastic collision of disks
                             mpm_pc.CalculateEnergies(TKE,TSE);
                             TE=TKE+TSE;
+#ifndef AMREX_USE_GPU
                             PrintToFile("ElasticDiskCollisionEnergy.out")<<time<<"\t"<<TKE<<"\t"<<TSE<<"\t"<<TE<<"\n";
+#endif
                             break;
                         case(4):	//Static deflection of a beam under gravity
                             mpm_pc.CalculateVelocityCantilever(Vmnum);
                             Vmex = 0.0;
+#ifndef AMREX_USE_GPU
                             PrintToFile("CantileverVel.out")<<time<<"\t"<<Vmex<<"\t"<<Vmnum<<"\n";
+#endif
                             mpm_pc.CalculateEnergies(TKE,TSE);
                             TE=TKE+TSE;
+#ifndef AMREX_USE_GPU
                             PrintToFile("CantileverEnergy.out")<<time<<"\t"<<TKE<<"\t"<<TSE<<"\t"<<TE<<"\n";
+#endif
                             break;
                         case(5):	//Transverse vibration of a bar
                             mpm_pc.CalculateErrorTVB(specs.tvb_E,specs.tvb_v0,specs.tvb_L,specs.tvb_rho,err);
+#ifndef AMREX_USE_GPU
                             PrintToFile("TVB_Error.out")<<time<<"\t"<<TKE<<"\t"<<TSE<<"\t"<<TE<<"\n";
+#endif
                             break;
                         case(6):    //Check function reconstruction and convergence
                             mpm_pc.CalculateErrorP2G(nodaldata,specs.p2g_L,specs.p2g_f,specs.p2g_ncell);
@@ -867,7 +895,9 @@ int main (int argc, char* argv[])
                                                      order_surface_integral,
                                                      specs.periodic);
                             CalculateSurfaceIntegralOnBG(geom, nodaldata,STRESS_INDEX,err);
+#ifndef AMREX_USE_GPU
                             PrintToFile("Weight.out")<<time<<"\t"<<err<<"\t"<<-specs.total_mass*9.81<<"\n";
+#endif
                             break;
                         case(8):    CalculateInterpolationError(geom, nodaldata,STRESS_INDEX);
                                     break;
@@ -877,8 +907,10 @@ int main (int argc, char* argv[])
                                     //
                                     break;
                         default:	//
+#ifndef AMREX_USE_GPU
                                     amrex::Print()<<"\nTest number = "<<specs.test_number;
                                     amrex::Abort("\nSorry. The test number does not exist");
+#endif
 
                     }
                 }
@@ -888,7 +920,9 @@ int main (int argc, char* argv[])
                       {
                         mpm_pc.CalculateEnergies(TKE,TSE);
                         TE=TKE+TSE;
+#ifndef AMREX_USE_GPU
                         PrintToFile("Energy.out")<<time<<"\t"<<TKE<<"\t"<<TSE<<"\t"<<TE<<"\n";
+#endif
                       }
                     if(specs.print_max_min_avg_stress and steps%specs.diagnostic_iteration_frequency==0)
                       {
@@ -922,7 +956,9 @@ int main (int argc, char* argv[])
                         amrex::Real avg_vel=0.0;
                         mpm_pc.CalculateVelocityDiagnostics(min_vel,max_vel,avg_vel);
                         avg_vel=avg_vel/specs.total_number_of_material_points;
+#ifndef AMREX_USE_GPU
                         PrintToFile("Velocity_Dianostic.out")<<steps<<"\t"<<min_vel<<"\t"<<max_vel<<"\t"<<avg_vel<<"\n";
+#endif
                       }
 
 
@@ -986,11 +1022,15 @@ int main (int argc, char* argv[])
                                              specs.periodic);
                     CalculateSurfaceIntegralOnBG(geom, nodaldata,STRESS_INDEX,err);*/
                     ymax = mpm_pc.GetPosSpring();//+specs.spring_alone_exact_delta;
+#ifndef AMREX_USE_GPU
                     PrintToFile("Spring.out")<<time<<"\t"<<ymax<<"\t"<<err<<"\n";
+#endif
                 }
 
             	Print()<<"\nIteration: "<<std::setw(10)<<steps<<",\t"<<"Time (s): "<<std::fixed<<std::setprecision(10)<<time<<",\tDt (s) = "<<std::scientific<<std::setprecision(5)<<dt<<std::fixed<<std::setprecision(10)<<",\t Time/Iter (s) = "<<time_per_iter_sum/iter_test;
+#ifndef AMREX_USE_GPU
             	PrintToFile("CompTime.out")<<steps<<"\t"<<time_per_iter_sum/iter_test<<" "<<time_per_iter<<"\n";
+#endif
             	time_per_iter_sum=zero;
             	iter_test=0;
             	output_timePrint=zero;

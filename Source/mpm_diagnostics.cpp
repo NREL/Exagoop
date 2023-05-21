@@ -440,7 +440,9 @@ void MPMParticleContainer::WriteDeflectionTVB(Real tvb_E,Real tvb_v0,Real tvb_L,
 	            xp[XDIR]=p.pos(XDIR);
 	            xp[YDIR]=p.pos(YDIR);
 	            y_exact = Amplitude*sin(pi*xp[XDIR]/tvb_L);
+#ifndef AMREX_USE_GPU
 	            PrintToFile(outputfile)<<xp[XDIR]<<"\t"<<xp[YDIR]<<"\t"<<y_exact<<"\n";
+#endif
 	        });
 	    }
 
@@ -504,7 +506,9 @@ amrex::Real MPMParticleContainer::CalculateEffectiveSpringConstant(amrex::Real A
 
 	}
 
+#ifndef AMREX_USE_GPU
 	PrintToFile("SpringConst.out")<<Calculated_Spring_Const<<"\n";
+#endif
 
 	//Calculate and return the restoring force
 	return(Restoring_force);
