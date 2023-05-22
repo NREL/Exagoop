@@ -332,44 +332,44 @@ int main (int argc, char* argv[])
                     case(1):	//Axial vibration of continuum bar
                         mpm_pc.CalculateVelocity(Vmnum);
                         Vmex = mpm_pc.CalculateExactVelocity(specs.axial_bar_modenumber,specs.axial_bar_E,specs.axial_bar_rho,specs.axial_bar_v0,specs.axial_bar_L,time);
-#ifndef AMREX_USE_GPU
-                        PrintToFile("AxialBarVel.out")<<time<<"\t"<<Vmex<<"\t"<<Vmnum<<"\n";
-#endif
+                        #ifndef AMREX_USE_GPU
+                          PrintToFile(specs.prefix_diagnosticfoldername+"AxialBarVel.out")<<time<<"\t"<<Vmex<<"\t"<<Vmnum<<"\n";
+                        #endif
                         mpm_pc.CalculateEnergies(TKE,TSE);
                         TE=TKE+TSE;
-#ifndef AMREX_USE_GPU
-                        PrintToFile("AxialBarEnergy.out")<<time<<"\t"<<TKE<<"\t"<<TSE<<"\t"<<TE<<"\n";
-#endif
+                        #ifndef AMREX_USE_GPU
+                        PrintToFile(specs.prefix_diagnosticfoldername+"AxialBarEnergy.out")<<time<<"\t"<<TKE<<"\t"<<TSE<<"\t"<<TE<<"\n";
+                        #endif
                         break;
                     case(2):	//Dam break
                         mpm_pc.FindWaterFront(Xwf);
 #ifndef AMREX_USE_GPU
-                        PrintToFile("DamBreakWaterfront.out")<<time/sqrt(specs.dam_break_H1/specs.dam_break_g)<<"\t"<<Xwf/specs.dam_break_H1<<"\n";
+                        PrintToFile(specs.prefix_diagnosticfoldername+"DamBreakWaterfront.out")<<time/sqrt(specs.dam_break_H1/specs.dam_break_g)<<"\t"<<Xwf/specs.dam_break_H1<<"\n";
 #endif
                         break;
                     case(3):	//Elastic collision of disks
                         mpm_pc.CalculateEnergies(TKE,TSE);
                         TE=TKE+TSE;
 #ifndef AMREX_USE_GPU
-                        PrintToFile("ElasticDiskCollisionEnergy.out")<<time<<"\t"<<TKE<<"\t"<<TSE<<"\t"<<TE<<"\n";
+                        PrintToFile(specs.prefix_diagnosticfoldername+"ElasticDiskCollisionEnergy.out")<<time<<"\t"<<TKE<<"\t"<<TSE<<"\t"<<TE<<"\n";
 #endif
                         break;
                     case(4):	//Static deflection of beam under gravity
                         mpm_pc.CalculateVelocityCantilever(Vmnum);
                         Vmex = 0.0;
 #ifndef AMREX_USE_GPU
-                        PrintToFile("CantileverVel.out")<<time<<"\t"<<Vmex<<"\t"<<Vmnum<<"\n";
+                        PrintToFile(specs.prefix_diagnosticfoldername+"CantileverVel.out")<<time<<"\t"<<Vmex<<"\t"<<Vmnum<<"\n";
 #endif
                         mpm_pc.CalculateEnergies(TKE,TSE);
                         TE=TKE+TSE;
 #ifndef AMREX_USE_GPU
-                        PrintToFile("CantileverEnergy.out")<<time<<"\t"<<TKE<<"\t"<<TSE<<"\t"<<TE<<"\n";
+                        PrintToFile(specs.prefix_diagnosticfoldername+"CantileverEnergy.out")<<time<<"\t"<<TKE<<"\t"<<TSE<<"\t"<<TE<<"\n";
 #endif
                         break;
                     case(5):	//Transverse vibration of a bar
                         mpm_pc.CalculateErrorTVB(specs.tvb_E,specs.tvb_v0,specs.tvb_L,specs.tvb_rho,err);
 #ifndef AMREX_USE_GPU
-                        PrintToFile("TVB_Error.out")<<time<<"\t"<<TKE<<"\t"<<TSE<<"\t"<<TE<<"\n";
+                        PrintToFile(specs.prefix_diagnosticfoldername+"TVB_Error.out")<<time<<"\t"<<TKE<<"\t"<<TSE<<"\t"<<TE<<"\n";
 #endif
                         break;
                     case(6):    //Check function reconstruction and convergence
@@ -386,7 +386,7 @@ int main (int argc, char* argv[])
                                                  specs.periodic);
                         CalculateSurfaceIntegralOnBG(geom, nodaldata,STRESS_INDEX,err);
 #ifndef AMREX_USE_GPU
-                        PrintToFile("Weight.out")<<time<<"\t"<<err<<"\t"<<-specs.total_mass*9.81<<"\n";
+                        PrintToFile(specs.prefix_diagnosticfoldername+"Weight.out")<<time<<"\t"<<err<<"\t"<<-specs.total_mass*9.81<<"\n";
 #endif
                         break;
                     case(8): 	CalculateInterpolationError(geom, nodaldata,STRESS_INDEX);
@@ -409,7 +409,8 @@ int main (int argc, char* argv[])
                 mpm_pc.CalculateEnergies(TKE,TSE);
                 TE=TKE+TSE;
 #ifndef AMREX_USE_GPU
-                PrintToFile("Energy.out")<<time<<"\t"<<TKE<<"\t"<<TSE<<"\t"<<TE<<"\n";
+                amrex::Print()<<"\n "<<specs.prefix_diagnosticfoldername+"Energy.out";
+                PrintToFile(specs.prefix_diagnosticfoldername+"Energy.out")<<time<<"\t"<<TKE<<"\t"<<TSE<<"\t"<<TE<<"\n";
 #endif
             }
         }
@@ -843,43 +844,43 @@ int main (int argc, char* argv[])
                             mpm_pc.CalculateVelocity(Vmnum);
                             Vmex = mpm_pc.CalculateExactVelocity(specs.axial_bar_modenumber,specs.axial_bar_E,specs.axial_bar_rho,specs.axial_bar_v0,specs.axial_bar_L,time);
                             #ifndef AMREX_USE_GPU
-                              PrintToFile("AxialBarVel.out")<<time<<"\t"<<Vmex<<"\t"<<Vmnum<<"\n";
+                              PrintToFile(specs.prefix_diagnosticfoldername+"AxialBarVel.out")<<time<<"\t"<<Vmex<<"\t"<<Vmnum<<"\n";
                             #endif
                             mpm_pc.CalculateEnergies(TKE,TSE);
                             TE=TKE+TSE;
                             #ifndef AMREX_USE_GPU
-                              PrintToFile("AxialBarEnergy.out")<<time<<"\t"<<TKE<<"\t"<<TSE<<"\t"<<TE<<"\n";
+                              PrintToFile(specs.prefix_diagnosticfoldername+"AxialBarEnergy.out")<<time<<"\t"<<TKE<<"\t"<<TSE<<"\t"<<TE<<"\n";
                             #endif
                             break;
                         case(2):	//Dam break
                             mpm_pc.FindWaterFront(Xwf);
                             #ifndef AMREX_USE_GPU
-                            PrintToFile("DamBreakWaterfront.out")<<time/sqrt(specs.dam_break_H1/specs.dam_break_g)<<"\t"<<Xwf/specs.dam_break_H1<<"\n";
+                            PrintToFile(specs.prefix_diagnosticfoldername+"DamBreakWaterfront.out")<<time/sqrt(specs.dam_break_H1/specs.dam_break_g)<<"\t"<<Xwf/specs.dam_break_H1<<"\n";
                             #endif
                             break;
                         case(3):	//Elastic collision of disks
                             mpm_pc.CalculateEnergies(TKE,TSE);
                             TE=TKE+TSE;
 #ifndef AMREX_USE_GPU
-                            PrintToFile("ElasticDiskCollisionEnergy.out")<<time<<"\t"<<TKE<<"\t"<<TSE<<"\t"<<TE<<"\n";
+                            PrintToFile(specs.prefix_diagnosticfoldername+"ElasticDiskCollisionEnergy.out")<<time<<"\t"<<TKE<<"\t"<<TSE<<"\t"<<TE<<"\n";
 #endif
                             break;
                         case(4):	//Static deflection of a beam under gravity
                             mpm_pc.CalculateVelocityCantilever(Vmnum);
                             Vmex = 0.0;
 #ifndef AMREX_USE_GPU
-                            PrintToFile("CantileverVel.out")<<time<<"\t"<<Vmex<<"\t"<<Vmnum<<"\n";
+                            PrintToFile(specs.prefix_diagnosticfoldername+"CantileverVel.out")<<time<<"\t"<<Vmex<<"\t"<<Vmnum<<"\n";
 #endif
                             mpm_pc.CalculateEnergies(TKE,TSE);
                             TE=TKE+TSE;
 #ifndef AMREX_USE_GPU
-                            PrintToFile("CantileverEnergy.out")<<time<<"\t"<<TKE<<"\t"<<TSE<<"\t"<<TE<<"\n";
+                            PrintToFile(specs.prefix_diagnosticfoldername+"CantileverEnergy.out")<<time<<"\t"<<TKE<<"\t"<<TSE<<"\t"<<TE<<"\n";
 #endif
                             break;
                         case(5):	//Transverse vibration of a bar
                             mpm_pc.CalculateErrorTVB(specs.tvb_E,specs.tvb_v0,specs.tvb_L,specs.tvb_rho,err);
 #ifndef AMREX_USE_GPU
-                            PrintToFile("TVB_Error.out")<<time<<"\t"<<TKE<<"\t"<<TSE<<"\t"<<TE<<"\n";
+                            PrintToFile(specs.prefix_diagnosticfoldername+"TVB_Error.out")<<time<<"\t"<<TKE<<"\t"<<TSE<<"\t"<<TE<<"\n";
 #endif
                             break;
                         case(6):    //Check function reconstruction and convergence
@@ -896,7 +897,7 @@ int main (int argc, char* argv[])
                                                      specs.periodic);
                             CalculateSurfaceIntegralOnBG(geom, nodaldata,STRESS_INDEX,err);
 #ifndef AMREX_USE_GPU
-                            PrintToFile("Weight.out")<<time<<"\t"<<err<<"\t"<<-specs.total_mass*9.81<<"\n";
+                            PrintToFile(specs.prefix_diagnosticfoldername+"Weight.out")<<time<<"\t"<<err<<"\t"<<-specs.total_mass*9.81<<"\n";
 #endif
                             break;
                         case(8):    CalculateInterpolationError(geom, nodaldata,STRESS_INDEX);
@@ -920,33 +921,24 @@ int main (int argc, char* argv[])
                       {
                         mpm_pc.CalculateEnergies(TKE,TSE);
                         TE=TKE+TSE;
-#ifndef AMREX_USE_GPU
-                        PrintToFile("Energy.out")<<time<<"\t"<<TKE<<"\t"<<TSE<<"\t"<<TE<<"\n";
-#endif
+                        #ifndef AMREX_USE_GPU
+                        PrintToFile(specs.prefix_diagnosticfoldername+"Energy.out")<<time<<"\t"<<TKE<<"\t"<<TSE<<"\t"<<TE<<"\n";
+                        #endif
                       }
                     if(specs.print_max_min_avg_stress and steps%specs.diagnostic_iteration_frequency==0)
                       {
-                        amrex::Real min_Sxx=0.0;
-                        amrex::Real min_Sxy=0.0;
-                        amrex::Real min_Sxz=0.0;
-                        amrex::Real min_Syy=0.0;
-                        amrex::Real min_Syz=0.0;
-                        amrex::Real min_Szz=0.0;
 
-                        amrex::Real max_Sxx=0.0;
-                        amrex::Real max_Sxy=0.0;
-                        amrex::Real max_Sxz=0.0;
-                        amrex::Real max_Syy=0.0;
-                        amrex::Real max_Syz=0.0;
-                        amrex::Real max_Szz=0.0;
+                        amrex::GpuArray<amrex::Real, 6> min_stress;
+                        amrex::GpuArray<amrex::Real, 6> max_stress;
+                        amrex::GpuArray<amrex::Real, 6> avg_stress;
 
-                        amrex::Real avg_Sxx=0.0;
-                        amrex::Real avg_Sxy=0.0;
-                        amrex::Real avg_Sxz=0.0;
-                        amrex::Real avg_Syy=0.0;
-                        amrex::Real avg_Syz=0.0;
-                        amrex::Real avg_Szz=0.0;
+                        mpm_pc.CalculateStressDiagnostics(min_stress,max_stress,avg_stress);
 
+                        #ifndef AMREX_USE_GPU
+                        PrintToFile(specs.prefix_diagnosticfoldername+"Min_Stress_Dianostic.out")<<steps<<"\t"<<min_stress[0]<<"\t"<<min_stress[1]<<"\t"<<min_stress[2]<<"\t"<<min_stress[3]<<"\t"<<min_stress[4]<<"\t"<<min_stress[5]<<"\n";
+                        PrintToFile(specs.prefix_diagnosticfoldername+"Max_Stress_Dianostic.out")<<steps<<"\t"<<max_stress[0]<<"\t"<<max_stress[1]<<"\t"<<max_stress[2]<<"\t"<<max_stress[3]<<"\t"<<max_stress[4]<<"\t"<<max_stress[5]<<"\n";
+                        PrintToFile(specs.prefix_diagnosticfoldername+"Avg_Stress_Dianostic.out")<<steps<<"\t"<<avg_stress[0]<<"\t"<<avg_stress[1]<<"\t"<<avg_stress[2]<<"\t"<<avg_stress[3]<<"\t"<<avg_stress[4]<<"\t"<<avg_stress[5]<<"\n";
+                        #endif
 
                       }
                     if(specs.print_max_min_avg_velocity and steps%specs.diagnostic_iteration_frequency==0)
@@ -956,9 +948,9 @@ int main (int argc, char* argv[])
                         amrex::Real avg_vel=0.0;
                         mpm_pc.CalculateVelocityDiagnostics(min_vel,max_vel,avg_vel);
                         avg_vel=avg_vel/specs.total_number_of_material_points;
-#ifndef AMREX_USE_GPU
-                        PrintToFile("Velocity_Dianostic.out")<<steps<<"\t"<<min_vel<<"\t"<<max_vel<<"\t"<<avg_vel<<"\n";
-#endif
+                        #ifndef AMREX_USE_GPU
+                        PrintToFile(specs.prefix_diagnosticfoldername+"Velocity_Dianostic.out")<<steps<<"\t"<<min_vel<<"\t"<<max_vel<<"\t"<<avg_vel<<"\n";
+                        #endif
                       }
 
 

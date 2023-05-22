@@ -76,6 +76,68 @@ void MPMParticleContainer::CalculateEnergies(Real &TKE,Real &TSE)
 
 }
 
+void MPMParticleContainer::CalculateStressDiagnostics(amrex::GpuArray<amrex::Real, 6> &min_stress, amrex::GpuArray<amrex::Real, 6> &max_stress, amrex::GpuArray<amrex::Real, 6> &avg_stress)
+{
+  const int lev = 0;
+      const Geometry& geom = Geom(lev);
+      auto& plev  = GetParticles(lev);
+      const auto dxi = geom.InvCellSizeArray();
+      const auto dx = geom.CellSizeArray();
+      const auto plo = geom.ProbLoArray();
+      const auto domain = geom.Domain();
+
+      using PType = typename MPMParticleContainer::SuperParticleType;
+      for(int comp=0;comp<NCOMP_TENSOR;comp++)
+        {
+          min_stress[comp] = amrex::ReduceMin(*this, [=]
+          AMREX_GPU_HOST_DEVICE (const PType& p) -> Real
+          {
+              return(p.rdata(realData::stress+comp));
+          });
+
+        }
+      for(int comp=0;comp<NCOMP_TENSOR;comp++)
+        {
+          max_stress[comp] = amrex::ReduceMax(*this, [=]
+          AMREX_GPU_HOST_DEVICE (const PType& p) -> Real
+          {
+            return(p.rdata(realData::stress+comp));
+          });
+        }
+      for(int comp=0;comp<NCOMP_TENSOR;comp++)
+        {
+          avg_stress[comp] = amrex::ReduceSum(*this, [=]
+          AMREX_GPU_HOST_DEVICE (const PType& p) -> Real
+          {
+            return(p.rdata(realData::stress+comp));
+          });
+        }
+
+#ifdef BL_USE_MPI
+    ParallelDescriptor::ReduceRealMin(min_stress[0]);
+    ParallelDescriptor::ReduceRealMin(min_stress[1]);
+    ParallelDescriptor::ReduceRealMin(min_stress[2]);
+    ParallelDescriptor::ReduceRealMin(min_stress[3]);
+    ParallelDescriptor::ReduceRealMin(min_stress[4]);
+    ParallelDescriptor::ReduceRealMin(min_stress[5]);
+
+    ParallelDescriptor::ReduceRealMax(max_stress[0]);
+    ParallelDescriptor::ReduceRealMax(max_stress[1]);
+    ParallelDescriptor::ReduceRealMax(max_stress[2]);
+    ParallelDescriptor::ReduceRealMax(max_stress[3]);
+    ParallelDescriptor::ReduceRealMax(max_stress[4]);
+    ParallelDescriptor::ReduceRealMax(max_stress[5]);
+
+    ParallelDescriptor::ReduceRealSum(avg_stress[0]);
+    ParallelDescriptor::ReduceRealSum(avg_stress[1]);
+    ParallelDescriptor::ReduceRealSum(avg_stress[2]);
+    ParallelDescriptor::ReduceRealSum(avg_stress[3]);
+    ParallelDescriptor::ReduceRealSum(avg_stress[4]);
+    ParallelDescriptor::ReduceRealSum(avg_stress[5]);
+
+#endif
+}
+
 void MPMParticleContainer::CalculateVelocityDiagnostics(Real &min_vel,Real &max_vel, Real &avg_vel)
 {
     const int lev = 0;

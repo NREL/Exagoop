@@ -99,6 +99,7 @@ class MPMspecs
         std::string prefix_gridfilename =  "nplt";
         std::string prefix_densityfilename = "dens";
         std::string prefix_checkpointfilename = "chk";
+        std::string prefix_diagnosticfoldername = "";
         int num_of_digits_in_filenames=6;
 
         //Diagnostic parameters
@@ -260,6 +261,7 @@ class MPMspecs
             pp.query("prefix_densityfilename",prefix_densityfilename);
             pp.query("prefix_checkpointfilename",prefix_checkpointfilename);
             pp.query("num_of_digits_in_filenames",num_of_digits_in_filenames);
+            pp.query("prefix_diagnosticfoldername",prefix_diagnosticfoldername);
 
             //Reading diagnostic parameters
             pp.query("is_standard_test",is_standard_test);
