@@ -53,7 +53,6 @@ public:
     amrex::Real GetPosSpring();
     void CalculateSurfaceIntegralTop(Array<Real,AMREX_SPACEDIM> gravity, Real &Fy_top, Real &Fy_bottom);
     void deposit_onto_grid(MultiFab& nodaldata,
-                           MultiFab& f_ext,
                            Vector<MultiFab>& v_old,
                            Array<Real,AMREX_SPACEDIM> gravity,
                            int external_loads_present,
@@ -122,16 +121,30 @@ public:
     void implicitUpdate(int implicit_solve, 
                         Vector<MultiFab>& v_old, 
                         Vector<MultiFab>& v_new, 
-                        MultiFab& fext, 
                         MultiFab& nodaldata, 
+                        Array<Real,AMREX_SPACEDIM> gravity,
+                        int external_loads_present,
+                        Array<Real,AMREX_SPACEDIM> force_slab_lo,
+                        Array<Real,AMREX_SPACEDIM> force_slab_hi,
+                        Array<Real,AMREX_SPACEDIM> extforce,
                         Real mass_tolerance,
+                        GpuArray<int, AMREX_SPACEDIM> order_scheme_directional,
+                        GpuArray<int, AMREX_SPACEDIM> periodic,
+                        amrex::Real applied_strainrate,
                         Real time, Real dt);
 
     void implicitSolveM1(Vector<MultiFab>& v_old, 
                          Vector<MultiFab>& v_new, 
-                         MultiFab& fext, 
                          MultiFab& nodaldata, 
+                         Array<Real,AMREX_SPACEDIM> gravity,
+                         int external_loads_present,
+                         Array<Real,AMREX_SPACEDIM> force_slab_lo,
+                         Array<Real,AMREX_SPACEDIM> force_slab_hi,
+                         Array<Real,AMREX_SPACEDIM> extforce,
                          Real mass_tolerance,
+                         GpuArray<int, AMREX_SPACEDIM> order_scheme_directional,
+                         GpuArray<int, AMREX_SPACEDIM> periodic,
+                         amrex::Real applied_strainrate,
                          Real time, Real dt);
 
 private:

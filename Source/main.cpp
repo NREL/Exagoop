@@ -267,12 +267,9 @@ int main (int argc, char* argv[])
 
         // Set up MFs for implicit time advancement 
         // CvodeIntegrator cv_solver;
-        MultiFab f_ext;
         Vector<MultiFab> v_vect_old, v_vect_new;
         if(specs.implicit_solve == 1){
             // cv_solver.init(specs.ncells[XDIR], specs.ncells[YDIR], specs.ncells[ZDIR]);
-            f_ext.define(nodeba, dm, 3, ng_cells_nodaldata);
-            f_ext.setVal(0.0,ng_cells_nodaldata);
             v_vect_old.push_back(MultiFab(nodeba, dm, 3, ng_cells_nodaldata));
             v_vect_old[0].setVal(0.0,ng_cells_nodaldata);
             v_vect_new.push_back(MultiFab(nodeba, dm, 3, ng_cells_nodaldata));
@@ -291,7 +288,7 @@ int main (int argc, char* argv[])
 
         msg="\n Calculating initial strainrates and stresses";
         PrintMessage(msg,print_length,true);
-        mpm_pc.deposit_onto_grid(nodaldata, f_ext, v_vect_old,
+        mpm_pc.deposit_onto_grid(nodaldata, v_vect_old,
                                  specs.gravity,
                                  specs.external_loads_present,
                                  specs.force_slab_lo,
@@ -375,7 +372,7 @@ int main (int argc, char* argv[])
                         mpm_pc.CalculateErrorP2G(nodaldata,specs.p2g_L,specs.p2g_f,specs.p2g_ncell);
                         break;
                     case(7):	//Checks the weight of a block of elastic solid. Used to validate functionality to evaluate surface forces
-                        mpm_pc.deposit_onto_grid(nodaldata, f_ext, v_vect_old,
+                        mpm_pc.deposit_onto_grid(nodaldata, v_vect_old,
                                                  specs.gravity,
                                                  specs.external_loads_present,
                                                  specs.force_slab_lo,
@@ -533,7 +530,7 @@ int main (int argc, char* argv[])
             nodaldata.setVal(ZERO,ng_cells_nodaldata);
 
             //update_massvel=1, update_forces=0
-            mpm_pc.deposit_onto_grid(	nodaldata, f_ext, v_vect_old,
+            mpm_pc.deposit_onto_grid(	nodaldata, v_vect_old,
                                      specs.gravity,
                                      specs.external_loads_present,
                                      specs.force_slab_lo,
@@ -551,7 +548,7 @@ int main (int argc, char* argv[])
 
             // NOTE: Why not just one deposite onto grid call with both vel and force flags?
             // Calculate forces on nodes
-            mpm_pc.deposit_onto_grid(	nodaldata, f_ext, v_vect_old,
+            mpm_pc.deposit_onto_grid(	nodaldata, v_vect_old,
                                      specs.gravity,
                                      specs.external_loads_present,
                                      specs.force_slab_lo,
@@ -565,9 +562,22 @@ int main (int argc, char* argv[])
                                      specs.implicit_solve);
 
             //update velocity on nodes
+            printf("AT TIME %.6e\n", time);
             if(specs.implicit_solve){
                 // cv_solver.solve(time, dt, nodaldata, f_ext, specs.mass_tolerance);
-                mpm_pc.implicitUpdate(specs.implicit_solve, v_vect_old, v_vect_new, f_ext, nodaldata, specs.mass_tolerance, time, dt);
+                mpm_pc.implicitUpdate(specs.implicit_solve, 
+                                      v_vect_old, v_vect_new, 
+                                      nodaldata, 
+                                      specs.gravity,
+                                      specs.external_loads_present,
+                                      specs.force_slab_lo,
+                                      specs.force_slab_hi,
+                                      specs.extforce,
+                                      specs.mass_tolerance, 
+                                      specs.order_scheme_directional,
+                                      specs.periodic,
+                                      specs.applied_strainrate,
+                                      time, dt);
             } else {
                 nodal_update(nodaldata,dt,specs.mass_tolerance);
             }
@@ -671,11 +681,12 @@ int main (int argc, char* argv[])
                                  specs.levelset_wall_mu);
 
             // FIXME: Don't do MUSL when using implicit solve
-            if(specs.stress_update_scheme==1)										
+            if(specs.stress_update_scheme==1 && !specs.implicit_solve)										
+            // if(specs.stress_update_scheme==1)										
             {
                 //MUSL scheme
                 // Calculate velocity on nodes
-                mpm_pc.deposit_onto_grid(	nodaldata, f_ext, v_vect_old,
+                mpm_pc.deposit_onto_grid(	nodaldata, v_vect_old,
                                          specs.gravity,
                                          specs.external_loads_present,
                                          specs.force_slab_lo,
@@ -802,7 +813,7 @@ int main (int argc, char* argv[])
                             mpm_pc.CalculateErrorP2G(nodaldata,specs.p2g_L,specs.p2g_f,specs.p2g_ncell);
                             break;
                         case(7):	//Checks the weight of a block of elastic solid. Used to validate functionality to evaluate surface forces
-                            mpm_pc.deposit_onto_grid(nodaldata, f_ext, v_vect_old,
+                            mpm_pc.deposit_onto_grid(nodaldata, v_vect_old,
                                                      specs.gravity,
                                                      specs.external_loads_present,
                                                      specs.force_slab_lo,

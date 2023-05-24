@@ -213,7 +213,6 @@ amrex::Real MPMParticleContainer::Calculate_Total_Vol_RigidParticles(int body_id
 }
 
 void MPMParticleContainer::deposit_onto_grid(MultiFab& nodaldata,
-                                             MultiFab& f_ext,
                                              Vector<MultiFab>& v_vect_old,
                                              Array<Real,AMREX_SPACEDIM> gravity,
                                              int external_loads_present,
@@ -221,10 +220,10 @@ void MPMParticleContainer::deposit_onto_grid(MultiFab& nodaldata,
                                              Array<Real,AMREX_SPACEDIM> force_slab_hi,
                                              Array<Real,AMREX_SPACEDIM> extforce,
                                              int update_massvel,
-				             				 int update_forces,
-					 						 amrex::Real mass_tolerance,
-					     					 GpuArray<int,AMREX_SPACEDIM> order_scheme_directional,
-											 GpuArray<int,AMREX_SPACEDIM> periodic,
+				             				                 int update_forces,
+					 						                       amrex::Real mass_tolerance,
+					     					                     GpuArray<int,AMREX_SPACEDIM> order_scheme_directional,
+											                       GpuArray<int,AMREX_SPACEDIM> periodic,
                                              int implicit_solve)
 {
     const int lev = 0;
@@ -253,8 +252,6 @@ void MPMParticleContainer::deposit_onto_grid(MultiFab& nodaldata,
         const Box& nodalbox=mfi.validbox();
 
         Array4<Real> nodal_data_arr=nodaldata.array(mfi);
-        Array4<Real> fext_data_arr;
-        if(implicit_solve) fext_data_arr = f_ext.array(mfi); 
 
         amrex::ParallelFor(nodalbox,[=]
         AMREX_GPU_DEVICE (int i,int j,int k) noexcept
@@ -271,11 +268,6 @@ void MPMParticleContainer::deposit_onto_grid(MultiFab& nodaldata,
                 nodal_data_arr(i,j,k,FRCX_INDEX)=ZERO;
                 nodal_data_arr(i,j,k,FRCY_INDEX)=ZERO;
                 nodal_data_arr(i,j,k,FRCZ_INDEX)=ZERO;
-                if(implicit_solve){
-                    fext_data_arr(i,j,k,0)=ZERO;
-                    fext_data_arr(i,j,k,1)=ZERO;
-                    fext_data_arr(i,j,k,2)=ZERO;
-                }
             }
             if(update_forces==2)
             {
@@ -300,8 +292,6 @@ void MPMParticleContainer::deposit_onto_grid(MultiFab& nodaldata,
         int nt = np+ng;
 
         Array4<Real> nodal_data_arr=nodaldata.array(mfi);
-        Array4<Real> fext_data_arr;
-        if(implicit_solve) fext_data_arr = f_ext.array(mfi); 
 
         ParticleType* pstruct = aos().dataPtr();
     
@@ -412,11 +402,6 @@ void MPMParticleContainer::deposit_onto_grid(MultiFab& nodaldata,
             							amrex::Gpu::Atomic::AddNoRet(
             									&nodal_data_arr(iv[XDIR]+l,iv[YDIR]+m,iv[ZDIR]+n,FRCX_INDEX+dim),
 												bforce_contrib[dim]+intforce_contrib[dim]);
-                          if(implicit_solve){
-            							  amrex::Gpu::Atomic::AddNoRet(
-            									&fext_data_arr(iv[XDIR]+l,iv[YDIR]+m,iv[ZDIR]+n,dim),
-												      bforce_contrib[dim] + intforce_contrib[dim]);
-                          }
             						}
             					}
 
@@ -453,8 +438,6 @@ void MPMParticleContainer::deposit_onto_grid(MultiFab& nodaldata,
         Array4<Real> nodal_data_arr=nodaldata.array(mfi);
         Array4<Real> vold_data_arr;
         if(implicit_solve) vold_data_arr = v_vect_old[0].array(mfi); 
-        Array4<Real> fext_data_arr;
-        if(implicit_solve) fext_data_arr = f_ext.array(mfi); 
 
         amrex::ParallelFor(
         nodalbox, [=] AMREX_GPU_DEVICE(int i, int j, int k) noexcept 
@@ -467,19 +450,12 @@ void MPMParticleContainer::deposit_onto_grid(MultiFab& nodaldata,
                   if(nodal_data_arr(i,j,k,MASS_INDEX)>=mass_tolerance)
                   {
                       nodal_data_arr(i,j,k,VELX_INDEX+dim)/=nodal_data_arr(i,j,k,MASS_INDEX);
+                      if(implicit_solve) vold_data_arr(i,j,k,dim) = nodal_data_arr(i,j,k,VELX_INDEX+dim);
                   }
                   else
                   {
                       nodal_data_arr(i,j,k,VELX_INDEX+dim) = 0.0;
-                  }
-                  if(implicit_solve){
-                      // Save down old velocity for implicit solve
-                      vold_data_arr(i,j,k,dim) = nodal_data_arr(i,j,k,VELX_INDEX+dim);
-                      if(nodal_data_arr(i,j,k,MASS_INDEX) >= mass_tolerance){
-                          fext_data_arr(i,j,k,dim) /= nodal_data_arr(i,j,k,MASS_INDEX);
-                      } else{
-                          fext_data_arr(i,j,k,dim) = 0.0;
-                      }
+                      if(implicit_solve) vold_data_arr(i,j,k,dim) = nodal_data_arr(i,j,k,VELX_INDEX+dim);
                   }
               }
             }

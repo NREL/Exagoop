@@ -140,6 +140,15 @@ void MPMParticleContainer::writeParticles(std::string prefix_particlefilename, i
     real_data_names.push_back("Gama_pressure");
     real_data_names.push_back("Dynamic_viscosity");
     real_data_names.push_back("yacceleration");
+    for(int i=0;i<6;i++)
+    {
+        real_data_names.push_back(amrex::Concatenate("strain_imp_", i, 1));
+    }
+    for(int i=0;i<9;i++)
+    {
+    	real_data_names.push_back(amrex::Concatenate("defgrad_imp_", i, 1));
+    }
+    real_data_names.push_back("volume_temp");
 
     int_data_names.push_back("phase");
     int_data_names.push_back("rigid_body_id");
@@ -254,6 +263,15 @@ void MPMParticleContainer::writeCheckpointFile(std::string prefix_particlefilena
 	real_data_names.push_back("Gama_pressure");
 	real_data_names.push_back("Dynamic_viscosity");
 	real_data_names.push_back("yacceleration");
+  for(int i=0;i<6;i++)
+  {
+      real_data_names.push_back(amrex::Concatenate("strain_imp_", i, 1));
+  }
+  for(int i=0;i<9;i++)
+  {
+  	real_data_names.push_back(amrex::Concatenate("defgrad_imp_", i, 1));
+  }
+  real_data_names.push_back("volume_temp");
 
 	amrex::Vector<std::string> int_data_names;
 	int_data_names.push_back("phase");
