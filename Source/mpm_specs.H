@@ -5,6 +5,7 @@
 #include <AMReX_REAL.H>
 #include <AMReX_ParmParse.H>
 #include <constants.H>
+#include<cmath>
 
 using namespace amrex;
 
@@ -38,6 +39,15 @@ struct realData
         defgrad_imp=46,
         strain_imp=55,
         volume_imp=61,
+        spinrate=62,//33 //rate of rotation; this tensor is anti-symmetric, to better utilize existing code, we store the upper half matrix [XX, XY, XZ, YY, YZ, ZZ] (XX YY ZZ === 0)
+        void_ratio=68,// 39 // for hypoplastic model
+        min_void_ratio=69,
+        max_void_ratio=70,
+        critical_void_ratio=71,
+        inertial_number=72,
+        miu_I=73,
+        tau=74, //reserve NCOMP_TENSOR (6) space
+        dummy=80,
         count
     };
 };
@@ -213,6 +223,33 @@ class MPMspecs
         
         Real levset_mu=0.1;
 
+        // yli add for gbhypo
+        // material properties for granular material, default to sand.
+        struct GBHypoParameters{
+            Real phi_c = 0.5236; // critical state internal friction angle, unit: radian
+            Real h_s = 5800000000.0; // granular hardness, unit: Pa
+            Real n = 0.28; // pressure sensitive exponent : G paper says range (0.3, 0.5)
+            Real e_d0 = 0.53; // material constant for minimum void ratio
+            Real e_c0 = 0.84; // material constant for critical void ratio
+            Real e_i0 = 1.0; // material constant for maximum void ratio
+            Real alpha = 0.13; //material constant (0.1, 0.3)  
+            Real beta = 1.0; //material constant (1.0, 1.1)
+            Real stress_cutoff = -10.0; //stress cutoff to ensure compressive stress on material points
+        } GBparameters;
+        int print_GBHypoParameters = 0;
+        Real initial_void_ratio = 0.55; // initial void ratio for hypoplastic model
+        //end yli gbhypo
+        // yli add miu I
+        struct miuIParameters{
+            Real d = 1;
+            Real rou_s = 1;
+            Real miu_s = tan(20.9);
+            Real miu_2 = tan(32.76);
+            Real I_0 = 0.279;
+        } miu_I_Parameters;
+        int print_miuIParameters = 0;
+        //end yli add
+
         void read_mpm_specs()
         {
             bclo.resize(AMREX_SPACEDIM);
@@ -294,7 +331,7 @@ class MPMspecs
 
 
             //Rigid body params
-            pp.get("num_of_rigid_bodies", num_of_rigid_bodies);
+            pp.query("num_of_rigid_bodies", num_of_rigid_bodies);
 
 
             if(!use_autogen)
@@ -380,6 +417,48 @@ class MPMspecs
 
             pp.query("wall_vel_lo",wall_vel_lo);
             pp.query("wall_vel_hi",wall_vel_hi);
+
+            // yli add read gbhypo
+            ParmParse gbhp("GBHypoPlastic");
+            gbhp.query("critical_state_internal_friction_angle",GBparameters.phi_c);
+            gbhp.query("granular_hardness",GBparameters.h_s);
+            gbhp.query("n",GBparameters.n);
+            gbhp.query("min_void_ratio_0",GBparameters.e_d0);
+            gbhp.query("critical_void_ratio_0",GBparameters.e_c0);
+            gbhp.query("max_void_ratio_0",GBparameters.e_i0);
+            gbhp.query("alpha",GBparameters.alpha); 
+            gbhp.query("beta",GBparameters.beta);
+            gbhp.query("stress_cutoff",GBparameters.stress_cutoff);
+            gbhp.query("print_parameters",print_GBHypoParameters);
+            gbhp.query("initial_void_ratio",initial_void_ratio);
+            if(print_GBHypoParameters == 1){
+                amrex::Print()<<"\nGBhypoplastic parameters: friction angle = "<<GBparameters.phi_c<<";";
+                amrex::Print()<<"\nGBhypoplastic parameters: h_s = "<<GBparameters.h_s<<";";
+                amrex::Print()<<"\nGBhypoplastic parameters: n = "<<GBparameters.n<<";";
+                amrex::Print()<<"\nGBhypoplastic parameters: e_d0 = "<<GBparameters.e_d0<<";";
+                amrex::Print()<<"\nGBhypoplastic parameters: e_c0 = "<<GBparameters.e_c0<<";";
+                amrex::Print()<<"\nGBhypoplastic parameters: e_i0 = "<<GBparameters.e_i0<<";";
+                amrex::Print()<<"\nGBhypoplastic parameters: alpha = "<<GBparameters.alpha<<";";
+                amrex::Print()<<"\nGBhypoplastic parameters: beta = "<<GBparameters.beta<<";";
+                amrex::Print()<<"\nGBhypoplastic parameters: stress_cutoff = "<<GBparameters.stress_cutoff<<";";
+                amrex::Print()<<"\nGBhypoplastic initial void ratio e0 = "<<initial_void_ratio<<";";
+            }
+
+            ParmParse miuIp("miuIRheology");
+            miuIp.query("particle_diameter",miu_I_Parameters.d);
+            miuIp.query("particle_density",miu_I_Parameters.rou_s);
+            miuIp.query("miu_s",miu_I_Parameters.miu_s);
+            miuIp.query("miu_2",miu_I_Parameters.miu_2);
+            miuIp.query("I0",miu_I_Parameters.I_0);
+            miuIp.query("print_parameters",print_miuIParameters);
+            if(print_miuIParameters == 1){
+                amrex::Print()<<"\nmiuI rheology parameters: d = "<<miu_I_Parameters.d<<";";
+                amrex::Print()<<"\nmiuI rheology parameters: rou_s = "<<miu_I_Parameters.rou_s<<";";
+                amrex::Print()<<"\nmiuI rheology parameters: miu_s = "<<miu_I_Parameters.miu_s<<";";
+                amrex::Print()<<"\nmiuI rheology parameters: miu_2 = "<<miu_I_Parameters.miu_2<<";";
+                amrex::Print()<<"\nmiuI rheology parameters: I_0 = "<<miu_I_Parameters.I_0<<";";
+            }
+            // end yli add    
         }
 
         std::string Convert_arr_string(Array<Real,AMREX_SPACEDIM>arr)

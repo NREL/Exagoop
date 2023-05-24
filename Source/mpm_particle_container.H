@@ -22,6 +22,7 @@ public:
     
     }
 
+    //void InitParticles (const std::string & filename,Real &total_mass, Real &total_vol);
     void InitParticles (const std::string & filename,Real &total_mass, Real &total_vol, Real &total_rigid_mass, int &index_rigid_body_read_so_far, int &ifrigidnodespresent);
 
     void InitParticles (Real mincoords[AMREX_SPACEDIM],Real maxcoords[AMREX_SPACEDIM], 
@@ -29,6 +30,13 @@ public:
         Real dens, int constmodel, 
         Real E, Real nu,Real bulkMod, Real Gama_pres,Real visc,
         int do_multi_part_per_cell,Real &total_mass,Real &total_vol);
+    //yli add for gbhypo: overload this function, could pass in mpmspec to allow access for all user parameters
+    void InitParticles (Real mincoords[AMREX_SPACEDIM],Real maxcoords[AMREX_SPACEDIM], 
+        Real vel[AMREX_SPACEDIM],
+        Real dens, int constmodel, 
+        Real E, Real nu,Real bulkMod, Real Gama_pres,Real visc,
+        int do_multi_part_per_cell,Real &total_mass,Real &total_vol, Real initial_void_ratio);
+    //end yli add
 
     void moveParticles (const amrex::Real& dt,
                         int bclo[AMREX_SPACEDIM],
@@ -122,6 +130,9 @@ public:
     void FindWaterFront(Real &Xwf);
 
     void apply_constitutive_model(const amrex::Real& dt,amrex::Real applied_strainrate);
+    //yli add for gbhypo
+    void apply_constitutive_model(MPMspecs specs,const amrex::Real& dt,amrex::Real applied_strainrate);
+    //end yli add
     void apply_constitutive_model_delta(const amrex::Real& dt,amrex::Real applied_strainrate);
     void apply_constitutive_model_on_rigidparticles(const amrex::Real& dt,amrex::Real applied_strainrate);
 
@@ -173,6 +184,12 @@ private:
         Real vel[AMREX_SPACEDIM],
         Real dens, Real vol, int constmodel, Real E, Real nu,
         Real bulkmod, Real Gama_pres,Real visc);
-
+    //yli add for gbhypo : overload to add initial void ratio
+    ParticleType generate_particle
+        (Real x,Real y,Real z,
+        Real vel[AMREX_SPACEDIM],
+        Real dens, Real vol, int constmodel, Real E, Real nu,
+        Real bulkmod, Real Gama_pres,Real visc, Real initial_void_ratio);
+    //end yli add
 };
 #endif

@@ -1033,19 +1033,19 @@ void MPMParticleContainer::interpolate_from_grid(MultiFab& nodaldata,
 		          }
 		      }
 
-		    //Calculate deformation gradient tensor at time t+dt
-		    get_deformation_gradient_tensor(p,realData::deformation_gradient,gradvp,dt);
-
-		    int ind=0;
-		    for(int d1=0;d1<AMREX_SPACEDIM;d1++)
-		      {
-		        for(int d2=d1;d2<AMREX_SPACEDIM;d2++)
-		          {
-		            p.rdata(realData::strainrate+ind)=0.5*(gradvp[d1][d2]+gradvp[d2][d1]);
-		            ind++;
-		          }
-		      }
-		  }
+					int ind=0;
+					for(int d1=0;d1<AMREX_SPACEDIM;d1++)
+					{
+						for(int d2=d1;d2<AMREX_SPACEDIM;d2++)
+						{
+							p.rdata(realData::strainrate+ind)=0.5*(gradvp[d1][d2]+gradvp[d2][d1]);
+							//yli add for gbhypo
+							p.rdata(realData::spinrate+ind)=0.5*(gradvp[d1][d2]-gradvp[d2][d1]); // this only calculates the upper half of spin tensor
+							//end yli add
+							ind++;
+						}
+					}
+				}
             }
         });
     }

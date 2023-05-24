@@ -2,6 +2,7 @@
 #include <interpolants.H>
 #include <mpm_eb.H>
 #include <mpm_kernels.H>
+#include <constants.H>
 
 amrex::Real MPMParticleContainer::Calculate_time_step(amrex::Real CFL,amrex::Real dtmax,amrex::Real dtmin)
 {
@@ -18,7 +19,11 @@ amrex::Real MPMParticleContainer::Calculate_time_step(amrex::Real CFL,amrex::Rea
         amrex::Real Cs;
         if(p.idata(intData::phase)==0)
         {
-			if(p.idata(intData::constitutive_model)==1)
+            amrex::Real velmag=std::sqrt(p.rdata(realData::xvel)*p.rdata(realData::xvel) +
+										 p.rdata(realData::yvel)*p.rdata(realData::yvel) +
+										 p.rdata(realData::zvel)*p.rdata(realData::zvel) );
+			
+            if(p.idata(intData::constitutive_model)==1)
 			{
 				Cs = sqrt(p.rdata(realData::Bulk_modulus)/p.rdata(realData::density));
 			}
@@ -29,9 +34,14 @@ amrex::Real MPMParticleContainer::Calculate_time_step(amrex::Real CFL,amrex::Rea
 				Real mu=p.rdata(realData::E)/(2.0*(1+p.rdata(realData::nu)));
 				Cs = sqrt((lambda+2.0*mu)/p.rdata(realData::density));
 			}
-			amrex::Real velmag=std::sqrt(p.rdata(realData::xvel)*p.rdata(realData::xvel) +
-										 p.rdata(realData::yvel)*p.rdata(realData::yvel) +
-										 p.rdata(realData::zvel)*p.rdata(realData::zvel) );
+            else if(p.idata(intData::constitutive_model)==2){
+                if(velmag < TINYVAL){
+                    Cs = TINYVAL;
+                }
+                else{
+                    Cs = 0.0;
+                }
+            }
 
 			Real tscale=amrex::min<amrex::Real>(dx[0],amrex::min<amrex::Real>(dx[1],dx[2]))/(Cs+velmag);
 			return(tscale);
@@ -86,13 +96,31 @@ void MPMParticleContainer::updateVolume(const amrex::Real& dt)
         AMREX_GPU_DEVICE (int i) noexcept
         {
             ParticleType& p = pstruct[i];
+            //yli add for gbhypo
+            amrex::Real old_void_ratio = 0.0;
+            amrex::Real new_void_ratio = 0.0;
+            //end yli add
             if(p.idata(intData::phase)==0)
             {
-				p.rdata(realData::jacobian) = p.rdata(realData::deformation_gradient+0)*(p.rdata(realData::deformation_gradient+4)*p.rdata(realData::deformation_gradient+8)-p.rdata(realData::deformation_gradient+7)*p.rdata(realData::deformation_gradient+5))-
+                //yli add for gbhypo
+                if(p.idata(intData::constitutive_model)==2){
+                    // old_void_ratio = p.rdata(realData::void_ratio);
+                    // new_void_ratio = old_void_ratio + (p.rdata(realData::strainrate+XX)
+                    //                                 +p.rdata(realData::strainrate+YY)
+                    //                                 +p.rdata(realData::strainrate+ZZ))
+                    //                                 * (1 +old_void_ratio)* dt;
+                    // p.rdata(realData::void_ratio) = new_void_ratio;
+                    // p.rdata(realData::volume)	= (1+new_void_ratio)/(1+old_void_ratio)*p.rdata(realData::vol_init); // use order_of_scheme=1 to update vol_init
+                    // p.rdata(realData::density)	= p.rdata(realData::mass)/p.rdata(realData::volume);
+                }
+                //end yli add
+                else{
+                    p.rdata(realData::jacobian) = p.rdata(realData::deformation_gradient+0)*(p.rdata(realData::deformation_gradient+4)*p.rdata(realData::deformation_gradient+8)-p.rdata(realData::deformation_gradient+7)*p.rdata(realData::deformation_gradient+5))-
 											  p.rdata(realData::deformation_gradient+1)*(p.rdata(realData::deformation_gradient+3)*p.rdata(realData::deformation_gradient+8)-p.rdata(realData::deformation_gradient+6)*p.rdata(realData::deformation_gradient+5))+
 											  p.rdata(realData::deformation_gradient+2)*(p.rdata(realData::deformation_gradient+3)*p.rdata(realData::deformation_gradient+7)-p.rdata(realData::deformation_gradient+6)*p.rdata(realData::deformation_gradient+4));
-				p.rdata(realData::volume)	= p.rdata(realData::vol_init)*p.rdata(realData::jacobian);
-				p.rdata(realData::density)	= p.rdata(realData::mass)/p.rdata(realData::volume);
+                    p.rdata(realData::volume)	= p.rdata(realData::vol_init)*p.rdata(realData::jacobian);
+                    p.rdata(realData::density)	= p.rdata(realData::mass)/p.rdata(realData::volume);
+                }
             }
         });
     }

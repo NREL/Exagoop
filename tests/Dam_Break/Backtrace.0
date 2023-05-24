@@ -1,0 +1,39 @@
+=== If no file names and line numbers are shown below, one can run
+            addr2line -Cpfie my_exefile my_line_address
+    to convert `my_line_address` (e.g., 0x4a6b) into file name and line number.
+    Or one can use amrex/Tools/Backtrace/parse_bt.py.
+
+=== Please note that the line number reported by addr2line may not be accurate.
+    One can use
+            readelf -wl my_exefile | grep my_line_address'
+    to find out the offset for that line.
+
+ 0: ../../../build/mpm3d.gnu.MPI.ex() [0x5574a6]
+    amrex::BLBackTrace::print_backtrace_info(_IO_FILE*)
+../amrex/Src/Base/AMReX_BLBackTrace.cpp:179:39
+
+ 1: ../../../build/mpm3d.gnu.MPI.ex() [0x5592d2]
+    amrex::BLBackTrace::handler(int)
+../amrex/Src/Base/AMReX_BLBackTrace.cpp:85:15
+
+ 2: ../../../build/mpm3d.gnu.MPI.ex() [0x43eaa5]
+    sgetarr<std::__cxx11::basic_string<char> >
+../amrex/Src/Base/AMReX_ParmParse.cpp:905:1
+
+ 3: ../../../build/mpm3d.gnu.MPI.ex() [0x444ef7]
+    sgetarr<int> inlined at ../amrex/Src/Base/AMReX_ParmParse.cpp:1371:12 in amrex::ParmParse::getarr(char const*, std::vector<int, std::allocator<int> >&, int, int) const
+../amrex/Src/Base/AMReX_ParmParse.cpp:1372:1
+
+ 4: ../../../build/mpm3d.gnu.MPI.ex() [0x6e3892]
+    void amrex::ParmParse::get<int, 2ul>(char const*, std::array<int, 2ul>&) const
+../amrex/Src/Base/AMReX_ParmParse.H:921:9
+
+ 5: ../../../build/mpm3d.gnu.MPI.ex() [0x42b273]
+    main
+../ExagoopNRELRepo/Source/main.cpp:183:16
+
+ 6: /lib64/libc.so.6(__libc_start_main+0xf5) [0x7ff310d41555]
+
+ 7: ../../../build/mpm3d.gnu.MPI.ex() [0x433272]
+    _start at ??:?
+

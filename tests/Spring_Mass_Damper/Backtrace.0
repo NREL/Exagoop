@@ -1,0 +1,59 @@
+=== If no file names and line numbers are shown below, one can run
+            addr2line -Cpfie my_exefile my_line_address
+    to convert `my_line_address` (e.g., 0x4a6b) into file name and line number.
+    Or one can use amrex/Tools/Backtrace/parse_bt.py.
+
+=== Please note that the line number reported by addr2line may not be accurate.
+    One can use
+            readelf -wl my_exefile | grep my_line_address'
+    to find out the offset for that line.
+
+ 0: ../../../build/mpm3d.gnu.MPI.ex() [0x5574a6]
+    amrex::BLBackTrace::print_backtrace_info(_IO_FILE*)
+../amrex/Src/Base/AMReX_BLBackTrace.cpp:179:39
+
+ 1: ../../../build/mpm3d.gnu.MPI.ex() [0x5592d2]
+    amrex::BLBackTrace::handler(int)
+../amrex/Src/Base/AMReX_BLBackTrace.cpp:85:15
+
+ 2: ../../../build/mpm3d.gnu.MPI.ex() [0x449da7]
+    __gnu_cxx::__enable_if<std::__is_char<char>::__value, bool>::__type std::operator==<char>(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&) inlined at ../amrex/Src/Base/AMReX_ParmParse.cpp:598:14 in amrex::(anonymous namespace)::addDefn(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >&, std::__cxx11::list<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > >&, std::__cxx11::list<amrex::ParmParse::PP_entry, std::allocator<amrex::ParmParse::PP_entry> >&)
+/nopt/nrel/apps/base/2020-05-12/spack/opt/spack/linux-centos7-x86_64/gcc-4.8.5/gcc-8.4.0-xrmnckz436rnkcwooooi2r7n35pojkov/include/c++/8.4.0/bits/basic_string.h:6058:28
+addDefn
+../amrex/Src/Base/AMReX_ParmParse.cpp:598:14
+
+ 3: ../../../build/mpm3d.gnu.MPI.ex() [0x449f5a]
+    std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::_M_is_local() const inlined at /nopt/nrel/apps/base/2020-05-12/spack/opt/spack/linux-centos7-x86_64/gcc-4.8.5/gcc-8.4.0-xrmnckz436rnkcwooooi2r7n35pojkov/include/c++/8.4.0/bits/basic_string.h:220:6 in amrex::(anonymous namespace)::bldTable(char const*&, std::__cxx11::list<amrex::ParmParse::PP_entry, std::allocator<amrex::ParmParse::PP_entry> >&)
+/nopt/nrel/apps/base/2020-05-12/spack/opt/spack/linux-centos7-x86_64/gcc-4.8.5/gcc-8.4.0-xrmnckz436rnkcwooooi2r7n35pojkov/include/c++/8.4.0/bits/basic_string.h:211:26
+std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::_M_dispose()
+/nopt/nrel/apps/base/2020-05-12/spack/opt/spack/linux-centos7-x86_64/gcc-4.8.5/gcc-8.4.0-xrmnckz436rnkcwooooi2r7n35pojkov/include/c++/8.4.0/bits/basic_string.h:220:6
+std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::~basic_string()
+/nopt/nrel/apps/base/2020-05-12/spack/opt/spack/linux-centos7-x86_64/gcc-4.8.5/gcc-8.4.0-xrmnckz436rnkcwooooi2r7n35pojkov/include/c++/8.4.0/bits/basic_string.h:657:9
+bldTable
+../amrex/Src/Base/AMReX_ParmParse.cpp:662:13
+
+ 4: ../../../build/mpm3d.gnu.MPI.ex() [0x44920e]
+    std::__cxx11::basic_ostringstream<char, std::char_traits<char>, std::allocator<char> >::str() const inlined at ../amrex/Src/Base/AMReX_ParmParse.cpp:567:57 in amrex::(anonymous namespace)::read_file(char const*, std::__cxx11::list<amrex::ParmParse::PP_entry, std::allocator<amrex::ParmParse::PP_entry> >&)
+/nopt/nrel/apps/base/2020-05-12/spack/opt/spack/linux-centos7-x86_64/gcc-4.8.5/gcc-8.4.0-xrmnckz436rnkcwooooi2r7n35pojkov/include/c++/8.4.0/sstream:639:33
+read_file
+../amrex/Src/Base/AMReX_ParmParse.cpp:567:57
+
+ 5: ../../../build/mpm3d.gnu.MPI.ex() [0x44a651]
+    ppinit inlined at ../amrex/Src/Base/AMReX_ParmParse.cpp:1153:11 in amrex::ParmParse::Initialize(int, char**, char const*)
+../amrex/Src/Base/AMReX_ParmParse.cpp:954:5
+amrex::ParmParse::Initialize(int, char**, char const*)
+../amrex/Src/Base/AMReX_ParmParse.cpp:1153:11
+
+ 6: ../../../build/mpm3d.gnu.MPI.ex() [0x437234]
+    amrex::Initialize(int&, char**&, bool, ompi_communicator_t*, std::function<void ()> const&, std::ostream&, std::ostream&, void (*)(char const*))
+../amrex/Src/Base/AMReX.cpp:406:46
+
+ 7: ../../../build/mpm3d.gnu.MPI.ex() [0x42a5ac]
+    main
+../ExagoopNRELRepo/Source/main.cpp:54:22
+
+ 8: /lib64/libc.so.6(__libc_start_main+0xf5) [0x7f2a5a3d3555]
+
+ 9: ../../../build/mpm3d.gnu.MPI.ex() [0x433272]
+    _start at ??:?
+

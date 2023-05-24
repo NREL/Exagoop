@@ -5,6 +5,7 @@
 #include <AMReX_ParmParse.H>
 #include <AMReX_MultiFab.H>
 #include <AMReX_EB2_IF_Cylinder.H>
+#include <AMReX_EB2_IF_Box.H>
 #include <AMReX_EBFArrayBox.H>
 #include <AMReX_EBFabFactory.H>
 #include <AMReX_PlotFileUtil.H>
@@ -29,14 +30,14 @@ namespace mpm_ebtools
     extern EBFArrayBoxFactory* ebfactory;
     extern MultiFab *lsphi;
     extern int ls_refinement;
+    extern const int max_blocks;
     extern bool using_levelset_geometry;
     void init_eb(const Geometry &geom,const BoxArray &ba,
             const DistributionMapping &dm);
     void make_wedge_hopper_levelset(const Geometry &geom,const BoxArray &ba,const DistributionMapping &dm);
 }
 
-AMREX_GPU_DEVICE
-AMREX_FORCE_INLINE
+AMREX_GPU_DEVICE AMREX_FORCE_INLINE
 amrex::Real get_levelset_value(amrex::Array4<amrex::Real> phi,
         const amrex::GpuArray<amrex::Real, AMREX_SPACEDIM> problo,
         const amrex::GpuArray<amrex::Real, AMREX_SPACEDIM> dx,
@@ -76,8 +77,7 @@ amrex::Real get_levelset_value(amrex::Array4<amrex::Real> phi,
     return(lsval);
 }
 
-AMREX_GPU_DEVICE 
-AMREX_FORCE_INLINE
+AMREX_GPU_DEVICE AMREX_FORCE_INLINE
 void get_levelset_grad(amrex::Array4<amrex::Real> phi,
         const amrex::GpuArray<amrex::Real, AMREX_SPACEDIM> problo,
         const amrex::GpuArray<amrex::Real, AMREX_SPACEDIM> dx,
@@ -90,11 +90,9 @@ void get_levelset_grad(amrex::Array4<amrex::Real> phi,
     amrex::GpuArray<amrex::Real,AMREX_SPACEDIM> ls_dx;
     const int lo[AMREX_SPACEDIM]={0};
     const int hi[AMREX_SPACEDIM]={0};
-    
     const GpuArray<int, AMREX_SPACEDIM> order_scheme_pseudo={1,1,1};
     const GpuArray<int, AMREX_SPACEDIM> periodic_pseudo={1,1,1};
 
-    
     ls_dx[XDIR]=dx[XDIR]/lsref;
     ls_dx[YDIR]=dx[YDIR]/lsref;
     ls_dx[ZDIR]=dx[ZDIR]/lsref;

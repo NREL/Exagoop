@@ -1,62 +1,9 @@
-#ifndef CONSTITUTIVE_MODELS_H_
-#define CONSTITUTIVE_MODELS_H_
+#ifndef GB_HYPOPLASTIC_H_
+#define GB_HYPOPLASTIC_H_
 
 #include<constants.H>
 #include <AMReX.H>
-
-AMREX_GPU_DEVICE AMREX_FORCE_INLINE
-void linear_elastic(amrex::Real eps[NCOMP_TENSOR],
-        amrex::Real epsdot[NCOMP_TENSOR],
-        amrex::Real sigma[NCOMP_TENSOR],
-        amrex::Real E, amrex::Real v)
-{
-    amrex::Real trace_eps=eps[XX]+eps[YY]+eps[ZZ];
-    amrex::Real const1=E/(one+v)/(one-two*v);
-    amrex::Real const2=E/(one+v);
-
-    sigma[XX]=const1*((1-v)*eps[XX] + v*(eps[YY]+eps[ZZ]));
-    sigma[YY]=const1*((1-v)*eps[YY] + v*(eps[XX]+eps[ZZ]));
-    sigma[ZZ]=const1*((1-v)*eps[ZZ] + v*(eps[XX]+eps[YY]));
-
-    sigma[XY]=const2*eps[XY];
-    sigma[XZ]=const2*eps[XZ];
-    sigma[YZ]=const2*eps[YZ];
-}
-
-AMREX_GPU_DEVICE AMREX_FORCE_INLINE
-void linear_elastic(amrex::Real delta_eps[NCOMP_TENSOR],amrex::Real delta_sigma[NCOMP_TENSOR],amrex::Real E, amrex::Real v)
-{
-    amrex::Real const1=E/(one+v)/(one-two*v);
-    amrex::Real const2=E/(one+v);
-
-    delta_sigma[XX]=const1*((1-v)*delta_eps[XX] + v*(delta_eps[YY]+delta_eps[ZZ]));
-    delta_sigma[YY]=const1*((1-v)*delta_eps[YY] + v*(delta_eps[XX]+delta_eps[ZZ]));
-    delta_sigma[ZZ]=const1*((1-v)*delta_eps[ZZ] + v*(delta_eps[XX]+delta_eps[YY]));
-
-    delta_sigma[XY]=const2*delta_eps[XY];
-    delta_sigma[XZ]=const2*delta_eps[XZ];
-    delta_sigma[YZ]=const2*delta_eps[YZ];
-}
-
-AMREX_GPU_DEVICE AMREX_FORCE_INLINE
-void Newtonian_Fluid(amrex::Real epsdot[NCOMP_TENSOR],
-        amrex::Real sigma[NCOMP_TENSOR],
-        amrex::Real dyn_visc,
-		amrex::Real pressure)
-{
-
-    amrex::Real trace_epsdot=epsdot[XX]+epsdot[YY]+epsdot[ZZ];
-    amrex::Real one_by_three=1.0/3.0;
-
-    sigma[XX]=2.0*dyn_visc*(epsdot[XX]-one_by_three*trace_epsdot)-pressure;
-    sigma[YY]=2.0*dyn_visc*(epsdot[YY]-one_by_three*trace_epsdot)-pressure;
-    sigma[ZZ]=2.0*dyn_visc*(epsdot[ZZ]-one_by_three*trace_epsdot)-pressure;
-
-    sigma[XY]=2.0*dyn_visc*(epsdot[XY]);
-    sigma[XZ]=2.0*dyn_visc*(epsdot[XZ]);
-    sigma[YZ]=2.0*dyn_visc*(epsdot[YZ]);
-
-}
+#include<mpm_particle_container.H>
 
 /**
  * @brief Yudong: implementation of Gudehus-Bauer hypoplastic model 
@@ -72,7 +19,7 @@ void GB_hypoplastic(amrex::Real eps_dot[NCOMP_TENSOR],
         amrex::Real omega_dot[NCOMP_TENSOR],
         amrex::Real sigma[NCOMP_TENSOR],
         amrex::Real dt,
-        amrex::Real &e,
+        MPMParticleContainer::ParticleType &p,
         MPMspecs specs
         )
 {
@@ -88,7 +35,7 @@ void GB_hypoplastic(amrex::Real eps_dot[NCOMP_TENSOR],
     // identity matrix upper
     amrex::Real Identity[NCOMP_TENSOR] = {1.0,0,0,1.0,0,1.0};
     // void ratio
-    //amrex::Real e;
+    amrex::Real e = p.rdata(realData::void_ratio);
 
     //get tensors for computation of stress rate
     amrex::Real tensor_Jaumann[AMREX_SPACEDIM*AMREX_SPACEDIM];
@@ -116,9 +63,16 @@ void GB_hypoplastic(amrex::Real eps_dot[NCOMP_TENSOR],
     amrex::Real stress_cutoff = specs.GBparameters.stress_cutoff;
 
     amrex::Real trace_sigma = sigma[XX] + sigma[YY] + sigma[ZZ];
-    
+
     if(trace_sigma>0){
         trace_sigma = 0;
+        if(e>e_i0){
+            e = e_i0;
+        }
+        else if (e<e_d0){
+            e = e_d0;
+        }
+        p.rdata(realData::void_ratio) = e;
     }
 
     if(trace_sigma != 0.0){
@@ -159,6 +113,10 @@ void GB_hypoplastic(amrex::Real eps_dot[NCOMP_TENSOR],
         amrex::Real e_i = e_i0*exp(-pow(-trace_sigma/h_s,n)); // max void ratio
         amrex::Real e_d = e_d0*exp(-pow(-trace_sigma/h_s,n)); // min void ratio
         amrex::Real e_c = e_c0*exp(-pow(-trace_sigma/h_s,n)); // critical void ratio
+        p.rdata(realData::min_void_ratio) = e_d;
+        p.rdata(realData::max_void_ratio) = e_i;
+        p.rdata(realData::critical_void_ratio) = e_c;
+
         if(e>e_i){
             e = e_i;
         }
@@ -231,6 +189,29 @@ void GB_hypoplastic(amrex::Real eps_dot[NCOMP_TENSOR],
         }
 
         // update void ratio here
+        amrex::Real old_void_ratio = e;
+        e = old_void_ratio + (p.rdata(realData::strainrate+XX)
+                                    +p.rdata(realData::strainrate+YY)
+                                    +p.rdata(realData::strainrate+ZZ))
+                                    * (1 +old_void_ratio)* dt;
+
+        trace_sigma = sigma[XX] + sigma[YY] + sigma[ZZ];
+        e_i = e_i0*exp(-pow(-trace_sigma/h_s,n)); // max void ratio
+        e_d = e_d0*exp(-pow(-trace_sigma/h_s,n)); // min void ratio
+        e_c = e_c0*exp(-pow(-trace_sigma/h_s,n)); // critical void ratio
+        p.rdata(realData::min_void_ratio) = e_d;
+        p.rdata(realData::max_void_ratio) = e_i;
+        p.rdata(realData::critical_void_ratio) = e_c;
+        if(e>e_i){
+            e = e_i;
+        }
+        else if (e<e_d){
+            e = e_d;
+        }
+        p.rdata(realData::void_ratio) = e;
+        p.rdata(realData::volume)	= (1+e)/(1+old_void_ratio)*p.rdata(realData::vol_init); // use order_of_scheme=1 to update vol_init
+        p.rdata(realData::density)	= p.rdata(realData::mass)/p.rdata(realData::volume);
+
         //amrex::Print()<<"strain rate XX = " << p.rdata(realData::strainrate+XX);
         //e += (p.rdata(realData::strainrate+XX)+p.rdata(realData::strainrate+YY) +p.rdata(realData::strainrate+ZZ)) * (1 +e)* dt;
         //sigma[XX] = (sigma[XX]<=stress_cutoff)?sigma[XX]:stress_cutoff;
@@ -238,30 +219,16 @@ void GB_hypoplastic(amrex::Real eps_dot[NCOMP_TENSOR],
         //sigma[ZZ] = (sigma[ZZ]<=stress_cutoff)?sigma[ZZ]:stress_cutoff;
     }
     else{
+
         if(e>e_i0){
             e = e_i0;
         }
         else if (e<e_d0){
             e = e_d0;
         }
+        p.rdata(realData::void_ratio) = e;
     }
 }
 
 
-/**
- * @brief miuI rheology model implementation
- *  Yudong Li 01/05/2023
- * 
- */
-AMREX_GPU_DEVICE AMREX_FORCE_INLINE
-void miuI(amrex::Real eps_dot[NCOMP_TENSOR],
-        amrex::Real omega_dot[NCOMP_TENSOR],
-        amrex::Real sigma[NCOMP_TENSOR],
-        amrex::Real dt,
-        MPMspecs specs
-        )
-{
-    
-
-}
 #endif

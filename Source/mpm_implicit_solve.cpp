@@ -146,14 +146,14 @@ void MPMParticleContainer::implicitSolveM1(Vector<MultiFab>& v_vect_old,
 
                     auto iv = getParticleCell(p, plo, dxi, domain);
 
-                    lmin=(order_scheme_directional[0]==1)?0:((order_scheme_directional[0]==3)?(iv[XDIR]==lo[XDIR])?0:((iv[XDIR]==hi[XDIR])?-1:-1):-1000);
-                    lmax=(order_scheme_directional[0]==1)?2:((order_scheme_directional[0]==3)?(iv[XDIR]==lo[XDIR])?lmin+3:((iv[XDIR]==hi[XDIR])?lmin+3:lmin+4):-1000);
-
-                    mmin=(order_scheme_directional[1]==1)?0:((order_scheme_directional[1]==3)?(iv[YDIR]==lo[YDIR])?0:((iv[YDIR]==hi[YDIR])?-1:-1):-1000);
-                    mmax=(order_scheme_directional[1]==1)?2:((order_scheme_directional[1]==3)?(iv[YDIR]==lo[YDIR])?mmin+3:((iv[YDIR]==hi[YDIR])?mmin+3:mmin+4):-1000);
-
-                    nmin=(order_scheme_directional[2]==1)?0:((order_scheme_directional[2]==3)?(iv[ZDIR]==lo[ZDIR])?0:((iv[ZDIR]==hi[ZDIR])?-1:-1):-1000);
-                    nmax=(order_scheme_directional[2]==1)?2:((order_scheme_directional[2]==3)?(iv[ZDIR]==lo[ZDIR])?nmin+3:((iv[ZDIR]==hi[ZDIR])?nmin+3:nmin+4):-1000);
+                    lmin=(order_scheme_directional[0]==1)?0:((order_scheme_directional[0]==3 or order_scheme_directional[0]==2)?(iv[XDIR]==lo[XDIR])?0:((iv[XDIR]==hi[XDIR])?-1:-1):-1000     );
+                    lmax=(order_scheme_directional[0]==1)?2:((order_scheme_directional[0]==3 or order_scheme_directional[0]==2)?(iv[XDIR]==lo[XDIR])?lmin+3:((iv[XDIR]==hi[XDIR])?lmin+3:     lmin+4):-1000);
+ 
+                    mmin=(order_scheme_directional[1]==1)?0:((order_scheme_directional[1]==3 or order_scheme_directional[1]==2)?(iv[YDIR]==lo[YDIR])?0:((iv[YDIR]==hi[YDIR])?-1:-1):-1000     );
+                    mmax=(order_scheme_directional[1]==1)?2:((order_scheme_directional[1]==3 or order_scheme_directional[1]==2)?(iv[YDIR]==lo[YDIR])?mmin+3:((iv[YDIR]==hi[YDIR])?mmin+3:     mmin+4):-1000);
+ 
+                    nmin=(order_scheme_directional[2]==1)?0:((order_scheme_directional[2]==3 or order_scheme_directional[2]==2)?(iv[ZDIR]==lo[ZDIR])?0:((iv[ZDIR]==hi[ZDIR])?-1:-1):-1000     );
+                    nmax=(order_scheme_directional[2]==1)?2:((order_scheme_directional[2]==3 or order_scheme_directional[2]==2)?(iv[ZDIR]==lo[ZDIR])?nmin+3:((iv[ZDIR]==hi[ZDIR])?nmin+3:     nmin+4):-1000);
 
                     if(lmin==-1000 or lmax==-1000 or mmin==-1000 or mmax==-1000 or nmin==-1000 or nmax==-1000){
                       amrex::Abort("\nError. Something wrong with min/max index values in deposit onto grid");
@@ -212,7 +212,6 @@ void MPMParticleContainer::implicitSolveM1(Vector<MultiFab>& v_vect_old,
                                                  +p.rdata(realData::defgrad_imp+2)*(p.rdata(realData::defgrad_imp+3)*p.rdata(realData::defgrad_imp+7)
                                                                                             -p.rdata(realData::defgrad_imp+6)*p.rdata(realData::defgrad_imp+4));
                     p.rdata(realData::volume_imp) = p.rdata(realData::vol_init)*p.rdata(realData::jacobian);
-                    // printf("particle (%i %i %i) volnew = %.6e, volold = %.6e\n", iv[XDIR], iv[YDIR], iv[ZDIR], p.rdata(realData::volume_imp), p.rdata(realData::volume));
 
                     // Update the particle strain
                     int ind=0;
@@ -296,15 +295,14 @@ void MPMParticleContainer::implicitSolveM1(Vector<MultiFab>& v_vect_old,
 
                     auto iv = getParticleCell(p, plo, dxi, domain);
 
-                    lmin=(order_scheme_directional[0]==1)?0:((order_scheme_directional[0]==3)?(iv[XDIR]==lo[XDIR])?0:((iv[XDIR]==hi[XDIR])?-1:-1):-1000);
-                    lmax=(order_scheme_directional[0]==1)?2:((order_scheme_directional[0]==3)?(iv[XDIR]==lo[XDIR])?lmin+3:((iv[XDIR]==hi[XDIR])?lmin+3:lmin+4):-1000);
-
-                    mmin=(order_scheme_directional[1]==1)?0:((order_scheme_directional[1]==3)?(iv[YDIR]==lo[YDIR])?0:((iv[YDIR]==hi[YDIR])?-1:-1):-1000);
-                    mmax=(order_scheme_directional[1]==1)?2:((order_scheme_directional[1]==3)?(iv[YDIR]==lo[YDIR])?mmin+3:((iv[YDIR]==hi[YDIR])?mmin+3:mmin+4):-1000);
-
-                    nmin=(order_scheme_directional[2]==1)?0:((order_scheme_directional[2]==3)?(iv[ZDIR]==lo[ZDIR])?0:((iv[ZDIR]==hi[ZDIR])?-1:-1):-1000);
-                    nmax=(order_scheme_directional[2]==1)?2:((order_scheme_directional[2]==3)?(iv[ZDIR]==lo[ZDIR])?nmin+3:((iv[ZDIR]==hi[ZDIR])?nmin+3:nmin+4):-1000);
-
+                    lmin=(order_scheme_directional[0]==1)?0:((order_scheme_directional[0]==3 or order_scheme_directional[0]==2)?(iv[XDIR]==lo[XDIR])?0:((iv[XDIR]==hi[XDIR])?-1:-1):-1000     );
+                    lmax=(order_scheme_directional[0]==1)?2:((order_scheme_directional[0]==3 or order_scheme_directional[0]==2)?(iv[XDIR]==lo[XDIR])?lmin+3:((iv[XDIR]==hi[XDIR])?lmin+3:     lmin+4):-1000);
+ 
+                    mmin=(order_scheme_directional[1]==1)?0:((order_scheme_directional[1]==3 or order_scheme_directional[1]==2)?(iv[YDIR]==lo[YDIR])?0:((iv[YDIR]==hi[YDIR])?-1:-1):-1000     );
+                    mmax=(order_scheme_directional[1]==1)?2:((order_scheme_directional[1]==3 or order_scheme_directional[1]==2)?(iv[YDIR]==lo[YDIR])?mmin+3:((iv[YDIR]==hi[YDIR])?mmin+3:     mmin+4):-1000);
+ 
+                    nmin=(order_scheme_directional[2]==1)?0:((order_scheme_directional[2]==3 or order_scheme_directional[2]==2)?(iv[ZDIR]==lo[ZDIR])?0:((iv[ZDIR]==hi[ZDIR])?-1:-1):-1000     );
+                    nmax=(order_scheme_directional[2]==1)?2:((order_scheme_directional[2]==3 or order_scheme_directional[2]==2)?(iv[ZDIR]==lo[ZDIR])?nmin+3:((iv[ZDIR]==hi[ZDIR])?nmin+3:     nmin+4):-1000);
 
                     if(lmin==-1000 or lmax==-1000 or mmin==-1000 or mmax==-1000 or nmin==-1000 or nmax==-1000)
                     {
@@ -432,7 +430,6 @@ void MPMParticleContainer::implicitSolveM1(Vector<MultiFab>& v_vect_old,
                 {
                     nodal_data_arr(i,j,k,VELX_INDEX + dim) = vnew_data_arr(i,j,k,dim);
                 }
-                // printf("(%i %i %i) vel n+1 = (%.6e, %.6e, %.6e), force = (%.6e, %.6e, %.6e)\n", i, j, k, nodal_data_arr(i,j,k,VELX_INDEX), nodal_data_arr(i,j,k,VELX_INDEX+1), nodal_data_arr(i,j,k,VELX_INDEX+2), nodal_data_arr(i,j,k,FRCX_INDEX), nodal_data_arr(i,j,k,FRCX_INDEX+1), nodal_data_arr(i,j,k,FRCX_INDEX+2));
             }
             else
             {
