@@ -43,14 +43,15 @@ public:
     void updateVolume (const amrex::Real& dt);
     amrex::Real CalculateExactVelocity(int modenumber,amrex::Real E, amrex::Real rho, amrex::Real v0,amrex::Real L, amrex::Real time);
     void writeParticles (std::string prefix_particlefilename, int num_of_digits_in_filenames, const int n);
-    void writeCheckpointFile(std::string prefix_particlefilename, int num_of_digits_in_filenames, amrex::Real cur_time,  int nstep, int output_it);
-    void WriteHeader(const std::string& name, bool is_checkpoint, amrex::Real cur_time, int nstep, int EB_generate_max_level, int output_it) const;
-    void readCheckpointFile(std::string & restart_chkfile, int &nstep, double &cur_time, int &output_it);
+    void writeCheckpointFile(std::string prefix_particlefilename, int num_of_digits_in_filenames, amrex::Real cur_time,  int nstep, int output_it, GpuArray<amrex::Real,AMREX_SPACEDIM> vel);
+    void WriteHeader(const std::string& name, bool is_checkpoint, amrex::Real cur_time, int nstep, int EB_generate_max_level, int output_it, GpuArray<amrex::Real,AMREX_SPACEDIM> vel) const;
+    void readCheckpointFile(std::string & restart_chkfile, int &nstep, double &cur_time, int &output_it, GpuArray<amrex::Real,AMREX_SPACEDIM> &vel);
     int checkifrigidnodespresent();
     void  Calculate_Total_Mass_RigidParticles(int body_id, amrex::Real &total_mass);
     amrex::Real Calculate_Total_Vol_RigidParticles(int body_id);
     amrex::Real GetPosPiston();
     amrex::Real GetPosSpring();
+    void CalculateSurfaceLoads(Real &Load,int rigidbodyid);
     void CalculateSurfaceIntegralTop(Array<Real,AMREX_SPACEDIM> gravity, Real &Fy_top, Real &Fy_bottom);
     void deposit_onto_grid(MultiFab& nodaldata,
                            Vector<MultiFab>& v_old,
@@ -65,10 +66,21 @@ public:
 			   GpuArray<int, AMREX_SPACEDIM> periodic,
                            int implicit_solve);
 
+    void deposit_stressyy_onto_lowyboundary(MultiFab& nodaldata,
+                           Array<Real,AMREX_SPACEDIM> gravity,
+                           int external_loads_present,
+                           Array<Real,AMREX_SPACEDIM> force_slab_lo,
+                           Array<Real,AMREX_SPACEDIM> force_slab_hi,
+                           Array<Real,AMREX_SPACEDIM> extforce,
+                           amrex::Real mass_tolerance,
+                           GpuArray<int, AMREX_SPACEDIM> order_scheme_directional,
+                           GpuArray<int, AMREX_SPACEDIM> periodic);
+
     void calculate_nodal_normal (	MultiFab& nodaldata,
 			 	 	 	 	 	 	 	amrex::Real mass_tolerance,
 										GpuArray<int,AMREX_SPACEDIM> order_scheme_directional,
 										GpuArray<int,AMREX_SPACEDIM> periodic);
+    int get_num_of_bodies();
 
     void deposit_onto_grid_rigidnodesonly(MultiFab& nodaldata,
                                Array<Real,AMREX_SPACEDIM> gravity,
@@ -87,10 +99,10 @@ public:
 
     void interpolate_from_grid(MultiFab& nodaldata,
                                int update_vel,int update_strainrate,
-							   GpuArray <int,AMREX_SPACEDIM> order_scheme_directional,
-							   GpuArray <int,AMREX_SPACEDIM> periodic,
-							   amrex::Real alpha_pic_flip,
-							   amrex::Real dt);
+                               GpuArray <int,AMREX_SPACEDIM> order_scheme_directional,
+                               GpuArray <int,AMREX_SPACEDIM> periodic,
+                               amrex::Real alpha_pic_flip,
+                               amrex::Real dt);
 
     void move_particles_from_nodevel(MultiFab& nodaldata,const amrex::Real& dt,
             int bclo[AMREX_SPACEDIM],int bchi[AMREX_SPACEDIM],
@@ -100,7 +112,7 @@ public:
     amrex::Real CalculateEffectiveSpringConstant(amrex::Real Area,amrex::Real L0);
     void CalculateVelocity(Real &Vcm);
     void CalculateVelocityCantilever(Real &Vcm);
-    void Calculate_Total_Number_of_rigid_particles(int body_id,int &total_num);
+    int Calculate_Total_Number_of_rigid_particles(int body_id);
     void Calculate_Total_Number_of_MaterialParticles(int &total_num);
     void Calculate_Total_Mass_MaterialPoints(Real &total_mass);
     void Calculate_Total_Vol_MaterialPoints(Real &total_vol);
@@ -111,8 +123,15 @@ public:
 
     void apply_constitutive_model(const amrex::Real& dt,amrex::Real applied_strainrate);
     void apply_constitutive_model_delta(const amrex::Real& dt,amrex::Real applied_strainrate);
+    void apply_constitutive_model_on_rigidparticles(const amrex::Real& dt,amrex::Real applied_strainrate);
 
     void interpolate_mass_from_grid(MultiFab& nodaldata,int order_scheme);
+    void CalculateStressOnRigidParticles(MultiFab& nodaldata,
+                                         int update_vel,int update_strainrate,
+                                         GpuArray <int,AMREX_SPACEDIM> order_scheme_directional,
+                                         GpuArray <int,AMREX_SPACEDIM> periodic,
+                                         amrex::Real alpha_pic_flip,
+                                         amrex::Real dt);
 
     void update_density_field(MultiFab& nodaldata,int refratio,amrex::Real smoothfactor);
     amrex::Real Calculate_time_step(amrex::Real CFL, amrex::Real dtmax,amrex::Real dtmin);

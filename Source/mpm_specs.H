@@ -16,25 +16,25 @@ struct realData
         xvel=1,
         yvel=2,
         zvel=3,
-		xvel_prime=4,				//For position update. Check the review paper page 34
-		yvel_prime=5,
-		zvel_prime=6,
+        xvel_prime=4,                           //For position update. Check the review paper page 34
+        yvel_prime=5,
+        zvel_prime=6,
         strainrate=7, 				//4
-        strain=13,	  				//10
-        stress=19,					//16
-		deformation_gradient=25,	//22
-        volume=34,					//31
-        mass=35,					//32
-        density=36,					//33
+        strain=13,	  			//10
+        stress=19,				//16
+        deformation_gradient=25,	        //22
+        volume=34,				//31
+        mass=35,				//32
+        density=36,				//33
         jacobian=37,				//34
         pressure=38,				//35
         vol_init=39,				//36
-        E=40,						//37
-        nu=41,						//38
+        E=40,					//37
+        nu=41,					//38
         Bulk_modulus=42,			//39
         Gama_pressure=43,			//40
         Dynamic_viscosity=44,		//41
-		yacceleration=45,			//45	This is for storing the acceleration of each particle in the y-direction. This variable is not generic and used only for the spring-mass and membrane simulations only
+		    yacceleration=45,			//45	This is for storing the acceleration of each particle in the y-direction. This variable is not generic and used only for the spring-mass and membrane simulations only
         defgrad_imp=46,
         strain_imp=55,
         volume_imp=61,
@@ -47,7 +47,7 @@ struct intData
     enum 
     {
         phase = 0,
-		rigid_body_id,
+        rigid_body_id,
         constitutive_model,
         count
     };
@@ -154,7 +154,7 @@ class MPMspecs
         amrex::Real spring_alone_exact_delta = 0.0;
 
 
-        //1-->tent function, 3--> cubic spline shape function
+        //1-->tent function, 2--> Quadratic Spline Shape Function, 3--> Cubic Spline Shape Function
         int order_scheme=1;				
 
         Real applied_strainrate=0.0;
@@ -174,9 +174,13 @@ class MPMspecs
         Real total_vol = 0.0;
         Real mem_compaction_vnew=0.0;
         Real mem_compaction_vold=0.0;
+        Real mem_compaction_volume=0.0;
         int stress_update_scheme=1;
         int calculate_strain_based_on_delta=0;
         
+
+        //Rigid body params
+        int num_of_rigid_bodies=0;
 
         Vector<int> bclo;
         Vector<int> bchi;
@@ -232,6 +236,8 @@ class MPMspecs
             periodic={AMREX_D_DECL(periodicarr[XDIR],periodicarr[YDIR],periodicarr[ZDIR])};
             pp.get("max_grid_size", max_grid_size);
 
+
+
             pp.get("max_steps", maxsteps);
             pp.get("final_time",final_time);
 
@@ -278,6 +284,7 @@ class MPMspecs
             pp.query("p2g_ncell",p2g_ncell);
 
             pp.query("mem_compaction_area",mem_compaction_area);
+            pp.query("mem_compaction_volume",mem_compaction_volume);
             pp.query("mem_compaction_dampcoeff",mem_compaction_dampcoeff);
             pp.query("mem_compaction_restoring_force_calc_method",mem_compaction_restoring_force_calc_method);
 
@@ -285,6 +292,9 @@ class MPMspecs
             pp.query("spring_alone_length",spring_alone_length);
             pp.query("spring_alone_E",spring_alone_E);
 
+
+            //Rigid body params
+            pp.get("num_of_rigid_bodies", num_of_rigid_bodies);
 
 
             if(!use_autogen)
