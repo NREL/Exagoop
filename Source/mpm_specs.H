@@ -223,6 +223,10 @@ class MPMspecs
         
         Real levset_mu=0.1;
 
+        int calc_mass_flow = 0;
+        int mass_flow_dir = -1;
+        Real mass_flow_cutoff = 0.0;
+
         // yli add for gbhypo
         // material properties for granular material, default to sand.
         struct GBHypoParameters{
@@ -459,6 +463,12 @@ class MPMspecs
                 amrex::Print()<<"\nmiuI rheology parameters: I_0 = "<<miu_I_Parameters.I_0<<";";
             }
             // end yli add    
+            
+            pp.query("calc_mass_flow", calc_mass_flow);
+            if(calc_mass_flow){
+                pp.get("mass_flow_dir", mass_flow_dir);
+                pp.get("mass_flow_cutoff", mass_flow_cutoff);
+            }
         }
 
         std::string Convert_arr_string(Array<Real,AMREX_SPACEDIM>arr)

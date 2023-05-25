@@ -123,6 +123,7 @@ public:
     int Calculate_Total_Number_of_rigid_particles(int body_id);
     void Calculate_Total_Number_of_MaterialParticles(int &total_num);
     void Calculate_Total_Mass_MaterialPoints(Real &total_mass);
+    void Calculate_Total_Mass_MaterialPoints(Real &total_mass, int dir, Real cutoff);
     void Calculate_Total_Vol_MaterialPoints(Real &total_vol);
     void CalculateErrorTVB(Real tvb_E,Real tvb_v0,Real tvb_L,Real tvb_rho,Real err);
     void WriteDeflectionTVB(Real tvb_E,Real tvb_v0,Real tvb_L,Real tvb_rho, Real time, int output_it);

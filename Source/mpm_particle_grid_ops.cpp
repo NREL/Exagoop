@@ -188,6 +188,38 @@ void MPMParticleContainer::Calculate_Total_Mass_MaterialPoints(Real &total_mass)
 	#endif
 }
 
+void MPMParticleContainer::Calculate_Total_Mass_MaterialPoints(Real &total_mass, int cdir, Real cutoff)
+{
+    const int lev = 0;
+    const Geometry& geom = Geom(lev);
+    auto& plev  = GetParticles(lev);
+    const auto dxi = geom.InvCellSizeArray();
+    const auto dx = geom.CellSizeArray();
+    const auto plo = geom.ProbLoArray();
+    const auto domain = geom.Domain();
+
+    total_mass=0.0;
+
+    using PType = typename MPMParticleContainer::SuperParticleType;
+    total_mass = amrex::ReduceSum(*this, [=]
+        AMREX_GPU_HOST_DEVICE (const PType& p) -> Real
+        {
+            Real ppos[3] = {p.pos(0), p.pos(1), p.pos(2)};
+    		    if(p.idata(intData::phase)==0 && ppos[cdir] > cutoff)
+    		    {
+    		    	return(p.rdata(realData::mass));
+    		    }
+    		    else
+    		    {
+    		    	return(0.0);
+    		    }
+        });
+
+	#ifdef BL_USE_MPI
+	    ParallelDescriptor::ReduceRealSum(total_mass);
+	#endif
+}
+
 void MPMParticleContainer::Calculate_Total_Vol_MaterialPoints(Real &total_vol)
 {
     const int lev = 0;

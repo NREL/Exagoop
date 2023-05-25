@@ -290,7 +290,7 @@ int main (int argc, char* argv[])
         }
         else
         {
-            amrex::Abort("\nOrder scheme not implemented yet. Please use order_scheme=1 or order_scheme=3 in the input file.\n");
+            amrex::Abort("\nOrder scheme not implemented yet. Please use order_scheme=1, 2, or 3 in the input file.\n");
         }
 
         MultiFab nodaldata(nodeba, dm, NUM_STATES, ng_cells_nodaldata);
@@ -500,6 +500,9 @@ int main (int argc, char* argv[])
 
         //Printing problem parameters
         //specs.PrintSimulationParams();
+        amrex::Real mass_flow_prev;
+        amrex::Real mass_flow_next;
+        amrex::Real t_prev=0.0;
         {
         	int tmpi;
         	amrex::Real tmpr;
@@ -518,6 +521,8 @@ int main (int argc, char* argv[])
 
         	mpm_pc.Calculate_Total_Mass_MaterialPoints(tmpr);
         	amrex::Print()<<" "<<std::setprecision(4)<<tmpr;
+
+          if(specs.calc_mass_flow) mpm_pc.Calculate_Total_Mass_MaterialPoints(mass_flow_prev, specs.mass_flow_dir, specs.mass_flow_cutoff);
 
         	msg="\n     Total volume of material points:";
         	PrintMessage(msg,print_length,true);
@@ -648,7 +653,6 @@ int main (int argc, char* argv[])
                                      specs.implicit_solve);
 
             //update velocity on nodes
-            printf("AT TIME %.6e\n", time);
             if(specs.implicit_solve){
                 // cv_solver.solve(time, dt, nodaldata, f_ext, specs.mass_tolerance);
                 mpm_pc.implicitUpdate(specs.implicit_solve, 
@@ -988,6 +992,16 @@ int main (int argc, char* argv[])
                 BL_PROFILE_VAR_STOP(outputs);
 
                 mpm_pc.writeCheckpointFile(specs.prefix_checkpointfilename, specs.num_of_digits_in_filenames, time,steps,output_it, velocity_upper_jaw);
+
+                // Writing to mass flow rate file w same frequency as plt/chk files
+                if(specs.calc_mass_flow){
+                    Real delta_t = time - t_prev;
+                    t_prev = time;
+                    mpm_pc.Calculate_Total_Mass_MaterialPoints(mass_flow_next, specs.mass_flow_dir, specs.mass_flow_cutoff);
+                    Real flow_out = mass_flow_prev - mass_flow_next;
+                    mass_flow_prev = mass_flow_next;
+                    PrintToFile("Mass_Flow.out")<<time<<"\t"<<delta_t<<"\t"<<flow_out<<"\n";
+                }
             }
             auto time_per_iter=amrex::second()-iter_time_start;
             if (fabs(output_timePrint-specs.screen_output_time)<dt*0.5)
