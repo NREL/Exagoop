@@ -416,7 +416,7 @@ void GB_hypoplastic(amrex::Real eps_dot[NCOMP_TENSOR],
         //e += (p.rdata(realData::strainrate+XX)+p.rdata(realData::strainrate+YY) +p.rdata(realData::strainrate+ZZ)) * (1 +e)* dt;
         //sigma[XX] = (sigma[XX]<=stress_cutoff)?sigma[XX]:stress_cutoff;
         //sigma[YY] = (sigma[YY]<=stress_cutoff)?sigma[YY]:stress_cutoff;
-        //sigma[ZZ] = (sigma[ZZ]<=stress_cutoff)?sigma[ZZ]:stress_cutoff;
+        //sigma[ZZ] = (sigma[ZZ]<=tress_cutoff)?sigma[ZZ]:stress_cutoff;
     }
     else{
         if(e>e_i0){
