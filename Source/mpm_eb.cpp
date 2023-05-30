@@ -103,6 +103,61 @@ namespace mpm_ebtools
 
     }
 
+    void make_membrane_embossing_levelset(const Geometry &geom,const BoxArray &ba,const DistributionMapping &dm)
+        {
+            int ls_ref = ls_refinement;
+            // Define nGrow of level-set and EB
+            int nghost = 1;
+
+            const auto plo = geom.ProbLoArray();
+            const auto phi = geom.ProbHiArray();
+
+            EB2::CylinderIF Cyl1(5e-6,5e-6, 2, {AMREX_D_DECL(3.4e-5,0,1.5e-6)}, false);
+            EB2::CylinderIF Cyl2(5e-6,5e-6, 2, {AMREX_D_DECL(1.02e-4,0,1.5e-6)}, false);
+            EB2::CylinderIF Cyl3(5e-6,5e-6, 2, {AMREX_D_DECL(1.7e-4,0,1.5e-6)}, false);
+
+            auto all_cyl=EB2::makeUnion(Cyl1,Cyl2,Cyl3);
+
+
+            auto cyl_gshop = EB2::makeShop(all_cyl);
+
+            //make domain finer for levelset
+            Box dom_ls = geom.Domain();
+            dom_ls.refine(ls_ref);
+            Geometry geom_ls(dom_ls);
+
+            int required_coarsening_level = 0;
+            int max_coarsening_level=10;
+            if (ls_refinement > 1)
+            {
+                int tmp = ls_refinement;
+                while (tmp >>= 1) ++required_coarsening_level;
+            }
+
+            // Build EB
+            EB2::Build(cyl_gshop, geom_ls,
+                       required_coarsening_level, max_coarsening_level);
+
+            const EB2::IndexSpace & ebis   = EB2::IndexSpace::top();
+            const EB2::Level &      eblev  = ebis.getLevel(geom);
+            //create lslev
+            const EB2::Level & lslev = ebis.getLevel(geom_ls);
+
+            //build factory
+            ebfactory = new EBFArrayBoxFactory(eblev, geom, ba, dm,
+                                               {nghost, nghost,
+                                                   nghost}, EBSupport::full);
+
+            //create nodal multifab with level-set refinement
+            BoxArray ls_ba = amrex::convert(ba, IntVect::TheNodeVector());
+            ls_ba.refine(ls_ref);
+            lsphi = new MultiFab;
+            lsphi->define(ls_ba, dm, 1, nghost);
+
+            amrex::FillSignedDistance (*lsphi,lslev,*ebfactory,ls_ref);
+
+        }
+
     void init_eb(const Geometry &geom,const BoxArray &ba,const DistributionMapping &dm)
     {
         int nghost = 1;
@@ -119,6 +174,13 @@ namespace mpm_ebtools
                 using_levelset_geometry=true;
                 make_wedge_hopper_levelset(geom,ba,dm);
             }
+            else if(geom_type=="membrane_emboss")
+              {
+                amrex::Print()<<"\n Entered eb";
+                using_levelset_geometry=true;
+                make_membrane_embossing_levelset(geom,ba,dm);
+
+              }
             else
             {
                 using_levelset_geometry=true;

@@ -34,6 +34,15 @@ int main (int argc, char* argv[])
         GpuArray <int,AMREX_SPACEDIM> order_surface_integral={3,3,3};
         GpuArray<amrex::Real,AMREX_SPACEDIM> velocity_upper_jaw={0.0,0.0,0.0};
 
+        //ofstream object for tempeorals
+        std::ofstream temporalfileoutput;
+        std::string tempFileName = "temporals/tempState";
+        tempFileName = "Min_Stress_Dianostic_ofs.out";
+        temporalfileoutput.open(tempFileName.c_str(),std::ios::out | std::ios::app | std::ios_base::binary);
+        temporalfileoutput.precision(12);
+
+
+
         //A few aesthetics
         int print_length=60;
         std::string msg="";
@@ -108,6 +117,7 @@ int main (int argc, char* argv[])
 								 specs.total_rigid_mass,
 								 specs.no_of_rigidbodies_present,
 								 specs.ifrigidnodespresent);
+            amrex::Print()<<"\nTotal mass = "<<specs.total_mass;
             PrintMessage(msg,print_length,false);
             if(specs.no_of_rigidbodies_present!=specs.num_of_rigid_bodies)
             {
@@ -933,6 +943,8 @@ int main (int argc, char* argv[])
                         amrex::GpuArray<amrex::Real, 6> avg_stress;
 
                         mpm_pc.CalculateStressDiagnostics(min_stress,max_stress,avg_stress);
+
+                        temporalfileoutput<<"\n "<<steps<<" "<<min_stress[0];
 
                         #ifndef AMREX_USE_GPU
                         PrintToFile(specs.prefix_diagnosticfoldername+"Min_Stress_Dianostic.out")<<steps<<"\t"<<min_stress[0]<<"\t"<<min_stress[1]<<"\t"<<min_stress[2]<<"\t"<<min_stress[3]<<"\t"<<min_stress[4]<<"\t"<<min_stress[5]<<"\n";
