@@ -113,6 +113,7 @@ class MPMspecs
         amrex::Real total_vol_phase_0=0.0;
         int print_max_min_avg_stress=1;
         int print_max_min_avg_velocity=1;
+        int print_max_min_pos=1;
         int print_total_energy=1;
         int diagnostic_iteration_frequency=10;
 
@@ -293,6 +294,7 @@ class MPMspecs
 
             pp.query("print_max_min_avg_stress",print_max_min_avg_stress);
             pp.query("print_max_min_avg_velocity",print_max_min_avg_velocity);
+            pp.query("print_max_min_pos",print_max_min_pos);
             pp.query("print_total_energy",print_total_energy);
             pp.query("diagnostic_iteration_frequency",diagnostic_iteration_frequency);
 

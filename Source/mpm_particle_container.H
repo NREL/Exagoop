@@ -116,6 +116,7 @@ public:
     amrex::Real CalculateEffectiveSpringConstant(amrex::Real Area,amrex::Real L0);
     void CalculateVelocity(Real &Vcm);
     void CalculateVelocityCantilever(Real &Vcm);
+    void CalculatePosDiagnostics(amrex::GpuArray<amrex::Real, 3> &mmin_pos, amrex::GpuArray<amrex::Real, 3> &max_pos);
     int Calculate_Total_Number_of_rigid_particles(int body_id);
     void Calculate_Total_Number_of_MaterialParticles(int &total_num);
     void Calculate_Total_Mass_MaterialPoints(Real &total_mass);

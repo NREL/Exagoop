@@ -466,14 +466,14 @@ void CalculateSurfaceIntegralOnBG(const amrex::Geometry geom, amrex::MultiFab &n
         Array4<Real> nodal_data_arr=nodaldata.array(mfi);
 
 
-        amrex::ParallelFor(amrex::bdryLo(bx, 1),[=,&integral_value] AMREX_GPU_DEVICE(int i, int j, int k) noexcept {
+        /*amrex::ParallelFor(amrex::bdryLo(bx, 1),[=,&integral_value] AMREX_GPU_DEVICE(int i, int j, int k) noexcept {
 
 
                                     integral_value+=(nodal_data_arr(i,j,k,nodaldataindex)+nodal_data_arr(i+1,j,k,nodaldataindex)+nodal_data_arr(i,j,k+1,nodaldataindex)+nodal_data_arr(i+1,j,k+1,nodaldataindex))/4.0*dx[0]*dx[2];
 
                             });
 
-        /*amrex::ParallelFor(nodalbox,[=,&integral_value]AMREX_GPU_DEVICE (int i,int j,int k) noexcept
+        amrex::ParallelFor(nodalbox,[=,&integral_value]AMREX_GPU_DEVICE (int i,int j,int k) noexcept
         {
           if(j==0)
             {
