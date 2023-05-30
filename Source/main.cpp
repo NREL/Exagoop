@@ -1073,10 +1073,12 @@ int main (int argc, char* argv[])
 
                     mpm_pc.CalculatePosDiagnostics(min_pos,max_pos);
                     tempFilenamePos="Position_Diagnostic.out";
-                    temporalPos.open(tempFilenamePos.c_str(),std::ios::out | std::ios::app | std::ios_base::binary);
-                    temporalPos<<steps<<"\t"<<min_pos[0]<<"\t"<<min_pos[1]<<"\t"<<min_pos[2]<<"\t"<<max_pos[0]<<"\t"<<max_pos[1]<<"\t"<<max_pos[2]<<"\n";
-                    temporalPos.flush();
-
+                    if(amrex::ParallelDescriptor::IOProcessor())
+                      {
+                        temporalPos.open(tempFilenamePos.c_str(),std::ios::out | std::ios::app | std::ios_base::binary);
+                        temporalPos<<steps<<"\t"<<min_pos[0]<<"\t"<<min_pos[1]<<"\t"<<min_pos[2]<<"\t"<<max_pos[0]<<"\t"<<max_pos[1]<<"\t"<<max_pos[2]<<"\n";
+                        temporalPos.flush();
+                      }
                   }
               }
           }
