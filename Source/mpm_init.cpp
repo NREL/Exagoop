@@ -110,8 +110,17 @@ void MPMParticleContainer::InitParticles (const std::string& filename,
 
 
             // Set other particle properties
-            p.rdata(realData::volume)      = fourbythree*PI*pow(p.rdata(realData::radius),three);		//Material point is assumed to be a sphere. The radius provided in the input particle file is used to calculate the mp volume
+            //p.rdata(realData::volume)      = fourbythree*PI*pow(p.rdata(realData::radius),three);		//Material point is assumed to be a sphere. The radius provided in the input particle file is used to calculate the mp volume
+            p.rdata(realData::volume)      = p.rdata(realData::radius)*2.0;               //Material point is assumed to be a sphere. The radius provided in the input particle file is used to calculate the mp volume
             p.rdata(realData::mass)        = p.rdata(realData::density)*p.rdata(realData::volume);
+
+            //Introducing an error variable. This is to store error for regular test cases and to find out where the error is maximum.
+            p.rdata(realData::error)         = 0.0;
+
+            //Introducing the below three variables. This is for comparing the error in freely falling non-interacting material point studies
+            p.rdata(realData::pos_0_x)       = p.pos(0);
+            p.rdata(realData::pos_0_y)       = p.pos(1);
+            p.rdata(realData::pos_0_z)       = p.pos(2);
 
             if(p.idata(intData::phase)==0)
             {

@@ -52,7 +52,14 @@ public:
     amrex::Real GetPosPiston();
     amrex::Real GetPosSpring();
     void CalculateSurfaceLoads(Real &Load,int rigidbodyid);
+    void CalculateVelocityL2Error_Axialbar(Real &Error, int n, Real L, Real E, Real rho, Real time, Real V0, int nump);
     void CalculateSurfaceIntegralTop(Array<Real,AMREX_SPACEDIM> gravity, Real &Fy_top, Real &Fy_bottom);
+    void GetStrainRateAxialVibrationofBar(MultiFab& nodaldata, amrex::Real time);
+    void CalculateVelocityL2Error_TransverseVibrationString(Real &Error, Real L, Real time, Real V0, Real c, int nump);
+    void CalculatePositionL2Error_PositionofSingleMaterialPoint(Real &Error, Real x0, Real u0, Real accln, Real time, int nump);
+    void ParticleErrorAxialBar(MultiFab& nodaldata,int n, Real L, Real E, Real rho, Real time, Real V0);
+    void ParticleErrorTranslationofNonInteractingMaterialPoints(MultiFab& nodaldata,Real V0, Real g,Real time);
+    void CalculatePositionL2Error_TranslationofNonInteractingMaterialPoints(Real &Error, Real V0, Real G0, Real W0, Real time, int nump);
     void deposit_onto_grid(MultiFab& nodaldata,
                            Array<Real,AMREX_SPACEDIM> gravity,
                            int external_loads_present,

@@ -379,8 +379,8 @@ void MPMParticleContainer::deposit_onto_grid(MultiFab& nodaldata,
             						amrex::Real mass_contrib=p.rdata(realData::mass)*basisvalue;
             						amrex::Real p_contrib[AMREX_SPACEDIM] =
             						{p.rdata(realData::mass)*p.rdata(realData::xvel)*basisvalue,
-                                     p.rdata(realData::mass)*p.rdata(realData::yvel)*basisvalue,
-                                     p.rdata(realData::mass)*p.rdata(realData::zvel)*basisvalue};
+                                                         p.rdata(realData::mass)*p.rdata(realData::yvel)*basisvalue,
+                                                         p.rdata(realData::mass)*p.rdata(realData::zvel)*basisvalue};
 
             						amrex::Gpu::Atomic::AddNoRet(&nodal_data_arr(ivlocal,MASS_INDEX), mass_contrib);
 
@@ -852,6 +852,73 @@ void MPMParticleContainer::deposit_onto_grid_rigidnodesonly(MultiFab& nodaldata,
 
 }
 
+
+void MPMParticleContainer::GetStrainRateAxialVibrationofBar(MultiFab& nodaldata, amrex::Real time)
+{
+    const int lev = 0;
+    const Geometry& geom = Geom(lev);
+    auto& plev  = GetParticles(lev);
+    const auto dxi = geom.InvCellSizeArray();
+    const auto dx = geom.CellSizeArray();
+    const auto plo = geom.ProbLoArray();
+    const auto domain = geom.Domain();
+
+    int ncomp=nodaldata.nComp();
+    const int* loarr = domain.loVect ();
+    const int* hiarr = domain.hiVect ();
+
+    int lo[]={loarr[0],loarr[1],loarr[2]};
+    int hi[]={hiarr[0],hiarr[1],hiarr[2]};
+    const double pi = 3.141592654;
+
+    nodaldata.FillBoundary(geom.periodicity());
+
+    for(MFIter mfi = MakeMFIter(lev); mfi.isValid(); ++mfi)
+    {
+        const amrex::Box& box = mfi.tilebox();
+        int gid = mfi.index();
+        int tid = mfi.LocalTileIndex();
+        auto index = std::make_pair(gid, tid);
+
+        auto& ptile = plev[index];
+        auto& aos   = ptile.GetArrayOfStructs();
+        const int np = aos.numRealParticles();
+
+        Array4<Real> nodal_data_arr=nodaldata.array(mfi);
+
+        ParticleType* pstruct = aos().dataPtr();
+
+        amrex::ParallelFor(np,[=]
+        AMREX_GPU_DEVICE (int i) noexcept
+        {
+            int lmin,lmax,nmin,nmax,mmin,mmax;
+            ParticleType& p = pstruct[i];
+
+            if(p.idata(intData::phase)==0)
+            {
+                amrex::Real xp[AMREX_SPACEDIM];
+                amrex::Real Pi = atan(1.0)*4.0;
+                amrex::Real beta = Pi/(2.0*25.0);
+                amrex::Real omega = beta*10;    //E=100,rho=1
+
+                xp[XDIR]=p.pos(XDIR);
+                xp[YDIR]=p.pos(YDIR);
+                xp[ZDIR]=p.pos(ZDIR);
+
+                p.rdata(realData::strainrate+0) = 0.1*beta*cos(beta*xp[0])*cos(omega*time);
+                p.rdata(realData::strainrate+1) = 0.0;
+                p.rdata(realData::strainrate+2) = 0.0;
+                p.rdata(realData::strainrate+3) = 0.0;
+                p.rdata(realData::strainrate+4) = 0.0;
+                p.rdata(realData::strainrate+5) = 0.0;
+
+            }
+        });
+    }
+}
+
+
+
 void MPMParticleContainer::interpolate_from_grid(MultiFab& nodaldata,
                                                  int update_vel,
                                                  int update_strainrate,
@@ -1029,6 +1096,7 @@ void MPMParticleContainer::interpolate_from_grid(MultiFab& nodaldata,
 		              }
 		          }
 		      }
+
 
 		    //Calculate deformation gradient tensor at time t+dt
 		    get_deformation_gradient_tensor(p,realData::deformation_gradient,gradvp,dt);

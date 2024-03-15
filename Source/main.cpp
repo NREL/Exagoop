@@ -35,23 +35,106 @@ int main (int argc, char* argv[])
     GpuArray<amrex::Real,AMREX_SPACEDIM> velocity_upper_jaw={0.0,0.0,0.0};
 
     //Declaring ofstream objects for tempeorals
-    std::ofstream temporalPos;                                  //output min, max positions of material points
-    std::ofstream temporalVel;                      //output min, max and average of velocity magnitude
-    std::ofstream temporalEnergy;                   //output total kinetic, strain and total energy in domain
-    std::ofstream temporalMinStress;                //output minimum stress components
-    std::ofstream temporalMaxStress;                //output maximum stress components
-    std::ofstream temporalAvgStress;                //output average stress components
-    std::ofstream temporalComptime;                 //output average stress components
-    std::ofstream temporalCenterofMassVel_AxialBar; //output center of mass velocity. Only for axial bar test case
+    std::ofstream temporalPos;                          //output min, max positions of material points
+    std::ofstream temporalVel;                          //output min, max and average of velocity magnitude
+    std::ofstream temporalEnergy;                       //output total kinetic, strain and total energy in domain
+    std::ofstream temporalMinStress;                    //output minimum stress components
+    std::ofstream temporalMaxStress;                    //output maximum stress components
+    std::ofstream temporalAvgStress;                    //output average stress components
+    std::ofstream temporalComptime;                     //output average stress components
+    std::ofstream temporalCenterofMassVel_AxialBar;     //output center of mass velocity. Only for axial bar test case
+    std::ofstream temporalL2ErrorVel_AxialBar;          //output center of mass velocity. Only for axial bar test case
+    std::ofstream temporalL2ErrorPos_TVBString;         //output center of mass velocity. Only for axial bar test case
+    std::ofstream temporalL2ErrorPos_SingleParticle;    //output center of mass velocity. Only for axial bar test case
 
-    std::string tempFilenamePos = "";
-    std::string tempFilenameVel = "";
-    std::string tempFilenameEnergy = "";
-    std::string tempFilenameMinStress = "";
-    std::string tempFilenameMaxStress = "";
-    std::string tempFilenameAvgStress = "";
-    std::string tempFilenameComptime = "";
-    std::string tempFilenameCoMVel_AxialBar = "";
+    std::string tempFilenamePos = "Position_Diagnostic.out";
+    std::string tempFilenameVel = "Velocity_Diagnostic.out";
+    std::string tempFilenameEnergy = "Energy.out";
+    std::string tempFilenameMinStress = "Min_Stress_Dianostic.out";
+    std::string tempFilenameMaxStress = "Max_Stress_Dianostic.out";
+    std::string tempFilenameAvgStress = "Avg_Stress_Dianostic.out";
+    std::string tempFilenameComptime = "Comptime.out";
+    std::string tempFilenameCoMVel_AxialBar = "AxialBarCoMVel.out";
+    std::string tempFilenameL2ErrorVel_AxialBar = "L2Error_Vel.out";
+    std::string tempFilenameL2ErrorPos_TVBString = "L2Error_Pos.out";
+    std::string tempFilenameL2ErrorPos_SingleParticle = "L2Error_Pos.out";
+
+    if(specs.print_diagnostics)
+      {
+        amrex::UtilCreateDirectory(specs.prefix_diagnosticfoldername, 0755);
+        tempFilenamePos=specs.prefix_diagnosticfoldername+"/"+tempFilenamePos;
+        tempFilenameVel=specs.prefix_diagnosticfoldername+"/"+tempFilenameVel;
+        tempFilenameEnergy=specs.prefix_diagnosticfoldername+"/"+tempFilenameEnergy;
+        tempFilenameMinStress=specs.prefix_diagnosticfoldername+"/"+tempFilenameMinStress;
+        tempFilenameMaxStress=specs.prefix_diagnosticfoldername+"/"+tempFilenameMaxStress;
+        tempFilenameAvgStress=specs.prefix_diagnosticfoldername+"/"+tempFilenameAvgStress;
+        tempFilenameComptime=specs.prefix_diagnosticfoldername+"/"+tempFilenameComptime;
+        tempFilenameCoMVel_AxialBar=specs.prefix_diagnosticfoldername+"/"+tempFilenameCoMVel_AxialBar;
+        tempFilenameL2ErrorVel_AxialBar=specs.prefix_diagnosticfoldername+"/"+tempFilenameL2ErrorVel_AxialBar;
+        tempFilenameL2ErrorPos_TVBString=specs.prefix_diagnosticfoldername+"/"+tempFilenameL2ErrorPos_TVBString;
+        tempFilenameL2ErrorPos_SingleParticle=specs.prefix_diagnosticfoldername+"/"+tempFilenameL2ErrorPos_SingleParticle;
+
+        if(specs.is_standard_test)
+          {
+            switch(specs.test_number)
+            {
+              case(1):    {
+                            temporalCenterofMassVel_AxialBar.open(tempFilenameCoMVel_AxialBar.c_str(),std::ios::out | std::ios::app | std::ios_base::binary);
+                            temporalEnergy.open(tempFilenameEnergy.c_str(),std::ios::out | std::ios::app | std::ios_base::binary);
+                            temporalL2ErrorVel_AxialBar.open(tempFilenameL2ErrorVel_AxialBar.c_str(),std::ios::out | std::ios::app | std::ios_base::binary);
+                            break;}
+              case(2):    //Dam break
+                          {
+                            tempFilenamePos="Waterfront.out";
+                            temporalPos.open(tempFilenamePos.c_str(),std::ios::out | std::ios::app | std::ios_base::binary);
+                            break;
+                          }
+              case(3):    //Elastic collision of disks
+                          {
+                            temporalEnergy.open(tempFilenameEnergy.c_str(),std::ios::out | std::ios::app | std::ios_base::binary);
+                            break;
+                          }
+              case(5):    //Transverse vibration of string
+                          {
+                            temporalL2ErrorPos_TVBString.open(tempFilenameL2ErrorPos_TVBString.c_str(),std::ios::out | std::ios::app | std::ios_base::binary);
+                            break;
+                          }
+              case(6):    //Translation of a/collection of material point(s) under a fictious gravity force
+                          {
+                            temporalL2ErrorPos_SingleParticle.open(tempFilenameL2ErrorPos_SingleParticle.c_str(),std::ios::out | std::ios::app | std::ios_base::binary);
+                            break;
+                          }
+              default:    //
+                          amrex::Abort("\nSorry. The test number does not exist");
+            }
+          }
+        else
+          {
+            if(specs.print_total_energy)
+              {
+                temporalEnergy.open(tempFilenameEnergy.c_str(),std::ios::out | std::ios::app | std::ios_base::binary);
+              }
+            if(specs.print_max_min_avg_stress)
+              {
+                temporalMinStress.open(tempFilenameMinStress.c_str(),std::ios::out | std::ios::app | std::ios_base::binary);
+                temporalMaxStress.open(tempFilenameMaxStress.c_str(),std::ios::out | std::ios::app | std::ios_base::binary);
+                temporalAvgStress.open(tempFilenameAvgStress.c_str(),std::ios::out | std::ios::app | std::ios_base::binary);
+              }
+            if(specs.print_max_min_avg_velocity)
+              {
+                temporalVel.open(tempFilenameVel.c_str(),std::ios::out | std::ios::app | std::ios_base::binary);
+              }
+            if(specs.print_max_min_pos)
+              {
+                temporalPos.open(tempFilenamePos.c_str(),std::ios::out | std::ios::app | std::ios_base::binary);
+              }
+          }
+        if(specs.print_comptime)
+          {
+            temporalComptime.open(tempFilenameComptime.c_str(),std::ios::out | std::ios::app | std::ios_base::binary);
+          }
+
+      }
 
     //A few aesthetics
     int print_length=60;
@@ -315,13 +398,14 @@ int main (int argc, char* argv[])
                              specs.periodic);
 
     //Calculate strainrate at each material point
+
     mpm_pc.interpolate_from_grid(nodaldata,
                                  0,
                                  1,
                                  specs.order_scheme_directional,
                                  specs.periodic,
                                  specs.alpha_pic_flip,
-                                 dt);	//Calculate strainrate at each mp
+                                 dt);
 
 
     mpm_pc.apply_constitutive_model(dt,specs.applied_strainrate);
@@ -362,21 +446,12 @@ int main (int argc, char* argv[])
                             Vmex = mpm_pc.CalculateExactVelocity(specs.axial_bar_modenumber,specs.axial_bar_E,specs.axial_bar_rho,specs.axial_bar_v0,specs.axial_bar_L,time);
                             mpm_pc.CalculateEnergies(TKE,TSE);
                             TE=TKE+TSE;
-
-                            tempFilenameCoMVel_AxialBar="AxialBarCoMVel.out";
-                            tempFilenameEnergy="Energy.out";
-
-                            temporalCenterofMassVel_AxialBar.open(tempFilenameCoMVel_AxialBar.c_str(),std::ios::out | std::ios::app | std::ios_base::binary);
-                            temporalEnergy.open(tempFilenameEnergy.c_str(),std::ios::out | std::ios::app | std::ios_base::binary);
-
-                            temporalCenterofMassVel_AxialBar.precision(12);
-                            temporalEnergy.precision(12);
-
-                            temporalCenterofMassVel_AxialBar<<"\n"<<time<<"\t"<<Vmex<<"\t"<<Vmnum<<"\n";
-                            temporalEnergy<<"\n"<<time<<"\t"<<TKE<<"\t"<<TSE<<"\t"<<TE<<"\n";
-
-                            temporalCenterofMassVel_AxialBar.flush();
-                            temporalEnergy.flush();
+                            if(amrex::ParallelDescriptor::IOProcessor())
+                              {
+                                temporalCenterofMassVel_AxialBar<<time<<"\t"<<Vmex<<"\t"<<Vmnum<<"\n";
+                                temporalEnergy<<time<<"\t"<<TKE<<"\t"<<TSE<<"\t"<<TE<<"\n";
+                                temporalL2ErrorVel_AxialBar<<time<<" 0.0"<<"\n";
+                              }
                             break;}
               case(2):	    //Dam break
                             {
@@ -385,22 +460,23 @@ int main (int argc, char* argv[])
                             mpm_pc.FindWaterFront(Xwf);
                             mpm_pc.CalculatePosDiagnostics(min_pos,max_pos);
 
-                            tempFilenamePos="Waterfront.out";
-                            temporalPos.open(tempFilenamePos.c_str(),std::ios::out | std::ios::app | std::ios_base::binary);
-                            temporalPos<<time/sqrt(specs.dam_break_H1/specs.dam_break_g)<<"\t"<<Xwf/specs.dam_break_H1<<"\n";
-                            temporalPos.flush();
+                            if(amrex::ParallelDescriptor::IOProcessor())
+                              {
+                                temporalPos<<time/sqrt(specs.dam_break_H1/specs.dam_break_g)<<"\t"<<max_pos[0]/specs.dam_break_H1<<"\n";
+
+                              }
                             break;
                             }
               case(3):	    //Elastic collision of disks
                             {
-                            tempFilenameEnergy="Energy.out";
-                            mpm_pc.CalculateEnergies(TKE,TSE);
-                            TE=TKE+TSE;
-                            temporalEnergy.open(tempFilenameEnergy.c_str(),std::ios::out | std::ios::app | std::ios_base::binary);
-                            temporalEnergy.precision(12);
-                            temporalEnergy<<"\n"<<time<<"\t"<<TKE<<"\t"<<TSE<<"\t"<<TE<<"\n";
-                            temporalEnergy.flush();
-                            break;
+                              mpm_pc.CalculateEnergies(TKE,TSE);
+                              TE=TKE+TSE;
+                              if(amrex::ParallelDescriptor::IOProcessor())
+                                {
+                                  temporalEnergy.precision(12);
+                                  temporalEnergy<<"\n"<<time<<"\t"<<TKE<<"\t"<<TSE<<"\t"<<TE<<"\n";
+                                }
+                              break;
                             }
               case(4):	    //Static deflection of beam under gravity
                             {
@@ -416,18 +492,19 @@ int main (int argc, char* argv[])
                             #endif
                             break;
                             }
-              case(5):	    //Transverse vibration of a bar
+              case(5):	    //Transverse vibration of a string
                             {
                             mpm_pc.CalculateErrorTVB(specs.tvb_E,specs.tvb_v0,specs.tvb_L,specs.tvb_rho,err);
+                            temporalL2ErrorPos_TVBString<<time<<" 0.0"<<"\n";
                             #ifndef AMREX_USE_GPU
                             PrintToFile(specs.prefix_diagnosticfoldername+"TVB_Error.out")<<time<<"\t"<<TKE<<"\t"<<TSE<<"\t"<<TE<<"\n";
                             #endif
                             break;
                             }
-              case(6):      //Check function reconstruction and convergence
+              case(6):      //Single particle translation in x
                             {
-                            mpm_pc.CalculateErrorP2G(nodaldata,specs.p2g_L,specs.p2g_f,specs.p2g_ncell);
-                            break;
+                              temporalL2ErrorPos_SingleParticle<<"0.0 0.0 \n";
+                              break;
                             }
               case(7):	    //Checks the weight of a block of elastic solid. Used to validate functionality to evaluate surface forces
                             mpm_pc.deposit_stressyy_onto_lowyboundary(nodaldata,
@@ -459,7 +536,8 @@ int main (int argc, char* argv[])
                             //amrex::Print()<<"\n"<<specs.total_mass<<" "<<specs.gravity[YDIR]<<" "<<specs.spring_alone_length<<" "<<specs.spring_alone_area<<" "<<specs.spring_alone_E;
                             break;
               default:	    //
-                            amrex::Abort("\nSorry. The test number does not exist");
+                            amrex::Print()<<"\n Test number = "<<specs.test_number;
+                            //amrex::Abort("\nSorry. The test number does not exist");
 
             }
           }
@@ -467,11 +545,10 @@ int main (int argc, char* argv[])
           {
             mpm_pc.CalculateEnergies(TKE,TSE);
             TE=TKE+TSE;
-            tempFilenameEnergy="Energy.out";
-            temporalEnergy.open(tempFilenameEnergy.c_str(),std::ios::out | std::ios::app | std::ios_base::binary);
-            temporalEnergy.precision(12);
-            temporalEnergy<<"\n"<<time<<"\t"<<TKE<<"\t"<<TSE<<"\t"<<TE<<"\n";
-            temporalEnergy.flush();
+            if(amrex::ParallelDescriptor::IOProcessor())
+              {
+                temporalEnergy<<time<<"\t"<<TKE<<"\t"<<TSE<<"\t"<<TE<<"\n";
+              }
           }
       }
     PrintMessage(msg,print_length,false);
@@ -523,7 +600,6 @@ int main (int argc, char* argv[])
       }
 
     //Printing problem parameters
-    //specs.PrintSimulationParams();
     {
       int tmpi;
       amrex::Real tmpr;
@@ -579,7 +655,6 @@ int main (int argc, char* argv[])
             {
               amrex::Print()<<" Imposed constant velocity";
             }
-
 
           msg="\n        Enable weight of rigid body "+std::to_string(i)+":";
           PrintMessage(msg,print_length,true);
@@ -643,6 +718,14 @@ int main (int argc, char* argv[])
           }
 
         nodaldata.setVal(zero,ng_cells_nodaldata);
+
+        if(specs.is_standard_test and specs.test_number==6)
+          {
+            specs.gravity[XDIR] = 0.0;
+            specs.gravity[YDIR] = specs.tnimp_G0*cos(specs.tnimp_w0*time);
+            specs.gravity[ZDIR] = 0.0;
+
+          }
 
         //update_massvel=1, update_forces=0
         mpm_pc.deposit_onto_grid(nodaldata,
@@ -754,23 +837,17 @@ int main (int argc, char* argv[])
 
             Real ymin;
             ymin = mpm_pc.GetPosPiston();
-#ifndef AMREX_USE_GPU
-            PrintToFile("Spring.out")<<time<<"\t"<<ymin<<" "<<specs.Rb[0].velocity[1]<<" "<<specs.Rb[0].force_internal[1]<<"\n";
-#endif
-
           }
 
-
-
         //impose bcs at nodes
-        nodal_bcs(	geom,nodaldata,
-                  	specs.bclo.data(),
-                  	specs.bchi.data(),
-                  	specs.wall_mu_lo.data(),
-                  	specs.wall_mu_hi.data(),
-                  	specs.wall_vel_lo.data(),
-                  	specs.wall_vel_hi.data(),
-                  	dt);
+        nodal_bcs(geom,nodaldata,
+                  specs.bclo.data(),
+                  specs.bchi.data(),
+                  specs.wall_mu_lo.data(),
+                  specs.wall_mu_hi.data(),
+                  specs.wall_vel_lo.data(),
+                  specs.wall_vel_hi.data(),
+                  dt);
 
         if(mpm_ebtools::using_levelset_geometry)
           {
@@ -838,12 +915,18 @@ int main (int argc, char* argv[])
           }
 
         //find strainrate at material points at time t+dt
-        mpm_pc.interpolate_from_grid(nodaldata,0,1,specs.order_scheme_directional,specs.periodic,specs.alpha_pic_flip,dt);
+        mpm_pc.interpolate_from_grid(nodaldata,
+                                     0,
+                                     1,
+                                     specs.order_scheme_directional,
+                                     specs.periodic,
+                                     specs.alpha_pic_flip,
+                                     dt);
+
         mpm_pc.updateNeighbors();
 
         //mpm_pc.move_particles_from_nodevel(nodaldata,dt,specs.bclo.data(),specs.bchi.data(),1);
         mpm_pc.updateVolume(dt);
-
 
         //update stress at material pointsat time t+dt
         if(time<specs.applied_strainrate_time)
@@ -885,6 +968,7 @@ int main (int argc, char* argv[])
             if(specs.is_standard_test)
               {
                 Real Vmnum=0.0;
+                Real Error=0.0;
                 Real Vmex=0.0;
                 Real Xwf=0.0;
                 Real err=0.0;
@@ -892,7 +976,6 @@ int main (int argc, char* argv[])
                 Real Fy_bottom=0.0;
                 Real ymin=0.0;
                 Real ymax = 0.0;
-
 
                 switch(specs.test_number)
                 {
@@ -903,20 +986,15 @@ int main (int argc, char* argv[])
                                   mpm_pc.CalculateEnergies(TKE,TSE);
                                   TE=TKE+TSE;
 
-                                  tempFilenameCoMVel_AxialBar="AxialBarCoMVel.out";
-                                  tempFilenameEnergy="Energy.out";
+                                  mpm_pc.CalculateVelocityL2Error_Axialbar(Error,1,specs.axial_bar_L,specs.axial_bar_E,specs.axial_bar_rho,time,specs.axial_bar_v0, specs.total_number_of_material_points);
+                                  mpm_pc.ParticleErrorAxialBar(nodaldata,1,specs.axial_bar_L,specs.axial_bar_E,specs.axial_bar_rho,time,specs.axial_bar_v0);
 
-                                  temporalCenterofMassVel_AxialBar.open(tempFilenameCoMVel_AxialBar.c_str(),std::ios::out | std::ios::app | std::ios_base::binary);
-                                  temporalEnergy.open(tempFilenameEnergy.c_str(),std::ios::out | std::ios::app | std::ios_base::binary);
-
-                                  temporalCenterofMassVel_AxialBar.precision(12);
-                                  temporalEnergy.precision(12);
-
-                                  temporalCenterofMassVel_AxialBar<<"\n"<<time<<"\t"<<Vmex<<"\t"<<Vmnum<<"\n";
-                                  temporalEnergy<<"\n"<<time<<"\t"<<TKE<<"\t"<<TSE<<"\t"<<TE<<"\n";
-
-                                  temporalCenterofMassVel_AxialBar.flush();
-                                  temporalEnergy.flush();
+                                  if(amrex::ParallelDescriptor::IOProcessor())
+                                    {
+                                      temporalCenterofMassVel_AxialBar<<time<<"\t"<<Vmex<<"\t"<<Vmnum<<"\n";
+                                      temporalEnergy<<time<<"\t"<<TKE<<"\t"<<TSE<<"\t"<<TE<<"\n";
+                                      temporalL2ErrorVel_AxialBar<<time<<"\t"<<Error<<"\n";
+                                    }
                                   break;}
                   case(2):        //Dam break
                                   {
@@ -925,10 +1003,11 @@ int main (int argc, char* argv[])
 
                                     mpm_pc.CalculatePosDiagnostics(min_pos,max_pos);
 
-                                    tempFilenamePos="Waterfront.out";
-                                    temporalPos.open(tempFilenamePos.c_str(),std::ios::out | std::ios::app | std::ios_base::binary);
-                                    temporalPos<<time/sqrt(specs.dam_break_H1/specs.dam_break_g)<<"\t"<<Xwf/specs.dam_break_H1<<"\n";
-                                    temporalPos.flush();
+                                    if(amrex::ParallelDescriptor::IOProcessor())
+                                      {
+                                        temporalPos<<time/sqrt(specs.dam_break_H1/specs.dam_break_g)<<"\t"<<max_pos[0]/specs.dam_break_H1<<"\n";
+                                      }
+
                                     break;
                                   }
                   case(3):        //Elastic collision of disks
@@ -936,10 +1015,12 @@ int main (int argc, char* argv[])
                                     tempFilenameEnergy="Energy.out";
                                     mpm_pc.CalculateEnergies(TKE,TSE);
                                     TE=TKE+TSE;
-                                    temporalEnergy.open(tempFilenameEnergy.c_str(),std::ios::out | std::ios::app | std::ios_base::binary);
-                                    temporalEnergy.precision(12);
-                                    temporalEnergy<<"\n"<<time<<"\t"<<TKE<<"\t"<<TSE<<"\t"<<TE<<"\n";
-                                    temporalEnergy.flush();
+
+                                    if(amrex::ParallelDescriptor::IOProcessor())
+                                      {
+                                        temporalEnergy<<"\n"<<time<<"\t"<<TKE<<"\t"<<TSE<<"\t"<<TE<<"\n";
+                                      }
+
                                     break;
                                   }
                   case(4):        //Static deflection of beam under gravity
@@ -956,17 +1037,18 @@ int main (int argc, char* argv[])
                                     #endif
                                     break;
                                   }
-                  case(5):        //Transverse vibration of a bar
+                  case(5):        //Transverse vibration of a string
                                   {
                                   mpm_pc.CalculateErrorTVB(specs.tvb_E,specs.tvb_v0,specs.tvb_L,specs.tvb_rho,err);
-                                  #ifndef AMREX_USE_GPU
-                                  PrintToFile(specs.prefix_diagnosticfoldername+"TVB_Error.out")<<time<<"\t"<<TKE<<"\t"<<TSE<<"\t"<<TE<<"\n";
-                                  #endif
+                                  amrex::Real tvb_c = sqrt(specs.tvb_E/specs.tvb_rho);
+                                  mpm_pc.CalculateVelocityL2Error_TransverseVibrationString(Error, specs.tvb_L, time, specs.tvb_v0, tvb_c, specs.total_number_of_material_points);
+                                  temporalL2ErrorPos_TVBString<<time<<"\t"<<Error<<"\n";
                                   break;
                                   }
-                  case(6):        //Check function reconstruction and convergence
+                  case(6):        //Single particle translation in x
                                   {
-                                    mpm_pc.CalculateErrorP2G(nodaldata,specs.p2g_L,specs.p2g_f,specs.p2g_ncell);
+                                    mpm_pc.CalculatePositionL2Error_TranslationofNonInteractingMaterialPoints(Error,specs.tnimp_u0,specs.tnimp_G0,specs.tnimp_w0, time,specs.total_number_of_material_points);
+                                    temporalL2ErrorPos_SingleParticle<<time<<"\t"<<Error<<"\n";
                                     break;
                                   }
                   case(7):        //Checks the weight of a block of elastic solid. Used to validate functionality to evaluate surface forces
@@ -1013,11 +1095,11 @@ int main (int argc, char* argv[])
                   {
                     mpm_pc.CalculateEnergies(TKE,TSE);
                     TE=TKE+TSE;
-                    tempFilenameEnergy="Energy.out";
-                    temporalEnergy.open(tempFilenameEnergy.c_str(),std::ios::out | std::ios::app | std::ios_base::binary);
-                    temporalEnergy.precision(12);
-                    temporalEnergy<<"\n"<<time<<"\t"<<TKE<<"\t"<<TSE<<"\t"<<TE<<"\n";
-                    temporalEnergy.flush();
+                    if(amrex::ParallelDescriptor::IOProcessor())
+                      {
+                        temporalEnergy<<time<<"\t"<<TKE<<"\t"<<TSE<<"\t"<<TE<<"\n";
+                      }
+
                   }
                 if(specs.print_max_min_avg_stress and steps%specs.diagnostic_iteration_frequency==0)
                   {
@@ -1027,30 +1109,18 @@ int main (int argc, char* argv[])
 
                     mpm_pc.CalculateStressDiagnostics(min_stress,max_stress,avg_stress);
 
-                    tempFilenameMinStress = "Min_Stress_Dianostic.out";
-                    tempFilenameMaxStress = "Max_Stress_Dianostic.out";
-                    tempFilenameAvgStress = "Avg_Stress_Dianostic.out";
+                    if(amrex::ParallelDescriptor::IOProcessor())
+                      {
+                        temporalMinStress<<steps<<"\t"<<min_stress[0]<<"\t"<<min_stress[1]<<"\t"<<min_stress[2]<<"\t"<<min_stress[3]<<"\t"<<min_stress[4]<<"\t"<<min_stress[5]<<"\n";
+                        temporalMaxStress<<steps<<"\t"<<max_stress[0]<<"\t"<<max_stress[1]<<"\t"<<max_stress[2]<<"\t"<<max_stress[3]<<"\t"<<max_stress[4]<<"\t"<<max_stress[5]<<"\n";
+                        temporalAvgStress<<steps<<"\t"<<avg_stress[0]/specs.total_number_of_material_points<<"\t"
+                                                                          <<avg_stress[1]/specs.total_number_of_material_points<<"\t"
+                                                                          <<avg_stress[2]/specs.total_number_of_material_points<<"\t"
+                                                                          <<avg_stress[3]/specs.total_number_of_material_points<<"\t"
+                                                                          <<avg_stress[4]/specs.total_number_of_material_points<<"\t"
+                                                                          <<avg_stress[5]/specs.total_number_of_material_points<<"\n";
+                      }
 
-                    temporalMinStress.open(tempFilenameMinStress.c_str(),std::ios::out | std::ios::app | std::ios_base::binary);
-                    temporalMaxStress.open(tempFilenameMaxStress.c_str(),std::ios::out | std::ios::app | std::ios_base::binary);
-                    temporalAvgStress.open(tempFilenameAvgStress.c_str(),std::ios::out | std::ios::app | std::ios_base::binary);
-
-                    temporalMinStress.precision(12);
-                    temporalMaxStress.precision(12);
-                    temporalAvgStress.precision(12);
-
-                    temporalMinStress<<steps<<"\t"<<min_stress[0]<<"\t"<<min_stress[1]<<"\t"<<min_stress[2]<<"\t"<<min_stress[3]<<"\t"<<min_stress[4]<<"\t"<<min_stress[5]<<"\n";
-                    temporalMaxStress<<steps<<"\t"<<max_stress[0]<<"\t"<<max_stress[1]<<"\t"<<max_stress[2]<<"\t"<<max_stress[3]<<"\t"<<max_stress[4]<<"\t"<<max_stress[5]<<"\n";
-                    temporalAvgStress<<steps<<"\t"<<avg_stress[0]/specs.total_number_of_material_points<<"\t"
-                                                  <<avg_stress[1]/specs.total_number_of_material_points<<"\t"
-                                                  <<avg_stress[2]/specs.total_number_of_material_points<<"\t"
-                                                  <<avg_stress[3]/specs.total_number_of_material_points<<"\t"
-                                                  <<avg_stress[4]/specs.total_number_of_material_points<<"\t"
-                                                  <<avg_stress[5]/specs.total_number_of_material_points<<"\n";
-
-                    temporalMinStress.flush();
-                    temporalMaxStress.flush();
-                    temporalAvgStress.flush();
                   }
                 if(specs.print_max_min_avg_velocity and steps%specs.diagnostic_iteration_frequency==0)
                   {
@@ -1060,24 +1130,20 @@ int main (int argc, char* argv[])
                     mpm_pc.CalculateVelocityDiagnostics(min_vel,max_vel,avg_vel);
                     avg_vel=avg_vel/specs.total_number_of_material_points;
 
-                    tempFilenameVel="Velocity_Diagnostic.out";
-                    temporalVel.open(tempFilenameVel.c_str(),std::ios::out | std::ios::app | std::ios_base::binary);
-                    temporalVel.precision(12);
-                    temporalVel<<steps<<"\t"<<min_vel<<"\t"<<max_vel<<"\t"<<avg_vel<<"\n";
-                    temporalVel.flush();
+                    if(amrex::ParallelDescriptor::IOProcessor())
+                      {
+                        temporalVel<<steps<<"\t"<<min_vel<<"\t"<<max_vel<<"\t"<<avg_vel<<"\n";
+                      }
                   }
                 if(specs.print_max_min_pos and steps%specs.diagnostic_iteration_frequency==0)
                   {
                     amrex::GpuArray<amrex::Real, 3> min_pos;
                     amrex::GpuArray<amrex::Real, 3> max_pos;
-
                     mpm_pc.CalculatePosDiagnostics(min_pos,max_pos);
-                    tempFilenamePos="Position_Diagnostic.out";
+
                     if(amrex::ParallelDescriptor::IOProcessor())
                       {
-                        temporalPos.open(tempFilenamePos.c_str(),std::ios::out | std::ios::app | std::ios_base::binary);
                         temporalPos<<steps<<"\t"<<min_pos[0]<<"\t"<<min_pos[1]<<"\t"<<min_pos[2]<<"\t"<<max_pos[0]<<"\t"<<max_pos[1]<<"\t"<<max_pos[2]<<"\n";
-                        temporalPos.flush();
                       }
                   }
               }
@@ -1127,9 +1193,10 @@ int main (int argc, char* argv[])
         if (fabs(output_timePrint-specs.screen_output_time)<dt*0.5)
           {
             Print()<<"\nIteration: "<<std::setw(10)<<steps<<",\t"<<"Time (s): "<<std::fixed<<std::setprecision(10)<<time<<",\tDt (s) = "<<std::scientific<<std::setprecision(5)<<dt<<std::fixed<<std::setprecision(10)<<",\t Time/Iter (s) = "<<time_per_iter_sum/iter_test;
-#ifndef AMREX_USE_GPU
-            PrintToFile("CompTime.out")<<steps<<"\t"<<time_per_iter_sum/iter_test<<" "<<time_per_iter<<"\n";
-#endif
+            if(amrex::ParallelDescriptor::IOProcessor())
+              {
+                temporalComptime<<steps<<"\t"<<time_per_iter_sum/iter_test<<" "<<time_per_iter<<"\n";
+              }
             time_per_iter_sum=zero;
             iter_test=0;
             output_timePrint=zero;
@@ -1156,8 +1223,19 @@ int main (int argc, char* argv[])
     msg="\n Exagoop iterations";
     PrintMessage(msg,print_length,true);
     PrintEndMessage(" End");
-  }
 
+    //Close all temporal ofstream objects
+    temporalPos.flush();
+    temporalVel.flush();
+    temporalEnergy.flush();
+    temporalMinStress.flush();
+    temporalMaxStress.flush();
+    temporalAvgStress.flush();
+    temporalCenterofMassVel_AxialBar.flush();
+    temporalL2ErrorVel_AxialBar.flush();
+    temporalL2ErrorPos_TVBString.flush();
+
+  }
 
   amrex::Finalize();
 }

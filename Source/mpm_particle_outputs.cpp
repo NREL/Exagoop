@@ -140,6 +140,10 @@ void MPMParticleContainer::writeParticles(std::string prefix_particlefilename, i
     real_data_names.push_back("Gama_pressure");
     real_data_names.push_back("Dynamic_viscosity");
     real_data_names.push_back("yacceleration");
+    real_data_names.push_back("error");
+    real_data_names.push_back("pos_0_x");
+    real_data_names.push_back("pos_0_y");
+    real_data_names.push_back("pos_0_z");
 
     int_data_names.push_back("phase");
     int_data_names.push_back("rigid_body_id");
@@ -163,6 +167,7 @@ void MPMParticleContainer::writeParticles(std::string prefix_particlefilename, i
     writeflags_real[realData::Bulk_modulus]=0;
     writeflags_real[realData::Gama_pressure]=0;
     writeflags_real[realData::Dynamic_viscosity]=0;
+    writeflags_real[realData::error]=1;
     
     WritePlotFile(pltfile, "particles",writeflags_real, 
                   writeflags_int, real_data_names, int_data_names);
@@ -257,6 +262,10 @@ void MPMParticleContainer::writeCheckpointFile(std::string prefix_particlefilena
 	real_data_names.push_back("Gama_pressure");
 	real_data_names.push_back("Dynamic_viscosity");
 	real_data_names.push_back("yacceleration");
+	real_data_names.push_back("error");
+	real_data_names.push_back("pos_0_x");
+	real_data_names.push_back("pos_0_y");
+	real_data_names.push_back("pos_0_z");
 
 	amrex::Vector<std::string> int_data_names;
 	int_data_names.push_back("phase");

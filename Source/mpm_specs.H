@@ -35,6 +35,10 @@ struct realData
         Gama_pressure=43,			//40
         Dynamic_viscosity=44,		        //41
         yacceleration=45,			//45	This is for storing the acceleration of each particle in the y-direction. This variable is not generic and used only for the spring-mass and membrane simulations only
+        error = 46,                             //46    This is for storing error in regular test cases
+        pos_0_x = 47,                             //46    This is for storing error in regular test cases
+        pos_0_y = 48,                             //46    This is for storing error in regular test cases
+        pos_0_z = 49,                             //46    This is for storing error in regular test cases
         count
     };
 };
@@ -115,6 +119,7 @@ class MPMspecs
         int print_max_min_avg_velocity=1;
         int print_max_min_pos=1;
         int print_total_energy=1;
+        int print_comptime=0;
         int diagnostic_iteration_frequency=10;
 
 
@@ -141,6 +146,11 @@ class MPMspecs
         amrex::Real p2g_L = 1.0;
         amrex::Real p2g_f = 1.0;
         int p2g_ncell=0;
+
+        //Parameters for translation of single particle
+        amrex::Real tnimp_u0 = 0.0;             //Sorry for the weird acronym. TNIMP==> Translation of non-interacting material points
+        amrex::Real tnimp_G0 = 1.0;             //In this case, the acceleration due to gravity g is defined as G0*cos(w0*t)
+        amrex::Real tnimp_w0 = 0.05;            //The circular frequency of acceleration due to gravity
 
         //Parameters for membrane compaction
         amrex::Real mem_compaction_area=1.0;
@@ -238,8 +248,6 @@ class MPMspecs
             periodic={AMREX_D_DECL(periodicarr[XDIR],periodicarr[YDIR],periodicarr[ZDIR])};
             pp.get("max_grid_size", max_grid_size);
 
-
-
             pp.get("max_steps", maxsteps);
             pp.get("final_time",final_time);
 
@@ -279,6 +287,10 @@ class MPMspecs
             pp.query("tvb_E",tvb_E);
             pp.query("tvb_rho",tvb_rho);
 
+            pp.query("tnimp_u0",tnimp_u0);
+            pp.query("tnimp_G0",tnimp_G0);
+            pp.query("tnimp_w0",tnimp_w0);
+
             pp.query("p2g_L",p2g_L);
             pp.query("p2g_f",p2g_f);
             pp.query("p2g_ncell",p2g_ncell);
@@ -295,9 +307,9 @@ class MPMspecs
             pp.query("print_max_min_avg_stress",print_max_min_avg_stress);
             pp.query("print_max_min_avg_velocity",print_max_min_avg_velocity);
             pp.query("print_max_min_pos",print_max_min_pos);
+            pp.query("print_comptime",print_comptime);
             pp.query("print_total_energy",print_total_energy);
             pp.query("diagnostic_iteration_frequency",diagnostic_iteration_frequency);
-
 
             //Rigid body params
             pp.get("num_of_rigid_bodies", num_of_rigid_bodies);

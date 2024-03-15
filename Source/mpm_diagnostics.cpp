@@ -239,6 +239,250 @@ amrex::Real MPMParticleContainer::CalculateExactVelocity(int modenumber,amrex::R
   return(Vmex);
 }
 
+void MPMParticleContainer::ParticleErrorAxialBar(MultiFab& nodaldata,
+                                                 int n, Real L, Real E, Real rho, Real time, Real V0)
+{
+    const int lev = 0;
+    const Geometry& geom = Geom(lev);
+    auto& plev  = GetParticles(lev);
+    const auto dxi = geom.InvCellSizeArray();
+    const auto dx = geom.CellSizeArray();
+    const auto plo = geom.ProbLoArray();
+    const auto domain = geom.Domain();
+
+    int ncomp=nodaldata.nComp();
+    const int* loarr = domain.loVect ();
+    const int* hiarr = domain.hiVect ();
+
+    int lo[]={loarr[0],loarr[1],loarr[2]};
+    int hi[]={hiarr[0],hiarr[1],hiarr[2]};
+    const double Pi = 3.141592654;
+
+    Real beta_n=(2.0*n-1)/2.0*Pi/L;
+    Real omega_n=beta_n*sqrt(E/rho);
+
+
+
+    for(MFIter mfi = MakeMFIter(lev); mfi.isValid(); ++mfi)
+    {
+        const amrex::Box& box = mfi.tilebox();
+        int gid = mfi.index();
+        int tid = mfi.LocalTileIndex();
+        auto index = std::make_pair(gid, tid);
+
+        auto& ptile = plev[index];
+        auto& aos   = ptile.GetArrayOfStructs();
+        const int np = aos.numRealParticles();
+
+        Array4<Real> nodal_data_arr=nodaldata.array(mfi);
+
+        ParticleType* pstruct = aos().dataPtr();
+
+        amrex::ParallelFor(np,[=]
+        AMREX_GPU_DEVICE (int i) noexcept
+        {
+            int lmin,lmax,nmin,nmax,mmin,mmax;
+            ParticleType& p = pstruct[i];
+
+            if(p.idata(intData::phase)==0)
+            {
+                Real Vex=0.0;
+                Vex=V0*sin(Pi*p.pos(0)/(2.0*L))*cos(omega_n*time);
+                p.rdata(realData::error) = fabs(p.rdata(realData::xvel)-Vex);
+            }
+        });
+    }
+}
+
+void MPMParticleContainer::ParticleErrorTranslationofNonInteractingMaterialPoints(MultiFab& nodaldata,
+                                                 Real V0, Real g,Real time)
+{
+    const int lev = 0;
+    const Geometry& geom = Geom(lev);
+    auto& plev  = GetParticles(lev);
+    const auto dxi = geom.InvCellSizeArray();
+    const auto dx = geom.CellSizeArray();
+    const auto plo = geom.ProbLoArray();
+    const auto domain = geom.Domain();
+
+    int ncomp=nodaldata.nComp();
+    const int* loarr = domain.loVect ();
+    const int* hiarr = domain.hiVect ();
+
+    int lo[]={loarr[0],loarr[1],loarr[2]};
+    int hi[]={hiarr[0],hiarr[1],hiarr[2]};
+    const double Pi = 3.141592654;
+
+
+
+
+
+    for(MFIter mfi = MakeMFIter(lev); mfi.isValid(); ++mfi)
+    {
+        const amrex::Box& box = mfi.tilebox();
+        int gid = mfi.index();
+        int tid = mfi.LocalTileIndex();
+        auto index = std::make_pair(gid, tid);
+
+        auto& ptile = plev[index];
+        auto& aos   = ptile.GetArrayOfStructs();
+        const int np = aos.numRealParticles();
+
+        Array4<Real> nodal_data_arr=nodaldata.array(mfi);
+
+        ParticleType* pstruct = aos().dataPtr();
+
+        amrex::ParallelFor(np,[=]
+        AMREX_GPU_DEVICE (int i) noexcept
+        {
+            int lmin,lmax,nmin,nmax,mmin,mmax;
+            ParticleType& p = pstruct[i];
+
+            if(p.idata(intData::phase)==0)
+            {
+                Real position=0.0;
+                position=p.rdata(realData::pos_0_y)+V0*time+0.5*g*time*time;
+                p.rdata(realData::error) = fabs(p.pos(1)-position);
+            }
+        });
+    }
+}
+
+
+void MPMParticleContainer::CalculatePositionL2Error_TranslationofNonInteractingMaterialPoints(Real &Error, Real V0, Real G0, Real W0, Real time, int nump)
+{
+  const int lev = 0;
+  const Geometry& geom = Geom(lev);
+  auto& plev  = GetParticles(lev);
+  const auto dxi = geom.InvCellSizeArray();
+  const auto dx = geom.CellSizeArray();
+  const auto plo = geom.ProbLoArray();
+  const auto domain = geom.Domain();
+
+  Real Pi = atan(1.0)*4.0;
+
+
+
+  using PType = typename MPMParticleContainer::SuperParticleType;
+  Error = amrex::ReduceSum(*this, [=]
+                                  AMREX_GPU_HOST_DEVICE (const PType& p) -> Real
+                                  {
+    Real position=0.0;
+    if(W0==0)
+      {
+        position= p.rdata(realData::pos_0_y)+V0*time+0.5*G0*time*time;               //s=x0+u*t+1/2*g*t^2. Only y-displacement is computed.
+      }
+    else
+      {
+        position= p.rdata(realData::pos_0_y)+G0/(W0*W0)+V0*time-G0/(W0*W0)*cos(W0*time);               //s=x0+u*t+1/2*g*t^2. Only y-displacement is computed.
+      }
+
+    return((p.pos(1)-position)*(p.pos(1)-position));
+                                  });
+
+
+
+#ifdef BL_USE_MPI
+  ParallelDescriptor::ReduceRealSum(Error);
+#endif
+
+  Error=sqrt(Error)/nump;
+
+
+}
+
+void MPMParticleContainer::CalculateVelocityL2Error_Axialbar(Real &Error, int n, Real L, Real E, Real rho, Real time, Real V0, int nump)
+{
+  const int lev = 0;
+  const Geometry& geom = Geom(lev);
+  auto& plev  = GetParticles(lev);
+  const auto dxi = geom.InvCellSizeArray();
+  const auto dx = geom.CellSizeArray();
+  const auto plo = geom.ProbLoArray();
+  const auto domain = geom.Domain();
+
+  Real Pi = atan(1.0)*4.0;
+  Real beta_n=(2.0*n-1)/2.0*Pi/L;
+  Real omega_n=beta_n*sqrt(E/rho);
+
+
+  using PType = typename MPMParticleContainer::SuperParticleType;
+  Error = amrex::ReduceSum(*this, [=]
+                                  AMREX_GPU_HOST_DEVICE (const PType& p) -> Real
+                                  {
+    Real Vex=0.0;
+    Vex=V0*sin(Pi*p.pos(0)/(2.0*L))*cos(omega_n*time);
+    //p.rdata(realData::error) = p.rdata(realData::xvel)-Vex;
+    return((p.rdata(realData::xvel)-Vex)*(p.rdata(realData::xvel)-Vex));
+                                  });
+
+
+
+#ifdef BL_USE_MPI
+  ParallelDescriptor::ReduceRealSum(Error);
+#endif
+
+  Error=sqrt(Error)/nump;
+}
+
+void MPMParticleContainer::CalculateVelocityL2Error_TransverseVibrationString(Real &Error, Real L, Real time, Real V0, Real c, int nump)
+{
+  const int lev = 0;
+  const Geometry& geom = Geom(lev);
+  auto& plev  = GetParticles(lev);
+  const auto dxi = geom.InvCellSizeArray();
+  const auto dx = geom.CellSizeArray();
+  const auto plo = geom.ProbLoArray();
+  const auto domain = geom.Domain();
+
+  Real Pi = atan(1.0)*4.0;
+
+  using PType = typename MPMParticleContainer::SuperParticleType;
+  Error = amrex::ReduceSum(*this, [=]
+                                  AMREX_GPU_HOST_DEVICE (const PType& p) -> Real
+                                  {
+    Real Yex=V0*L/(c*Pi)*sin(c*Pi*time/L)*sin(Pi*p.pos(0)/L);
+    return((p.pos(1)-Yex)*(p.pos(1)-Yex));
+                                  });
+
+
+
+#ifdef BL_USE_MPI
+  ParallelDescriptor::ReduceRealSum(Error);
+#endif
+
+  Error=sqrt(Error)/nump;
+
+
+}
+
+void MPMParticleContainer::CalculatePositionL2Error_PositionofSingleMaterialPoint(Real &Error, Real x0, Real u0, Real accln, Real time, int nump)
+{
+  const int lev = 0;
+  const Geometry& geom = Geom(lev);
+  auto& plev  = GetParticles(lev);
+  const auto dxi = geom.InvCellSizeArray();
+  const auto dx = geom.CellSizeArray();
+  const auto plo = geom.ProbLoArray();
+  const auto domain = geom.Domain();
+
+
+
+  using PType = typename MPMParticleContainer::SuperParticleType;
+  Error = amrex::ReduceSum(*this, [=]
+                                  AMREX_GPU_HOST_DEVICE (const PType& p) -> Real
+                                  {
+    Real Xex=x0+ u0*time+0.5*accln*time*time;
+    return((p.pos(0)-Xex)*(p.pos(0)-Xex));
+                                  });
+
+#ifdef BL_USE_MPI
+  ParallelDescriptor::ReduceRealSum(Error);
+#endif
+
+  Error=sqrt(Error)/nump;
+}
+
 void MPMParticleContainer::CalculateVelocity(Real &Vcm)
 {
   const int lev = 0;
@@ -513,6 +757,7 @@ void MPMParticleContainer::WriteDeflectionTVB(Real tvb_E,Real tvb_v0,Real tvb_L,
   const Real pi = atan(1.0)*4.0;
   Real w0 = c*pi/tvb_L;
   Real Amplitude = tvb_v0*tvb_L/(c*pi)*sin(w0*time);
+  amrex::Print()<<"\n Exact = "<<tvb_v0<<" "<<tvb_L<<" "<<tvb_E<<" "<<tvb_rho<<" "<<pi<<" "<<w0;
   std::string outputfile;
   int num_of_digits_in_filenames = 5;
   outputfile = amrex::Concatenate("TVB_Deflection_", output_it, num_of_digits_in_filenames);
