@@ -16,6 +16,7 @@ USE_EB    = TRUE
 
 TINY_PROFILE = FALSE
 USE_PARTICLES = TRUE
+BL_NO_FORT = TRUE
 
 include $(AMREX_HOME)/Tools/GNUMake/Make.defs
 

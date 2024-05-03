@@ -66,7 +66,7 @@ int main (int argc, char* argv[])
         int steps=0;
         Real dt;
         Real time = 0.0;
-        int num_of_rigid_bodies=0;
+        int num_of_rigid_bodies=0; 
         int output_it=0;
         std::string pltfile;
         Real output_time=zero;
@@ -169,7 +169,7 @@ int main (int argc, char* argv[])
 
         //Setting up rigid particle setups
 
-        if(numrigidbodies!=0)
+        if(specs.no_of_rigidbodies_present > 0)
         {
         	specs.Rb = new Rigid_Bodies[specs.no_of_rigidbodies_present];
         	Array<int,numrigidbodies> position_update_method;
