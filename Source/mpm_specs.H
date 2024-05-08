@@ -96,7 +96,7 @@ class MPMspecs
 
         //Output parameters
         std::string prefix_particlefilename = "plt";
-        std::string prefix_gridfilename =  "nplt";
+        std::string prefix_gridfilename =  "plt";
         std::string prefix_densityfilename = "dens";
         std::string prefix_checkpointfilename = "chk";
         int num_of_digits_in_filenames=6;
