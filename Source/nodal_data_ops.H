@@ -7,7 +7,7 @@
 #include <AMReX_PlotFileUtil.H>
 #include <AMReX_MultiFabUtil.H>
 
-void write_plot_file(std::string fname, amrex::MultiFab &nodaldata, amrex::Vector<std::string> fieldnames, 
+void write_grid_file(std::string fname, amrex::MultiFab &nodaldata, amrex::Vector<std::string> fieldnames, 
                            amrex::Geometry geom, amrex::BoxArray ba, amrex::DistributionMapping dm,amrex::Real time);
 
 void backup_current_velocity(amrex::MultiFab &nodaldata);

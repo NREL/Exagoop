@@ -4,7 +4,7 @@
 
 using namespace amrex;
 
-void write_plot_file(std::string fname, MultiFab &nodaldata, Vector<std::string> fieldnames, 
+void write_grid_file(std::string fname, MultiFab &nodaldata, Vector<std::string> fieldnames, 
                            Geometry geom, BoxArray ba, DistributionMapping dm,Real time)
 {
   MultiFab plotmf(ba,dm,nodaldata.nComp(),0);

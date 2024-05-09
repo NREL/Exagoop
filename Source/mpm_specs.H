@@ -78,7 +78,7 @@ class MPMspecs
         Array<Real,AMREX_SPACEDIM> phi{AMREX_D_DECL(0.0, 0.0, 0.0)};
         Array<int,AMREX_SPACEDIM> ncells{AMREX_D_DECL(0, 0, 0)};
         GpuArray<int,AMREX_SPACEDIM> periodic{AMREX_D_DECL(0, 0, 0)};
-        Array<Real,AMREX_SPACEDIM> gravity{AMREX_D_DECL(0.0, -9.81, 0.0)};
+        Array<Real,AMREX_SPACEDIM> gravity{AMREX_D_DECL(0.0, -ACCG, 0.0)};
 
         Array<Real,AMREX_SPACEDIM> force_slab_lo{AMREX_D_DECL(0.0, 0.0, 0.0)};
         Array<Real,AMREX_SPACEDIM> force_slab_hi{AMREX_D_DECL(0.0, 0.0, 0.0)};
@@ -96,7 +96,7 @@ class MPMspecs
 
         //Output parameters
         std::string prefix_particlefilename = "plt";
-        std::string prefix_gridfilename =  "nplt";
+        std::string prefix_gridfilename =  "plt";
         std::string prefix_densityfilename = "dens";
         std::string prefix_checkpointfilename = "chk";
         int num_of_digits_in_filenames=6;
@@ -122,7 +122,7 @@ class MPMspecs
 
         //Parameters for dam break
         amrex::Real dam_break_H1 = 0.2;
-        amrex::Real dam_break_g = 9.81;
+        amrex::Real dam_break_g = ACCG;
 
         //Parameters for lateral vibration of bar (TVB). The test case is performed for first mode
         amrex::Real tvb_E = 50.0;
