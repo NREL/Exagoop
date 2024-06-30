@@ -10,7 +10,10 @@ The basic components and the terminologies used in EXAGOOP MPM solver is shown i
 
 The various steps involved in one time integration stage in EXAGOOP is shown in the following figure and are described in the following 4 steps.
 
-$$\sqrt{3x-1}+(1+x)^2$$
+$$
+\begin{itemize}
+\end
+$$
 
 ## EXAGOOP features
 ## Build Instructions
