@@ -16,7 +16,7 @@ The various steps involved in one time integration stage in EXAGOOP is shown in 
 ### Steps:
 
 0. In the initialization stage, material point mass, position, velocity and stresses are initialized.
-1. The material point (subscript p) mass and momentum are mapped onto the grid node (subscript I) using grid shape functions $\phi$. Similarly particle forces (external forces such as gravity and internal forces from stresses) are also mapped to grid nodes. Mathematically, 
+1. The material point (subscript p) mass and momentum are mapped onto the grid node (subscript I) using grid shape functions $\phi$. Similarly, the forces on the material points (comprising external forces such as gravity and internal forces from stresses) are also mapped to grid nodes. Mathematically, 
 
 $$
 m_I^t = \sum_p \Phi_I (x_p^t) m_p
@@ -31,24 +31,24 @@ $$
 $$
 
 $$
-\mathbf{f}_I^{int,t} = \sum_p V_p^t \mathbf{\Sigma}_p^t \nabla \Phi_I (x_p^t)
+\mathbf{f}_I^{int,t} = \sum_p V_p^t \mathbf{\sigma}_p^t \nabla \Phi_I (x_p^t)
 $$
 
-where, $\sum_p$ denotes summation over all material points. $m_p$, $v$, $V_p$, $b$, $\Sigma$ and $\Phi$ denote particle mass, particle velocity vector, particle volume, body force, stress and grid shape functions respectively.
+where, $\sum_p$ denotes summation over all material points. $m_p$, $\mathbf{v}$, $V_p$, $\mathbf{b}$, $\sigma$ and $\Phi$ denote particle mass, particle velocity vector, particle volume, body force vector, stress and grid shape functions respectively.
 
 2. The updated grid nodal velocity is calculated using explicit Euler time integration. 
 
 $$
-\mathbf{v}_I^{t+\Delta t} = \mathbf{v}_I^{t} + \frac{\mathbf{f}_I^{ext,t}+\mathbf{f}_I^{int,t}}{m_I^t} 
+\mathbf{v}_I^{t+\Delta t} = \mathbf{v}_I^{t} + \frac{\mathbf{f}_I^{ext,t}+\mathbf{f}_I^{int,t}}{m_I^t} \Delta t
 $$
 
-3. Particle velocity is updated with new nodal velocity at time $t+\Delta t$ using a blend of Particle in Cell (PIC) and Fluid Implicit Particle (FLIP) update. The blending factor used is $\alpha$.
+3. Particle velocity is updated from new nodal velocity (at time $t+\Delta t$) using a blend of Particle in Cell (PIC) and Fluid Implicit Particle (FLIP) update methods. The blending factor used is $\alpha$.
 
 $$
 \mathbf{v}_p^{t+\Delta t}=\alpha\left(\mathbf{v}_p^t+\sum_I \Phi_I\left[\mathbf{v}_I^{t+\Delta t}-\mathbf{v}_I^t\right]\right)+\left(1-\alpha\right) \sum_I \Phi_I \mathbf{v}_I^{t+\Delta t} \nabla \mathbf{v}_p^{t+\Delta t}=\sum_I^{n g} \nabla \Phi_I \mathbf{v}_I^{t+\Delta t}
 $$
 
-4. Particle positions are updated using Euler integration.
+4. Particle positions are updated using Euler time integration.
 
 $$
 x_p^{\{t+\Delta t\}}=x_p^t+\Delta t \sum_I \phi_I\left(x_p^t\right) v_I^{\{t+\Delta t\}}
@@ -56,20 +56,20 @@ $$
 
 ## EXAGOOP features
 
-- Based on AMReX framework. Single-level, block-cartesian grid used as Eulerian background grid. Material points simulated using particle class in AMReX.
+- Based on AMReX framework. Single-level, block-structured, cartesian grid is used as the background grid. Material points are simulated using particle class in AMReX.
 - MPI+GPU support using CUDA and HIP
-- Linearly elastic, compressible fluid material models available
-- Linear, Quadratic and Cubic B-Spline grid shape functions available
-- Explicit time integration
+- Linearly elastic and compressible fluid material models available
+- Linear, Quadratic, and Cubic B-Spline grid shape functions available
+- Explicit time integration used for time update
 - Complex geometry simulated using embedded boundary method
 - Rigid material points available for simulating stationary/moving rigid walls
 
 ## Build Instructions
 
 - Clone AMReX source code to a convenient location and point __AMREX_HOME__ environment variable to this directory
-- Clone EXAGOOP from github to a convenient location and set __MPM_HOME__ enviroment variable to this directory
-- Go to __BUILD__ directory. Modify the GNUmake file according to problem to be simulated. Set __COMP__ to GNU and __USE_MPI__ to TRUE for MPI support. For GPU support enable  __USE_CUDA__ variable.
-- Run __make__ to generate the executable (One can test running the executable using the test cases in the __tests__ folder.
+- Clone EXAGOOP from GitHub to a convenient location and set __MPM_HOME__ enviroment variable to this directory
+- Go to __BUILD__ directory. Modify the GNUmake file according to the problem to be simulated. Set __COMP__ to GNU and __USE_MPI__ to TRUE for MPI support. For GPU support, enable  __USE_CUDA__ variable.
+- Run __make__ to compile and generate the executable (One can test running the executable using the test cases in the __tests__ folder).
 
 
 ## Visualization Instructions
