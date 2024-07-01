@@ -46,6 +46,7 @@ $$
 $$
 
 4. Particle positions are updated using Euler integration.
+
 $$
 x_p^{\{t+\Delta t\}}=x_p^t+\Delta t \sum_I \phi_I\left(x_p^t\right) v_I^{\{t+\Delta t\}}
 $$
