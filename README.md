@@ -45,6 +45,11 @@ $$
 \mathbf{v}_p^{t+\Delta t}=\alpha\left(\mathbf{v}_p^t+\sum_I \Phi_I\left[\mathbf{v}_I^{t+\Delta t}-\mathbf{v}_I^t\right]\right)+\left(1-\alpha\right) \sum_I \Phi_I \mathbf{v}_I^{t+\Delta t} \nabla \mathbf{v}_p^{t+\Delta t}=\sum_I^{n g} \nabla \Phi_I \mathbf{v}_I^{t+\Delta t}
 $$
 
+4. Particle positions are updated using Euler integration.
+$$
+x_p^{\{t+\Delta t\}}=x_p^t+\Delta t \sum_I \phi_I\left(x_p^t\right) v_I^{\{t+\Delta t\}}
+$$
+
 ## EXAGOOP features
 ## Build Instructions
 ## Run Instructions
