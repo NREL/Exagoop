@@ -20,17 +20,31 @@ m_I^t = \sum_p \Phi_I (x_p^t) m_p
 $$
 
 $$
-(mv)_I^t = \sum_p \Phi_I (x_p^t) (mv)_p
+(m\mathbf{v})_I^t = \sum_p \Phi_I (x_p^t) (mv)_p
 $$
 
 $$
-f_I^{ext,t} = \sum_p \Phi_I (x_p^t) m_p b(x_p)
+\mathbf{f}_I^{ext,t} = \sum_p \Phi_I (x_p^t) m_p \mathbf{b}(x_p)
 $$
 
 $$
-f_I^{int,t} = \sum_p V_p^t \Sigma_p^t \nabla \Phi_I (x_p^t)
+\mathbf{f}_I^{int,t} = \sum_p V_p^t \mathbf{\Sigma}_p^t \nabla \Phi_I (x_p^t)
 $$
 
+where, $\sum_p$ denotes summation over all material points. $m_p$, $v$, $V_p$, $b$, $\Sigma$ and $\Phi$ denote particle mass, particle velocity vector, particle volume, body force, stress and grid shape functions respectively.
+
+2. The updated grid nodal velocity is calculated using explicit Euler time integration. 
+
+$$
+\mathbf{v}_I^{t+\Delta t} = \mathbf{v}_I^{t} + \frac{\mathbf{f}_I^{ext,t}+\mathbf{f}_I^{int,t}}{m_I^t} 
+$$
+
+3. Particle velocity is updated with new nodal velocity at time $t+\Delta t$ using a blend of Particle in Cell (PIC) and Fluid Implicit Particle (FLIP) update. The blending factor used is $\alpha$.
+
+$$
+\mathbf{v}_p^{t+\Delta t}=\alpha\left(\mathbf{v}_p^t+\sum_I N_I\left[\mathbf{v}_I^{t+\Delta t}-\mathbf{v}_I^t\right]\right)+\left(1-\alpha_{P-F}\right) \sum_I N_I \mathbf{v}_I^{t+\Delta t} \\
+\nabla \mathbf{v}_p^{t+\Delta t}=\sum_I^{n g} \nabla N_I \mathbf{v}_I^{t+\Delta t}
+$$
 
 ## EXAGOOP features
 ## Build Instructions
