@@ -13,7 +13,7 @@ The various steps involved in one time integration stage in EXAGOOP is shown in 
 ![Steps_in_MPM](https://github.com/NREL/Exagoop/assets/98907926/30811ef6-57ca-4983-89ed-65b27c14f70d)
 
 
-Steps:
+###Steps:
 
 0. In the initialization stage, material point mass, position, velocity and stresses are initialized.
 1. The material point (subscript p) mass and momentum are mapped onto the grid node (subscript I) using grid shape functions $\phi$. Similarly particle forces (external forces such as gravity and internal forces from stresses) are also mapped to grid nodes. Mathematically, 
@@ -55,6 +55,26 @@ x_p^{\{t+\Delta t\}}=x_p^t+\Delta t \sum_I \phi_I\left(x_p^t\right) v_I^{\{t+\De
 $$
 
 ## EXAGOOP features
+
+- Based on AMReX framework. Single-level, block-cartesian grid used as Eulerian background grid. Material points simulated using particle class in AMReX.
+- MPI+GPU support using CUDA and HIP
+- Linearly elastic, compressible fluid material models available
+- Linear, Quadratic and Cubic B-Spline grid shape functions available
+- Explicit time integration
+- Complex geometry simulated using embedded boundary method
+- Rigid material points available for simulating stationary/moving rigid walls
+
 ## Build Instructions
-## Run Instructions
+
+- Clone AMReX source code to a convenient location and point __AMREX_HOME__ environment variable to this directory
+- Clone EXAGOOP from github to a convenient location and set __MPM_HOME__ enviroment variable to this directory
+- Go to __BUILD__ directory. Modify the GNUmake file according to problem to be simulated. Set __COMP__ to GNU and __USE_MPI__ to TRUE for MPI support. For GPU support enable  __USE_CUDA__ variable.
+- Run __make__ to generate the executable (One can test running the executable using the test cases in the __tests__ folder.
+
+
 ## Visualization Instructions
+
+- The simulation output files are in the form of AMReX plotfiles.
+- Paraview can be used to load and view the particle ( __plt__ files) and nodal ( __nplt__ files) solution files.
+
+ 
