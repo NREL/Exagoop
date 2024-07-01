@@ -13,7 +13,7 @@ The various steps involved in one time integration stage in EXAGOOP is shown in 
 ![Steps_in_MPM](https://github.com/NREL/Exagoop/assets/98907926/30811ef6-57ca-4983-89ed-65b27c14f70d)
 
 
-###Steps:
+### Steps:
 
 0. In the initialization stage, material point mass, position, velocity and stresses are initialized.
 1. The material point (subscript p) mass and momentum are mapped onto the grid node (subscript I) using grid shape functions $\phi$. Similarly particle forces (external forces such as gravity and internal forces from stresses) are also mapped to grid nodes. Mathematically, 
