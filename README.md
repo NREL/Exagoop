@@ -10,6 +10,8 @@ The basic components and the terminologies used in EXAGOOP MPM solver is shown i
 
 
 The various steps involved in one time integration stage in EXAGOOP is shown in the following figure and are described in the following 4 steps.
+![Steps_in_MPM](https://github.com/NREL/Exagoop/assets/98907926/30811ef6-57ca-4983-89ed-65b27c14f70d)
+
 
 Steps:
 
