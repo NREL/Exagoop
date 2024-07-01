@@ -42,7 +42,7 @@ $$
 3. Particle velocity is updated with new nodal velocity at time $t+\Delta t$ using a blend of Particle in Cell (PIC) and Fluid Implicit Particle (FLIP) update. The blending factor used is $\alpha$.
 
 $$
-\mathbf{v}_p^{t+\Delta t}=0
+\mathbf{v}_p^{t+\Delta t}= \left(0 \right)
 $$
 
 ## EXAGOOP features
