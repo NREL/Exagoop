@@ -11,11 +11,24 @@ The basic components and the terminologies used in EXAGOOP MPM solver is shown i
 The various steps involved in one time integration stage in EXAGOOP is shown in the following figure and are described in the following 4 steps.
 
 Steps:
+
 0. In the initialization stage, material point mass, position, velocity and stresses are initialized.
 1. The material point (subscript p) mass and momentum are mapped onto the grid node (subscript I) using grid shape functions $\phi$. Similarly particle forces (external forces such as gravity and internal forces from stresses) are also mapped to grid nodes. Mathematically, 
 
 $$
-m_I^t = \sigma_p \Phi_I (x_p^t) m_p
+m_I^t = \sum_p \Phi_I (x_p^t) m_p
+$$
+
+$$
+(mv)_I^t = \sum_p \Phi_I (x_p^t) (mv)_p
+$$
+
+$$
+f_I^{ext,t} = \sum_p \Phi_I (x_p^t) m_p b(x_p)
+$$
+
+$$
+f_I^{int,t} = \sum_p V_p^t \Sigma_p^t \nabla \Phi_I (x_p^t)
 $$
 
 
