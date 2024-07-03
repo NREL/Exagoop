@@ -32,7 +32,8 @@
 #define FRCX_INDEX 4
 #define FRCY_INDEX 5
 #define FRCZ_INDEX 6
-#define DELTA_VELX_INDEX 7		//Difference in velocity between two successive time steps Vx(t+dt)-Vx(t)
+//Difference in velocity between two successive time steps Vx(t+dt)-Vx(t)
+#define DELTA_VELX_INDEX 7		
 #define DELTA_VELY_INDEX 8
 #define DELTA_VELZ_INDEX 9
 #define MASS_OLD_INDEX 10
@@ -60,5 +61,7 @@
 #define BC_SLIPWALL 2
 #define BC_PARTIALSLIPWALL 3
 #define BC_OUTFLOW 4
+
+#define ACCG 9.81
 
 #endif

@@ -24,10 +24,10 @@ mpm.multi_part_per_cell_autogen=1		#Number of particles per cell
 mpm.particle_file="mpm_particles.dat"		#Particle filename
 
 #File output parameters
-mpm.prefix_particlefilename="./Solution/1Order_CFL0.1_Alpha0.99_Buf3_Per_Serial/plt"		#Particle filename prefix
-mpm.prefix_gridfilename="./Solution/1Order_CFL0.1_Alpha0.99_Buf3_Per_Serial/nplt"			#Background grid filename prefix
-mpm.prefix_densityfilename="./Solution/1Order_CFL0.1_Alpha0.99_Buf3_Per_Serial/dens"		#Density filename prefix
-mpm.prefix_checkpointfilename="./Solution/1Order_CFL0.1_Alpha0.99_Buf3_Per_Serial/chk"		#Checkpoint filename prefix
+#mpm.prefix_particlefilename="./Solution/1Order_CFL0.1_Alpha0.99_Buf3_Per_Serial/plt"		#Particle filename prefix
+#mpm.prefix_gridfilename="./Solution/1Order_CFL0.1_Alpha0.99_Buf3_Per_Serial/nplt"			#Background grid filename prefix
+#mpm.prefix_densityfilename="./Solution/1Order_CFL0.1_Alpha0.99_Buf3_Per_Serial/dens"		#Density filename prefix
+#mpm.prefix_checkpointfilename="./Solution/1Order_CFL0.1_Alpha0.99_Buf3_Per_Serial/chk"		#Checkpoint filename prefix
 mpm.num_of_digits_in_filenames=6		#Number of digits in the filename
 
 #Simulation run parameters
