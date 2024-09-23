@@ -60,5 +60,35 @@ void Newtonian_Fluid(amrex::Real epsdot[NCOMP_TENSOR],
 
 }
 
+AMREX_GPU_DEVICE AMREX_FORCE_INLINE
+void Hyper_Elastic_Solid(amrex::Real deform_grad[NCOMP_TENSOR],
+		amrex::Real sigma[NCOMP_TENSOR],
+		amrex::Real jacob,
+        amrex::Real mu,
+        amrex::Real lambda
+        )
+{
+	amrex::Real one_by_J = 1.0/jacob;
+	amrex::Real lnJ = log(jacob);
+	amrex::Real B[NCOMP_TENSOR];
+	//F*Ftranspose
+	B[XX] = deform_grad[XX]*deform_grad[XX]+deform_grad[XY]*deform_grad[XY]+deform_grad[XZ]*deform_grad[XZ];
+	B[YY] = deform_grad[XY]*deform_grad[XY]+deform_grad[YY]*deform_grad[YY]+deform_grad[YZ]*deform_grad[YZ];
+	B[ZZ] = deform_grad[XZ]*deform_grad[XZ]+deform_grad[YZ]*deform_grad[YZ]+deform_grad[ZZ]*deform_grad[ZZ];
+
+	B[XY] = deform_grad[XX]*deform_grad[XY]+deform_grad[XY]*deform_grad[YY]+deform_grad[XZ]*deform_grad[YZ];
+	B[XZ] = deform_grad[XX]*deform_grad[XZ]+deform_grad[XY]*deform_grad[YZ]+deform_grad[XZ]*deform_grad[ZZ];
+	B[YZ] = deform_grad[XY]*deform_grad[XZ]+deform_grad[YY]*deform_grad[YZ]+deform_grad[YZ]*deform_grad[ZZ];
+
+	sigma[XX] = one_by_J*(mu*(B[XX]-1.0)+lambda*lnJ);
+	sigma[YY] = one_by_J*(mu*(B[YY]-1.0)+lambda*lnJ);
+	sigma[ZZ] = one_by_J*(mu*(B[ZZ]-1.0)+lambda*lnJ);
+
+	sigma[XY] = one_by_J*(mu*B[XY]);
+	sigma[YZ] = one_by_J*(mu*B[YZ]);
+	sigma[XZ] = one_by_J*(mu*B[XZ]);
+
+}
+
 
 #endif
