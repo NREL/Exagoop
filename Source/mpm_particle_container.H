@@ -112,7 +112,7 @@ public:
 
     void interpolate_mass_from_grid(MultiFab& nodaldata,int order_scheme);
 
-    void update_density_field(MultiFab& nodaldata,int refratio,amrex::Real smoothfactor);
+    void update_phase_field(MultiFab& nodaldata,int refratio,amrex::Real smoothfactor);
     amrex::Real Calculate_time_step(amrex::Real CFL, amrex::Real dtmax,amrex::Real dtmin);
     void removeParticlesInsideEB();
 

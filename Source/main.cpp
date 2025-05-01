@@ -99,7 +99,12 @@ int main (int argc, char* argv[])
         std::string grid_output_folder="./grid_files/";
         amrex::UtilCreateDirectory(grid_output_folder,0755);        
         std::string checkpoint_output_folder="./checkpoint_files/";
-        amrex::UtilCreateDirectory(checkpoint_output_folder,0755);        
+        amrex::UtilCreateDirectory(checkpoint_output_folder,0755);       
+        std::string phasefield_output_folder="./phasefield_files/";
+        if(specs.phasefield_output)
+        {
+           amrex::UtilCreateDirectory(phasefield_output_folder,0755);       
+        } 
 
         //Defining real box
         RealBox real_box;
@@ -292,17 +297,17 @@ int main (int argc, char* argv[])
         MultiFab nodaldata(nodeba, dm, NUM_STATES, ng_cells_nodaldata);
         nodaldata.setVal(0.0,ng_cells_nodaldata);
 
-        MultiFab dens_field_data;
-        BoxArray dens_ba=ba;
-        Box dom_dens = geom.Domain();
-        dom_dens.refine(specs.dens_field_gridratio);
-        Geometry geom_dens(dom_dens);
-        int ng_dens=3;
-        if(specs.dens_field_output)
+        MultiFab phasefield_data;
+        BoxArray phase_ba=ba;
+        Box dom_phasefield = geom.Domain();
+        dom_phasefield.refine(specs.phasefield_gridratio);
+        Geometry geom_phasefield(dom_phasefield);
+        int ng_phase=3;
+        if(specs.phasefield_output)
         {
-            dens_ba.refine(specs.dens_field_gridratio);
-            dens_field_data.define(dens_ba,dm,1,ng_dens);
-            dens_field_data.setVal(0.0,ng_dens);
+            phase_ba.refine(specs.phasefield_gridratio);
+            phasefield_data.define(phase_ba,dm,1,ng_phase);
+            phasefield_data.setVal(0.0,ng_phase);
         }
         PrintMessage(msg,print_length,false);
 
@@ -342,11 +347,11 @@ int main (int argc, char* argv[])
         mpm_pc.apply_constitutive_model(dt,specs.applied_strainrate);
         PrintMessage(msg,print_length,false);
 
-        msg="\n Updating density field";
+        msg="\n Updating phase field";
         PrintMessage(msg,print_length,true);
-        if(specs.dens_field_output)
+        if(specs.phasefield_output)
         {
-            mpm_pc.update_density_field(dens_field_data,specs.dens_field_gridratio,specs.smoothfactor);
+            mpm_pc.update_phase_field(phasefield_data,specs.phasefield_gridratio,specs.phasefield_smoothfactor);
         }
         PrintMessage(msg,print_length,false);
 
@@ -497,10 +502,11 @@ int main (int argc, char* argv[])
             pltfile = amrex::Concatenate(specs.prefix_gridfilename, steps,specs.num_of_digits_in_filenames);
             write_grid_file(grid_output_folder+pltfile,nodaldata,nodaldata_names,geom,ba,dm,time);
 
-            if(specs.dens_field_output)
+            if(specs.phasefield_output)
             {
-                pltfile = amrex::Concatenate(specs.prefix_densityfilename, steps, specs.num_of_digits_in_filenames);
-                WriteSingleLevelPlotfile(pltfile, dens_field_data, {"density"}, geom_dens, time, 0);
+                pltfile = amrex::Concatenate(phasefield_output_folder+specs.prefix_densityfilename, 
+                                             steps, specs.num_of_digits_in_filenames);
+                WriteSingleLevelPlotfile(pltfile, phasefield_data, {"density"}, geom_phasefield, time, 0);
             }
             PrintMessage(msg,print_length,false);
         }
@@ -777,11 +783,11 @@ int main (int argc, char* argv[])
                 }
             }
 
-            if(specs.dens_field_output)
+            if(specs.phasefield_output)
             {
-                mpm_pc.update_density_field(	dens_field_data,
-                                            specs.dens_field_gridratio,
-                                            specs.smoothfactor);
+                mpm_pc.update_phase_field(	phasefield_data,
+                                            specs.phasefield_gridratio,
+                                            specs.phasefield_smoothfactor);
             }
 
             if(specs.print_diagnostics)
@@ -927,14 +933,14 @@ int main (int argc, char* argv[])
                                               specs.tvb_L,specs.tvb_rho,time,output_it);
                 }
 
-                if(specs.dens_field_output)
+                if(specs.phasefield_output)
                 {
-                    pltfile = amrex::Concatenate(specs.prefix_densityfilename, 
+                    pltfile = amrex::Concatenate(phasefield_output_folder+specs.prefix_densityfilename, 
                                                  output_it, 
                                                  specs.num_of_digits_in_filenames);
                     
-                    WriteSingleLevelPlotfile(pltfile, dens_field_data, 
-                                             {"density"}, geom_dens, time, 0);
+                    WriteSingleLevelPlotfile(pltfile, phasefield_data, 
+                                             {"density"}, geom_phasefield, time, 0);
                 }
 
                 output_time=zero;
@@ -972,14 +978,14 @@ int main (int argc, char* argv[])
             mpm_pc.WriteDeflectionCantilever();
         }
 
-        if(specs.dens_field_output)
+        if(specs.phasefield_output)
         {
-            pltfile = amrex::Concatenate(specs.prefix_densityfilename, 
+            pltfile = amrex::Concatenate(phasefield_output_folder+specs.prefix_densityfilename, 
                                          output_it+1, 
                                          specs.num_of_digits_in_filenames);
 
-            WriteSingleLevelPlotfile(pltfile, dens_field_data, 
-                                     {"density"}, geom_dens, time, 0);
+            WriteSingleLevelPlotfile(pltfile, phasefield_data, 
+                                     {"density"}, geom_phasefield, time, 0);
         }
     }
 

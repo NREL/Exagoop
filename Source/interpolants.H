@@ -18,7 +18,16 @@ amrex::Real spherical_gaussian(amrex::Real xi[3],amrex::Real xp[3],amrex::Real r
 }
 
 AMREX_GPU_DEVICE AMREX_FORCE_INLINE
-        amrex::Real hat1d(amrex::Real xi,amrex::Real xp,amrex::Real hatsize)
+amrex::Real box_kernel(amrex::Real xi[3],amrex::Real xp[3],amrex::Real r0)
+{
+    amrex::Real r2=(xi[0]-xp[0])*(xi[0]-xp[0])+(xi[1]-xp[1])*(xi[1]-xp[1])+(xi[2]-xp[2])*(xi[2]-xp[2]);
+    amrex::Real f=(r2<r0*r0)?1.0:0.0;
+
+    return(f);
+}
+
+AMREX_GPU_DEVICE AMREX_FORCE_INLINE
+amrex::Real hat1d(amrex::Real xi,amrex::Real xp,amrex::Real hatsize)
 {
     amrex::Real zeta=xi-xp;
     amrex::Real halfhatsize=hatsize*half;
@@ -30,19 +39,19 @@ AMREX_GPU_DEVICE AMREX_FORCE_INLINE
     {
         if(zeta>0.0)
         {
-           funcval = -slope*zeta + maxval;       
+            funcval = -slope*zeta + maxval;       
         }
         else
         {
-           funcval =  slope*zeta + maxval;
+            funcval =  slope*zeta + maxval;
         }
     }
     return(funcval);
 }
 
 AMREX_GPU_DEVICE AMREX_FORCE_INLINE
-        amrex::Real hat3d(amrex::Real xi[AMREX_SPACEDIM], amrex::Real xp[AMREX_SPACEDIM],
-                amrex::Real hatsize[AMREX_SPACEDIM])
+amrex::Real hat3d(amrex::Real xi[AMREX_SPACEDIM], amrex::Real xp[AMREX_SPACEDIM],
+                  amrex::Real hatsize[AMREX_SPACEDIM])
 {
     amrex::Real funcval=one;
     funcval *= hat1d(xi[XDIR],xp[XDIR],hatsize[XDIR]);
@@ -53,11 +62,11 @@ AMREX_GPU_DEVICE AMREX_FORCE_INLINE
 }
 
 AMREX_GPU_DEVICE AMREX_FORCE_INLINE
-        amrex::Real bilin_interp(amrex::Real xp[AMREX_SPACEDIM], int i, int j, int k, 
-                const amrex::GpuArray<amrex::Real, AMREX_SPACEDIM> plo, 
-                const amrex::GpuArray<amrex::Real, AMREX_SPACEDIM> dx,
-                amrex::Array4<amrex::Real> nodaldata,
-				int comp)
+amrex::Real bilin_interp(amrex::Real xp[AMREX_SPACEDIM], int i, int j, int k, 
+                         const amrex::GpuArray<amrex::Real, AMREX_SPACEDIM> plo, 
+                         const amrex::GpuArray<amrex::Real, AMREX_SPACEDIM> dx,
+                         amrex::Array4<amrex::Real> nodaldata,
+                         int comp)
 {
 
     amrex::Real alpha,beta,gama;
@@ -72,42 +81,42 @@ AMREX_GPU_DEVICE AMREX_FORCE_INLINE
     value += alpha       * (1-beta) * (1-gama) * nodaldata(i+1,j,k,comp);
     value += (1.0-alpha) * beta     * (1-gama) * nodaldata(i,j+1,k,comp);
     value += alpha       * beta     * (1-gama) * nodaldata(i+1,j+1,k,comp);
-    
+
     value += (1.0-alpha) * (1-beta)  * gama  * nodaldata(i,j,k+1,comp);
     value += alpha       * (1-beta)  * gama  * nodaldata(i+1,j,k+1,comp);
     value += (1.0-alpha) * beta      * gama  * nodaldata(i,j+1,k+1,comp);
     value += alpha       * beta      * gama  * nodaldata(i+1,j+1,k+1,comp);
-    
+
     return(value);
 }
 
 
 AMREX_GPU_DEVICE AMREX_FORCE_INLINE
-        amrex::Real cubicspline_1d_der(int shapefunctiontype,amrex:: Real zi)
+amrex::Real cubicspline_1d_der(int shapefunctiontype,amrex:: Real zi)
 {
-	amrex::Real value=0.0;
-	if(shapefunctiontype==1)	//Boundary node
-	{
-		if(zi>=-2 && zi<=-1)
-		{
-			value=zi*zi/2.0+2*zi+2.0;
-		}
-		else if(zi>=-1 && zi<=0)
-		{
-			value=-zi*zi/2.0+1.0;
-		}
-		else if(zi>=0 && zi<=1)
-		{
-			value=zi*zi/2.0-1.0;
-		}
-		else if(zi>=1 && zi<=2.0)
-		{
-			value=-zi*zi/2.0+2*zi-2.0;
-		}
-	}
-	else if(shapefunctiontype==2)	//Near Boundary node
-	{
-		if(zi>=-1 && zi<=0)
+    amrex::Real value=0.0;
+    if(shapefunctiontype==1)	//Boundary node
+    {
+        if(zi>=-2 && zi<=-1)
+        {
+            value=zi*zi/2.0+2*zi+2.0;
+        }
+        else if(zi>=-1 && zi<=0)
+        {
+            value=-zi*zi/2.0+1.0;
+        }
+        else if(zi>=0 && zi<=1)
+        {
+            value=zi*zi/2.0-1.0;
+        }
+        else if(zi>=1 && zi<=2.0)
+        {
+            value=-zi*zi/2.0+2*zi-2.0;
+        }
+    }
+    else if(shapefunctiontype==2)	//Near Boundary node
+    {
+        if(zi>=-1 && zi<=0)
 		{
 			value=-zi*zi-2.0*zi;
 		}

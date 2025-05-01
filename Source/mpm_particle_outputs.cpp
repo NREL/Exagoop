@@ -3,10 +3,10 @@
 #include <AMReX_PlotFileUtil.H>
 #include <AMReX_AmrMesh.H>
 
-void MPMParticleContainer::update_density_field(MultiFab& densdata,int refratio,Real smoothfactor)
+void MPMParticleContainer::update_phase_field(MultiFab& phasedata,int refratio,Real smoothfactor)
 {
-    int ng_dens=3;
-    densdata.setVal(zero,ng_dens);
+    int ng_phase=3;
+    phasedata.setVal(zero,ng_phase);
     const int lev = 0;
     const Geometry& geom = Geom(lev);
     auto& plev  = GetParticles(lev);
@@ -29,7 +29,7 @@ void MPMParticleContainer::update_density_field(MultiFab& densdata,int refratio,
     {
         amrex::Box box = mfi.tilebox();
         amrex::Box& refbox = box.refine(refratio);
-        const amrex::Box& refboxgrow = amrex::grow(refbox,ng_dens);
+        const amrex::Box& refboxgrow = amrex::grow(refbox,ng_phase);
         int gid = mfi.index();
         int tid = mfi.LocalTileIndex();
         auto index = std::make_pair(gid, tid);
@@ -39,7 +39,7 @@ void MPMParticleContainer::update_density_field(MultiFab& densdata,int refratio,
         int np = aos.numRealParticles();
         int nt = np;
 
-        Array4<Real> dens_data_arr=densdata.array(mfi);
+        Array4<Real> phase_data_arr=phasedata.array(mfi);
 
         ParticleType* pstruct = aos().dataPtr();
 
@@ -61,7 +61,6 @@ void MPMParticleContainer::update_density_field(MultiFab& densdata,int refratio,
                         {
                             amrex::Real xp[AMREX_SPACEDIM];
                             amrex::Real xi[AMREX_SPACEDIM];
-                            amrex::Real weight;
 
                             xp[XDIR]=p.pos(XDIR);
                             xp[YDIR]=p.pos(YDIR);
@@ -71,12 +70,14 @@ void MPMParticleContainer::update_density_field(MultiFab& densdata,int refratio,
                             xi[YDIR]=plo[YDIR]+(ivlocal[YDIR]+half)*dx[YDIR];
                             xi[ZDIR]=plo[ZDIR]+(ivlocal[ZDIR]+half)*dx[ZDIR];
 
-                            weight=p.rdata(realData::mass)*
-                            spherical_gaussian(xi,xp,smoothfactor*p.rdata(realData::radius));
+                            //amrex::Real weight=p.rdata(realData::mass)*
+                            //spherical_gaussian(xi,xp,smoothfactor*p.rdata(realData::radius));
+                            //
+                            amrex::Real is_inside_particle=box_kernel(xi,xp,smoothfactor*p.rdata(realData::radius));
 
                             amrex::Gpu::Atomic::AddNoRet(
-                                &dens_data_arr(ivlocal),
-                                weight);
+                                &phase_data_arr(ivlocal),
+                                is_inside_particle);
                         }
                         //else
                         //{
@@ -90,7 +91,24 @@ void MPMParticleContainer::update_density_field(MultiFab& densdata,int refratio,
 
     }
 
-    densdata.SumBoundary(geom.periodicity());
+    phasedata.SumBoundary(geom.periodicity());
+    
+    //set maximum value to 1
+    for(MFIter mfi = MakeMFIter(lev); mfi.isValid(); ++mfi)
+    {
+        amrex::Box box = mfi.tilebox();
+        amrex::Box& refbox = box.refine(refratio);
+        Array4<Real> phase_data_arr=phasedata.array(mfi);
+        
+        amrex::ParallelFor(refbox,[=]
+        AMREX_GPU_DEVICE (int i,int j,int k) noexcept
+        {
+            if(phase_data_arr(i,j,k)>1.0)
+            {
+                phase_data_arr(i,j,k)=1.0;
+            }
+        });
+    }
 }
 
 void MPMParticleContainer::writeParticles(std::string prefix_particlefilename, int num_of_digits_in_filenames, const int n)

@@ -91,7 +91,7 @@ void MPMParticleContainer::updateVolume(const amrex::Real& dt)
 				p.rdata(realData::jacobian) = p.rdata(realData::deformation_gradient+0)*(p.rdata(realData::deformation_gradient+4)*p.rdata(realData::deformation_gradient+8)-p.rdata(realData::deformation_gradient+7)*p.rdata(realData::deformation_gradient+5))-
 											  p.rdata(realData::deformation_gradient+1)*(p.rdata(realData::deformation_gradient+3)*p.rdata(realData::deformation_gradient+8)-p.rdata(realData::deformation_gradient+6)*p.rdata(realData::deformation_gradient+5))+
 											  p.rdata(realData::deformation_gradient+2)*(p.rdata(realData::deformation_gradient+3)*p.rdata(realData::deformation_gradient+7)-p.rdata(realData::deformation_gradient+6)*p.rdata(realData::deformation_gradient+4));
-				p.rdata(realData::volume)	= p.rdata(realData::vol_init)*p.rdata(realData::jacobian);
+				//p.rdata(realData::volume)	= p.rdata(realData::vol_init)*p.rdata(realData::jacobian);
 				p.rdata(realData::density)	= p.rdata(realData::mass)/p.rdata(realData::volume);
             }
         });
