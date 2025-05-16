@@ -27,6 +27,16 @@ amrex::Real box_kernel(amrex::Real xi[3],amrex::Real xp[3],amrex::Real r0)
 }
 
 AMREX_GPU_DEVICE AMREX_FORCE_INLINE
+amrex::Real levelset(amrex::Real xi[3],amrex::Real xp[3],amrex::Real r0,amrex::Real minval=-1.0,amrex::Real maxval=1.0)
+{
+    amrex::Real r2=(xi[0]-xp[0])*(xi[0]-xp[0])+(xi[1]-xp[1])*(xi[1]-xp[1])+(xi[2]-xp[2])*(xi[2]-xp[2]);
+    amrex::Real f1=(r2<r0*r0)?minval:std::sqrt(r2);
+    amrex::Real f2=(f1>3.0*r0)?maxval:f1;
+
+    return(f2);
+}
+
+AMREX_GPU_DEVICE AMREX_FORCE_INLINE
 amrex::Real hat1d(amrex::Real xi,amrex::Real xp,amrex::Real hatsize)
 {
     amrex::Real zeta=xi-xp;

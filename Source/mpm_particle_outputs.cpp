@@ -6,13 +6,19 @@
 void MPMParticleContainer::update_phase_field(MultiFab& phasedata,int refratio,Real smoothfactor)
 {
     int ng_phase=3;
-    phasedata.setVal(zero,ng_phase);
     const int lev = 0;
     const Geometry& geom = Geom(lev);
     auto& plev  = GetParticles(lev);
     GpuArray<Real,AMREX_SPACEDIM> dxi = geom.InvCellSizeArray();
     GpuArray<Real,AMREX_SPACEDIM> dx = geom.CellSizeArray();
     const auto plo = geom.ProbLoArray();
+    const auto phi = geom.ProbHiArray();
+
+    amrex::Real maxdist=10.0*std::sqrt((phi[XDIR]-plo[XDIR])*(phi[XDIR]-plo[XDIR])+
+                                  (phi[YDIR]-plo[YDIR])*(phi[YDIR]-plo[YDIR])+
+                                  (phi[ZDIR]-plo[ZDIR])*(phi[ZDIR]-plo[ZDIR]));
+    phasedata.setVal(maxdist,ng_phase);
+
     Box domain = geom.Domain();
     domain.refine(refratio);
 
@@ -73,11 +79,11 @@ void MPMParticleContainer::update_phase_field(MultiFab& phasedata,int refratio,R
                             //amrex::Real weight=p.rdata(realData::mass)*
                             //spherical_gaussian(xi,xp,smoothfactor*p.rdata(realData::radius));
                             //
-                            amrex::Real is_inside_particle=box_kernel(xi,xp,smoothfactor*p.rdata(realData::radius));
+                            amrex::Real dist=levelset(xi,xp,smoothfactor*p.rdata(realData::radius),-1,maxdist);
 
-                            amrex::Gpu::Atomic::AddNoRet(
+                            amrex::Gpu::Atomic::Min(
                                 &phase_data_arr(ivlocal),
-                                is_inside_particle);
+                                dist);
                         }
                         //else
                         //{
@@ -91,7 +97,13 @@ void MPMParticleContainer::update_phase_field(MultiFab& phasedata,int refratio,R
 
     }
 
-    phasedata.SumBoundary(geom.periodicity());
+    //FIXLATER HARI:-------------------------
+    //ideally we need a minboundary function
+    //which is not there in amrex
+    //but if the levset grid is sufficiently larger than
+    //particle radii (dx>3*radius) it wouldnt matter
+    //-------------------------------------
+    /*phasedata.SumBoundary(geom.periodicity());
     
     //set maximum value to 1
     for(MFIter mfi = MakeMFIter(lev); mfi.isValid(); ++mfi)
@@ -108,7 +120,7 @@ void MPMParticleContainer::update_phase_field(MultiFab& phasedata,int refratio,R
                 phase_data_arr(i,j,k)=1.0;
             }
         });
-    }
+    }*/
 }
 
 void MPMParticleContainer::writeParticles(std::string prefix_particlefilename, int num_of_digits_in_filenames, const int n)
