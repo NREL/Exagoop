@@ -153,9 +153,9 @@ class MPMspecs
 
         Real applied_strainrate=0.0;
         Real applied_strainrate_time=0.0;
-        int phasefield_output=0;
-        int phasefield_gridratio=1;
-        Real phasefield_smoothfactor=1.0;
+        int levset_output=0;
+        int levset_gridratio=1;
+        Real levset_smoothfactor=1.0;
         int external_loads_present=0.0;
         int fixed_timestep = 0;				//Use fixed time step provided by user if this flag is 1
         Real dt_max_limit=1e0;
@@ -321,9 +321,9 @@ class MPMspecs
             pp.query("order_scheme",order_scheme);
             pp.query("mass_tolerance",mass_tolerance);
 
-            pp.query("phasefield_output",phasefield_output);
-            pp.query("phasefield_smoothfactor",phasefield_smoothfactor);
-            pp.query("phasefield_gridratio",phasefield_gridratio);
+            pp.query("levset_output",levset_output);
+            pp.query("levset_smoothfactor",levset_smoothfactor);
+            pp.query("levset_gridratio",levset_gridratio);
 
             pp.query("external_loads",external_loads_present); 
             if(external_loads_present)
