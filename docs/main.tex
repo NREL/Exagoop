@@ -1,0 +1,89 @@
+%% LaTeX version of the M$ Word NREL Milestone template
+\documentclass[letterpaper,11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{fancyhdr}
+\usepackage{calc}
+\usepackage{amsmath,amssymb}
+\usepackage{tabularx}
+\usepackage{graphicx}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{physics}
+\usepackage{makecell,multirow}
+\usepackage[usenames,dvipsnames,table]{xcolor}
+% fonts
+\usepackage[T1]{fontenc}
+\usepackage{mathptmx}
+\usepackage[square,numbers,sort&compress]{natbib}
+\bibliographystyle{unsrt}
+
+\newcommand{\Ex}{\textit{Exagoop}~}
+
+% headers, footers
+\fancypagestyle{firststyle}
+{
+  \renewcommand{\headrulewidth}{0pt} % remove line under header
+  \fancyhf{} % I think this clears all the default headers and footers
+  %\lhead{\includegraphics[width=2in]{nrel_logo_2009.pdf}}
+  \chead{\includegraphics[width=\linewidth]{nawi_pic.png}}
+  
+  % now get the headheight to be the height of the graphics set in the header
+}
+\title{}
+\author{\bf 
+TASK 6.11: UHPRO Membrane and Module Design and Optimization\\ \\
+    Milestone 6.11.3\\ \\
+    MPM simulation results calibrated to +/-20\%\\
+    against in operando and post-mortem compaction characterizations\\ \\
+    \textbf{Responsible personnel:} Sreejith Appukuttan, Hari Sitaraman, Marc Day\\
+    National Renewable Energy Laboratory}
+  \date{\today}
+
+%%%% markup tools  %%%%%%
+\newcommand{\comment}[1]{\textcolor{Green}{#1}}
+%%%% shift left to provide a larger right margin for notes -- comment out
+%%%% before submit
+%\addtolength{\hoffset}{-0.7in} 
+% package "todonotes" enables margin comment boxes
+%\usepackage[backgroundcolor=yellow, linecolor=red, textwidth=2.1in, textsize=footnotesize]{todonotes}
+
+\usepackage{setspace}
+\usepackage{makecell,multirow}
+\usepackage{amstext,amsmath,amsfonts,amssymb,color}
+\usepackage{mathtools}
+\usepackage{tikz}
+\usepackage[framemethod=tikz]{mdframed}
+\usetikzlibrary{patterns}
+\usetikzlibrary{patterns.meta}
+\usetikzlibrary{shapes.geometric}
+
+\usepackage{floatrow}
+% Table float box with bottom caption, box width adjusted to content
+\newfloatcommand{capbtabbox}{table}[][\FBwidth]
+
+\begin{document}
+
+\maketitle
+\pagestyle{plain}
+\thispagestyle{firststyle}
+
+
+\begin{flushleft}
+\raisebox{3.2in}[0pt]{National Alliance for Water Innovation}
+\end{flushleft}
+
+
+\section*{Executive Summary:}
+
+This report presents the validation of our computational model against membrane compaction experiments for high-pressure reverse osmosis applications. We utilize our in-house developed open-source material point method solver in this work.
+\input{intro}
+\input{theory}
+\input{mpm_equations}
+\input{Validation}
+\input{results}
+\input{conclusions}
+\newpage{}
+\bibliography{refs}
+%\bibliographystyle{unsrt}
+%
+\end{document}
