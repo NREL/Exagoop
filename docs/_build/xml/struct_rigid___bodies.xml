@@ -1,0 +1,210 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.14.0" xml:lang="en-US">
+  <compounddef id="struct_rigid___bodies" kind="struct" language="C++" prot="public">
+    <compoundname>Rigid_Bodies</compoundname>
+    <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="struct_rigid___bodies_1a131c44c0275c0e0bdf16fb5c8819bee6" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int Rigid_Bodies::Rigid_Body_Id</definition>
+        <argsstring></argsstring>
+        <name>Rigid_Body_Id</name>
+        <qualifiedname>Rigid_Bodies::Rigid_Body_Id</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_specs.H" line="55" column="5" bodyfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_specs.H" bodystart="55" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="struct_rigid___bodies_1a1be2a1c201ffb1f94bcfadec4e564bd5" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int Rigid_Bodies::num_of_mp</definition>
+        <argsstring></argsstring>
+        <name>num_of_mp</name>
+        <qualifiedname>Rigid_Bodies::num_of_mp</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_specs.H" line="56" column="5" bodyfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_specs.H" bodystart="56" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="struct_rigid___bodies_1a827ef2412b574062821210e97da74be5" prot="public" static="no" mutable="no">
+        <type>amrex::Real</type>
+        <definition>amrex::Real Rigid_Bodies::total_mass</definition>
+        <argsstring></argsstring>
+        <name>total_mass</name>
+        <qualifiedname>Rigid_Bodies::total_mass</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_specs.H" line="57" column="13" bodyfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_specs.H" bodystart="57" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="struct_rigid___bodies_1af963c559cfaf1e775afc10c831c27217" prot="public" static="no" mutable="no">
+        <type>amrex::Real</type>
+        <definition>amrex::Real Rigid_Bodies::total_volume</definition>
+        <argsstring></argsstring>
+        <name>total_volume</name>
+        <qualifiedname>Rigid_Bodies::total_volume</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_specs.H" line="58" column="13" bodyfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_specs.H" bodystart="58" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="struct_rigid___bodies_1a88e11cb0ae190dd46396aed2877ccc52" prot="public" static="no" mutable="no">
+        <type>Array&lt; amrex::Real, AMREX_SPACEDIM &gt;</type>
+        <definition>Array&lt;amrex::Real,AMREX_SPACEDIM&gt; Rigid_Bodies::gravity</definition>
+        <argsstring></argsstring>
+        <name>gravity</name>
+        <qualifiedname>Rigid_Bodies::gravity</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_specs.H" line="59" column="8" bodyfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_specs.H" bodystart="59" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="struct_rigid___bodies_1ae0e202624b5c9fa25f832a2a2cc178b5" prot="public" static="no" mutable="no">
+        <type>Array&lt; amrex::Real, AMREX_SPACEDIM &gt;</type>
+        <definition>Array&lt;amrex::Real,AMREX_SPACEDIM&gt; Rigid_Bodies::force_external</definition>
+        <argsstring></argsstring>
+        <name>force_external</name>
+        <qualifiedname>Rigid_Bodies::force_external</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_specs.H" line="60" column="8" bodyfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_specs.H" bodystart="60" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="struct_rigid___bodies_1ac5d3b841d67a8d028c8cd482278ce521" prot="public" static="no" mutable="no">
+        <type>Array&lt; amrex::Real, AMREX_SPACEDIM &gt;</type>
+        <definition>Array&lt;amrex::Real,AMREX_SPACEDIM&gt; Rigid_Bodies::force_internal</definition>
+        <argsstring></argsstring>
+        <name>force_internal</name>
+        <qualifiedname>Rigid_Bodies::force_internal</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_specs.H" line="61" column="8" bodyfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_specs.H" bodystart="61" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="struct_rigid___bodies_1afdcc859384abd31b6f229dc1f5be562f" prot="public" static="no" mutable="no">
+        <type>Array&lt; amrex::Real, AMREX_SPACEDIM &gt;</type>
+        <definition>Array&lt;amrex::Real,AMREX_SPACEDIM&gt; Rigid_Bodies::velocity</definition>
+        <argsstring></argsstring>
+        <name>velocity</name>
+        <qualifiedname>Rigid_Bodies::velocity</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_specs.H" line="62" column="8" bodyfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_specs.H" bodystart="62" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="struct_rigid___bodies_1ae6e87693e8dd809dbd7058dd688736f6" prot="public" static="no" mutable="no">
+        <type>Array&lt; amrex::Real, AMREX_SPACEDIM &gt;</type>
+        <definition>Array&lt;amrex::Real,AMREX_SPACEDIM&gt; Rigid_Bodies::imposed_velocity</definition>
+        <argsstring></argsstring>
+        <name>imposed_velocity</name>
+        <qualifiedname>Rigid_Bodies::imposed_velocity</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_specs.H" line="63" column="8" bodyfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_specs.H" bodystart="63" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="struct_rigid___bodies_1a718bd13717dbcf72e10126c0bd054bb1" prot="public" static="no" mutable="no">
+        <type>amrex::Real</type>
+        <definition>amrex::Real Rigid_Bodies::Damping_Coefficient</definition>
+        <argsstring></argsstring>
+        <name>Damping_Coefficient</name>
+        <qualifiedname>Rigid_Bodies::Damping_Coefficient</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_specs.H" line="64" column="13" bodyfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_specs.H" bodystart="64" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="struct_rigid___bodies_1a71bba2e68948bb42de59791d88522128" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int Rigid_Bodies::position_update_method</definition>
+        <argsstring></argsstring>
+        <name>position_update_method</name>
+        <qualifiedname>Rigid_Bodies::position_update_method</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_specs.H" line="66" column="5" bodyfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_specs.H" bodystart="66" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="struct_rigid___bodies_1affbe33e69409b2eb97a0aa627be7c06f" prot="public" static="no" mutable="no">
+        <type>bool</type>
+        <definition>bool Rigid_Bodies::enable_weight</definition>
+        <argsstring></argsstring>
+        <name>enable_weight</name>
+        <qualifiedname>Rigid_Bodies::enable_weight</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_specs.H" line="67" column="6" bodyfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_specs.H" bodystart="67" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="struct_rigid___bodies_1adf470d46dd711c4f8e5ad9d012419a3b" prot="public" static="no" mutable="no">
+        <type>bool</type>
+        <definition>bool Rigid_Bodies::enable_damping_force</definition>
+        <argsstring></argsstring>
+        <name>enable_damping_force</name>
+        <qualifiedname>Rigid_Bodies::enable_damping_force</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_specs.H" line="68" column="6" bodyfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_specs.H" bodystart="68" bodyend="-1"/>
+      </memberdef>
+    </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_specs.H" line="53" column="1" bodyfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_specs.H" bodystart="54" bodyend="69"/>
+    <listofallmembers>
+      <member refid="struct_rigid___bodies_1a718bd13717dbcf72e10126c0bd054bb1" prot="public" virt="non-virtual"><scope>Rigid_Bodies</scope><name>Damping_Coefficient</name></member>
+      <member refid="struct_rigid___bodies_1adf470d46dd711c4f8e5ad9d012419a3b" prot="public" virt="non-virtual"><scope>Rigid_Bodies</scope><name>enable_damping_force</name></member>
+      <member refid="struct_rigid___bodies_1affbe33e69409b2eb97a0aa627be7c06f" prot="public" virt="non-virtual"><scope>Rigid_Bodies</scope><name>enable_weight</name></member>
+      <member refid="struct_rigid___bodies_1ae0e202624b5c9fa25f832a2a2cc178b5" prot="public" virt="non-virtual"><scope>Rigid_Bodies</scope><name>force_external</name></member>
+      <member refid="struct_rigid___bodies_1ac5d3b841d67a8d028c8cd482278ce521" prot="public" virt="non-virtual"><scope>Rigid_Bodies</scope><name>force_internal</name></member>
+      <member refid="struct_rigid___bodies_1a88e11cb0ae190dd46396aed2877ccc52" prot="public" virt="non-virtual"><scope>Rigid_Bodies</scope><name>gravity</name></member>
+      <member refid="struct_rigid___bodies_1ae6e87693e8dd809dbd7058dd688736f6" prot="public" virt="non-virtual"><scope>Rigid_Bodies</scope><name>imposed_velocity</name></member>
+      <member refid="struct_rigid___bodies_1a1be2a1c201ffb1f94bcfadec4e564bd5" prot="public" virt="non-virtual"><scope>Rigid_Bodies</scope><name>num_of_mp</name></member>
+      <member refid="struct_rigid___bodies_1a71bba2e68948bb42de59791d88522128" prot="public" virt="non-virtual"><scope>Rigid_Bodies</scope><name>position_update_method</name></member>
+      <member refid="struct_rigid___bodies_1a131c44c0275c0e0bdf16fb5c8819bee6" prot="public" virt="non-virtual"><scope>Rigid_Bodies</scope><name>Rigid_Body_Id</name></member>
+      <member refid="struct_rigid___bodies_1a827ef2412b574062821210e97da74be5" prot="public" virt="non-virtual"><scope>Rigid_Bodies</scope><name>total_mass</name></member>
+      <member refid="struct_rigid___bodies_1af963c559cfaf1e775afc10c831c27217" prot="public" virt="non-virtual"><scope>Rigid_Bodies</scope><name>total_volume</name></member>
+      <member refid="struct_rigid___bodies_1afdcc859384abd31b6f229dc1f5be562f" prot="public" virt="non-virtual"><scope>Rigid_Bodies</scope><name>velocity</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

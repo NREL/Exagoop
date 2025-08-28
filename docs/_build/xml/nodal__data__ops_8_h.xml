@@ -1,0 +1,403 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.14.0" xml:lang="en-US">
+  <compounddef id="nodal__data__ops_8_h" kind="file" language="C++">
+    <compoundname>nodal_data_ops.H</compoundname>
+    <includes local="no">AMReX.H</includes>
+    <includes local="no">AMReX_MultiFab.H</includes>
+    <includes refid="constants_8_h" local="no">constants.H</includes>
+    <includes local="no">AMReX_PlotFileUtil.H</includes>
+    <includes local="no">AMReX_MultiFabUtil.H</includes>
+    <includedby refid="main_8cpp" local="no">E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/main.cpp</includedby>
+    <includedby refid="nodal__data__ops_8cpp" local="no">E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/nodal_data_ops.cpp</includedby>
+    <incdepgraph>
+      <node id="2">
+        <label>AMReX.H</label>
+      </node>
+      <node id="3">
+        <label>AMReX_MultiFab.H</label>
+      </node>
+      <node id="6">
+        <label>AMReX_MultiFabUtil.H</label>
+      </node>
+      <node id="5">
+        <label>AMReX_PlotFileUtil.H</label>
+      </node>
+      <node id="4">
+        <label>constants.H</label>
+        <link refid="constants_8_h_source"/>
+      </node>
+      <node id="1">
+        <label>E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/nodal_data_ops.H</label>
+        <link refid="nodal__data__ops_8_h"/>
+        <childnode refid="2" relation="include">
+        </childnode>
+        <childnode refid="3" relation="include">
+        </childnode>
+        <childnode refid="4" relation="include">
+        </childnode>
+        <childnode refid="5" relation="include">
+        </childnode>
+        <childnode refid="6" relation="include">
+        </childnode>
+      </node>
+    </incdepgraph>
+    <sectiondef kind="func">
+      <memberdef kind="function" id="nodal__data__ops_8_h_1acce84e6d21d4828bdcd1142ab97b5803" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void write_grid_file</definition>
+        <argsstring>(std::string fname, amrex::MultiFab &amp;nodaldata, amrex::Vector&lt; std::string &gt; fieldnames, amrex::Geometry geom, amrex::BoxArray ba, amrex::DistributionMapping dm, amrex::Real time)</argsstring>
+        <name>write_grid_file</name>
+        <param>
+          <type>std::string</type>
+          <declname>fname</declname>
+        </param>
+        <param>
+          <type>amrex::MultiFab &amp;</type>
+          <declname>nodaldata</declname>
+        </param>
+        <param>
+          <type>amrex::Vector&lt; std::string &gt;</type>
+          <declname>fieldnames</declname>
+        </param>
+        <param>
+          <type>amrex::Geometry</type>
+          <declname>geom</declname>
+        </param>
+        <param>
+          <type>amrex::BoxArray</type>
+          <declname>ba</declname>
+        </param>
+        <param>
+          <type>amrex::DistributionMapping</type>
+          <declname>dm</declname>
+        </param>
+        <param>
+          <type>amrex::Real</type>
+          <declname>time</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/nodal_data_ops.H" line="10" column="6" declfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/nodal_data_ops.H" declline="10" declcolumn="6"/>
+      </memberdef>
+      <memberdef kind="function" id="nodal__data__ops_8_h_1a81c625e5f02516a9238bb536eee8fc10" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void backup_current_velocity</definition>
+        <argsstring>(amrex::MultiFab &amp;nodaldata)</argsstring>
+        <name>backup_current_velocity</name>
+        <param>
+          <type>amrex::MultiFab &amp;</type>
+          <declname>nodaldata</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/nodal_data_ops.H" line="13" column="6" declfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/nodal_data_ops.H" declline="13" declcolumn="6"/>
+      </memberdef>
+      <memberdef kind="function" id="nodal__data__ops_8_h_1a990b60bd8c358733651abc3308af7244" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void store_delta_velocity</definition>
+        <argsstring>(amrex::MultiFab &amp;nodaldata)</argsstring>
+        <name>store_delta_velocity</name>
+        <param>
+          <type>amrex::MultiFab &amp;</type>
+          <declname>nodaldata</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/nodal_data_ops.H" line="14" column="6" declfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/nodal_data_ops.H" declline="14" declcolumn="6"/>
+      </memberdef>
+      <memberdef kind="function" id="nodal__data__ops_8_h_1a3534475674ea1d341b6a5507f74edcc5" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void nodal_update</definition>
+        <argsstring>(amrex::MultiFab &amp;nodaldata, const amrex::Real &amp;dt, const amrex::Real &amp;mass_tolerance)</argsstring>
+        <name>nodal_update</name>
+        <param>
+          <type>amrex::MultiFab &amp;</type>
+          <declname>nodaldata</declname>
+        </param>
+        <param>
+          <type>const amrex::Real &amp;</type>
+          <declname>dt</declname>
+        </param>
+        <param>
+          <type>const amrex::Real &amp;</type>
+          <declname>mass_tolerance</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/nodal_data_ops.H" line="15" column="6" declfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/nodal_data_ops.H" declline="15" declcolumn="6"/>
+      </memberdef>
+      <memberdef kind="function" id="nodal__data__ops_8_h_1aec77171cf69d0285a9e136e15e8677b3" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void nodal_detect_contact</definition>
+        <argsstring>(amrex::MultiFab &amp;nodaldata, const amrex::Geometry geom, amrex::Real &amp;contact_tolerance, amrex::GpuArray&lt; amrex::GpuArray&lt; amrex::Real, AMREX_SPACEDIM &gt;, numrigidbodies &gt;)</argsstring>
+        <name>nodal_detect_contact</name>
+        <param>
+          <type>amrex::MultiFab &amp;</type>
+          <declname>nodaldata</declname>
+        </param>
+        <param>
+          <type>const amrex::Geometry</type>
+          <declname>geom</declname>
+        </param>
+        <param>
+          <type>amrex::Real &amp;</type>
+          <declname>contact_tolerance</declname>
+        </param>
+        <param>
+          <type>amrex::GpuArray&lt; amrex::GpuArray&lt; amrex::Real, AMREX_SPACEDIM &gt;, numrigidbodies &gt;</type>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/nodal_data_ops.H" line="16" column="6" declfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/nodal_data_ops.H" declline="16" declcolumn="6"/>
+      </memberdef>
+      <memberdef kind="function" id="nodal__data__ops_8_h_1a3d366d01328065d3d55d6936a0c13d54" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void initialise_shape_function_indices</definition>
+        <argsstring>(amrex::iMultiFab &amp;shapefunctionindex, const amrex::Geometry geom)</argsstring>
+        <name>initialise_shape_function_indices</name>
+        <param>
+          <type>amrex::iMultiFab &amp;</type>
+          <declname>shapefunctionindex</declname>
+        </param>
+        <param>
+          <type>const amrex::Geometry</type>
+          <declname>geom</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/nodal_data_ops.H" line="17" column="6" declfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/nodal_data_ops.H" declline="17" declcolumn="6"/>
+      </memberdef>
+      <memberdef kind="function" id="nodal__data__ops_8_h_1aac0452d85b2957a5a5fcc7d8215c5064" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void nodal_bcs</definition>
+        <argsstring>(const amrex::Geometry geom, amrex::MultiFab &amp;nodaldata, int bclo[AMREX_SPACEDIM], int bchi[AMREX_SPACEDIM], amrex::Real wall_mu_lo[AMREX_SPACEDIM], amrex::Real wall_mu_hi[AMREX_SPACEDIM], amrex::Real wall_vel_lo[AMREX_SPACEDIM *AMREX_SPACEDIM], amrex::Real wall_vel_hi[AMREX_SPACEDIM *AMREX_SPACEDIM], const amrex::Real &amp;dt)</argsstring>
+        <name>nodal_bcs</name>
+        <param>
+          <type>const amrex::Geometry</type>
+          <declname>geom</declname>
+        </param>
+        <param>
+          <type>amrex::MultiFab &amp;</type>
+          <declname>nodaldata</declname>
+        </param>
+        <param>
+          <type>int</type>
+          <declname>bclo</declname>
+          <array>[AMREX_SPACEDIM]</array>
+        </param>
+        <param>
+          <type>int</type>
+          <declname>bchi</declname>
+          <array>[AMREX_SPACEDIM]</array>
+        </param>
+        <param>
+          <type>amrex::Real</type>
+          <declname>wall_mu_lo</declname>
+          <array>[AMREX_SPACEDIM]</array>
+        </param>
+        <param>
+          <type>amrex::Real</type>
+          <declname>wall_mu_hi</declname>
+          <array>[AMREX_SPACEDIM]</array>
+        </param>
+        <param>
+          <type>amrex::Real</type>
+          <declname>wall_vel_lo</declname>
+          <array>[AMREX_SPACEDIM *AMREX_SPACEDIM]</array>
+        </param>
+        <param>
+          <type>amrex::Real</type>
+          <declname>wall_vel_hi</declname>
+          <array>[AMREX_SPACEDIM *AMREX_SPACEDIM]</array>
+        </param>
+        <param>
+          <type>const amrex::Real &amp;</type>
+          <declname>dt</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/nodal_data_ops.H" line="20" column="6" declfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/nodal_data_ops.H" declline="20" declcolumn="6"/>
+      </memberdef>
+      <memberdef kind="function" id="nodal__data__ops_8_h_1ae9500b4b48c4af1ea5e19fff939be146" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void nodal_bcs</definition>
+        <argsstring>(const amrex::Geometry geom, amrex::MultiFab &amp;nodaldata, const amrex::Real &amp;dt)</argsstring>
+        <name>nodal_bcs</name>
+        <param>
+          <type>const amrex::Geometry</type>
+          <declname>geom</declname>
+        </param>
+        <param>
+          <type>amrex::MultiFab &amp;</type>
+          <declname>nodaldata</declname>
+        </param>
+        <param>
+          <type>const amrex::Real &amp;</type>
+          <declname>dt</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/nodal_data_ops.H" line="26" column="6" declfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/nodal_data_ops.H" declline="26" declcolumn="6"/>
+      </memberdef>
+      <memberdef kind="function" id="nodal__data__ops_8_h_1a84a1e395d30120d2fc87601d4f3c20db" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void CalculateSurfaceIntegralOnBG</definition>
+        <argsstring>(const amrex::Geometry geom, amrex::MultiFab &amp;nodaldata, int nodaldataindex, amrex::Real &amp;integral_value)</argsstring>
+        <name>CalculateSurfaceIntegralOnBG</name>
+        <param>
+          <type>const amrex::Geometry</type>
+          <declname>geom</declname>
+        </param>
+        <param>
+          <type>amrex::MultiFab &amp;</type>
+          <declname>nodaldata</declname>
+        </param>
+        <param>
+          <type>int</type>
+          <declname>nodaldataindex</declname>
+        </param>
+        <param>
+          <type>amrex::Real &amp;</type>
+          <declname>integral_value</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/nodal_data_ops.H" line="27" column="6" bodyfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/nodal_data_ops.cpp" bodystart="450" bodyend="475" declfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/nodal_data_ops.H" declline="27" declcolumn="6"/>
+      </memberdef>
+      <memberdef kind="function" id="nodal__data__ops_8_h_1ac2bc971f20a0f386eeb87a91335b9e3e" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void CalculateInterpolationError</definition>
+        <argsstring>(const amrex::Geometry geom, amrex::MultiFab &amp;nodaldata, int nodaldataindex)</argsstring>
+        <name>CalculateInterpolationError</name>
+        <param>
+          <type>const amrex::Geometry</type>
+          <declname>geom</declname>
+        </param>
+        <param>
+          <type>amrex::MultiFab &amp;</type>
+          <declname>nodaldata</declname>
+        </param>
+        <param>
+          <type>int</type>
+          <declname>nodaldataindex</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/nodal_data_ops.H" line="28" column="6" bodyfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/nodal_data_ops.cpp" bodystart="477" bodyend="497" declfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/nodal_data_ops.H" declline="28" declcolumn="6"/>
+      </memberdef>
+      <memberdef kind="function" id="nodal__data__ops_8_h_1a615e657b57bf1c9c4ebe1fe17fa6c9e0" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void nodal_levelset_bcs</definition>
+        <argsstring>(amrex::MultiFab &amp;nodaldata, const amrex::Geometry geom, amrex::Real &amp;dt, int lsetbc, amrex::Real lset_wall_mu)</argsstring>
+        <name>nodal_levelset_bcs</name>
+        <param>
+          <type>amrex::MultiFab &amp;</type>
+          <declname>nodaldata</declname>
+        </param>
+        <param>
+          <type>const amrex::Geometry</type>
+          <declname>geom</declname>
+        </param>
+        <param>
+          <type>amrex::Real &amp;</type>
+          <declname>dt</declname>
+        </param>
+        <param>
+          <type>int</type>
+          <declname>lsetbc</declname>
+        </param>
+        <param>
+          <type>amrex::Real</type>
+          <declname>lset_wall_mu</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/nodal_data_ops.H" line="30" column="6" declfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/nodal_data_ops.H" declline="30" declcolumn="6"/>
+      </memberdef>
+    </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"><highlight class="preprocessor">#ifndef<sp/>NODAL_DATA_OPS_H_</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="2"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>NODAL_DATA_OPS_H_</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="3"><highlight class="normal"></highlight></codeline>
+<codeline lineno="4"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;AMReX.H&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="5"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;AMReX_MultiFab.H&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="6"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;constants.H&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="7"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;AMReX_PlotFileUtil.H&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="8"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;AMReX_MultiFabUtil.H&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="9"><highlight class="normal"></highlight></codeline>
+<codeline lineno="10"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>write_grid_file(std::string<sp/>fname,<sp/>amrex::MultiFab<sp/>&amp;nodaldata,<sp/>amrex::Vector&lt;std::string&gt;<sp/>fieldnames,<sp/></highlight></codeline>
+<codeline lineno="11"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>amrex::Geometry<sp/>geom,<sp/>amrex::BoxArray<sp/>ba,<sp/>amrex::DistributionMapping<sp/>dm,amrex::Real<sp/>time);</highlight></codeline>
+<codeline lineno="12"><highlight class="normal"></highlight></codeline>
+<codeline lineno="13"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>backup_current_velocity(amrex::MultiFab<sp/>&amp;nodaldata);</highlight></codeline>
+<codeline lineno="14"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>store_delta_velocity(amrex::MultiFab<sp/>&amp;nodaldata);</highlight></codeline>
+<codeline lineno="15"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>nodal_update(amrex::MultiFab<sp/>&amp;nodaldata,</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>amrex::Real&amp;<sp/>dt,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>amrex::Real&amp;<sp/>mass_tolerance);</highlight></codeline>
+<codeline lineno="16"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>nodal_detect_contact(amrex::MultiFab<sp/>&amp;nodaldata,</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>amrex::Geometry<sp/>geom,amrex::Real&amp;<sp/>contact_tolerance,amrex::GpuArray&lt;amrex::GpuArray&lt;amrex::Real,AMREX_SPACEDIM&gt;,numrigidbodies&gt;);</highlight></codeline>
+<codeline lineno="17"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>initialise_shape_function_indices(amrex::iMultiFab<sp/>&amp;shapefunctionindex,</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>amrex::Geometry<sp/>geom);</highlight></codeline>
+<codeline lineno="18"><highlight class="normal"></highlight></codeline>
+<codeline lineno="19"><highlight class="normal"></highlight></codeline>
+<codeline lineno="20"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>nodal_bcs(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>amrex::Geometry<sp/>geom,amrex::MultiFab<sp/>&amp;nodaldata,</highlight></codeline>
+<codeline lineno="21"><highlight class="normal"></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>bclo[AMREX_SPACEDIM],</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>bchi[AMREX_SPACEDIM],</highlight></codeline>
+<codeline lineno="22"><highlight class="normal">amrex::Real<sp/>wall_mu_lo[AMREX_SPACEDIM],amrex::Real<sp/>wall_mu_hi[AMREX_SPACEDIM],</highlight></codeline>
+<codeline lineno="23"><highlight class="normal">amrex::Real<sp/>wall_vel_lo[AMREX_SPACEDIM*AMREX_SPACEDIM],</highlight></codeline>
+<codeline lineno="24"><highlight class="normal">amrex::Real<sp/>wall_vel_hi[AMREX_SPACEDIM*AMREX_SPACEDIM],</highlight></codeline>
+<codeline lineno="25"><highlight class="normal"></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>amrex::Real&amp;<sp/>dt);</highlight></codeline>
+<codeline lineno="26"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>nodal_bcs(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>amrex::Geometry<sp/>geom,<sp/>amrex::MultiFab<sp/>&amp;nodaldata,</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>amrex::Real&amp;<sp/>dt);</highlight></codeline>
+<codeline lineno="27"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>CalculateSurfaceIntegralOnBG(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>amrex::Geometry<sp/>geom,amrex::MultiFab<sp/>&amp;nodaldata,<sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>nodaldataindex,amrex::Real<sp/>&amp;integral_value);</highlight></codeline>
+<codeline lineno="28"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>CalculateInterpolationError(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>amrex::Geometry<sp/>geom,amrex::MultiFab<sp/>&amp;nodaldata,<sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>nodaldataindex);</highlight></codeline>
+<codeline lineno="29"><highlight class="normal"></highlight></codeline>
+<codeline lineno="30"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>nodal_levelset_bcs(amrex::MultiFab<sp/>&amp;nodaldata,</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>amrex::Geometry<sp/>geom,</highlight></codeline>
+<codeline lineno="31"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>amrex::Real&amp;<sp/>dt,</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>lsetbc,amrex::Real<sp/>lset_wall_mu);</highlight></codeline>
+<codeline lineno="32"><highlight class="normal"></highlight></codeline>
+<codeline lineno="33"><highlight class="normal"></highlight><highlight class="preprocessor">#endif</highlight></codeline>
+    </programlisting>
+    <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/nodal_data_ops.H"/>
+  </compounddef>
+</doxygen>

@@ -1,0 +1,1607 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.14.0" xml:lang="en-US">
+  <compounddef id="class_m_p_mspecs" kind="class" language="C++" prot="public">
+    <compoundname>MPMspecs</compoundname>
+    <sectiondef kind="public-attrib">
+      <memberdef kind="variable" id="class_m_p_mspecs_1a542ca96b9b59b09b2ee1181077c94f87" prot="public" static="no" mutable="no">
+        <type>Array&lt; Real, AMREX_SPACEDIM &gt;</type>
+        <definition>Array&lt;Real,AMREX_SPACEDIM&gt; MPMspecs::plo</definition>
+        <argsstring></argsstring>
+        <name>plo</name>
+        <qualifiedname>MPMspecs::plo</qualifiedname>
+        <initializer>{AMREX_D_DECL(0.0, 0.0, 0.0)}</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_specs.H" line="77" column="15" bodyfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_specs.H" bodystart="77" bodyend="77"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_m_p_mspecs_1a5a6218f941f7d9e8798615e7a60c3cb9" prot="public" static="no" mutable="no">
+        <type>Array&lt; Real, AMREX_SPACEDIM &gt;</type>
+        <definition>Array&lt;Real,AMREX_SPACEDIM&gt; MPMspecs::phi</definition>
+        <argsstring></argsstring>
+        <name>phi</name>
+        <qualifiedname>MPMspecs::phi</qualifiedname>
+        <initializer>{AMREX_D_DECL(0.0, 0.0, 0.0)}</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_specs.H" line="78" column="15" bodyfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_specs.H" bodystart="78" bodyend="78"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_m_p_mspecs_1a9dfe1a5dc143ae717f04a7103c4c1c7c" prot="public" static="no" mutable="no">
+        <type>Array&lt; int, AMREX_SPACEDIM &gt;</type>
+        <definition>Array&lt;int,AMREX_SPACEDIM&gt; MPMspecs::ncells</definition>
+        <argsstring></argsstring>
+        <name>ncells</name>
+        <qualifiedname>MPMspecs::ncells</qualifiedname>
+        <initializer>{AMREX_D_DECL(0, 0, 0)}</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_specs.H" line="79" column="15" bodyfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_specs.H" bodystart="79" bodyend="79"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_m_p_mspecs_1ab92ca35619466a1203727da2d4da3495" prot="public" static="no" mutable="no">
+        <type>GpuArray&lt; int, AMREX_SPACEDIM &gt;</type>
+        <definition>GpuArray&lt;int,AMREX_SPACEDIM&gt; MPMspecs::periodic</definition>
+        <argsstring></argsstring>
+        <name>periodic</name>
+        <qualifiedname>MPMspecs::periodic</qualifiedname>
+        <initializer>{AMREX_D_DECL(0, 0, 0)}</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_specs.H" line="80" column="18" bodyfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_specs.H" bodystart="80" bodyend="80"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_m_p_mspecs_1a7fbabd30c07bba21a60f5bc95d0d1935" prot="public" static="no" mutable="no">
+        <type>Array&lt; Real, AMREX_SPACEDIM &gt;</type>
+        <definition>Array&lt;Real,AMREX_SPACEDIM&gt; MPMspecs::gravity</definition>
+        <argsstring></argsstring>
+        <name>gravity</name>
+        <qualifiedname>MPMspecs::gravity</qualifiedname>
+        <initializer>{AMREX_D_DECL(0.0, -ACCG, 0.0)}</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_specs.H" line="81" column="15" bodyfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_specs.H" bodystart="81" bodyend="81"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_m_p_mspecs_1a1c4639b93d3ff39d1ec3f922b670644d" prot="public" static="no" mutable="no">
+        <type>Array&lt; Real, AMREX_SPACEDIM &gt;</type>
+        <definition>Array&lt;Real,AMREX_SPACEDIM&gt; MPMspecs::force_slab_lo</definition>
+        <argsstring></argsstring>
+        <name>force_slab_lo</name>
+        <qualifiedname>MPMspecs::force_slab_lo</qualifiedname>
+        <initializer>{AMREX_D_DECL(0.0, 0.0, 0.0)}</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_specs.H" line="83" column="15" bodyfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_specs.H" bodystart="83" bodyend="83"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_m_p_mspecs_1af347eac4bff2d51c5f216ab4a2f9b599" prot="public" static="no" mutable="no">
+        <type>Array&lt; Real, AMREX_SPACEDIM &gt;</type>
+        <definition>Array&lt;Real,AMREX_SPACEDIM&gt; MPMspecs::force_slab_hi</definition>
+        <argsstring></argsstring>
+        <name>force_slab_hi</name>
+        <qualifiedname>MPMspecs::force_slab_hi</qualifiedname>
+        <initializer>{AMREX_D_DECL(0.0, 0.0, 0.0)}</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_specs.H" line="84" column="15" bodyfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_specs.H" bodystart="84" bodyend="84"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_m_p_mspecs_1abda4c74c124b325543720e7283d27445" prot="public" static="no" mutable="no">
+        <type>Array&lt; Real, AMREX_SPACEDIM &gt;</type>
+        <definition>Array&lt;Real,AMREX_SPACEDIM&gt; MPMspecs::extforce</definition>
+        <argsstring></argsstring>
+        <name>extforce</name>
+        <qualifiedname>MPMspecs::extforce</qualifiedname>
+        <initializer>{AMREX_D_DECL(0.0, 0.0, 0.0)}</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_specs.H" line="85" column="15" bodyfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_specs.H" bodystart="85" bodyend="85"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_m_p_mspecs_1a5f9b0bb080606b4361e7b0a5c4808221" prot="public" static="no" mutable="no">
+        <type>Real</type>
+        <definition>Real MPMspecs::timestep</definition>
+        <argsstring></argsstring>
+        <name>timestep</name>
+        <qualifiedname>MPMspecs::timestep</qualifiedname>
+        <initializer>=0.0</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_specs.H" line="87" column="14" bodyfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_specs.H" bodystart="87" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_m_p_mspecs_1ab2c9b30c92c56c4574f28672dc22cc28" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int MPMspecs::num_redist</definition>
+        <argsstring></argsstring>
+        <name>num_redist</name>
+        <qualifiedname>MPMspecs::num_redist</qualifiedname>
+        <initializer>=10</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_specs.H" line="88" column="13" bodyfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_specs.H" bodystart="88" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_m_p_mspecs_1a90f6d3d9b8730fc846b1b6c54d974f1c" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int MPMspecs::max_grid_size</definition>
+        <argsstring></argsstring>
+        <name>max_grid_size</name>
+        <qualifiedname>MPMspecs::max_grid_size</qualifiedname>
+        <initializer>=8</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_specs.H" line="89" column="13" bodyfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_specs.H" bodystart="89" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_m_p_mspecs_1aaeed8d5dcfbc006ba514d25b3e057f20" prot="public" static="no" mutable="no">
+        <type>Real</type>
+        <definition>Real MPMspecs::final_time</definition>
+        <argsstring></argsstring>
+        <name>final_time</name>
+        <qualifiedname>MPMspecs::final_time</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_specs.H" line="90" column="14" bodyfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_specs.H" bodystart="90" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_m_p_mspecs_1a8123df5c4ed8ab1faf4a1b1192129ded" prot="public" static="no" mutable="no">
+        <type>Real</type>
+        <definition>Real MPMspecs::write_output_time</definition>
+        <argsstring></argsstring>
+        <name>write_output_time</name>
+        <qualifiedname>MPMspecs::write_output_time</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_specs.H" line="91" column="14" bodyfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_specs.H" bodystart="91" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_m_p_mspecs_1a42c23cc35f47f62e1ac5657efb239c32" prot="public" static="no" mutable="no">
+        <type>Real</type>
+        <definition>Real MPMspecs::screen_output_time</definition>
+        <argsstring></argsstring>
+        <name>screen_output_time</name>
+        <qualifiedname>MPMspecs::screen_output_time</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_specs.H" line="92" column="14" bodyfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_specs.H" bodystart="92" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_m_p_mspecs_1ad97d6401481f539451c8c03a59ac29bb" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int MPMspecs::maxsteps</definition>
+        <argsstring></argsstring>
+        <name>maxsteps</name>
+        <qualifiedname>MPMspecs::maxsteps</qualifiedname>
+        <initializer>=1</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_specs.H" line="93" column="13" bodyfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_specs.H" bodystart="93" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_m_p_mspecs_1a14ea23afbc20f13f6f3f9c94e55dabc4" prot="public" static="no" mutable="no">
+        <type>std::string</type>
+        <definition>std::string MPMspecs::particlefilename</definition>
+        <argsstring></argsstring>
+        <name>particlefilename</name>
+        <qualifiedname>MPMspecs::particlefilename</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_specs.H" line="94" column="21" bodyfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_specs.H" bodystart="94" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_m_p_mspecs_1a4971e2008d51d625ff234f67cbef62d7" prot="public" static="no" mutable="no">
+        <type>std::string</type>
+        <definition>std::string MPMspecs::restart_checkfile</definition>
+        <argsstring></argsstring>
+        <name>restart_checkfile</name>
+        <qualifiedname>MPMspecs::restart_checkfile</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_specs.H" line="95" column="21" bodyfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_specs.H" bodystart="95" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_m_p_mspecs_1a4d4f1fabfcb272dc2075a3722134d2fe" prot="public" static="no" mutable="no">
+        <type>std::string</type>
+        <definition>std::string MPMspecs::prefix_particlefilename</definition>
+        <argsstring></argsstring>
+        <name>prefix_particlefilename</name>
+        <qualifiedname>MPMspecs::prefix_particlefilename</qualifiedname>
+        <initializer>= &quot;plt&quot;</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_specs.H" line="98" column="21" bodyfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_specs.H" bodystart="98" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_m_p_mspecs_1af4cfe41c8746541fd167b5a81160a3c8" prot="public" static="no" mutable="no">
+        <type>std::string</type>
+        <definition>std::string MPMspecs::prefix_gridfilename</definition>
+        <argsstring></argsstring>
+        <name>prefix_gridfilename</name>
+        <qualifiedname>MPMspecs::prefix_gridfilename</qualifiedname>
+        <initializer>=  &quot;plt&quot;</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_specs.H" line="99" column="21" bodyfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_specs.H" bodystart="99" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_m_p_mspecs_1a392050cede128087629f30086abe7323" prot="public" static="no" mutable="no">
+        <type>std::string</type>
+        <definition>std::string MPMspecs::prefix_densityfilename</definition>
+        <argsstring></argsstring>
+        <name>prefix_densityfilename</name>
+        <qualifiedname>MPMspecs::prefix_densityfilename</qualifiedname>
+        <initializer>= &quot;plt&quot;</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_specs.H" line="100" column="21" bodyfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_specs.H" bodystart="100" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_m_p_mspecs_1a2d74a6570e8be4e5bcf2366f46d7a40b" prot="public" static="no" mutable="no">
+        <type>std::string</type>
+        <definition>std::string MPMspecs::prefix_checkpointfilename</definition>
+        <argsstring></argsstring>
+        <name>prefix_checkpointfilename</name>
+        <qualifiedname>MPMspecs::prefix_checkpointfilename</qualifiedname>
+        <initializer>= &quot;chk&quot;</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_specs.H" line="101" column="21" bodyfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_specs.H" bodystart="101" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_m_p_mspecs_1a56c46c81b3d8c8bb6af8f01d00b860dd" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int MPMspecs::num_of_digits_in_filenames</definition>
+        <argsstring></argsstring>
+        <name>num_of_digits_in_filenames</name>
+        <qualifiedname>MPMspecs::num_of_digits_in_filenames</qualifiedname>
+        <initializer>=6</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_specs.H" line="102" column="13" bodyfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_specs.H" bodystart="102" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_m_p_mspecs_1a79e1917f2fc52a87c61d0deaeabd13b6" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int MPMspecs::print_diagnostics</definition>
+        <argsstring></argsstring>
+        <name>print_diagnostics</name>
+        <qualifiedname>MPMspecs::print_diagnostics</qualifiedname>
+        <initializer>=0</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_specs.H" line="105" column="13" bodyfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_specs.H" bodystart="105" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_m_p_mspecs_1aaa639b93f92a6bb21b2d4d75a29b0050" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int MPMspecs::ifrigidnodespresent</definition>
+        <argsstring></argsstring>
+        <name>ifrigidnodespresent</name>
+        <qualifiedname>MPMspecs::ifrigidnodespresent</qualifiedname>
+        <initializer>=0</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_specs.H" line="106" column="13" bodyfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_specs.H" bodystart="106" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_m_p_mspecs_1a39c12140fe1c2cef19a7da5c71fed1d0" prot="public" static="no" mutable="no">
+        <type>bool</type>
+        <definition>bool MPMspecs::is_standard_test</definition>
+        <argsstring></argsstring>
+        <name>is_standard_test</name>
+        <qualifiedname>MPMspecs::is_standard_test</qualifiedname>
+        <initializer>= true</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_specs.H" line="107" column="14" bodyfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_specs.H" bodystart="107" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_m_p_mspecs_1a062b427a5f2a633097cf55f39eb379aa" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int MPMspecs::test_number</definition>
+        <argsstring></argsstring>
+        <name>test_number</name>
+        <qualifiedname>MPMspecs::test_number</qualifiedname>
+        <initializer>= 0</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_specs.H" line="108" column="13" bodyfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_specs.H" bodystart="108" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_m_p_mspecs_1a82c2595bc7498c83192009c9086ade30" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int MPMspecs::no_of_rigidbodies_present</definition>
+        <argsstring></argsstring>
+        <name>no_of_rigidbodies_present</name>
+        <qualifiedname>MPMspecs::no_of_rigidbodies_present</qualifiedname>
+        <initializer>=0</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_specs.H" line="109" column="13" bodyfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_specs.H" bodystart="109" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_m_p_mspecs_1a39fa82b6cf4707bcb9d736e74b3950a5" prot="public" static="no" mutable="no">
+        <type>amrex::Real</type>
+        <definition>amrex::Real MPMspecs::total_mass_phase_0</definition>
+        <argsstring></argsstring>
+        <name>total_mass_phase_0</name>
+        <qualifiedname>MPMspecs::total_mass_phase_0</qualifiedname>
+        <initializer>=0.0</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_specs.H" line="110" column="21" bodyfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_specs.H" bodystart="110" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_m_p_mspecs_1aed7b2e9aa3b6b2f0781ffd38d59f49cb" prot="public" static="no" mutable="no">
+        <type>amrex::Real</type>
+        <definition>amrex::Real MPMspecs::total_vol_phase_0</definition>
+        <argsstring></argsstring>
+        <name>total_vol_phase_0</name>
+        <qualifiedname>MPMspecs::total_vol_phase_0</qualifiedname>
+        <initializer>=0.0</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_specs.H" line="111" column="21" bodyfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_specs.H" bodystart="111" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_m_p_mspecs_1a9fac5f461f3001477811f47c516b1a24" prot="public" static="no" mutable="no">
+        <type><ref refid="struct_rigid___bodies" kindref="compound">Rigid_Bodies</ref> *</type>
+        <definition>Rigid_Bodies* MPMspecs::Rb</definition>
+        <argsstring></argsstring>
+        <name>Rb</name>
+        <qualifiedname>MPMspecs::Rb</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_specs.H" line="114" column="22" bodyfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_specs.H" bodystart="114" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_m_p_mspecs_1a6185e507e37d8e33cb485af5684be47c" prot="public" static="no" mutable="no">
+        <type>amrex::Real</type>
+        <definition>amrex::Real MPMspecs::axial_bar_E</definition>
+        <argsstring></argsstring>
+        <name>axial_bar_E</name>
+        <qualifiedname>MPMspecs::axial_bar_E</qualifiedname>
+        <initializer>= 100.0</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_specs.H" line="117" column="21" bodyfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_specs.H" bodystart="117" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_m_p_mspecs_1a54894c7a8f1254c63c21b1cbbdec423e" prot="public" static="no" mutable="no">
+        <type>amrex::Real</type>
+        <definition>amrex::Real MPMspecs::axial_bar_rho</definition>
+        <argsstring></argsstring>
+        <name>axial_bar_rho</name>
+        <qualifiedname>MPMspecs::axial_bar_rho</qualifiedname>
+        <initializer>= 1.0</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_specs.H" line="118" column="21" bodyfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_specs.H" bodystart="118" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_m_p_mspecs_1a03aa0480488a8cd33a378a37156ac9d6" prot="public" static="no" mutable="no">
+        <type>amrex::Real</type>
+        <definition>amrex::Real MPMspecs::axial_bar_L</definition>
+        <argsstring></argsstring>
+        <name>axial_bar_L</name>
+        <qualifiedname>MPMspecs::axial_bar_L</qualifiedname>
+        <initializer>= 25.0</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_specs.H" line="119" column="21" bodyfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_specs.H" bodystart="119" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_m_p_mspecs_1a8a7650587390384c17d63e4ec541959d" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int MPMspecs::axial_bar_modenumber</definition>
+        <argsstring></argsstring>
+        <name>axial_bar_modenumber</name>
+        <qualifiedname>MPMspecs::axial_bar_modenumber</qualifiedname>
+        <initializer>= 1</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_specs.H" line="120" column="13" bodyfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_specs.H" bodystart="120" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_m_p_mspecs_1a13dd23c34110a7ca31f4b843659be1aa" prot="public" static="no" mutable="no">
+        <type>amrex::Real</type>
+        <definition>amrex::Real MPMspecs::axial_bar_v0</definition>
+        <argsstring></argsstring>
+        <name>axial_bar_v0</name>
+        <qualifiedname>MPMspecs::axial_bar_v0</qualifiedname>
+        <initializer>= 0.1</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_specs.H" line="121" column="21" bodyfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_specs.H" bodystart="121" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_m_p_mspecs_1ad44d96a644e9f283dac8c8b2049bc3b7" prot="public" static="no" mutable="no">
+        <type>amrex::Real</type>
+        <definition>amrex::Real MPMspecs::dam_break_H1</definition>
+        <argsstring></argsstring>
+        <name>dam_break_H1</name>
+        <qualifiedname>MPMspecs::dam_break_H1</qualifiedname>
+        <initializer>= 0.2</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_specs.H" line="124" column="21" bodyfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_specs.H" bodystart="124" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_m_p_mspecs_1a18f200f97476df7277b2d98e5e16a9e2" prot="public" static="no" mutable="no">
+        <type>amrex::Real</type>
+        <definition>amrex::Real MPMspecs::dam_break_g</definition>
+        <argsstring></argsstring>
+        <name>dam_break_g</name>
+        <qualifiedname>MPMspecs::dam_break_g</qualifiedname>
+        <initializer>= ACCG</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_specs.H" line="125" column="21" bodyfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_specs.H" bodystart="125" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_m_p_mspecs_1a7d91b2af3f2e963c2bd29bfe0f7d9fdc" prot="public" static="no" mutable="no">
+        <type>amrex::Real</type>
+        <definition>amrex::Real MPMspecs::tvb_E</definition>
+        <argsstring></argsstring>
+        <name>tvb_E</name>
+        <qualifiedname>MPMspecs::tvb_E</qualifiedname>
+        <initializer>= 50.0</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_specs.H" line="128" column="21" bodyfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_specs.H" bodystart="128" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_m_p_mspecs_1a8fe5fecdbac3bc081aef794ea976af5d" prot="public" static="no" mutable="no">
+        <type>amrex::Real</type>
+        <definition>amrex::Real MPMspecs::tvb_L</definition>
+        <argsstring></argsstring>
+        <name>tvb_L</name>
+        <qualifiedname>MPMspecs::tvb_L</qualifiedname>
+        <initializer>= 0.1</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_specs.H" line="129" column="21" bodyfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_specs.H" bodystart="129" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_m_p_mspecs_1ade44aa9e398af79414611d170fedca84" prot="public" static="no" mutable="no">
+        <type>amrex::Real</type>
+        <definition>amrex::Real MPMspecs::tvb_rho</definition>
+        <argsstring></argsstring>
+        <name>tvb_rho</name>
+        <qualifiedname>MPMspecs::tvb_rho</qualifiedname>
+        <initializer>= 25.0</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_specs.H" line="130" column="21" bodyfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_specs.H" bodystart="130" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_m_p_mspecs_1ada43720ea6c9adf009e2e6cb725db0f6" prot="public" static="no" mutable="no">
+        <type>amrex::Real</type>
+        <definition>amrex::Real MPMspecs::tvb_v0</definition>
+        <argsstring></argsstring>
+        <name>tvb_v0</name>
+        <qualifiedname>MPMspecs::tvb_v0</qualifiedname>
+        <initializer>= 0.0</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_specs.H" line="131" column="21" bodyfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_specs.H" bodystart="131" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_m_p_mspecs_1addedd8f6243265bc666e123d7e510997" prot="public" static="no" mutable="no">
+        <type>amrex::Real</type>
+        <definition>amrex::Real MPMspecs::p2g_L</definition>
+        <argsstring></argsstring>
+        <name>p2g_L</name>
+        <qualifiedname>MPMspecs::p2g_L</qualifiedname>
+        <initializer>= 1.0</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_specs.H" line="133" column="21" bodyfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_specs.H" bodystart="133" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_m_p_mspecs_1aca4f75bf15aecce7d3c4199c84174f6a" prot="public" static="no" mutable="no">
+        <type>amrex::Real</type>
+        <definition>amrex::Real MPMspecs::p2g_f</definition>
+        <argsstring></argsstring>
+        <name>p2g_f</name>
+        <qualifiedname>MPMspecs::p2g_f</qualifiedname>
+        <initializer>= 1.0</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_specs.H" line="134" column="21" bodyfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_specs.H" bodystart="134" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_m_p_mspecs_1a11b485d801e1bc733436b215a14b9269" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int MPMspecs::p2g_ncell</definition>
+        <argsstring></argsstring>
+        <name>p2g_ncell</name>
+        <qualifiedname>MPMspecs::p2g_ncell</qualifiedname>
+        <initializer>=0</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_specs.H" line="135" column="13" bodyfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_specs.H" bodystart="135" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_m_p_mspecs_1abfe02ddbb0fbc5f7f1490c0a4302149b" prot="public" static="no" mutable="no">
+        <type>amrex::Real</type>
+        <definition>amrex::Real MPMspecs::mem_compaction_area</definition>
+        <argsstring></argsstring>
+        <name>mem_compaction_area</name>
+        <qualifiedname>MPMspecs::mem_compaction_area</qualifiedname>
+        <initializer>=1.0</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_specs.H" line="138" column="21" bodyfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_specs.H" bodystart="138" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_m_p_mspecs_1a8ef3595102b71c5f9abbf3cc7f44f48e" prot="public" static="no" mutable="no">
+        <type>amrex::Real</type>
+        <definition>amrex::Real MPMspecs::mem_compaction_dampcoeff</definition>
+        <argsstring></argsstring>
+        <name>mem_compaction_dampcoeff</name>
+        <qualifiedname>MPMspecs::mem_compaction_dampcoeff</qualifiedname>
+        <initializer>=1.0</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_specs.H" line="139" column="21" bodyfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_specs.H" bodystart="139" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_m_p_mspecs_1a023fc8129575e3098c3892d5542474b2" prot="public" static="no" mutable="no">
+        <type>amrex::Real</type>
+        <definition>amrex::Real MPMspecs::mem_compaction_L0</definition>
+        <argsstring></argsstring>
+        <name>mem_compaction_L0</name>
+        <qualifiedname>MPMspecs::mem_compaction_L0</qualifiedname>
+        <initializer>=1.0</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_specs.H" line="140" column="21" bodyfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_specs.H" bodystart="140" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_m_p_mspecs_1a2403d35d4e28c488b1c7e8371a386066" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int MPMspecs::mem_compaction_restoring_force_calc_method</definition>
+        <argsstring></argsstring>
+        <name>mem_compaction_restoring_force_calc_method</name>
+        <qualifiedname>MPMspecs::mem_compaction_restoring_force_calc_method</qualifiedname>
+        <initializer>= 1</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_specs.H" line="141" column="13" bodyfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_specs.H" bodystart="141" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_m_p_mspecs_1a149d82a9382831c6af40cb7a9f02ee6f" prot="public" static="no" mutable="no">
+        <type>amrex::Real</type>
+        <definition>amrex::Real MPMspecs::spring_alone_area</definition>
+        <argsstring></argsstring>
+        <name>spring_alone_area</name>
+        <qualifiedname>MPMspecs::spring_alone_area</qualifiedname>
+        <initializer>= 0.1</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_specs.H" line="144" column="21" bodyfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_specs.H" bodystart="144" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_m_p_mspecs_1aea81e2d5bfb9a9447384ff2cbceab0b3" prot="public" static="no" mutable="no">
+        <type>amrex::Real</type>
+        <definition>amrex::Real MPMspecs::spring_alone_length</definition>
+        <argsstring></argsstring>
+        <name>spring_alone_length</name>
+        <qualifiedname>MPMspecs::spring_alone_length</qualifiedname>
+        <initializer>= 0.0</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_specs.H" line="145" column="21" bodyfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_specs.H" bodystart="145" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_m_p_mspecs_1a3925715e8ff99008cdc27d5c720dd787" prot="public" static="no" mutable="no">
+        <type>amrex::Real</type>
+        <definition>amrex::Real MPMspecs::spring_alone_E</definition>
+        <argsstring></argsstring>
+        <name>spring_alone_E</name>
+        <qualifiedname>MPMspecs::spring_alone_E</qualifiedname>
+        <initializer>= 0.0</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_specs.H" line="146" column="21" bodyfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_specs.H" bodystart="146" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_m_p_mspecs_1a9202ff2199f86245c781d4fa18707520" prot="public" static="no" mutable="no">
+        <type>amrex::Real</type>
+        <definition>amrex::Real MPMspecs::spring_alone_exact_deflection</definition>
+        <argsstring></argsstring>
+        <name>spring_alone_exact_deflection</name>
+        <qualifiedname>MPMspecs::spring_alone_exact_deflection</qualifiedname>
+        <initializer>= 0.0</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_specs.H" line="147" column="21" bodyfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_specs.H" bodystart="147" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_m_p_mspecs_1aa028414dd6934eaf7de6baee6b386bca" prot="public" static="no" mutable="no">
+        <type>amrex::Real</type>
+        <definition>amrex::Real MPMspecs::spring_alone_exact_delta</definition>
+        <argsstring></argsstring>
+        <name>spring_alone_exact_delta</name>
+        <qualifiedname>MPMspecs::spring_alone_exact_delta</qualifiedname>
+        <initializer>= 0.0</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_specs.H" line="148" column="21" bodyfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_specs.H" bodystart="148" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_m_p_mspecs_1a8bff4fe95dea7cddf3358fbc54250fb4" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int MPMspecs::order_scheme</definition>
+        <argsstring></argsstring>
+        <name>order_scheme</name>
+        <qualifiedname>MPMspecs::order_scheme</qualifiedname>
+        <initializer>=1</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_specs.H" line="152" column="13" bodyfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_specs.H" bodystart="152" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_m_p_mspecs_1a4759097fff8b93bc3a80bc98778841aa" prot="public" static="no" mutable="no">
+        <type>Real</type>
+        <definition>Real MPMspecs::applied_strainrate</definition>
+        <argsstring></argsstring>
+        <name>applied_strainrate</name>
+        <qualifiedname>MPMspecs::applied_strainrate</qualifiedname>
+        <initializer>=0.0</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_specs.H" line="154" column="14" bodyfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_specs.H" bodystart="154" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_m_p_mspecs_1abc8e5baccf617e175cab0b17e7f5a325" prot="public" static="no" mutable="no">
+        <type>Real</type>
+        <definition>Real MPMspecs::applied_strainrate_time</definition>
+        <argsstring></argsstring>
+        <name>applied_strainrate_time</name>
+        <qualifiedname>MPMspecs::applied_strainrate_time</qualifiedname>
+        <initializer>=0.0</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_specs.H" line="155" column="14" bodyfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_specs.H" bodystart="155" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_m_p_mspecs_1a31ec7760e087271c35f7c69cc431f3a6" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int MPMspecs::phasefield_output</definition>
+        <argsstring></argsstring>
+        <name>phasefield_output</name>
+        <qualifiedname>MPMspecs::phasefield_output</qualifiedname>
+        <initializer>=0</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_specs.H" line="156" column="13" bodyfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_specs.H" bodystart="156" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_m_p_mspecs_1a1a5b5046ae23460e7dd0b80ee893a7a4" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int MPMspecs::phasefield_gridratio</definition>
+        <argsstring></argsstring>
+        <name>phasefield_gridratio</name>
+        <qualifiedname>MPMspecs::phasefield_gridratio</qualifiedname>
+        <initializer>=1</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_specs.H" line="157" column="13" bodyfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_specs.H" bodystart="157" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_m_p_mspecs_1abe2641683b1b234fc2997b36876ace9d" prot="public" static="no" mutable="no">
+        <type>Real</type>
+        <definition>Real MPMspecs::phasefield_smoothfactor</definition>
+        <argsstring></argsstring>
+        <name>phasefield_smoothfactor</name>
+        <qualifiedname>MPMspecs::phasefield_smoothfactor</qualifiedname>
+        <initializer>=1.0</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_specs.H" line="158" column="14" bodyfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_specs.H" bodystart="158" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_m_p_mspecs_1a4ca7f20cb57d6b9390c07e221c716c98" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int MPMspecs::external_loads_present</definition>
+        <argsstring></argsstring>
+        <name>external_loads_present</name>
+        <qualifiedname>MPMspecs::external_loads_present</qualifiedname>
+        <initializer>=0.0</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_specs.H" line="159" column="13" bodyfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_specs.H" bodystart="159" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_m_p_mspecs_1a20441c2479a07677d1cb8d3d8f2e4f2a" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int MPMspecs::fixed_timestep</definition>
+        <argsstring></argsstring>
+        <name>fixed_timestep</name>
+        <qualifiedname>MPMspecs::fixed_timestep</qualifiedname>
+        <initializer>= 0</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_specs.H" line="160" column="13" bodyfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_specs.H" bodystart="160" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_m_p_mspecs_1ad3bd314b4548c5cb4a558a90bff02462" prot="public" static="no" mutable="no">
+        <type>Real</type>
+        <definition>Real MPMspecs::dt_max_limit</definition>
+        <argsstring></argsstring>
+        <name>dt_max_limit</name>
+        <qualifiedname>MPMspecs::dt_max_limit</qualifiedname>
+        <initializer>=1e0</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_specs.H" line="161" column="14" bodyfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_specs.H" bodystart="161" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_m_p_mspecs_1af5bc13e924367009df74ab10dab4eea8" prot="public" static="no" mutable="no">
+        <type>Real</type>
+        <definition>Real MPMspecs::dt_min_limit</definition>
+        <argsstring></argsstring>
+        <name>dt_min_limit</name>
+        <qualifiedname>MPMspecs::dt_min_limit</qualifiedname>
+        <initializer>=1e-12</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_specs.H" line="162" column="14" bodyfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_specs.H" bodystart="162" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_m_p_mspecs_1ac6740549f341b5fa8bcb60d11f84cd60" prot="public" static="no" mutable="no">
+        <type>Real</type>
+        <definition>Real MPMspecs::CFL</definition>
+        <argsstring></argsstring>
+        <name>CFL</name>
+        <qualifiedname>MPMspecs::CFL</qualifiedname>
+        <initializer>=0.1</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_specs.H" line="163" column="14" bodyfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_specs.H" bodystart="163" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_m_p_mspecs_1ae6e9a7e534e3d68683ed542efcfdfc87" prot="public" static="no" mutable="no">
+        <type>Real</type>
+        <definition>Real MPMspecs::mass_tolerance</definition>
+        <argsstring></argsstring>
+        <name>mass_tolerance</name>
+        <qualifiedname>MPMspecs::mass_tolerance</qualifiedname>
+        <initializer>= 1e-8</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_specs.H" line="164" column="14" bodyfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_specs.H" bodystart="164" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_m_p_mspecs_1a717b7eb9291297afe8c47b204ab75b76" prot="public" static="no" mutable="no">
+        <type>Real</type>
+        <definition>Real MPMspecs::alpha_pic_flip</definition>
+        <argsstring></argsstring>
+        <name>alpha_pic_flip</name>
+        <qualifiedname>MPMspecs::alpha_pic_flip</qualifiedname>
+        <initializer>= 0.95</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_specs.H" line="165" column="14" bodyfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_specs.H" bodystart="165" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_m_p_mspecs_1a4b9cdf5ab4c5c6e7c2135f504b3c2108" prot="public" static="no" mutable="no">
+        <type>Real</type>
+        <definition>Real MPMspecs::total_mass</definition>
+        <argsstring></argsstring>
+        <name>total_mass</name>
+        <qualifiedname>MPMspecs::total_mass</qualifiedname>
+        <initializer>= 0.0</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_specs.H" line="166" column="14" bodyfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_specs.H" bodystart="166" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_m_p_mspecs_1aebfa0f88857bc4b4ad00603cb3d90305" prot="public" static="no" mutable="no">
+        <type>Real</type>
+        <definition>Real MPMspecs::total_rigid_mass</definition>
+        <argsstring></argsstring>
+        <name>total_rigid_mass</name>
+        <qualifiedname>MPMspecs::total_rigid_mass</qualifiedname>
+        <initializer>= 0.0</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_specs.H" line="167" column="14" bodyfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_specs.H" bodystart="167" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_m_p_mspecs_1ab16ff53ac90b0f5bd14b7720db28c852" prot="public" static="no" mutable="no">
+        <type>Real</type>
+        <definition>Real MPMspecs::total_vol</definition>
+        <argsstring></argsstring>
+        <name>total_vol</name>
+        <qualifiedname>MPMspecs::total_vol</qualifiedname>
+        <initializer>= 0.0</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_specs.H" line="168" column="14" bodyfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_specs.H" bodystart="168" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_m_p_mspecs_1af5f688648c33dc8e4876bcdd7ef2d628" prot="public" static="no" mutable="no">
+        <type>Real</type>
+        <definition>Real MPMspecs::mem_compaction_vnew</definition>
+        <argsstring></argsstring>
+        <name>mem_compaction_vnew</name>
+        <qualifiedname>MPMspecs::mem_compaction_vnew</qualifiedname>
+        <initializer>=0.0</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_specs.H" line="169" column="14" bodyfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_specs.H" bodystart="169" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_m_p_mspecs_1a451697128a18b175c8ceb0a18a6e30c3" prot="public" static="no" mutable="no">
+        <type>Real</type>
+        <definition>Real MPMspecs::mem_compaction_vold</definition>
+        <argsstring></argsstring>
+        <name>mem_compaction_vold</name>
+        <qualifiedname>MPMspecs::mem_compaction_vold</qualifiedname>
+        <initializer>=0.0</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_specs.H" line="170" column="14" bodyfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_specs.H" bodystart="170" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_m_p_mspecs_1ad1fc57a3a8e2a770c60c04ef1d71bf46" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int MPMspecs::stress_update_scheme</definition>
+        <argsstring></argsstring>
+        <name>stress_update_scheme</name>
+        <qualifiedname>MPMspecs::stress_update_scheme</qualifiedname>
+        <initializer>=1</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_specs.H" line="171" column="13" bodyfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_specs.H" bodystart="171" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_m_p_mspecs_1ae888da118575ca42805fe753335806a2" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int MPMspecs::calculate_strain_based_on_delta</definition>
+        <argsstring></argsstring>
+        <name>calculate_strain_based_on_delta</name>
+        <qualifiedname>MPMspecs::calculate_strain_based_on_delta</qualifiedname>
+        <initializer>=0</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_specs.H" line="172" column="13" bodyfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_specs.H" bodystart="172" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_m_p_mspecs_1a3b2b71f09ae5bbed08d69b76573f0407" prot="public" static="no" mutable="no">
+        <type>Vector&lt; int &gt;</type>
+        <definition>Vector&lt;int&gt; MPMspecs::bclo</definition>
+        <argsstring></argsstring>
+        <name>bclo</name>
+        <qualifiedname>MPMspecs::bclo</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_specs.H" line="175" column="16" bodyfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_specs.H" bodystart="175" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_m_p_mspecs_1a3ccb155133faa51dc614afcc8839c962" prot="public" static="no" mutable="no">
+        <type>Vector&lt; int &gt;</type>
+        <definition>Vector&lt;int&gt; MPMspecs::bchi</definition>
+        <argsstring></argsstring>
+        <name>bchi</name>
+        <qualifiedname>MPMspecs::bchi</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_specs.H" line="176" column="16" bodyfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_specs.H" bodystart="176" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_m_p_mspecs_1a9bf705b474a4976c06c08f15b1210059" prot="public" static="no" mutable="no">
+        <type>GpuArray&lt; int, AMREX_SPACEDIM &gt;</type>
+        <definition>GpuArray&lt;int,AMREX_SPACEDIM&gt; MPMspecs::order_scheme_directional</definition>
+        <argsstring></argsstring>
+        <name>order_scheme_directional</name>
+        <qualifiedname>MPMspecs::order_scheme_directional</qualifiedname>
+        <initializer>{AMREX_D_DECL(1,1,1)}</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_specs.H" line="178" column="18" bodyfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_specs.H" bodystart="178" bodyend="178"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_m_p_mspecs_1ae6403efc833af3d15f5a52c025967598" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int MPMspecs::use_autogen</definition>
+        <argsstring></argsstring>
+        <name>use_autogen</name>
+        <qualifiedname>MPMspecs::use_autogen</qualifiedname>
+        <initializer>=0</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_specs.H" line="181" column="13" bodyfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_specs.H" bodystart="181" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_m_p_mspecs_1a8d219ebd5b4520916229ca91af59601f" prot="public" static="no" mutable="no">
+        <type>Vector&lt; Real &gt;</type>
+        <definition>Vector&lt;Real&gt; MPMspecs::autogen_mincoords</definition>
+        <argsstring></argsstring>
+        <name>autogen_mincoords</name>
+        <qualifiedname>MPMspecs::autogen_mincoords</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_specs.H" line="182" column="16" bodyfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_specs.H" bodystart="182" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_m_p_mspecs_1a9c5403efbc775dc1521fc19c1c71a087" prot="public" static="no" mutable="no">
+        <type>Vector&lt; Real &gt;</type>
+        <definition>Vector&lt;Real&gt; MPMspecs::autogen_maxcoords</definition>
+        <argsstring></argsstring>
+        <name>autogen_maxcoords</name>
+        <qualifiedname>MPMspecs::autogen_maxcoords</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_specs.H" line="183" column="16" bodyfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_specs.H" bodystart="183" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_m_p_mspecs_1ae8f980672462feb60ce38e94b8bf67f3" prot="public" static="no" mutable="no">
+        <type>Vector&lt; Real &gt;</type>
+        <definition>Vector&lt;Real&gt; MPMspecs::autogen_vel</definition>
+        <argsstring></argsstring>
+        <name>autogen_vel</name>
+        <qualifiedname>MPMspecs::autogen_vel</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_specs.H" line="184" column="16" bodyfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_specs.H" bodystart="184" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_m_p_mspecs_1a8d68c8a70698d6cd5a6af0f9fc3f2db1" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int MPMspecs::autogen_multi_part_per_cell</definition>
+        <argsstring></argsstring>
+        <name>autogen_multi_part_per_cell</name>
+        <qualifiedname>MPMspecs::autogen_multi_part_per_cell</qualifiedname>
+        <initializer>=1</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_specs.H" line="185" column="13" bodyfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_specs.H" bodystart="185" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_m_p_mspecs_1a1112ceaa8e45841fd234e110d90ca720" prot="public" static="no" mutable="no">
+        <type>Real</type>
+        <definition>Real MPMspecs::autogen_dens</definition>
+        <argsstring></argsstring>
+        <name>autogen_dens</name>
+        <qualifiedname>MPMspecs::autogen_dens</qualifiedname>
+        <initializer>=1000.0</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_specs.H" line="186" column="14" bodyfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_specs.H" bodystart="186" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_m_p_mspecs_1a1967124b6951e2d43a0493f5e1952bf8" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int MPMspecs::autogen_constmodel</definition>
+        <argsstring></argsstring>
+        <name>autogen_constmodel</name>
+        <qualifiedname>MPMspecs::autogen_constmodel</qualifiedname>
+        <initializer>=1</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_specs.H" line="187" column="13" bodyfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_specs.H" bodystart="187" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_m_p_mspecs_1af32c5b1ea9a8d4feb60bdf39f6c75a60" prot="public" static="no" mutable="no">
+        <type>Real</type>
+        <definition>Real MPMspecs::autogen_E</definition>
+        <argsstring></argsstring>
+        <name>autogen_E</name>
+        <qualifiedname>MPMspecs::autogen_E</qualifiedname>
+        <initializer>=1e9</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_specs.H" line="188" column="14" bodyfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_specs.H" bodystart="188" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_m_p_mspecs_1a8b2727bb34b40c27a7caabc086e9c8db" prot="public" static="no" mutable="no">
+        <type>Real</type>
+        <definition>Real MPMspecs::autogen_nu</definition>
+        <argsstring></argsstring>
+        <name>autogen_nu</name>
+        <qualifiedname>MPMspecs::autogen_nu</qualifiedname>
+        <initializer>=0.1</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_specs.H" line="189" column="14" bodyfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_specs.H" bodystart="189" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_m_p_mspecs_1a0482ad1a26ade70a8bc44340ed13591a" prot="public" static="no" mutable="no">
+        <type>Real</type>
+        <definition>Real MPMspecs::autogen_bulkmod</definition>
+        <argsstring></argsstring>
+        <name>autogen_bulkmod</name>
+        <qualifiedname>MPMspecs::autogen_bulkmod</qualifiedname>
+        <initializer>=0.0</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_specs.H" line="190" column="14" bodyfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_specs.H" bodystart="190" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_m_p_mspecs_1aa6ad23a13e7f19b40fb05f3941a5d367" prot="public" static="no" mutable="no">
+        <type>Real</type>
+        <definition>Real MPMspecs::autogen_Gama_pres</definition>
+        <argsstring></argsstring>
+        <name>autogen_Gama_pres</name>
+        <qualifiedname>MPMspecs::autogen_Gama_pres</qualifiedname>
+        <initializer>=1.4</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_specs.H" line="191" column="14" bodyfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_specs.H" bodystart="191" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_m_p_mspecs_1a991d3d66076630033ae8d4b50929042d" prot="public" static="no" mutable="no">
+        <type>Real</type>
+        <definition>Real MPMspecs::autogen_visc</definition>
+        <argsstring></argsstring>
+        <name>autogen_visc</name>
+        <qualifiedname>MPMspecs::autogen_visc</qualifiedname>
+        <initializer>=0.001</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_specs.H" line="192" column="14" bodyfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_specs.H" bodystart="192" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_m_p_mspecs_1ab6bf956158f4fd53604810b340f7b9da" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int MPMspecs::levelset_bc</definition>
+        <argsstring></argsstring>
+        <name>levelset_bc</name>
+        <qualifiedname>MPMspecs::levelset_bc</qualifiedname>
+        <initializer>=1</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_specs.H" line="194" column="13" bodyfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_specs.H" bodystart="194" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_m_p_mspecs_1aea82fabb297af79085c34707b4dcbc5f" prot="public" static="no" mutable="no">
+        <type>Real</type>
+        <definition>Real MPMspecs::levelset_wall_mu</definition>
+        <argsstring></argsstring>
+        <name>levelset_wall_mu</name>
+        <qualifiedname>MPMspecs::levelset_wall_mu</qualifiedname>
+        <initializer>=0.1</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_specs.H" line="195" column="14" bodyfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_specs.H" bodystart="195" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_m_p_mspecs_1a998760865ecccac70c232eee520fb7bf" prot="public" static="no" mutable="no">
+        <type>Array&lt; Real, AMREX_SPACEDIM &gt;</type>
+        <definition>Array&lt;Real,AMREX_SPACEDIM&gt; MPMspecs::wall_mu_lo</definition>
+        <argsstring></argsstring>
+        <name>wall_mu_lo</name>
+        <qualifiedname>MPMspecs::wall_mu_lo</qualifiedname>
+        <initializer>{AMREX_D_DECL(0.1, 0.1, 0.1)}</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_specs.H" line="198" column="15" bodyfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_specs.H" bodystart="198" bodyend="198"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_m_p_mspecs_1a0f9d89121925a4e03de80ae2a0cccd1e" prot="public" static="no" mutable="no">
+        <type>Array&lt; Real, AMREX_SPACEDIM &gt;</type>
+        <definition>Array&lt;Real,AMREX_SPACEDIM&gt; MPMspecs::wall_mu_hi</definition>
+        <argsstring></argsstring>
+        <name>wall_mu_hi</name>
+        <qualifiedname>MPMspecs::wall_mu_hi</qualifiedname>
+        <initializer>{AMREX_D_DECL(0.1, 0.1, 0.1)}</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_specs.H" line="199" column="15" bodyfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_specs.H" bodystart="199" bodyend="199"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_m_p_mspecs_1a8be5ab0574100f8fca3f47dc9efb64d7" prot="public" static="no" mutable="no">
+        <type>Array&lt; Real, AMREX_SPACEDIM *AMREX_SPACEDIM &gt;</type>
+        <definition>Array&lt;Real,AMREX_SPACEDIM*AMREX_SPACEDIM&gt; MPMspecs::wall_vel_lo</definition>
+        <argsstring></argsstring>
+        <name>wall_vel_lo</name>
+        <qualifiedname>MPMspecs::wall_vel_lo</qualifiedname>
+        <initializer>{0.0}</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_specs.H" line="201" column="15" bodyfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_specs.H" bodystart="201" bodyend="201"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_m_p_mspecs_1adaa4ac1432e09cdaf67968519caa8498" prot="public" static="no" mutable="no">
+        <type>Array&lt; Real, AMREX_SPACEDIM *AMREX_SPACEDIM &gt;</type>
+        <definition>Array&lt;Real,AMREX_SPACEDIM*AMREX_SPACEDIM&gt; MPMspecs::wall_vel_hi</definition>
+        <argsstring></argsstring>
+        <name>wall_vel_hi</name>
+        <qualifiedname>MPMspecs::wall_vel_hi</qualifiedname>
+        <initializer>{0.0}</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_specs.H" line="202" column="15" bodyfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_specs.H" bodystart="202" bodyend="202"/>
+      </memberdef>
+      <memberdef kind="variable" id="class_m_p_mspecs_1a8092737f3f5c67a890c4087350d488df" prot="public" static="no" mutable="no">
+        <type>Real</type>
+        <definition>Real MPMspecs::levset_mu</definition>
+        <argsstring></argsstring>
+        <name>levset_mu</name>
+        <qualifiedname>MPMspecs::levset_mu</qualifiedname>
+        <initializer>=0.1</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_specs.H" line="204" column="14" bodyfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_specs.H" bodystart="204" bodyend="-1"/>
+      </memberdef>
+    </sectiondef>
+    <sectiondef kind="public-func">
+      <memberdef kind="function" id="class_m_p_mspecs_1a3319b1f48198a6c7b6aec4f2ee426d5e" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void MPMspecs::read_mpm_specs</definition>
+        <argsstring>()</argsstring>
+        <name>read_mpm_specs</name>
+        <qualifiedname>MPMspecs::read_mpm_specs</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_specs.H" line="206" column="14" bodyfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_specs.H" bodystart="206" bodyend="364"/>
+      </memberdef>
+      <memberdef kind="function" id="class_m_p_mspecs_1a48055653f95244bd6d6c734d56ae8324" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>std::string</type>
+        <definition>std::string MPMspecs::Convert_arr_string</definition>
+        <argsstring>(Array&lt; Real, AMREX_SPACEDIM &gt;arr)</argsstring>
+        <name>Convert_arr_string</name>
+        <qualifiedname>MPMspecs::Convert_arr_string</qualifiedname>
+        <param>
+          <type>Array&lt; Real, AMREX_SPACEDIM &gt;</type>
+          <declname>arr</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_specs.H" line="366" column="21" bodyfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_specs.H" bodystart="366" bodyend="376"/>
+      </memberdef>
+      <memberdef kind="function" id="class_m_p_mspecs_1aa770c65ab72c9641825c55752ed5a978" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void MPMspecs::PrintSimulationParams</definition>
+        <argsstring>()</argsstring>
+        <name>PrintSimulationParams</name>
+        <qualifiedname>MPMspecs::PrintSimulationParams</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_specs.H" line="378" column="14" bodyfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_specs.H" bodystart="378" bodyend="384"/>
+      </memberdef>
+      <memberdef kind="function" id="class_m_p_mspecs_1af404e58c8085622cd0b686078399d158" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type>void</type>
+        <definition>void MPMspecs::ThreeDOF_Solver</definition>
+        <argsstring>(amrex::Real dt)</argsstring>
+        <name>ThreeDOF_Solver</name>
+        <qualifiedname>MPMspecs::ThreeDOF_Solver</qualifiedname>
+        <param>
+          <type>amrex::Real</type>
+          <declname>dt</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_specs.H" line="385" column="14" bodyfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_specs.H" bodystart="385" bodyend="404"/>
+      </memberdef>
+    </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <collaborationgraph>
+      <node id="1">
+        <label>MPMspecs</label>
+        <link refid="class_m_p_mspecs"/>
+        <childnode refid="2" relation="usage">
+          <edgelabel>Rb</edgelabel>
+        </childnode>
+      </node>
+      <node id="2">
+        <label>Rigid_Bodies</label>
+        <link refid="struct_rigid___bodies"/>
+      </node>
+    </collaborationgraph>
+    <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_specs.H" line="73" column="1" bodyfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_specs.H" bodystart="74" bodyend="406"/>
+    <listofallmembers>
+      <member refid="class_m_p_mspecs_1a717b7eb9291297afe8c47b204ab75b76" prot="public" virt="non-virtual"><scope>MPMspecs</scope><name>alpha_pic_flip</name></member>
+      <member refid="class_m_p_mspecs_1a4759097fff8b93bc3a80bc98778841aa" prot="public" virt="non-virtual"><scope>MPMspecs</scope><name>applied_strainrate</name></member>
+      <member refid="class_m_p_mspecs_1abc8e5baccf617e175cab0b17e7f5a325" prot="public" virt="non-virtual"><scope>MPMspecs</scope><name>applied_strainrate_time</name></member>
+      <member refid="class_m_p_mspecs_1a0482ad1a26ade70a8bc44340ed13591a" prot="public" virt="non-virtual"><scope>MPMspecs</scope><name>autogen_bulkmod</name></member>
+      <member refid="class_m_p_mspecs_1a1967124b6951e2d43a0493f5e1952bf8" prot="public" virt="non-virtual"><scope>MPMspecs</scope><name>autogen_constmodel</name></member>
+      <member refid="class_m_p_mspecs_1a1112ceaa8e45841fd234e110d90ca720" prot="public" virt="non-virtual"><scope>MPMspecs</scope><name>autogen_dens</name></member>
+      <member refid="class_m_p_mspecs_1af32c5b1ea9a8d4feb60bdf39f6c75a60" prot="public" virt="non-virtual"><scope>MPMspecs</scope><name>autogen_E</name></member>
+      <member refid="class_m_p_mspecs_1aa6ad23a13e7f19b40fb05f3941a5d367" prot="public" virt="non-virtual"><scope>MPMspecs</scope><name>autogen_Gama_pres</name></member>
+      <member refid="class_m_p_mspecs_1a9c5403efbc775dc1521fc19c1c71a087" prot="public" virt="non-virtual"><scope>MPMspecs</scope><name>autogen_maxcoords</name></member>
+      <member refid="class_m_p_mspecs_1a8d219ebd5b4520916229ca91af59601f" prot="public" virt="non-virtual"><scope>MPMspecs</scope><name>autogen_mincoords</name></member>
+      <member refid="class_m_p_mspecs_1a8d68c8a70698d6cd5a6af0f9fc3f2db1" prot="public" virt="non-virtual"><scope>MPMspecs</scope><name>autogen_multi_part_per_cell</name></member>
+      <member refid="class_m_p_mspecs_1a8b2727bb34b40c27a7caabc086e9c8db" prot="public" virt="non-virtual"><scope>MPMspecs</scope><name>autogen_nu</name></member>
+      <member refid="class_m_p_mspecs_1ae8f980672462feb60ce38e94b8bf67f3" prot="public" virt="non-virtual"><scope>MPMspecs</scope><name>autogen_vel</name></member>
+      <member refid="class_m_p_mspecs_1a991d3d66076630033ae8d4b50929042d" prot="public" virt="non-virtual"><scope>MPMspecs</scope><name>autogen_visc</name></member>
+      <member refid="class_m_p_mspecs_1a6185e507e37d8e33cb485af5684be47c" prot="public" virt="non-virtual"><scope>MPMspecs</scope><name>axial_bar_E</name></member>
+      <member refid="class_m_p_mspecs_1a03aa0480488a8cd33a378a37156ac9d6" prot="public" virt="non-virtual"><scope>MPMspecs</scope><name>axial_bar_L</name></member>
+      <member refid="class_m_p_mspecs_1a8a7650587390384c17d63e4ec541959d" prot="public" virt="non-virtual"><scope>MPMspecs</scope><name>axial_bar_modenumber</name></member>
+      <member refid="class_m_p_mspecs_1a54894c7a8f1254c63c21b1cbbdec423e" prot="public" virt="non-virtual"><scope>MPMspecs</scope><name>axial_bar_rho</name></member>
+      <member refid="class_m_p_mspecs_1a13dd23c34110a7ca31f4b843659be1aa" prot="public" virt="non-virtual"><scope>MPMspecs</scope><name>axial_bar_v0</name></member>
+      <member refid="class_m_p_mspecs_1a3ccb155133faa51dc614afcc8839c962" prot="public" virt="non-virtual"><scope>MPMspecs</scope><name>bchi</name></member>
+      <member refid="class_m_p_mspecs_1a3b2b71f09ae5bbed08d69b76573f0407" prot="public" virt="non-virtual"><scope>MPMspecs</scope><name>bclo</name></member>
+      <member refid="class_m_p_mspecs_1ae888da118575ca42805fe753335806a2" prot="public" virt="non-virtual"><scope>MPMspecs</scope><name>calculate_strain_based_on_delta</name></member>
+      <member refid="class_m_p_mspecs_1ac6740549f341b5fa8bcb60d11f84cd60" prot="public" virt="non-virtual"><scope>MPMspecs</scope><name>CFL</name></member>
+      <member refid="class_m_p_mspecs_1a48055653f95244bd6d6c734d56ae8324" prot="public" virt="non-virtual"><scope>MPMspecs</scope><name>Convert_arr_string</name></member>
+      <member refid="class_m_p_mspecs_1a18f200f97476df7277b2d98e5e16a9e2" prot="public" virt="non-virtual"><scope>MPMspecs</scope><name>dam_break_g</name></member>
+      <member refid="class_m_p_mspecs_1ad44d96a644e9f283dac8c8b2049bc3b7" prot="public" virt="non-virtual"><scope>MPMspecs</scope><name>dam_break_H1</name></member>
+      <member refid="class_m_p_mspecs_1ad3bd314b4548c5cb4a558a90bff02462" prot="public" virt="non-virtual"><scope>MPMspecs</scope><name>dt_max_limit</name></member>
+      <member refid="class_m_p_mspecs_1af5bc13e924367009df74ab10dab4eea8" prot="public" virt="non-virtual"><scope>MPMspecs</scope><name>dt_min_limit</name></member>
+      <member refid="class_m_p_mspecs_1a4ca7f20cb57d6b9390c07e221c716c98" prot="public" virt="non-virtual"><scope>MPMspecs</scope><name>external_loads_present</name></member>
+      <member refid="class_m_p_mspecs_1abda4c74c124b325543720e7283d27445" prot="public" virt="non-virtual"><scope>MPMspecs</scope><name>extforce</name></member>
+      <member refid="class_m_p_mspecs_1aaeed8d5dcfbc006ba514d25b3e057f20" prot="public" virt="non-virtual"><scope>MPMspecs</scope><name>final_time</name></member>
+      <member refid="class_m_p_mspecs_1a20441c2479a07677d1cb8d3d8f2e4f2a" prot="public" virt="non-virtual"><scope>MPMspecs</scope><name>fixed_timestep</name></member>
+      <member refid="class_m_p_mspecs_1af347eac4bff2d51c5f216ab4a2f9b599" prot="public" virt="non-virtual"><scope>MPMspecs</scope><name>force_slab_hi</name></member>
+      <member refid="class_m_p_mspecs_1a1c4639b93d3ff39d1ec3f922b670644d" prot="public" virt="non-virtual"><scope>MPMspecs</scope><name>force_slab_lo</name></member>
+      <member refid="class_m_p_mspecs_1a7fbabd30c07bba21a60f5bc95d0d1935" prot="public" virt="non-virtual"><scope>MPMspecs</scope><name>gravity</name></member>
+      <member refid="class_m_p_mspecs_1aaa639b93f92a6bb21b2d4d75a29b0050" prot="public" virt="non-virtual"><scope>MPMspecs</scope><name>ifrigidnodespresent</name></member>
+      <member refid="class_m_p_mspecs_1a39c12140fe1c2cef19a7da5c71fed1d0" prot="public" virt="non-virtual"><scope>MPMspecs</scope><name>is_standard_test</name></member>
+      <member refid="class_m_p_mspecs_1ab6bf956158f4fd53604810b340f7b9da" prot="public" virt="non-virtual"><scope>MPMspecs</scope><name>levelset_bc</name></member>
+      <member refid="class_m_p_mspecs_1aea82fabb297af79085c34707b4dcbc5f" prot="public" virt="non-virtual"><scope>MPMspecs</scope><name>levelset_wall_mu</name></member>
+      <member refid="class_m_p_mspecs_1a8092737f3f5c67a890c4087350d488df" prot="public" virt="non-virtual"><scope>MPMspecs</scope><name>levset_mu</name></member>
+      <member refid="class_m_p_mspecs_1ae6e9a7e534e3d68683ed542efcfdfc87" prot="public" virt="non-virtual"><scope>MPMspecs</scope><name>mass_tolerance</name></member>
+      <member refid="class_m_p_mspecs_1a90f6d3d9b8730fc846b1b6c54d974f1c" prot="public" virt="non-virtual"><scope>MPMspecs</scope><name>max_grid_size</name></member>
+      <member refid="class_m_p_mspecs_1ad97d6401481f539451c8c03a59ac29bb" prot="public" virt="non-virtual"><scope>MPMspecs</scope><name>maxsteps</name></member>
+      <member refid="class_m_p_mspecs_1abfe02ddbb0fbc5f7f1490c0a4302149b" prot="public" virt="non-virtual"><scope>MPMspecs</scope><name>mem_compaction_area</name></member>
+      <member refid="class_m_p_mspecs_1a8ef3595102b71c5f9abbf3cc7f44f48e" prot="public" virt="non-virtual"><scope>MPMspecs</scope><name>mem_compaction_dampcoeff</name></member>
+      <member refid="class_m_p_mspecs_1a023fc8129575e3098c3892d5542474b2" prot="public" virt="non-virtual"><scope>MPMspecs</scope><name>mem_compaction_L0</name></member>
+      <member refid="class_m_p_mspecs_1a2403d35d4e28c488b1c7e8371a386066" prot="public" virt="non-virtual"><scope>MPMspecs</scope><name>mem_compaction_restoring_force_calc_method</name></member>
+      <member refid="class_m_p_mspecs_1af5f688648c33dc8e4876bcdd7ef2d628" prot="public" virt="non-virtual"><scope>MPMspecs</scope><name>mem_compaction_vnew</name></member>
+      <member refid="class_m_p_mspecs_1a451697128a18b175c8ceb0a18a6e30c3" prot="public" virt="non-virtual"><scope>MPMspecs</scope><name>mem_compaction_vold</name></member>
+      <member refid="class_m_p_mspecs_1a9dfe1a5dc143ae717f04a7103c4c1c7c" prot="public" virt="non-virtual"><scope>MPMspecs</scope><name>ncells</name></member>
+      <member refid="class_m_p_mspecs_1a82c2595bc7498c83192009c9086ade30" prot="public" virt="non-virtual"><scope>MPMspecs</scope><name>no_of_rigidbodies_present</name></member>
+      <member refid="class_m_p_mspecs_1a56c46c81b3d8c8bb6af8f01d00b860dd" prot="public" virt="non-virtual"><scope>MPMspecs</scope><name>num_of_digits_in_filenames</name></member>
+      <member refid="class_m_p_mspecs_1ab2c9b30c92c56c4574f28672dc22cc28" prot="public" virt="non-virtual"><scope>MPMspecs</scope><name>num_redist</name></member>
+      <member refid="class_m_p_mspecs_1a8bff4fe95dea7cddf3358fbc54250fb4" prot="public" virt="non-virtual"><scope>MPMspecs</scope><name>order_scheme</name></member>
+      <member refid="class_m_p_mspecs_1a9bf705b474a4976c06c08f15b1210059" prot="public" virt="non-virtual"><scope>MPMspecs</scope><name>order_scheme_directional</name></member>
+      <member refid="class_m_p_mspecs_1aca4f75bf15aecce7d3c4199c84174f6a" prot="public" virt="non-virtual"><scope>MPMspecs</scope><name>p2g_f</name></member>
+      <member refid="class_m_p_mspecs_1addedd8f6243265bc666e123d7e510997" prot="public" virt="non-virtual"><scope>MPMspecs</scope><name>p2g_L</name></member>
+      <member refid="class_m_p_mspecs_1a11b485d801e1bc733436b215a14b9269" prot="public" virt="non-virtual"><scope>MPMspecs</scope><name>p2g_ncell</name></member>
+      <member refid="class_m_p_mspecs_1a14ea23afbc20f13f6f3f9c94e55dabc4" prot="public" virt="non-virtual"><scope>MPMspecs</scope><name>particlefilename</name></member>
+      <member refid="class_m_p_mspecs_1ab92ca35619466a1203727da2d4da3495" prot="public" virt="non-virtual"><scope>MPMspecs</scope><name>periodic</name></member>
+      <member refid="class_m_p_mspecs_1a1a5b5046ae23460e7dd0b80ee893a7a4" prot="public" virt="non-virtual"><scope>MPMspecs</scope><name>phasefield_gridratio</name></member>
+      <member refid="class_m_p_mspecs_1a31ec7760e087271c35f7c69cc431f3a6" prot="public" virt="non-virtual"><scope>MPMspecs</scope><name>phasefield_output</name></member>
+      <member refid="class_m_p_mspecs_1abe2641683b1b234fc2997b36876ace9d" prot="public" virt="non-virtual"><scope>MPMspecs</scope><name>phasefield_smoothfactor</name></member>
+      <member refid="class_m_p_mspecs_1a5a6218f941f7d9e8798615e7a60c3cb9" prot="public" virt="non-virtual"><scope>MPMspecs</scope><name>phi</name></member>
+      <member refid="class_m_p_mspecs_1a542ca96b9b59b09b2ee1181077c94f87" prot="public" virt="non-virtual"><scope>MPMspecs</scope><name>plo</name></member>
+      <member refid="class_m_p_mspecs_1a2d74a6570e8be4e5bcf2366f46d7a40b" prot="public" virt="non-virtual"><scope>MPMspecs</scope><name>prefix_checkpointfilename</name></member>
+      <member refid="class_m_p_mspecs_1a392050cede128087629f30086abe7323" prot="public" virt="non-virtual"><scope>MPMspecs</scope><name>prefix_densityfilename</name></member>
+      <member refid="class_m_p_mspecs_1af4cfe41c8746541fd167b5a81160a3c8" prot="public" virt="non-virtual"><scope>MPMspecs</scope><name>prefix_gridfilename</name></member>
+      <member refid="class_m_p_mspecs_1a4d4f1fabfcb272dc2075a3722134d2fe" prot="public" virt="non-virtual"><scope>MPMspecs</scope><name>prefix_particlefilename</name></member>
+      <member refid="class_m_p_mspecs_1a79e1917f2fc52a87c61d0deaeabd13b6" prot="public" virt="non-virtual"><scope>MPMspecs</scope><name>print_diagnostics</name></member>
+      <member refid="class_m_p_mspecs_1aa770c65ab72c9641825c55752ed5a978" prot="public" virt="non-virtual"><scope>MPMspecs</scope><name>PrintSimulationParams</name></member>
+      <member refid="class_m_p_mspecs_1a9fac5f461f3001477811f47c516b1a24" prot="public" virt="non-virtual"><scope>MPMspecs</scope><name>Rb</name></member>
+      <member refid="class_m_p_mspecs_1a3319b1f48198a6c7b6aec4f2ee426d5e" prot="public" virt="non-virtual"><scope>MPMspecs</scope><name>read_mpm_specs</name></member>
+      <member refid="class_m_p_mspecs_1a4971e2008d51d625ff234f67cbef62d7" prot="public" virt="non-virtual"><scope>MPMspecs</scope><name>restart_checkfile</name></member>
+      <member refid="class_m_p_mspecs_1a42c23cc35f47f62e1ac5657efb239c32" prot="public" virt="non-virtual"><scope>MPMspecs</scope><name>screen_output_time</name></member>
+      <member refid="class_m_p_mspecs_1a149d82a9382831c6af40cb7a9f02ee6f" prot="public" virt="non-virtual"><scope>MPMspecs</scope><name>spring_alone_area</name></member>
+      <member refid="class_m_p_mspecs_1a3925715e8ff99008cdc27d5c720dd787" prot="public" virt="non-virtual"><scope>MPMspecs</scope><name>spring_alone_E</name></member>
+      <member refid="class_m_p_mspecs_1a9202ff2199f86245c781d4fa18707520" prot="public" virt="non-virtual"><scope>MPMspecs</scope><name>spring_alone_exact_deflection</name></member>
+      <member refid="class_m_p_mspecs_1aa028414dd6934eaf7de6baee6b386bca" prot="public" virt="non-virtual"><scope>MPMspecs</scope><name>spring_alone_exact_delta</name></member>
+      <member refid="class_m_p_mspecs_1aea81e2d5bfb9a9447384ff2cbceab0b3" prot="public" virt="non-virtual"><scope>MPMspecs</scope><name>spring_alone_length</name></member>
+      <member refid="class_m_p_mspecs_1ad1fc57a3a8e2a770c60c04ef1d71bf46" prot="public" virt="non-virtual"><scope>MPMspecs</scope><name>stress_update_scheme</name></member>
+      <member refid="class_m_p_mspecs_1a062b427a5f2a633097cf55f39eb379aa" prot="public" virt="non-virtual"><scope>MPMspecs</scope><name>test_number</name></member>
+      <member refid="class_m_p_mspecs_1af404e58c8085622cd0b686078399d158" prot="public" virt="non-virtual"><scope>MPMspecs</scope><name>ThreeDOF_Solver</name></member>
+      <member refid="class_m_p_mspecs_1a5f9b0bb080606b4361e7b0a5c4808221" prot="public" virt="non-virtual"><scope>MPMspecs</scope><name>timestep</name></member>
+      <member refid="class_m_p_mspecs_1a4b9cdf5ab4c5c6e7c2135f504b3c2108" prot="public" virt="non-virtual"><scope>MPMspecs</scope><name>total_mass</name></member>
+      <member refid="class_m_p_mspecs_1a39fa82b6cf4707bcb9d736e74b3950a5" prot="public" virt="non-virtual"><scope>MPMspecs</scope><name>total_mass_phase_0</name></member>
+      <member refid="class_m_p_mspecs_1aebfa0f88857bc4b4ad00603cb3d90305" prot="public" virt="non-virtual"><scope>MPMspecs</scope><name>total_rigid_mass</name></member>
+      <member refid="class_m_p_mspecs_1ab16ff53ac90b0f5bd14b7720db28c852" prot="public" virt="non-virtual"><scope>MPMspecs</scope><name>total_vol</name></member>
+      <member refid="class_m_p_mspecs_1aed7b2e9aa3b6b2f0781ffd38d59f49cb" prot="public" virt="non-virtual"><scope>MPMspecs</scope><name>total_vol_phase_0</name></member>
+      <member refid="class_m_p_mspecs_1a7d91b2af3f2e963c2bd29bfe0f7d9fdc" prot="public" virt="non-virtual"><scope>MPMspecs</scope><name>tvb_E</name></member>
+      <member refid="class_m_p_mspecs_1a8fe5fecdbac3bc081aef794ea976af5d" prot="public" virt="non-virtual"><scope>MPMspecs</scope><name>tvb_L</name></member>
+      <member refid="class_m_p_mspecs_1ade44aa9e398af79414611d170fedca84" prot="public" virt="non-virtual"><scope>MPMspecs</scope><name>tvb_rho</name></member>
+      <member refid="class_m_p_mspecs_1ada43720ea6c9adf009e2e6cb725db0f6" prot="public" virt="non-virtual"><scope>MPMspecs</scope><name>tvb_v0</name></member>
+      <member refid="class_m_p_mspecs_1ae6403efc833af3d15f5a52c025967598" prot="public" virt="non-virtual"><scope>MPMspecs</scope><name>use_autogen</name></member>
+      <member refid="class_m_p_mspecs_1a0f9d89121925a4e03de80ae2a0cccd1e" prot="public" virt="non-virtual"><scope>MPMspecs</scope><name>wall_mu_hi</name></member>
+      <member refid="class_m_p_mspecs_1a998760865ecccac70c232eee520fb7bf" prot="public" virt="non-virtual"><scope>MPMspecs</scope><name>wall_mu_lo</name></member>
+      <member refid="class_m_p_mspecs_1adaa4ac1432e09cdaf67968519caa8498" prot="public" virt="non-virtual"><scope>MPMspecs</scope><name>wall_vel_hi</name></member>
+      <member refid="class_m_p_mspecs_1a8be5ab0574100f8fca3f47dc9efb64d7" prot="public" virt="non-virtual"><scope>MPMspecs</scope><name>wall_vel_lo</name></member>
+      <member refid="class_m_p_mspecs_1a8123df5c4ed8ab1faf4a1b1192129ded" prot="public" virt="non-virtual"><scope>MPMspecs</scope><name>write_output_time</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

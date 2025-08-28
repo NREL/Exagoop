@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="./">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Governing equations of continuum mechanics &#8212; ExaGOOP 1.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=5ecbeea2" />
+    <link rel="stylesheet" type="text/css" href="_static/basic.css?v=b08954a9" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css?v=27fed22d" />
+    <script src="_static/documentation_options.js?v=f2a433a1"></script>
+    <script src="_static/doctools.js?v=9bcbadda"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Governing Equations of MPM" href="mpm_equations.html" />
+    <link rel="prev" title="Introduction" href="intro.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="governing-equations-of-continuum-mechanics">
+<h1>Governing equations of continuum mechanics<a class="headerlink" href="#governing-equations-of-continuum-mechanics" title="Link to this heading">¶</a></h1>
+<p>The governing equations forming the basis of the material point method
+comprise of the equations of conservation of mass and momentum. Since,
+the membrane compaction problem under study is assumed to be isothermal
+in nature, the law of conservation of energy is implicitly satisfied.
+Also the absence of any material elements with internal torques
+justifies the omission of the angular momentum conservation equation. In
+the context of MPM, the mass and momentum conservation laws are
+expressed in the Lagrangian framework as explained in
+Section <a class="reference external" href="#sec:intro">[sec:intro]</a>.</p>
+<p>The Lagrangian description of motion of a particle is expressed in terms
+of its material coordinates <span class="math notranslate nohighlight">\(X\)</span> and time <span class="math notranslate nohighlight">\(t\)</span>. Material
+coordinates refer to a coordinate system attached to the particle under
+consideration in its initial configuration (time <span class="math notranslate nohighlight">\(t=0\)</span>). In the
+Lagrangian description, the particle is assumed to move with local
+velocity of the medium and other continuum properties are studied in
+this coordinate system.</p>
+<p>Hence, the motion of a particle is expressed in the Lagrangian
+description as,</p>
+<div class="math notranslate nohighlight">
+\[\begin{aligned}
+    \mathbf{x} = \mathbf{x}(\mathbf{X},t)
+\end{aligned}\]</div>
+<p>It is to be noted that by definition, the above particle had the
+coordinates defined by <span class="math notranslate nohighlight">\(\mathbf{X}\)</span> at time <span class="math notranslate nohighlight">\(t=0\)</span>. The
+displacement <span class="math notranslate nohighlight">\(\mathbf{u}\)</span> of the particle with respect to the
+initial configuration is then expressed as,</p>
+<div class="math notranslate nohighlight">
+\[\begin{aligned}
+    \mathbf{u} = \mathbf{x}(\mathbf{X},t)-\mathbf{X}
+\end{aligned}\]</div>
+<p>The definition of the velocity of the particle <span class="math notranslate nohighlight">\(\mathbf{v}\)</span> then
+follows as,</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{aligned}
+    \mathbf{v}  &amp;= \dot{\mathbf{x}} =  \frac{d \mathbf{u}(\mathbf{X},t)}{dt}\\
+                &amp;= \frac{\partial \mathbf{u}(\mathbf{X},t)}{\partial t}
+\end{aligned}\end{split}\]</div>
+<p>Similarly the time rate of change of any property of the particle
+expressed in the Lagrangian framework is simply its partial time
+derivative and <span class="math notranslate nohighlight">\(\mathbf{X}\)</span> simply serves as a parameter. Similar
+to the expression of velocity given above, the acceleration of the
+particle can also be expressed as,</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{aligned}
+    \mathbf{a}  &amp;= \dot{\mathbf{v}} =  \frac{\partial \mathbf{v}(\mathbf{X},t)}{\partial t}\\
+                &amp;= \frac{\partial^2 \mathbf{u}(\mathbf{X},t)}{\partial t^2}
+\end{aligned}\end{split}\]</div>
+<p>Without going deep into the details, some of the mathematical terms used
+in the governing equations are defined in the following paragraphs.</p>
+<section id="deformation-gradient-tensor">
+<h2>Deformation gradient tensor<a class="headerlink" href="#deformation-gradient-tensor" title="Link to this heading">¶</a></h2>
+<p>The deformation gradient tensor <span class="math notranslate nohighlight">\(\mathbf{F}\)</span> is defined as,</p>
+<div class="math notranslate nohighlight">
+\[\begin{aligned}
+    \mathbf{F}  = \frac{\partial \mathbf{x}(\mathbf{X},t)}{\partial \mathbf{X}}
+\end{aligned}\]</div>
+<p>is a symmetric, second-order tensor which describes the stretch and
+rotation of material element. Mathematically, it is a linear operator
+that maps the current configuration to the original configuration of a
+continuum body.</p>
+</section>
+<section id="velocity-gradient-tensor">
+<h2>Velocity gradient tensor<a class="headerlink" href="#velocity-gradient-tensor" title="Link to this heading">¶</a></h2>
+<p>The velocity gradient tensor <span class="math notranslate nohighlight">\(\mathbf{L}\)</span> is defined as the
+spatial gradient of velocity.</p>
+<div class="math notranslate nohighlight">
+\[\begin{aligned}
+\mathbf{L} = \frac{\partial \mathbf{v}}{\partial x}
+\end{aligned}\]</div>
+<p>This second-order tensor can be decomposed to a symmetric part (rate of
+deformation tensor) and an anti-symmetric part (spin tensor) as shown
+below</p>
+<div class="math notranslate nohighlight">
+\[\begin{aligned}
+\mathbf{L} = \mathbf{D}+{\Omega}
+\end{aligned}\]</div>
+<p>where,</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{aligned}
+\mathbf{D} &amp;= \frac{1}{2} (\mathbf{L}+\mathbf{L}^T)\\
+\Omega &amp;= \frac{1}{2} (\mathbf{L}-\mathbf{L}^T)\\
+\end{aligned}\end{split}\]</div>
+<p>The rate of deformation tensor <span class="math notranslate nohighlight">\(D\)</span> indicates the rate of strain
+suffered by a material element and is used to find the stresses through
+a constitutive model. The spin tensor <span class="math notranslate nohighlight">\(\Omega\)</span> refers the rotation
+the same material element undergoes. The velocity gradient tensor is
+related to the deformation gradient tensor through the following
+expression,</p>
+<div class="math notranslate nohighlight">
+\[\begin{aligned}
+\mathbf{L} = \dot{\mathbf{F}}\mathbf{F}^{-1}
+\end{aligned}\]</div>
+</section>
+<section id="jacobian">
+<h2>Jacobian<a class="headerlink" href="#jacobian" title="Link to this heading">¶</a></h2>
+<p>The jacobian (<span class="math notranslate nohighlight">\(\mathbf{J}\)</span>) is defined as the determinant of the
+deformation gradient tensor (<span class="math notranslate nohighlight">\(\mathbf{F}\)</span>).</p>
+<div class="math notranslate nohighlight">
+\[\begin{aligned}
+    J=\left|\frac{\partial \mathbf{x}}{\partial \mathbf{X}}\right| = \left| \mathbf{F} \right|
+\end{aligned}\]</div>
+<p>A necessary and sufficient condition for the motion to be invertible is
+to have a non-zero jacobian at all times. The jacobian also relates the
+volume of an infinitesimal body at time <span class="math notranslate nohighlight">\(t\)</span> to its volume at
+initial time through the relation</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{aligned}
+\mathrm{d} V=\left|\begin{array}{ccc}\mathrm{d} x_1 &amp; \mathrm{~d} x_2 &amp; \mathrm{~d} x_3 \\ \delta x_1 &amp; \delta x_2 &amp; \delta x_3 \\ \Delta x_1 &amp; \Delta x_2 &amp; \Delta x_3\end{array}\right|=J \mathrm{~d} V_0
+\end{aligned}\end{split}\]</div>
+<p>where <span class="math notranslate nohighlight">\(\mathrm{d} V\)</span> and <span class="math notranslate nohighlight">\(\mathrm{d} V_0\)</span> are the volumes at
+current and initial time.</p>
+</section>
+<section id="stress-tensor-and-constitutive-models">
+<h2>Stress tensor and Constitutive models<a class="headerlink" href="#stress-tensor-and-constitutive-models" title="Link to this heading">¶</a></h2>
+<p>The stress tensort <span class="math notranslate nohighlight">\(\mathbf{\sigma}\)</span> is another symmetric,
+second-order tensor that defines the state of stress at a point. The
+traction or force per unit area acting at a point on an imaginary
+surface with normal <span class="math notranslate nohighlight">\(\mathbf{n}\)</span> is related to the stress tensor
+at the point as,</p>
+<div class="math notranslate nohighlight">
+\[\begin{aligned}
+\mathbf{t} = \mathbf{n}.\mathbf{\sigma}
+\end{aligned}\]</div>
+<p>Stress tensor at a point is related to the rate of deformation tensor
+<span class="math notranslate nohighlight">\(\mathbf{D}\)</span> through a constitutive relation. Depending on the
+material considered, multitude of constitutive relations such as linear
+elastic, plastic, Newtonian fluids etc. exist.</p>
+</section>
+<section id="equation-of-conservation-of-mass">
+<h2>Equation of conservation of mass<a class="headerlink" href="#equation-of-conservation-of-mass" title="Link to this heading">¶</a></h2>
+<figure class="align-default" id="id1">
+<a class="reference internal image-reference" href="PICS/MPMEq.pngname:Fig:MPM_Dom"><img alt="PICS/MPMEq.pngname:Fig:MPM_Dom" src="PICS/MPMEq.pngname:Fig:MPM_Dom" style="width: 40.0%;" />
+</a>
+<figcaption>
+<p><span class="caption-text">Various stages in MPM computations</span><a class="headerlink" href="#id1" title="Link to this image">¶</a></p>
+</figcaption>
+</figure>
+<p>For a continuum body occupying a region <span class="math notranslate nohighlight">\(\Omega\)</span> in space and
+bounded by a surface <span class="math notranslate nohighlight">\(\Gamma=\Gamma_u \cup \Gamma_t\)</span> as shown in
+Figure <a class="reference external" href="#Fig:MPM_Dom">1</a>, the total mass <span class="math notranslate nohighlight">\(m\)</span> of the body is
+given by,</p>
+<div class="math notranslate nohighlight">
+\[\begin{aligned}
+m=\int_{\Omega} \rho(\mathbf{x}, t) d V
+\end{aligned}\]</div>
+<p>where <span class="math notranslate nohighlight">\(\rho\)</span> is the density of the material.</p>
+<p>Since the mass contained in the region <span class="math notranslate nohighlight">\(\Omega\)</span> and moving with
+local velocity is constant, the total time derivative is zero. Hence,</p>
+<div class="math notranslate nohighlight">
+\[\begin{aligned}
+\frac{\mathrm{D}}{\mathrm{D} t} \int_{\Omega} \rho(\mathbf{x}, t) \mathrm{d} V=\int_{\Omega}(\dot{\rho}+\rho \nabla \cdot \boldsymbol{v}) \mathrm{d} V=0
+\end{aligned}\]</div>
+<p>which leads to the mass conservation equation as,</p>
+<div class="math notranslate nohighlight">
+\[\begin{aligned}
+\rho J-\rho_0=0
+\end{aligned}\]</div>
+</section>
+<section id="conservation-of-momentum">
+<h2>Conservation of momentum<a class="headerlink" href="#conservation-of-momentum" title="Link to this heading">¶</a></h2>
+<p>The Newton’s second law of motion states that the rate of change of
+momentum of a body is equal to the sum of volume and surface forces
+acting on it. Consider the same body as shown in
+Figure <a class="reference external" href="#Fig:MPM_Dom">1</a>, with a body force per unit mass
+<span class="math notranslate nohighlight">\(\mathbf{b}\)</span> and traction <span class="math notranslate nohighlight">\(\mathbf{t}\)</span> acting on it’s
+surface. The law of conservation of momentum is expressed as,</p>
+<div class="math notranslate nohighlight">
+\[\begin{aligned}
+\frac{\mathrm{D}}{\mathrm{D} t} \int_{\Omega} \rho \mathbf{v} \mathrm{d} V=\int_{\Omega} \rho \mathbf{b}(\mathbf{x},t) \mathrm{d} V + \int_{\Gamma_t} \mathbf{t}(\mathbf{x},t).\mathbf{n} \mathrm{d} A
+\end{aligned}\]</div>
+<p>By invoking the Reynolds transport theorum and upon simplifying one
+obtains,</p>
+<div class="math notranslate nohighlight">
+\[\begin{aligned}
+\rho \dot{\mathbf{v}} = \rho \mathbf{b} + \nabla . \sigma
+\end{aligned}\]</div>
+</section>
+<section id="initial-and-boundary-conditions">
+<h2>Initial and Boundary conditions<a class="headerlink" href="#initial-and-boundary-conditions" title="Link to this heading">¶</a></h2>
+<p>Two types of boundary conditions are considered in MPM solution, namely
+boundaries with specified velocity and specified traction respectively.</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{aligned}
+&amp; \left\{\begin{array}{l}
+\left.(\boldsymbol{n} \cdot \boldsymbol{\sigma})\right|_{\Gamma_t}=\overline{\boldsymbol{t}} \\
+\left.\boldsymbol{v}\right|_{\Gamma_u}=\overline{\boldsymbol{v}}
+\end{array}\right. \\
+\end{aligned}\end{split}\]</div>
+<p>Initial conditions in MPM involve specifying displacement of material
+points and velocities at time t=0.</p>
+<div class="math notranslate nohighlight">
+\[\begin{aligned}
+&amp; \mathbf{v}(\mathbf{x}, 0)=\mathbf{v}_0(\mathbf{x}), \quad \mathbf{u}(\mathbf{x}, 0)=\mathbf{u}_0(\mathbf{x})
+\end{aligned}\]</div>
+</section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">ExaGOOP</a></h1>
+
+
+
+
+
+
+
+
+
+<search id="searchbox" style="display: none" role="search">
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="Search"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script><h3>Navigation</h3>
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="intro.html">Introduction</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Governing equations of continuum mechanics</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#deformation-gradient-tensor">Deformation gradient tensor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#velocity-gradient-tensor">Velocity gradient tensor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#jacobian">Jacobian</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#stress-tensor-and-constitutive-models">Stress tensor and Constitutive models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#equation-of-conservation-of-mass">Equation of conservation of mass</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#conservation-of-momentum">Conservation of momentum</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#initial-and-boundary-conditions">Initial and Boundary conditions</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="mpm_equations.html">Governing Equations of MPM</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="intro.html" title="previous chapter">Introduction</a></li>
+      <li>Next: <a href="mpm_equations.html" title="next chapter">Governing Equations of MPM</a></li>
+  </ul></li>
+</ul>
+</div>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &#169;2025, Sreejith N.A., Hariswaran Sitaraman, Nick Deak, Marc Day.
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 8.2.3</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 1.0.0</a>
+      
+      |
+      <a href="_sources/theory.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

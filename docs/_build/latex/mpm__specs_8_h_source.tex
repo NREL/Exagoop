@@ -1,0 +1,419 @@
+\doxysection{mpm\+\_\+specs.\+H}
+\hypertarget{mpm__specs_8_h_source}{}\label{mpm__specs_8_h_source}\index{E:/Research/02\_CODE\_DEVELOPMENTS/04\_EXAGOOP/Source/mpm\_specs.H@{E:/Research/02\_CODE\_DEVELOPMENTS/04\_EXAGOOP/Source/mpm\_specs.H}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#ifndef\ MPM\_PARTICLE\_SPECS\_H\_}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#define\ MPM\_PARTICLE\_SPECS\_H\_}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ <AMReX.H>}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ <AMReX\_REAL.H>}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ <AMReX\_ParmParse.H>}}
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ <constants.H>}}
+\DoxyCodeLine{00008\ }
+\DoxyCodeLine{00009\ \textcolor{keyword}{using\ namespace\ }amrex;}
+\DoxyCodeLine{00010\ }
+\DoxyCodeLine{00011\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structreal_data}{realData}}}
+\DoxyCodeLine{00012\ \{}
+\DoxyCodeLine{00013\ \ \ \ \ \textcolor{keyword}{enum}\ }
+\DoxyCodeLine{00014\ \ \ \ \ \{\ \textcolor{comment}{//\ Particle\ data\ stored\ in\ p.m\_data}}
+\DoxyCodeLine{00015\ \ \ \ \ \ \ \ \ radius=0,}
+\DoxyCodeLine{00016\ \ \ \ \ \ \ \ \ xvel=1,}
+\DoxyCodeLine{00017\ \ \ \ \ \ \ \ \ yvel=2,}
+\DoxyCodeLine{00018\ \ \ \ \ \ \ \ \ zvel=3,}
+\DoxyCodeLine{00019\ \ \ \ \ \ \ \ \ xvel\_prime=4,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//For\ position\ update.\ Check\ the\ review\ paper\ page\ 34}}
+\DoxyCodeLine{00020\ \ \ \ \ \ \ \ \ yvel\_prime=5,}
+\DoxyCodeLine{00021\ \ \ \ \ \ \ \ \ zvel\_prime=6,}
+\DoxyCodeLine{00022\ \ \ \ \ \ \ \ \ strainrate=7,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//4}}
+\DoxyCodeLine{00023\ \ \ \ \ \ \ \ \ strain=13,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//10}}
+\DoxyCodeLine{00024\ \ \ \ \ \ \ \ \ stress=19,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//16}}
+\DoxyCodeLine{00025\ \ \ \ \ \ \ \ \ deformation\_gradient=25,\ \ \ \ \textcolor{comment}{//22}}
+\DoxyCodeLine{00026\ \ \ \ \ \ \ \ \ volume=34,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//31}}
+\DoxyCodeLine{00027\ \ \ \ \ \ \ \ \ mass=35,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//32}}
+\DoxyCodeLine{00028\ \ \ \ \ \ \ \ \ density=36,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//33}}
+\DoxyCodeLine{00029\ \ \ \ \ \ \ \ \ jacobian=37,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//34}}
+\DoxyCodeLine{00030\ \ \ \ \ \ \ \ \ pressure=38,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//35}}
+\DoxyCodeLine{00031\ \ \ \ \ \ \ \ \ vol\_init=39,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//36}}
+\DoxyCodeLine{00032\ \ \ \ \ \ \ \ \ E=40,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//37}}
+\DoxyCodeLine{00033\ \ \ \ \ \ \ \ \ nu=41,\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//38}}
+\DoxyCodeLine{00034\ \ \ \ \ \ \ \ \ Bulk\_modulus=42,\ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//39}}
+\DoxyCodeLine{00035\ \ \ \ \ \ \ \ \ Gama\_pressure=43,\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//40}}
+\DoxyCodeLine{00036\ \ \ \ \ \ \ \ \ Dynamic\_viscosity=44,\ \ \ \ \ \ \ \textcolor{comment}{//41}}
+\DoxyCodeLine{00037\ \ \ \ \ \ \ \ \ yacceleration=45,\ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//45\ \ \ \ This\ is\ for\ storing\ the\ acceleration\ of\ each\ particle\ in\ the\ y-\/direction.\ This\ variable\ is\ not\ generic\ and\ used\ only\ for\ the\ spring-\/mass\ and\ membrane\ simulations\ only}}
+\DoxyCodeLine{00038\ \ \ \ \ \ \ \ \ count}
+\DoxyCodeLine{00039\ \ \ \ \ \};}
+\DoxyCodeLine{00040\ \};}
+\DoxyCodeLine{00041\ }
+\DoxyCodeLine{00042\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structint_data}{intData}}}
+\DoxyCodeLine{00043\ \{}
+\DoxyCodeLine{00044\ \ \ \ \ \textcolor{keyword}{enum}\ }
+\DoxyCodeLine{00045\ \ \ \ \ \{}
+\DoxyCodeLine{00046\ \ \ \ \ \ \ \ \ phase\ =\ 0,}
+\DoxyCodeLine{00047\ \ \ \ \ \ \ \ \ rigid\_body\_id,}
+\DoxyCodeLine{00048\ \ \ \ \ \ \ \ \ constitutive\_model,}
+\DoxyCodeLine{00049\ \ \ \ \ \ \ \ \ count}
+\DoxyCodeLine{00050\ \ \ \ \ \};}
+\DoxyCodeLine{00051\ \};}
+\DoxyCodeLine{00052\ }
+\DoxyCodeLine{00053\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_rigid___bodies}{Rigid\_Bodies}}}
+\DoxyCodeLine{00054\ \{}
+\DoxyCodeLine{00055\ \ \ \ \ \textcolor{keywordtype}{int}\ Rigid\_Body\_Id;}
+\DoxyCodeLine{00056\ \ \ \ \ \textcolor{keywordtype}{int}\ num\_of\_mp;}
+\DoxyCodeLine{00057\ \ \ \ \ amrex::Real\ total\_mass;}
+\DoxyCodeLine{00058\ \ \ \ \ amrex::Real\ total\_volume;}
+\DoxyCodeLine{00059\ \ \ \ \ Array\ <amrex::Real,AMREX\_SPACEDIM>\ gravity;}
+\DoxyCodeLine{00060\ \ \ \ \ Array\ <amrex::Real,AMREX\_SPACEDIM>\ force\_external;}
+\DoxyCodeLine{00061\ \ \ \ \ Array\ <amrex::Real,AMREX\_SPACEDIM>\ force\_internal;}
+\DoxyCodeLine{00062\ \ \ \ \ Array\ <amrex::Real,AMREX\_SPACEDIM>\ velocity;}
+\DoxyCodeLine{00063\ \ \ \ \ Array\ <amrex::Real,AMREX\_SPACEDIM>\ imposed\_velocity;}
+\DoxyCodeLine{00064\ \ \ \ \ amrex::Real\ Damping\_Coefficient;}
+\DoxyCodeLine{00065\ \ \ \ \ \textcolor{comment}{//Body\ forces}}
+\DoxyCodeLine{00066\ \ \ \ \ \textcolor{keywordtype}{int}\ position\_update\_method;\ \ \ \ \ \ \ \ \ \textcolor{comment}{//0-\/-\/>Constant\ Velocity\ 1-\/-\/>Particle\ dynamics\ solver}}
+\DoxyCodeLine{00067\ \ \ \ \ \textcolor{keywordtype}{bool}\ enable\_weight;}
+\DoxyCodeLine{00068\ \ \ \ \ \textcolor{keywordtype}{bool}\ enable\_damping\_force;}
+\DoxyCodeLine{00069\ \};}
+\DoxyCodeLine{00070\ }
+\DoxyCodeLine{00071\ }
+\DoxyCodeLine{00072\ }
+\DoxyCodeLine{00073\ \textcolor{keyword}{class\ }\mbox{\hyperlink{class_m_p_mspecs}{MPMspecs}}}
+\DoxyCodeLine{00074\ \{}
+\DoxyCodeLine{00075\ \ \ \ \ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00076\ }
+\DoxyCodeLine{00077\ \ \ \ \ \ \ \ \ Array<Real,AMREX\_SPACEDIM>\ plo\{AMREX\_D\_DECL(0.0,\ 0.0,\ 0.0)\};}
+\DoxyCodeLine{00078\ \ \ \ \ \ \ \ \ Array<Real,AMREX\_SPACEDIM>\ phi\{AMREX\_D\_DECL(0.0,\ 0.0,\ 0.0)\};}
+\DoxyCodeLine{00079\ \ \ \ \ \ \ \ \ Array<int,AMREX\_SPACEDIM>\ ncells\{AMREX\_D\_DECL(0,\ 0,\ 0)\};}
+\DoxyCodeLine{00080\ \ \ \ \ \ \ \ \ GpuArray<int,AMREX\_SPACEDIM>\ periodic\{AMREX\_D\_DECL(0,\ 0,\ 0)\};}
+\DoxyCodeLine{00081\ \ \ \ \ \ \ \ \ Array<Real,AMREX\_SPACEDIM>\ gravity\{AMREX\_D\_DECL(0.0,\ -\/ACCG,\ 0.0)\};}
+\DoxyCodeLine{00082\ }
+\DoxyCodeLine{00083\ \ \ \ \ \ \ \ \ Array<Real,AMREX\_SPACEDIM>\ force\_slab\_lo\{AMREX\_D\_DECL(0.0,\ 0.0,\ 0.0)\};}
+\DoxyCodeLine{00084\ \ \ \ \ \ \ \ \ Array<Real,AMREX\_SPACEDIM>\ force\_slab\_hi\{AMREX\_D\_DECL(0.0,\ 0.0,\ 0.0)\};}
+\DoxyCodeLine{00085\ \ \ \ \ \ \ \ \ Array<Real,AMREX\_SPACEDIM>\ extforce\{AMREX\_D\_DECL(0.0,\ 0.0,\ 0.0)\};}
+\DoxyCodeLine{00086\ }
+\DoxyCodeLine{00087\ \ \ \ \ \ \ \ \ Real\ timestep=0.0;}
+\DoxyCodeLine{00088\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ num\_redist=10;}
+\DoxyCodeLine{00089\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ max\_grid\_size=8;}
+\DoxyCodeLine{00090\ \ \ \ \ \ \ \ \ Real\ final\_time;}
+\DoxyCodeLine{00091\ \ \ \ \ \ \ \ \ Real\ write\_output\_time;}
+\DoxyCodeLine{00092\ \ \ \ \ \ \ \ \ Real\ screen\_output\_time;}
+\DoxyCodeLine{00093\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ maxsteps=1;}
+\DoxyCodeLine{00094\ \ \ \ \ \ \ \ \ std::string\ particlefilename;}
+\DoxyCodeLine{00095\ \ \ \ \ \ \ \ \ std::string\ restart\_checkfile;}
+\DoxyCodeLine{00096\ }
+\DoxyCodeLine{00097\ \ \ \ \ \ \ \ \ \textcolor{comment}{//Output\ parameters}}
+\DoxyCodeLine{00098\ \ \ \ \ \ \ \ \ std::string\ prefix\_particlefilename\ =\ \textcolor{stringliteral}{"{}plt"{}};}
+\DoxyCodeLine{00099\ \ \ \ \ \ \ \ \ std::string\ prefix\_gridfilename\ =\ \ \textcolor{stringliteral}{"{}plt"{}};}
+\DoxyCodeLine{00100\ \ \ \ \ \ \ \ \ std::string\ prefix\_densityfilename\ =\ \textcolor{stringliteral}{"{}plt"{}};}
+\DoxyCodeLine{00101\ \ \ \ \ \ \ \ \ std::string\ prefix\_checkpointfilename\ =\ \textcolor{stringliteral}{"{}chk"{}};}
+\DoxyCodeLine{00102\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ num\_of\_digits\_in\_filenames=6;}
+\DoxyCodeLine{00103\ }
+\DoxyCodeLine{00104\ \ \ \ \ \ \ \ \ \textcolor{comment}{//Diagnostic\ parameters}}
+\DoxyCodeLine{00105\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ print\_diagnostics=0;}
+\DoxyCodeLine{00106\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ ifrigidnodespresent=0;}
+\DoxyCodeLine{00107\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ is\_standard\_test\ =\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00108\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ test\_number\ =\ 0;\ \ \ \ \textcolor{comment}{//0-\/>is\_standard\_test=false,1-\/-\/>axial\ vibration\ of\ bar,\ 2-\/-\/>Dam\ break,\ 3-\/-\/>\ Elastic\ collision\ of\ disks,\ 4-\/-\/>\ Lateral\ deflection\ of\ beam}}
+\DoxyCodeLine{00109\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ no\_of\_rigidbodies\_present=0;}
+\DoxyCodeLine{00110\ \ \ \ \ \ \ \ \ amrex::Real\ total\_mass\_phase\_0=0.0;}
+\DoxyCodeLine{00111\ \ \ \ \ \ \ \ \ amrex::Real\ total\_vol\_phase\_0=0.0;}
+\DoxyCodeLine{00112\ }
+\DoxyCodeLine{00113\ \ \ \ \ \ \ \ \ \textcolor{comment}{//Rigid\ body\ nodes}}
+\DoxyCodeLine{00114\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{struct_rigid___bodies}{Rigid\_Bodies}}\ *Rb;}
+\DoxyCodeLine{00115\ }
+\DoxyCodeLine{00116\ \ \ \ \ \ \ \ \ \textcolor{comment}{//Parameters\ for\ Axial\ bar\ test}}
+\DoxyCodeLine{00117\ \ \ \ \ \ \ \ \ amrex::Real\ axial\_bar\_E\ =\ 100.0;}
+\DoxyCodeLine{00118\ \ \ \ \ \ \ \ \ amrex::Real\ axial\_bar\_rho\ =\ 1.0;}
+\DoxyCodeLine{00119\ \ \ \ \ \ \ \ \ amrex::Real\ axial\_bar\_L\ =\ 25.0;}
+\DoxyCodeLine{00120\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ axial\_bar\_modenumber\ =\ 1;}
+\DoxyCodeLine{00121\ \ \ \ \ \ \ \ \ amrex::Real\ axial\_bar\_v0\ =\ 0.1;}
+\DoxyCodeLine{00122\ }
+\DoxyCodeLine{00123\ \ \ \ \ \ \ \ \ \textcolor{comment}{//Parameters\ for\ dam\ break}}
+\DoxyCodeLine{00124\ \ \ \ \ \ \ \ \ amrex::Real\ dam\_break\_H1\ =\ 0.2;}
+\DoxyCodeLine{00125\ \ \ \ \ \ \ \ \ amrex::Real\ dam\_break\_g\ =\ ACCG;}
+\DoxyCodeLine{00126\ }
+\DoxyCodeLine{00127\ \ \ \ \ \ \ \ \ \textcolor{comment}{//Parameters\ for\ lateral\ vibration\ of\ bar\ (TVB).\ The\ test\ case\ is\ performed\ for\ first\ mode}}
+\DoxyCodeLine{00128\ \ \ \ \ \ \ \ \ amrex::Real\ tvb\_E\ =\ 50.0;}
+\DoxyCodeLine{00129\ \ \ \ \ \ \ \ \ amrex::Real\ tvb\_L\ =\ 0.1;}
+\DoxyCodeLine{00130\ \ \ \ \ \ \ \ \ amrex::Real\ tvb\_rho\ =\ 25.0;}
+\DoxyCodeLine{00131\ \ \ \ \ \ \ \ \ amrex::Real\ tvb\_v0\ =\ 0.0;}
+\DoxyCodeLine{00132\ }
+\DoxyCodeLine{00133\ \ \ \ \ \ \ \ \ amrex::Real\ p2g\_L\ =\ 1.0;}
+\DoxyCodeLine{00134\ \ \ \ \ \ \ \ \ amrex::Real\ p2g\_f\ =\ 1.0;}
+\DoxyCodeLine{00135\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ p2g\_ncell=0;}
+\DoxyCodeLine{00136\ }
+\DoxyCodeLine{00137\ \ \ \ \ \ \ \ \ \textcolor{comment}{//Parameters\ for\ membrane\ compaction}}
+\DoxyCodeLine{00138\ \ \ \ \ \ \ \ \ amrex::Real\ mem\_compaction\_area=1.0;}
+\DoxyCodeLine{00139\ \ \ \ \ \ \ \ \ amrex::Real\ mem\_compaction\_dampcoeff=1.0;}
+\DoxyCodeLine{00140\ \ \ \ \ \ \ \ \ amrex::Real\ mem\_compaction\_L0=1.0;}
+\DoxyCodeLine{00141\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ mem\_compaction\_restoring\_force\_calc\_method\ =\ 1;}
+\DoxyCodeLine{00142\ }
+\DoxyCodeLine{00143\ \ \ \ \ \ \ \ \ \textcolor{comment}{//Parameters\ for\ spring\ alone\ simulation}}
+\DoxyCodeLine{00144\ \ \ \ \ \ \ \ \ amrex::Real\ spring\_alone\_area\ =\ 0.1;}
+\DoxyCodeLine{00145\ \ \ \ \ \ \ \ \ amrex::Real\ spring\_alone\_length\ =\ 0.0;}
+\DoxyCodeLine{00146\ \ \ \ \ \ \ \ \ amrex::Real\ spring\_alone\_E\ =\ 0.0;}
+\DoxyCodeLine{00147\ \ \ \ \ \ \ \ \ amrex::Real\ spring\_alone\_exact\_deflection\ =\ 0.0;}
+\DoxyCodeLine{00148\ \ \ \ \ \ \ \ \ amrex::Real\ spring\_alone\_exact\_delta\ =\ 0.0;}
+\DoxyCodeLine{00149\ }
+\DoxyCodeLine{00150\ }
+\DoxyCodeLine{00151\ \ \ \ \ \ \ \ \ \textcolor{comment}{//1-\/-\/>tent\ function,\ 3-\/-\/>\ cubic\ spline\ shape\ function}}
+\DoxyCodeLine{00152\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ order\_scheme=1;\ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00153\ }
+\DoxyCodeLine{00154\ \ \ \ \ \ \ \ \ Real\ applied\_strainrate=0.0;}
+\DoxyCodeLine{00155\ \ \ \ \ \ \ \ \ Real\ applied\_strainrate\_time=0.0;}
+\DoxyCodeLine{00156\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ phasefield\_output=0;}
+\DoxyCodeLine{00157\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ phasefield\_gridratio=1;}
+\DoxyCodeLine{00158\ \ \ \ \ \ \ \ \ Real\ phasefield\_smoothfactor=1.0;}
+\DoxyCodeLine{00159\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ external\_loads\_present=0.0;}
+\DoxyCodeLine{00160\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ fixed\_timestep\ =\ 0;\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//Use\ fixed\ time\ step\ provided\ by\ user\ if\ this\ flag\ is\ 1}}
+\DoxyCodeLine{00161\ \ \ \ \ \ \ \ \ Real\ dt\_max\_limit=1e0;}
+\DoxyCodeLine{00162\ \ \ \ \ \ \ \ \ Real\ dt\_min\_limit=1e-\/12;}
+\DoxyCodeLine{00163\ \ \ \ \ \ \ \ \ Real\ CFL=0.1;}
+\DoxyCodeLine{00164\ \ \ \ \ \ \ \ \ Real\ mass\_tolerance\ =\ 1e-\/8;}
+\DoxyCodeLine{00165\ \ \ \ \ \ \ \ \ Real\ alpha\_pic\_flip\ =\ 0.95;}
+\DoxyCodeLine{00166\ \ \ \ \ \ \ \ \ Real\ total\_mass\ =\ 0.0;}
+\DoxyCodeLine{00167\ \ \ \ \ \ \ \ \ Real\ total\_rigid\_mass\ =\ 0.0;}
+\DoxyCodeLine{00168\ \ \ \ \ \ \ \ \ Real\ total\_vol\ =\ 0.0;}
+\DoxyCodeLine{00169\ \ \ \ \ \ \ \ \ Real\ mem\_compaction\_vnew=0.0;}
+\DoxyCodeLine{00170\ \ \ \ \ \ \ \ \ Real\ mem\_compaction\_vold=0.0;}
+\DoxyCodeLine{00171\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ stress\_update\_scheme=1;}
+\DoxyCodeLine{00172\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ calculate\_strain\_based\_on\_delta=0;}
+\DoxyCodeLine{00173\ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00174\ }
+\DoxyCodeLine{00175\ \ \ \ \ \ \ \ \ Vector<int>\ bclo;}
+\DoxyCodeLine{00176\ \ \ \ \ \ \ \ \ Vector<int>\ bchi;}
+\DoxyCodeLine{00177\ }
+\DoxyCodeLine{00178\ \ \ \ \ \ \ \ \ GpuArray<int,AMREX\_SPACEDIM>\ order\_scheme\_directional\{AMREX\_D\_DECL(1,1,1)\};}
+\DoxyCodeLine{00179\ }
+\DoxyCodeLine{00180\ }
+\DoxyCodeLine{00181\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ use\_autogen=0;\ }
+\DoxyCodeLine{00182\ \ \ \ \ \ \ \ \ Vector<Real>\ autogen\_mincoords;\ }
+\DoxyCodeLine{00183\ \ \ \ \ \ \ \ \ Vector<Real>\ autogen\_maxcoords;\ }
+\DoxyCodeLine{00184\ \ \ \ \ \ \ \ \ Vector<Real>\ autogen\_vel;\ }
+\DoxyCodeLine{00185\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ autogen\_multi\_part\_per\_cell=1;}
+\DoxyCodeLine{00186\ \ \ \ \ \ \ \ \ Real\ autogen\_dens=1000.0;}
+\DoxyCodeLine{00187\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ autogen\_constmodel=1;}
+\DoxyCodeLine{00188\ \ \ \ \ \ \ \ \ Real\ autogen\_E=1e9;}
+\DoxyCodeLine{00189\ \ \ \ \ \ \ \ \ Real\ autogen\_nu=0.1;}
+\DoxyCodeLine{00190\ \ \ \ \ \ \ \ \ Real\ autogen\_bulkmod=0.0;}
+\DoxyCodeLine{00191\ \ \ \ \ \ \ \ \ Real\ autogen\_Gama\_pres=1.4;}
+\DoxyCodeLine{00192\ \ \ \ \ \ \ \ \ Real\ autogen\_visc=0.001;}
+\DoxyCodeLine{00193\ }
+\DoxyCodeLine{00194\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ levelset\_bc=1;\ \textcolor{comment}{//no\ slip\ wall}}
+\DoxyCodeLine{00195\ \ \ \ \ \ \ \ \ Real\ levelset\_wall\_mu=0.1;}
+\DoxyCodeLine{00196\ }
+\DoxyCodeLine{00197\ }
+\DoxyCodeLine{00198\ \ \ \ \ \ \ \ \ Array<Real,AMREX\_SPACEDIM>\ wall\_mu\_lo\{AMREX\_D\_DECL(0.1,\ 0.1,\ 0.1)\};}
+\DoxyCodeLine{00199\ \ \ \ \ \ \ \ \ Array<Real,AMREX\_SPACEDIM>\ wall\_mu\_hi\{AMREX\_D\_DECL(0.1,\ 0.1,\ 0.1)\};}
+\DoxyCodeLine{00200\ }
+\DoxyCodeLine{00201\ \ \ \ \ \ \ \ \ Array<Real,AMREX\_SPACEDIM*AMREX\_SPACEDIM>\ wall\_vel\_lo\{0.0\};}
+\DoxyCodeLine{00202\ \ \ \ \ \ \ \ \ Array<Real,AMREX\_SPACEDIM*AMREX\_SPACEDIM>\ wall\_vel\_hi\{0.0\};}
+\DoxyCodeLine{00203\ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00204\ \ \ \ \ \ \ \ \ Real\ levset\_mu=0.1;}
+\DoxyCodeLine{00205\ }
+\DoxyCodeLine{00206\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ read\_mpm\_specs()}
+\DoxyCodeLine{00207\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00208\ \ \ \ \ \ \ \ \ \ \ \ \ bclo.resize(AMREX\_SPACEDIM);}
+\DoxyCodeLine{00209\ \ \ \ \ \ \ \ \ \ \ \ \ bchi.resize(AMREX\_SPACEDIM);}
+\DoxyCodeLine{00210\ }
+\DoxyCodeLine{00211\ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00212\ \ \ \ \ \ \ \ \ \ \ \ \ autogen\_mincoords.resize(AMREX\_SPACEDIM);}
+\DoxyCodeLine{00213\ \ \ \ \ \ \ \ \ \ \ \ \ autogen\_maxcoords.resize(AMREX\_SPACEDIM);}
+\DoxyCodeLine{00214\ \ \ \ \ \ \ \ \ \ \ \ \ autogen\_vel.resize(AMREX\_SPACEDIM);}
+\DoxyCodeLine{00215\ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00216\ \ \ \ \ \ \ \ \ \ \ \ \ ParmParse\ pp1(\textcolor{stringliteral}{"{}amr"{}});}
+\DoxyCodeLine{00217\ \ \ \ \ \ \ \ \ \ \ \ \ restart\_checkfile=\textcolor{stringliteral}{"{}"{}};}
+\DoxyCodeLine{00218\ \ \ \ \ \ \ \ \ \ \ \ \ pp1.query(\textcolor{stringliteral}{"{}restart\_checkfile"{}},restart\_checkfile);}
+\DoxyCodeLine{00219\ }
+\DoxyCodeLine{00220\ \ \ \ \ \ \ \ \ \ \ \ \ ParmParse\ pp(\textcolor{stringliteral}{"{}mpm"{}});}
+\DoxyCodeLine{00221\ \ \ \ \ \ \ \ \ \ \ \ \ pp.get(\textcolor{stringliteral}{"{}prob\_lo"{}},plo);}
+\DoxyCodeLine{00222\ \ \ \ \ \ \ \ \ \ \ \ \ pp.get(\textcolor{stringliteral}{"{}prob\_hi"{}},phi);}
+\DoxyCodeLine{00223\ \ \ \ \ \ \ \ \ \ \ \ \ pp.get(\textcolor{stringliteral}{"{}ncells"{}},\ ncells);}
+\DoxyCodeLine{00224\ \ \ \ \ \ \ \ \ \ \ \ \ Array<int,AMREX\_SPACEDIM>\ periodicarr\{AMREX\_D\_DECL(0,\ 0,\ 0)\};}
+\DoxyCodeLine{00225\ \ \ \ \ \ \ \ \ \ \ \ \ pp.get(\textcolor{stringliteral}{"{}is\_it\_periodic"{}},periodicarr);}
+\DoxyCodeLine{00226\ \ \ \ \ \ \ \ \ \ \ \ \ periodic=\{AMREX\_D\_DECL(periodicarr[XDIR],periodicarr[YDIR],periodicarr[ZDIR])\};}
+\DoxyCodeLine{00227\ \ \ \ \ \ \ \ \ \ \ \ \ pp.get(\textcolor{stringliteral}{"{}max\_grid\_size"{}},\ max\_grid\_size);}
+\DoxyCodeLine{00228\ }
+\DoxyCodeLine{00229\ \ \ \ \ \ \ \ \ \ \ \ \ pp.get(\textcolor{stringliteral}{"{}max\_steps"{}},\ maxsteps);}
+\DoxyCodeLine{00230\ \ \ \ \ \ \ \ \ \ \ \ \ pp.get(\textcolor{stringliteral}{"{}final\_time"{}},final\_time);}
+\DoxyCodeLine{00231\ }
+\DoxyCodeLine{00232\ \ \ \ \ \ \ \ \ \ \ \ \ pp.query(\textcolor{stringliteral}{"{}gravity"{}},\ gravity);}
+\DoxyCodeLine{00233\ \ \ \ \ \ \ \ \ \ \ \ \ pp.query(\textcolor{stringliteral}{"{}calculate\_strain\_based\_on\_delta"{}},calculate\_strain\_based\_on\_delta);}
+\DoxyCodeLine{00234\ }
+\DoxyCodeLine{00235\ \ \ \ \ \ \ \ \ \ \ \ \ write\_output\_time=final\_time/10.0;}
+\DoxyCodeLine{00236\ \ \ \ \ \ \ \ \ \ \ \ \ pp.query(\textcolor{stringliteral}{"{}write\_output\_time"{}},\ write\_output\_time);}
+\DoxyCodeLine{00237\ }
+\DoxyCodeLine{00238\ \ \ \ \ \ \ \ \ \ \ \ \ screen\_output\_time=write\_output\_time/10.0;}
+\DoxyCodeLine{00239\ \ \ \ \ \ \ \ \ \ \ \ \ pp.query(\textcolor{stringliteral}{"{}screen\_output\_time"{}},\ screen\_output\_time);}
+\DoxyCodeLine{00240\ }
+\DoxyCodeLine{00241\ \ \ \ \ \ \ \ \ \ \ \ \ pp.query(\textcolor{stringliteral}{"{}num\_redist"{}},\ num\_redist);}
+\DoxyCodeLine{00242\ }
+\DoxyCodeLine{00243\ \ \ \ \ \ \ \ \ \ \ \ \ pp.query(\textcolor{stringliteral}{"{}use\_autogen"{}},use\_autogen);}
+\DoxyCodeLine{00244\ }
+\DoxyCodeLine{00245\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//Read\ output\ parameters}}
+\DoxyCodeLine{00246\ \ \ \ \ \ \ \ \ \ \ \ \ pp.query(\textcolor{stringliteral}{"{}prefix\_particlefilename"{}},prefix\_particlefilename);}
+\DoxyCodeLine{00247\ \ \ \ \ \ \ \ \ \ \ \ \ pp.query(\textcolor{stringliteral}{"{}prefix\_gridfilename"{}},prefix\_gridfilename);}
+\DoxyCodeLine{00248\ \ \ \ \ \ \ \ \ \ \ \ \ pp.query(\textcolor{stringliteral}{"{}prefix\_densityfilename"{}},prefix\_densityfilename);}
+\DoxyCodeLine{00249\ \ \ \ \ \ \ \ \ \ \ \ \ pp.query(\textcolor{stringliteral}{"{}prefix\_checkpointfilename"{}},prefix\_checkpointfilename);}
+\DoxyCodeLine{00250\ \ \ \ \ \ \ \ \ \ \ \ \ pp.query(\textcolor{stringliteral}{"{}num\_of\_digits\_in\_filenames"{}},num\_of\_digits\_in\_filenames);}
+\DoxyCodeLine{00251\ }
+\DoxyCodeLine{00252\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//Reading\ diagnostic\ parameters}}
+\DoxyCodeLine{00253\ \ \ \ \ \ \ \ \ \ \ \ \ pp.query(\textcolor{stringliteral}{"{}is\_standard\_test"{}},is\_standard\_test);}
+\DoxyCodeLine{00254\ \ \ \ \ \ \ \ \ \ \ \ \ pp.query(\textcolor{stringliteral}{"{}test\_number"{}},test\_number);}
+\DoxyCodeLine{00255\ \ \ \ \ \ \ \ \ \ \ \ \ pp.query(\textcolor{stringliteral}{"{}axial\_bar\_E"{}},axial\_bar\_E);}
+\DoxyCodeLine{00256\ \ \ \ \ \ \ \ \ \ \ \ \ pp.query(\textcolor{stringliteral}{"{}axial\_bar\_rho"{}},axial\_bar\_rho);}
+\DoxyCodeLine{00257\ \ \ \ \ \ \ \ \ \ \ \ \ pp.query(\textcolor{stringliteral}{"{}axial\_bar\_L"{}},axial\_bar\_L);}
+\DoxyCodeLine{00258\ \ \ \ \ \ \ \ \ \ \ \ \ pp.query(\textcolor{stringliteral}{"{}axial\_bar\_modenumber"{}},axial\_bar\_modenumber);}
+\DoxyCodeLine{00259\ \ \ \ \ \ \ \ \ \ \ \ \ pp.query(\textcolor{stringliteral}{"{}axial\_bar\_v0"{}},axial\_bar\_v0);}
+\DoxyCodeLine{00260\ }
+\DoxyCodeLine{00261\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//Reading\ TVB\ test\ parameters}}
+\DoxyCodeLine{00262\ \ \ \ \ \ \ \ \ \ \ \ \ pp.query(\textcolor{stringliteral}{"{}tvb\_v0"{}},tvb\_v0);}
+\DoxyCodeLine{00263\ \ \ \ \ \ \ \ \ \ \ \ \ pp.query(\textcolor{stringliteral}{"{}tvb\_L"{}},tvb\_L);}
+\DoxyCodeLine{00264\ \ \ \ \ \ \ \ \ \ \ \ \ pp.query(\textcolor{stringliteral}{"{}tvb\_E"{}},tvb\_E);}
+\DoxyCodeLine{00265\ \ \ \ \ \ \ \ \ \ \ \ \ pp.query(\textcolor{stringliteral}{"{}tvb\_rho"{}},tvb\_rho);}
+\DoxyCodeLine{00266\ }
+\DoxyCodeLine{00267\ \ \ \ \ \ \ \ \ \ \ \ \ pp.query(\textcolor{stringliteral}{"{}p2g\_L"{}},p2g\_L);}
+\DoxyCodeLine{00268\ \ \ \ \ \ \ \ \ \ \ \ \ pp.query(\textcolor{stringliteral}{"{}p2g\_f"{}},p2g\_f);}
+\DoxyCodeLine{00269\ \ \ \ \ \ \ \ \ \ \ \ \ pp.query(\textcolor{stringliteral}{"{}p2g\_ncell"{}},p2g\_ncell);}
+\DoxyCodeLine{00270\ }
+\DoxyCodeLine{00271\ \ \ \ \ \ \ \ \ \ \ \ \ pp.query(\textcolor{stringliteral}{"{}mem\_compaction\_area"{}},mem\_compaction\_area);}
+\DoxyCodeLine{00272\ \ \ \ \ \ \ \ \ \ \ \ \ pp.query(\textcolor{stringliteral}{"{}mem\_compaction\_dampcoeff"{}},mem\_compaction\_dampcoeff);}
+\DoxyCodeLine{00273\ \ \ \ \ \ \ \ \ \ \ \ \ pp.query(\textcolor{stringliteral}{"{}mem\_compaction\_restoring\_force\_calc\_method"{}},mem\_compaction\_restoring\_force\_calc\_method);}
+\DoxyCodeLine{00274\ }
+\DoxyCodeLine{00275\ \ \ \ \ \ \ \ \ \ \ \ \ pp.query(\textcolor{stringliteral}{"{}spring\_alone\_area"{}},spring\_alone\_area);}
+\DoxyCodeLine{00276\ \ \ \ \ \ \ \ \ \ \ \ \ pp.query(\textcolor{stringliteral}{"{}spring\_alone\_length"{}},spring\_alone\_length);}
+\DoxyCodeLine{00277\ \ \ \ \ \ \ \ \ \ \ \ \ pp.query(\textcolor{stringliteral}{"{}spring\_alone\_E"{}},spring\_alone\_E);}
+\DoxyCodeLine{00278\ }
+\DoxyCodeLine{00279\ }
+\DoxyCodeLine{00280\ }
+\DoxyCodeLine{00281\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(!use\_autogen)}
+\DoxyCodeLine{00282\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00283\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ particlefilename=\textcolor{stringliteral}{"{}mpm\_particles.dat"{}};}
+\DoxyCodeLine{00284\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ pp.query(\textcolor{stringliteral}{"{}particle\_file"{}},particlefilename);}
+\DoxyCodeLine{00285\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00286\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{00287\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00288\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ pp.getarr(\textcolor{stringliteral}{"{}mincoords\_autogen"{}},autogen\_mincoords);}
+\DoxyCodeLine{00289\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ pp.getarr(\textcolor{stringliteral}{"{}maxcoords\_autogen"{}},autogen\_maxcoords);}
+\DoxyCodeLine{00290\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ pp.getarr(\textcolor{stringliteral}{"{}vel\_autogen"{}},autogen\_vel);}
+\DoxyCodeLine{00291\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ pp.query(\textcolor{stringliteral}{"{}constmodel\_autogen"{}},autogen\_constmodel);}
+\DoxyCodeLine{00292\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ pp.query(\textcolor{stringliteral}{"{}dens\_autogen"{}},autogen\_dens);}
+\DoxyCodeLine{00293\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ pp.query(\textcolor{stringliteral}{"{}E\_autogen"{}},autogen\_constmodel);}
+\DoxyCodeLine{00294\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ pp.query(\textcolor{stringliteral}{"{}nu\_autogen"{}},autogen\_constmodel);}
+\DoxyCodeLine{00295\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ pp.query(\textcolor{stringliteral}{"{}bulkmod\_autogen"{}},autogen\_bulkmod);}
+\DoxyCodeLine{00296\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ pp.query(\textcolor{stringliteral}{"{}Gama\_pres\_autogen"{}},autogen\_Gama\_pres);}
+\DoxyCodeLine{00297\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ pp.query(\textcolor{stringliteral}{"{}visc\_autogen"{}},autogen\_visc);}
+\DoxyCodeLine{00298\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ pp.query(\textcolor{stringliteral}{"{}multi\_part\_per\_cell\_autogen"{}},autogen\_multi\_part\_per\_cell);}
+\DoxyCodeLine{00299\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00300\ }
+\DoxyCodeLine{00301\ \ \ \ \ \ \ \ \ \ \ \ \ pp.query(\textcolor{stringliteral}{"{}fixed\_timestep"{}},fixed\_timestep);}
+\DoxyCodeLine{00302\ \ \ \ \ \ \ \ \ \ \ \ \ pp.query(\textcolor{stringliteral}{"{}stress\_update\_scheme"{}},stress\_update\_scheme);}
+\DoxyCodeLine{00303\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(fixed\_timestep==1)}
+\DoxyCodeLine{00304\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00305\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ pp.get(\textcolor{stringliteral}{"{}timestep"{}},\ timestep);}
+\DoxyCodeLine{00306\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00307\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{00308\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00309\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ timestep\ =0.0;}
+\DoxyCodeLine{00310\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00311\ }
+\DoxyCodeLine{00312\ \ \ \ \ \ \ \ \ \ \ \ \ pp.query(\textcolor{stringliteral}{"{}alpha\_pic\_flip"{}},alpha\_pic\_flip);}
+\DoxyCodeLine{00313\ \ \ \ \ \ \ \ \ \ \ \ \ pp.query(\textcolor{stringliteral}{"{}dt\_max\_limit"{}},dt\_max\_limit);}
+\DoxyCodeLine{00314\ \ \ \ \ \ \ \ \ \ \ \ \ pp.query(\textcolor{stringliteral}{"{}dt\_min\_limit"{}},dt\_min\_limit);}
+\DoxyCodeLine{00315\ \ \ \ \ \ \ \ \ \ \ \ \ pp.query(\textcolor{stringliteral}{"{}CFL"{}},CFL);}
+\DoxyCodeLine{00316\ }
+\DoxyCodeLine{00317\ \ \ \ \ \ \ \ \ \ \ \ \ pp.query(\textcolor{stringliteral}{"{}applied\_strainrate"{}},applied\_strainrate);}
+\DoxyCodeLine{00318\ \ \ \ \ \ \ \ \ \ \ \ \ applied\_strainrate\_time=final\_time;}
+\DoxyCodeLine{00319\ \ \ \ \ \ \ \ \ \ \ \ \ pp.query(\textcolor{stringliteral}{"{}applied\_strainrate\_time"{}},applied\_strainrate\_time);}
+\DoxyCodeLine{00320\ }
+\DoxyCodeLine{00321\ \ \ \ \ \ \ \ \ \ \ \ \ pp.query(\textcolor{stringliteral}{"{}order\_scheme"{}},order\_scheme);}
+\DoxyCodeLine{00322\ \ \ \ \ \ \ \ \ \ \ \ \ pp.query(\textcolor{stringliteral}{"{}mass\_tolerance"{}},mass\_tolerance);}
+\DoxyCodeLine{00323\ }
+\DoxyCodeLine{00324\ \ \ \ \ \ \ \ \ \ \ \ \ pp.query(\textcolor{stringliteral}{"{}phasefield\_output"{}},phasefield\_output);}
+\DoxyCodeLine{00325\ \ \ \ \ \ \ \ \ \ \ \ \ pp.query(\textcolor{stringliteral}{"{}phasefield\_smoothfactor"{}},phasefield\_smoothfactor);}
+\DoxyCodeLine{00326\ \ \ \ \ \ \ \ \ \ \ \ \ pp.query(\textcolor{stringliteral}{"{}phasefield\_gridratio"{}},phasefield\_gridratio);}
+\DoxyCodeLine{00327\ }
+\DoxyCodeLine{00328\ \ \ \ \ \ \ \ \ \ \ \ \ pp.query(\textcolor{stringliteral}{"{}external\_loads"{}},external\_loads\_present);\ }
+\DoxyCodeLine{00329\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(external\_loads\_present)}
+\DoxyCodeLine{00330\ \ \ \ \ \ \ \ \ \ \ \ \ \{\ \ }
+\DoxyCodeLine{00331\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ pp.get(\textcolor{stringliteral}{"{}force\_slab\_lo"{}},\ force\_slab\_lo);}
+\DoxyCodeLine{00332\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ pp.get(\textcolor{stringliteral}{"{}force\_slab\_hi"{}},\ force\_slab\_hi);}
+\DoxyCodeLine{00333\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ pp.get(\textcolor{stringliteral}{"{}extforce"{}},\ extforce);}
+\DoxyCodeLine{00334\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00335\ \ \ \ \ \ \ \ \ \ \ \ \ pp.query(\textcolor{stringliteral}{"{}print\_diagnostics"{}},print\_diagnostics);}
+\DoxyCodeLine{00336\ }
+\DoxyCodeLine{00337\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//by\ default\ it\ is\ periodic\ }}
+\DoxyCodeLine{00338\ \ \ \ \ \ \ \ \ \ \ \ \ bclo[0]=BC\_SLIPWALL;}
+\DoxyCodeLine{00339\ \ \ \ \ \ \ \ \ \ \ \ \ bclo[1]=BC\_SLIPWALL;}
+\DoxyCodeLine{00340\ \ \ \ \ \ \ \ \ \ \ \ \ bclo[2]=BC\_SLIPWALL;}
+\DoxyCodeLine{00341\ }
+\DoxyCodeLine{00342\ \ \ \ \ \ \ \ \ \ \ \ \ bchi[0]=BC\_SLIPWALL;}
+\DoxyCodeLine{00343\ \ \ \ \ \ \ \ \ \ \ \ \ bchi[1]=BC\_SLIPWALL;}
+\DoxyCodeLine{00344\ \ \ \ \ \ \ \ \ \ \ \ \ bchi[2]=BC\_SLIPWALL;}
+\DoxyCodeLine{00345\ }
+\DoxyCodeLine{00346\ \ \ \ \ \ \ \ \ \ \ \ \ pp.queryarr(\textcolor{stringliteral}{"{}bc\_lower"{}},bclo);}
+\DoxyCodeLine{00347\ \ \ \ \ \ \ \ \ \ \ \ \ pp.queryarr(\textcolor{stringliteral}{"{}bc\_upper"{}},bchi);}
+\DoxyCodeLine{00348\ }
+\DoxyCodeLine{00349\ \ \ \ \ \ \ \ \ \ \ \ \ pp.query(\textcolor{stringliteral}{"{}levelset\_bc"{}},levelset\_bc);}
+\DoxyCodeLine{00350\ \ \ \ \ \ \ \ \ \ \ \ \ pp.query(\textcolor{stringliteral}{"{}levelset\_wall\_mu"{}},levelset\_wall\_mu);}
+\DoxyCodeLine{00351\ }
+\DoxyCodeLine{00352\ }
+\DoxyCodeLine{00353\ \ \ \ \ \ \ \ \ \ \ \ \ pp.query(\textcolor{stringliteral}{"{}wall\_mu\_lo"{}},wall\_mu\_lo);}
+\DoxyCodeLine{00354\ \ \ \ \ \ \ \ \ \ \ \ \ pp.query(\textcolor{stringliteral}{"{}wall\_mu\_hi"{}},wall\_mu\_hi);}
+\DoxyCodeLine{00355\ }
+\DoxyCodeLine{00356\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(\textcolor{keywordtype}{int}\ i=0;i<AMREX\_SPACEDIM*AMREX\_SPACEDIM;i++)}
+\DoxyCodeLine{00357\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00358\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ wall\_vel\_lo[i]=0.0;}
+\DoxyCodeLine{00359\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ wall\_vel\_hi[i]=0.0;}
+\DoxyCodeLine{00360\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00361\ }
+\DoxyCodeLine{00362\ \ \ \ \ \ \ \ \ \ \ \ \ pp.query(\textcolor{stringliteral}{"{}wall\_vel\_lo"{}},wall\_vel\_lo);}
+\DoxyCodeLine{00363\ \ \ \ \ \ \ \ \ \ \ \ \ pp.query(\textcolor{stringliteral}{"{}wall\_vel\_hi"{}},wall\_vel\_hi);}
+\DoxyCodeLine{00364\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00365\ }
+\DoxyCodeLine{00366\ \ \ \ \ \ \ \ \ std::string\ Convert\_arr\_string(Array<Real,AMREX\_SPACEDIM>arr)}
+\DoxyCodeLine{00367\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00368\ \ \ \ \ \ \ \ \ \ \ \ \ std::string\ str;}
+\DoxyCodeLine{00369\ \ \ \ \ \ \ \ \ \ \ \ \ str=\textcolor{stringliteral}{"{}["{}};}
+\DoxyCodeLine{00370\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i=0;i<AMREX\_SPACEDIM-\/1;i++)}
+\DoxyCodeLine{00371\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00372\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ str=str+std::to\_string(arr[i])+\textcolor{stringliteral}{"{},"{}};}
+\DoxyCodeLine{00373\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00374\ \ \ \ \ \ \ \ \ \ \ \ \ str=str+std::to\_string(arr[AMREX\_SPACEDIM-\/1]);}
+\DoxyCodeLine{00375\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}(str);}
+\DoxyCodeLine{00376\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00377\ }
+\DoxyCodeLine{00378\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ PrintSimulationParams()}
+\DoxyCodeLine{00379\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00380\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//To\ be\ completed,\ Sreejith}}
+\DoxyCodeLine{00381\ \ \ \ \ \ \ \ \ \ \ \ \ std::string\ vect\_str;}
+\DoxyCodeLine{00382\ \ \ \ \ \ \ \ \ \ \ \ \ vect\_str=Convert\_arr\_string(plo);}
+\DoxyCodeLine{00383\ \ \ \ \ \ \ \ \ \ \ \ \ amrex::Print()<<\textcolor{stringliteral}{"{}\(\backslash\)n\(\backslash\)tBackground\ grid\ physical\ extents:\ "{}}<<vect\_str;}
+\DoxyCodeLine{00384\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00385\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ ThreeDOF\_Solver(amrex::Real\ dt)}
+\DoxyCodeLine{00386\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00387\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}\ (\textcolor{keywordtype}{int}\ i=0;i<no\_of\_rigidbodies\_present;i++)}
+\DoxyCodeLine{00388\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00389\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(Rb[i].position\_update\_method==1)}
+\DoxyCodeLine{00390\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00391\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(\textcolor{keywordtype}{int}\ j=0;j<AMREX\_SPACEDIM;j++)}
+\DoxyCodeLine{00392\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00393\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ Rb[i].velocity[j]+=(Rb[i].force\_internal[j]+Rb[i].force\_external[j])/Rb[i].total\_mass*dt;}
+\DoxyCodeLine{00394\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00395\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00396\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{00397\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00398\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(\textcolor{keywordtype}{int}\ j=0;j<AMREX\_SPACEDIM;j++)}
+\DoxyCodeLine{00399\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00400\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ Rb[i].velocity[j]=Rb[i].imposed\_velocity[j];}
+\DoxyCodeLine{00401\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00402\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00403\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00404\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00405\ }
+\DoxyCodeLine{00406\ \};}
+\DoxyCodeLine{00407\ }
+\DoxyCodeLine{00408\ \textcolor{comment}{//void\ MPMspecs::PrintSimulationParams()}}
+\DoxyCodeLine{00409\ \textcolor{comment}{//\{}}
+\DoxyCodeLine{00410\ \ \ \ \ \textcolor{comment}{//amrex::Print()<<"{}\(\backslash\)n\(\backslash\)tBackground\ grid\ physical\ extents:\ ["{}<<plo[0]<<"{},"{}<<"{}]"{};}}
+\DoxyCodeLine{00411\ \textcolor{comment}{//\}}}
+\DoxyCodeLine{00412\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00413\ }
+
+\end{DoxyCode}

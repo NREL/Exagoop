@@ -1,0 +1,722 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.14.0" xml:lang="en-US">
+  <compounddef id="constants_8_h" kind="file" language="C++">
+    <compoundname>constants.H</compoundname>
+    <includedby refid="constitutive__models_8_h" local="no">E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/constitutive_models.H</includedby>
+    <includedby refid="interpolants_8_h" local="no">E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/interpolants.H</includedby>
+    <includedby refid="mpm__eb_8_h" local="no">E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_eb.H</includedby>
+    <includedby refid="mpm__init_8cpp" local="no">E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_init.cpp</includedby>
+    <includedby refid="mpm__kernels_8_h" local="no">E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_kernels.H</includedby>
+    <includedby refid="mpm__particle__container_8_h" local="no">E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_particle_container.H</includedby>
+    <includedby refid="mpm__specs_8_h" local="no">E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_specs.H</includedby>
+    <includedby refid="nodal__data__ops_8_h" local="no">E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/nodal_data_ops.H</includedby>
+    <invincdepgraph>
+      <node id="1">
+        <label>E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/constants.H</label>
+        <link refid="constants_8_h"/>
+        <childnode refid="2" relation="include">
+        </childnode>
+        <childnode refid="3" relation="include">
+        </childnode>
+        <childnode refid="4" relation="include">
+        </childnode>
+        <childnode refid="5" relation="include">
+        </childnode>
+        <childnode refid="6" relation="include">
+        </childnode>
+        <childnode refid="7" relation="include">
+        </childnode>
+        <childnode refid="9" relation="include">
+        </childnode>
+      </node>
+      <node id="2">
+        <label>E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/constitutive_models.H</label>
+        <link refid="constitutive__models_8_h_source"/>
+      </node>
+      <node id="3">
+        <label>E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/interpolants.H</label>
+        <link refid="interpolants_8_h_source"/>
+        <childnode refid="4" relation="include">
+        </childnode>
+      </node>
+      <node id="8">
+        <label>E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_check_pair.H</label>
+        <link refid="mpm__check__pair_8_h_source"/>
+      </node>
+      <node id="4">
+        <label>E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_eb.H</label>
+        <link refid="mpm__eb_8_h_source"/>
+      </node>
+      <node id="5">
+        <label>E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_kernels.H</label>
+        <link refid="mpm__kernels_8_h_source"/>
+      </node>
+      <node id="6">
+        <label>E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_particle_container.H</label>
+        <link refid="mpm__particle__container_8_h_source"/>
+        <childnode refid="3" relation="include">
+        </childnode>
+      </node>
+      <node id="7">
+        <label>E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_specs.H</label>
+        <link refid="mpm__specs_8_h_source"/>
+        <childnode refid="8" relation="include">
+        </childnode>
+        <childnode refid="6" relation="include">
+        </childnode>
+      </node>
+      <node id="9">
+        <label>E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/nodal_data_ops.H</label>
+        <link refid="nodal__data__ops_8_h_source"/>
+      </node>
+    </invincdepgraph>
+    <sectiondef kind="define">
+      <memberdef kind="define" id="constants_8_h_1ae077f0720a45352ce8f42aabb5bfe3e3" prot="public" static="no">
+        <name>numrigidbodies</name>
+        <initializer>2</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/constants.H" line="4" column="9" bodyfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/constants.H" bodystart="4" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="constants_8_h_1a6c01eced551aef29394f33551e719287" prot="public" static="no">
+        <name>XDIR</name>
+        <initializer>0</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/constants.H" line="6" column="9" bodyfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/constants.H" bodystart="6" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="constants_8_h_1ae80bdbf4f8dfb6279b15c1418bbb73b6" prot="public" static="no">
+        <name>YDIR</name>
+        <initializer>1</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/constants.H" line="7" column="9" bodyfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/constants.H" bodystart="7" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="constants_8_h_1abe8c8bcaed873382186789a83fe9f519" prot="public" static="no">
+        <name>ZDIR</name>
+        <initializer>2</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/constants.H" line="8" column="9" bodyfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/constants.H" bodystart="8" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="constants_8_h_1a02a5a3a5dce7a3872cf642878d6d1a87" prot="public" static="no">
+        <name>fourbythree</name>
+        <initializer>1.3333333333</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/constants.H" line="10" column="9" bodyfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/constants.H" bodystart="10" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="constants_8_h_1a143fa055fc894f4591a2715c96eaeb01" prot="public" static="no">
+        <name>half</name>
+        <initializer>0.5</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/constants.H" line="11" column="9" bodyfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/constants.H" bodystart="11" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="constants_8_h_1a598a3330b3c21701223ee0ca14316eca" prot="public" static="no">
+        <name>PI</name>
+        <initializer>3.141592654</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/constants.H" line="12" column="9" bodyfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/constants.H" bodystart="12" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="constants_8_h_1a07e800919e864a03d92799035517e67e" prot="public" static="no">
+        <name>three</name>
+        <initializer>3.0</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/constants.H" line="13" column="9" bodyfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/constants.H" bodystart="13" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="constants_8_h_1a282f45bc7cdc923f2937b85bbd8d3c10" prot="public" static="no">
+        <name>two</name>
+        <initializer>2.0</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/constants.H" line="14" column="9" bodyfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/constants.H" bodystart="14" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="constants_8_h_1a7cf126dbeb6f30c606e3b42fea65cfef" prot="public" static="no">
+        <name>one</name>
+        <initializer>1.0</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/constants.H" line="15" column="9" bodyfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/constants.H" bodystart="15" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="constants_8_h_1ae88501af11d627bf97daf24bfefa9461" prot="public" static="no">
+        <name>four</name>
+        <initializer>4.0</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/constants.H" line="16" column="9" bodyfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/constants.H" bodystart="16" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="constants_8_h_1a9530fb5fa9ba5d1a3f083b9f14120814" prot="public" static="no">
+        <name>twobyfive</name>
+        <initializer>0.4</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/constants.H" line="17" column="9" bodyfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/constants.H" bodystart="17" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="constants_8_h_1ac3185f395116e0ab52526d31dfd89987" prot="public" static="no">
+        <name>fourth</name>
+        <initializer>0.25</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/constants.H" line="18" column="9" bodyfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/constants.H" bodystart="18" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="constants_8_h_1a54a6bfb21628666c39f1475c88b1fde3" prot="public" static="no">
+        <name>eighth</name>
+        <initializer>0.125</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/constants.H" line="19" column="9" bodyfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/constants.H" bodystart="19" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="constants_8_h_1a361b1d0588e13a7b5994f24b40138ec0" prot="public" static="no">
+        <name>zero</name>
+        <initializer>0.0</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/constants.H" line="20" column="9" bodyfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/constants.H" bodystart="20" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="constants_8_h_1a7db9f346f884057f991b0fd242cf476f" prot="public" static="no">
+        <name>TINYVAL</name>
+        <initializer>1e-20</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/constants.H" line="21" column="9" bodyfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/constants.H" bodystart="21" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="constants_8_h_1a3606dd6552c8a05f8b4885bfa469cb1a" prot="public" static="no">
+        <name>BIGVAL</name>
+        <initializer>1e20</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/constants.H" line="22" column="9" bodyfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/constants.H" bodystart="22" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="constants_8_h_1a4c834b1b536cce215c745e9551a0ae6a" prot="public" static="no">
+        <name>NCOMP_TENSOR</name>
+        <initializer>6</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/constants.H" line="24" column="9" bodyfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/constants.H" bodystart="24" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="constants_8_h_1a947892a2054a616ecff1f32c5594c2f2" prot="public" static="no">
+        <name>NCOMP_FULLTENSOR</name>
+        <initializer>9</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/constants.H" line="25" column="9" bodyfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/constants.H" bodystart="25" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="constants_8_h_1a6e67a587012cd0570839daca590cf822" prot="public" static="no">
+        <name>NUM_STATES</name>
+        <initializer>20</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/constants.H" line="27" column="9" bodyfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/constants.H" bodystart="27" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="constants_8_h_1a7ae74b9fe1afe4c19303a18f58e494a7" prot="public" static="no">
+        <name>MASS_INDEX</name>
+        <initializer>0</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/constants.H" line="28" column="9" bodyfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/constants.H" bodystart="28" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="constants_8_h_1a963eae90d88a7e91e1dff883fc52a390" prot="public" static="no">
+        <name>VELX_INDEX</name>
+        <initializer>1</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/constants.H" line="29" column="9" bodyfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/constants.H" bodystart="29" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="constants_8_h_1a4e552ba136510bfd0d2f41baa017cf9e" prot="public" static="no">
+        <name>VELY_INDEX</name>
+        <initializer>2</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/constants.H" line="30" column="9" bodyfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/constants.H" bodystart="30" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="constants_8_h_1af3cd7247d89c801d61ff01c0c0719f14" prot="public" static="no">
+        <name>VELZ_INDEX</name>
+        <initializer>3</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/constants.H" line="31" column="9" bodyfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/constants.H" bodystart="31" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="constants_8_h_1a78a2d267f2502540c27171e81d06609a" prot="public" static="no">
+        <name>FRCX_INDEX</name>
+        <initializer>4</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/constants.H" line="32" column="9" bodyfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/constants.H" bodystart="32" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="constants_8_h_1a08021be9224df65f8dc5dcbb2f40aa35" prot="public" static="no">
+        <name>FRCY_INDEX</name>
+        <initializer>5</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/constants.H" line="33" column="9" bodyfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/constants.H" bodystart="33" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="constants_8_h_1ada46e0a0cabf73b7735deadb071de755" prot="public" static="no">
+        <name>FRCZ_INDEX</name>
+        <initializer>6</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/constants.H" line="34" column="9" bodyfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/constants.H" bodystart="34" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="constants_8_h_1ae78d93a9cf22aabd25ff8bb536967d9d" prot="public" static="no">
+        <name>DELTA_VELX_INDEX</name>
+        <initializer>7</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/constants.H" line="36" column="9" bodyfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/constants.H" bodystart="36" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="constants_8_h_1a42d9f8291ab25dca47e808bff997542f" prot="public" static="no">
+        <name>DELTA_VELY_INDEX</name>
+        <initializer>8</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/constants.H" line="37" column="9" bodyfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/constants.H" bodystart="37" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="constants_8_h_1a6fab07ab2ae78fac2e4feb69d6cff5f1" prot="public" static="no">
+        <name>DELTA_VELZ_INDEX</name>
+        <initializer>9</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/constants.H" line="38" column="9" bodyfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/constants.H" bodystart="38" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="constants_8_h_1a0a1c6b0afcc5f59896990e7ea61c6ddf" prot="public" static="no">
+        <name>MASS_OLD_INDEX</name>
+        <initializer>10</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/constants.H" line="39" column="9" bodyfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/constants.H" bodystart="39" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="constants_8_h_1a00dcb3b1c2342aace7cddea6ca38a05f" prot="public" static="no">
+        <name>VELX_RIGID_INDEX</name>
+        <initializer>11</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/constants.H" line="40" column="9" bodyfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/constants.H" bodystart="40" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="constants_8_h_1a8e43bb60e4187f85dfd910c17393003f" prot="public" static="no">
+        <name>VELY_RIGID_INDEX</name>
+        <initializer>12</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/constants.H" line="41" column="9" bodyfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/constants.H" bodystart="41" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="constants_8_h_1a7b9c6c75c61f34d8fec9d300753669d1" prot="public" static="no">
+        <name>VELZ_RIGID_INDEX</name>
+        <initializer>13</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/constants.H" line="42" column="9" bodyfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/constants.H" bodystart="42" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="constants_8_h_1adbb77bd497b98e88e4c1d55f27cc8265" prot="public" static="no">
+        <name>MASS_RIGID_INDEX</name>
+        <initializer>14</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/constants.H" line="43" column="9" bodyfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/constants.H" bodystart="43" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="constants_8_h_1a517d4362a22bfef9d378b14cc5fbc774" prot="public" static="no">
+        <name>STRESS_INDEX</name>
+        <initializer>15</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/constants.H" line="44" column="9" bodyfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/constants.H" bodystart="44" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="constants_8_h_1ab88bdbbd5e1c2444d607cfcbea7ee77c" prot="public" static="no">
+        <name>RIGID_BODY_ID</name>
+        <initializer>16</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/constants.H" line="45" column="9" bodyfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/constants.H" bodystart="45" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="constants_8_h_1a80f21635559ae704e45207caaf075256" prot="public" static="no">
+        <name>NORMALX</name>
+        <initializer>17</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/constants.H" line="46" column="9" bodyfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/constants.H" bodystart="46" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="constants_8_h_1a7123c0bcd47130523004a7cf38a3e915" prot="public" static="no">
+        <name>NORMALY</name>
+        <initializer>18</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/constants.H" line="47" column="9" bodyfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/constants.H" bodystart="47" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="constants_8_h_1a32d4b60cc789be3fa11dc9a6dce3b7b6" prot="public" static="no">
+        <name>NORMALZ</name>
+        <initializer>19</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/constants.H" line="48" column="9" bodyfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/constants.H" bodystart="48" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="constants_8_h_1a7b8003af9a638915bbca18f3896c5eb7" prot="public" static="no">
+        <name>XX</name>
+        <initializer>0</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/constants.H" line="52" column="9" bodyfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/constants.H" bodystart="52" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="constants_8_h_1a323358fd84497c5085b677efc3c1ab92" prot="public" static="no">
+        <name>XY</name>
+        <initializer>1</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/constants.H" line="53" column="9" bodyfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/constants.H" bodystart="53" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="constants_8_h_1a6736db3c0be0d143ef677e1341a7e9e6" prot="public" static="no">
+        <name>XZ</name>
+        <initializer>2</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/constants.H" line="54" column="9" bodyfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/constants.H" bodystart="54" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="constants_8_h_1a45801fdf4499284e1c422d7c76a78fac" prot="public" static="no">
+        <name>YY</name>
+        <initializer>3</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/constants.H" line="55" column="9" bodyfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/constants.H" bodystart="55" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="constants_8_h_1afd97953520efd65730393ad496c2b646" prot="public" static="no">
+        <name>YZ</name>
+        <initializer>4</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/constants.H" line="56" column="9" bodyfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/constants.H" bodystart="56" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="constants_8_h_1a3aaa4e1cdeb6e2f2be8cd98e1baf010e" prot="public" static="no">
+        <name>ZZ</name>
+        <initializer>5</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/constants.H" line="57" column="9" bodyfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/constants.H" bodystart="57" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="constants_8_h_1ab7ba80f8e691d56bdd4438caadb13516" prot="public" static="no">
+        <name>BC_PERIODIC</name>
+        <initializer>0</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/constants.H" line="59" column="9" bodyfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/constants.H" bodystart="59" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="constants_8_h_1acc40217bae493377bf505b4b78afc142" prot="public" static="no">
+        <name>BC_NOSLIPWALL</name>
+        <initializer>1</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/constants.H" line="60" column="9" bodyfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/constants.H" bodystart="60" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="constants_8_h_1a22b748dd4e5c0883314ac2ded2a7b435" prot="public" static="no">
+        <name>BC_SLIPWALL</name>
+        <initializer>2</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/constants.H" line="61" column="9" bodyfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/constants.H" bodystart="61" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="constants_8_h_1ac48bae465e6a77df90646f7b2600d961" prot="public" static="no">
+        <name>BC_PARTIALSLIPWALL</name>
+        <initializer>3</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/constants.H" line="62" column="9" bodyfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/constants.H" bodystart="62" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="constants_8_h_1a393313d8a8fc290f1f69bffe10d4f0c6" prot="public" static="no">
+        <name>BC_OUTFLOW</name>
+        <initializer>4</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/constants.H" line="63" column="9" bodyfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/constants.H" bodystart="63" bodyend="-1"/>
+      </memberdef>
+      <memberdef kind="define" id="constants_8_h_1af65e3995b85161876cd9c764663f21dc" prot="public" static="no">
+        <name>ACCG</name>
+        <initializer>9.81</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/constants.H" line="65" column="9" bodyfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/constants.H" bodystart="65" bodyend="-1"/>
+      </memberdef>
+    </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"><highlight class="preprocessor">#ifndef<sp/>_CONSTANTS_H_</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="2"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>_CONSTANTS_H_</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="3"><highlight class="normal"></highlight></codeline>
+<codeline lineno="4"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>numrigidbodies<sp/>2</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="5"><highlight class="normal"></highlight></codeline>
+<codeline lineno="6"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>XDIR<sp/>0</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="7"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>YDIR<sp/>1</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="8"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>ZDIR<sp/>2</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="9"><highlight class="normal"></highlight></codeline>
+<codeline lineno="10"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>fourbythree<sp/>1.3333333333</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="11"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>half<sp/>0.5</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="12"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>PI<sp/>3.141592654</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="13"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>three<sp/>3.0</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="14"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>two<sp/>2.0</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="15"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>one<sp/>1.0</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="16"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>four<sp/>4.0</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="17"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>twobyfive<sp/>0.4</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="18"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>fourth<sp/>0.25</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="19"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>eighth<sp/>0.125</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="20"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>zero<sp/>0.0</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="21"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>TINYVAL<sp/>1e-20</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="22"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>BIGVAL<sp/>1e20</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="23"><highlight class="normal"></highlight></codeline>
+<codeline lineno="24"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>NCOMP_TENSOR<sp/>6</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="25"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>NCOMP_FULLTENSOR<sp/>9</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="26"><highlight class="normal"></highlight></codeline>
+<codeline lineno="27"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>NUM_STATES<sp/>20</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="28"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>MASS_INDEX<sp/>0</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="29"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>VELX_INDEX<sp/>1</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="30"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>VELY_INDEX<sp/>2</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="31"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>VELZ_INDEX<sp/>3</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="32"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>FRCX_INDEX<sp/>4</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="33"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>FRCY_INDEX<sp/>5</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="34"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>FRCZ_INDEX<sp/>6</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="35"><highlight class="normal"></highlight><highlight class="comment">//Difference<sp/>in<sp/>velocity<sp/>between<sp/>two<sp/>successive<sp/>time<sp/>steps<sp/>Vx(t+dt)-Vx(t)</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="36"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>DELTA_VELX_INDEX<sp/>7<sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="37"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>DELTA_VELY_INDEX<sp/>8</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="38"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>DELTA_VELZ_INDEX<sp/>9</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="39"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>MASS_OLD_INDEX<sp/>10</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="40"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>VELX_RIGID_INDEX<sp/>11</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="41"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>VELY_RIGID_INDEX<sp/>12</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="42"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>VELZ_RIGID_INDEX<sp/>13</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="43"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>MASS_RIGID_INDEX<sp/>14</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="44"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>STRESS_INDEX<sp/>15</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="45"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>RIGID_BODY_ID<sp/>16</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="46"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>NORMALX<sp/>17</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="47"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>NORMALY<sp/>18</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="48"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>NORMALZ<sp/>19</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="49"><highlight class="normal"></highlight></codeline>
+<codeline lineno="50"><highlight class="normal"></highlight></codeline>
+<codeline lineno="51"><highlight class="normal"></highlight></codeline>
+<codeline lineno="52"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>XX<sp/>0</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="53"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>XY<sp/>1</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="54"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>XZ<sp/>2</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="55"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>YY<sp/>3</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="56"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>YZ<sp/>4</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="57"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>ZZ<sp/>5</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="58"><highlight class="normal"></highlight></codeline>
+<codeline lineno="59"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>BC_PERIODIC<sp/>0</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="60"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>BC_NOSLIPWALL<sp/>1</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="61"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>BC_SLIPWALL<sp/>2</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="62"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>BC_PARTIALSLIPWALL<sp/>3</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="63"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>BC_OUTFLOW<sp/>4</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="64"><highlight class="normal"></highlight></codeline>
+<codeline lineno="65"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>ACCG<sp/>9.81</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="66"><highlight class="normal"></highlight></codeline>
+<codeline lineno="67"><highlight class="normal"></highlight><highlight class="preprocessor">#endif</highlight></codeline>
+    </programlisting>
+    <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/constants.H"/>
+  </compounddef>
+</doxygen>

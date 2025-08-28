@@ -1,0 +1,1313 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.14.0" xml:lang="en-US">
+  <compounddef id="class_m_p_m_particle_container" kind="class" language="C++" prot="public">
+    <compoundname>MPMParticleContainer</compoundname>
+    <basecompoundref prot="public" virt="non-virtual">amrex::NeighborParticleContainer&lt; realData::count, intData::count &gt;</basecompoundref>
+    <sectiondef kind="public-func">
+      <memberdef kind="function" id="class_m_p_m_particle_container_1a41bed452e06b20ecea07e6db107d6ab6" prot="public" static="no" const="no" explicit="no" inline="yes" virt="non-virtual">
+        <type></type>
+        <definition>MPMParticleContainer::MPMParticleContainer</definition>
+        <argsstring>(const amrex::Geometry geom, const amrex::DistributionMapping dmap, const amrex::BoxArray ba, int numcells)</argsstring>
+        <name>MPMParticleContainer</name>
+        <qualifiedname>MPMParticleContainer::MPMParticleContainer</qualifiedname>
+        <param>
+          <type>const amrex::Geometry</type>
+          <declname>geom</declname>
+        </param>
+        <param>
+          <type>const amrex::DistributionMapping</type>
+          <declname>dmap</declname>
+        </param>
+        <param>
+          <type>const amrex::BoxArray</type>
+          <declname>ba</declname>
+        </param>
+        <param>
+          <type>int</type>
+          <declname>numcells</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_particle_container.H" line="15" column="5" bodyfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_particle_container.H" bodystart="15" bodyend="23"/>
+      </memberdef>
+      <memberdef kind="function" id="class_m_p_m_particle_container_1a6d0591a8cc490f07004df522de4356ed" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void MPMParticleContainer::InitParticles</definition>
+        <argsstring>(const std::string &amp;filename, Real &amp;total_mass, Real &amp;total_vol, Real &amp;total_rigid_mass, int &amp;index_rigid_body_read_so_far, int &amp;ifrigidnodespresent)</argsstring>
+        <name>InitParticles</name>
+        <qualifiedname>MPMParticleContainer::InitParticles</qualifiedname>
+        <param>
+          <type>const std::string &amp;</type>
+          <declname>filename</declname>
+        </param>
+        <param>
+          <type>Real &amp;</type>
+          <declname>total_mass</declname>
+        </param>
+        <param>
+          <type>Real &amp;</type>
+          <declname>total_vol</declname>
+        </param>
+        <param>
+          <type>Real &amp;</type>
+          <declname>total_rigid_mass</declname>
+        </param>
+        <param>
+          <type>int &amp;</type>
+          <declname>index_rigid_body_read_so_far</declname>
+        </param>
+        <param>
+          <type>int &amp;</type>
+          <declname>ifrigidnodespresent</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_particle_container.H" line="25" column="10" bodyfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_init.cpp" bodystart="5" bodyend="164"/>
+      </memberdef>
+      <memberdef kind="function" id="class_m_p_m_particle_container_1af0318df3acf8f3859aae68b14665be51" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void MPMParticleContainer::InitParticles</definition>
+        <argsstring>(Real mincoords[AMREX_SPACEDIM], Real maxcoords[AMREX_SPACEDIM], Real vel[AMREX_SPACEDIM], Real dens, int constmodel, Real E, Real nu, Real bulkMod, Real Gama_pres, Real visc, int do_multi_part_per_cell, Real &amp;total_mass, Real &amp;total_vol)</argsstring>
+        <name>InitParticles</name>
+        <qualifiedname>MPMParticleContainer::InitParticles</qualifiedname>
+        <param>
+          <type>Real</type>
+          <declname>mincoords</declname>
+          <array>[AMREX_SPACEDIM]</array>
+        </param>
+        <param>
+          <type>Real</type>
+          <declname>maxcoords</declname>
+          <array>[AMREX_SPACEDIM]</array>
+        </param>
+        <param>
+          <type>Real</type>
+          <declname>vel</declname>
+          <array>[AMREX_SPACEDIM]</array>
+        </param>
+        <param>
+          <type>Real</type>
+          <declname>dens</declname>
+        </param>
+        <param>
+          <type>int</type>
+          <declname>constmodel</declname>
+        </param>
+        <param>
+          <type>Real</type>
+          <declname>E</declname>
+        </param>
+        <param>
+          <type>Real</type>
+          <declname>nu</declname>
+        </param>
+        <param>
+          <type>Real</type>
+          <declname>bulkMod</declname>
+        </param>
+        <param>
+          <type>Real</type>
+          <declname>Gama_pres</declname>
+        </param>
+        <param>
+          <type>Real</type>
+          <declname>visc</declname>
+        </param>
+        <param>
+          <type>int</type>
+          <declname>do_multi_part_per_cell</declname>
+        </param>
+        <param>
+          <type>Real &amp;</type>
+          <declname>total_mass</declname>
+        </param>
+        <param>
+          <type>Real &amp;</type>
+          <declname>total_vol</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_particle_container.H" line="27" column="10" bodyfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_init.cpp" bodystart="166" bodyend="270"/>
+      </memberdef>
+      <memberdef kind="function" id="class_m_p_m_particle_container_1a0dd801c985957025a736ebb7034c606e" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void MPMParticleContainer::moveParticles</definition>
+        <argsstring>(const amrex::Real &amp;dt, int bclo[AMREX_SPACEDIM], int bchi[AMREX_SPACEDIM], int lsetbc, amrex::Real wall_mu_lo[AMREX_SPACEDIM], amrex::Real wall_mu_hi[AMREX_SPACEDIM], amrex::Real wall_vel_lo[AMREX_SPACEDIM *AMREX_SPACEDIM], amrex::Real wall_vel_hi[AMREX_SPACEDIM *AMREX_SPACEDIM], amrex::Real lset_wall_mu)</argsstring>
+        <name>moveParticles</name>
+        <qualifiedname>MPMParticleContainer::moveParticles</qualifiedname>
+        <param>
+          <type>const amrex::Real &amp;</type>
+          <declname>dt</declname>
+        </param>
+        <param>
+          <type>int</type>
+          <declname>bclo</declname>
+          <array>[AMREX_SPACEDIM]</array>
+        </param>
+        <param>
+          <type>int</type>
+          <declname>bchi</declname>
+          <array>[AMREX_SPACEDIM]</array>
+        </param>
+        <param>
+          <type>int</type>
+          <declname>lsetbc</declname>
+        </param>
+        <param>
+          <type>amrex::Real</type>
+          <declname>wall_mu_lo</declname>
+          <array>[AMREX_SPACEDIM]</array>
+        </param>
+        <param>
+          <type>amrex::Real</type>
+          <declname>wall_mu_hi</declname>
+          <array>[AMREX_SPACEDIM]</array>
+        </param>
+        <param>
+          <type>amrex::Real</type>
+          <declname>wall_vel_lo</declname>
+          <array>[AMREX_SPACEDIM *AMREX_SPACEDIM]</array>
+        </param>
+        <param>
+          <type>amrex::Real</type>
+          <declname>wall_vel_hi</declname>
+          <array>[AMREX_SPACEDIM *AMREX_SPACEDIM]</array>
+        </param>
+        <param>
+          <type>amrex::Real</type>
+          <declname>lset_wall_mu</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_particle_container.H" line="33" column="10" bodyfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_particle_timestep.cpp" bodystart="101" bodyend="350"/>
+      </memberdef>
+      <memberdef kind="function" id="class_m_p_m_particle_container_1ad79cdc2ebdec20a79df168f7cd9b2533" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void MPMParticleContainer::updateVolume</definition>
+        <argsstring>(const amrex::Real &amp;dt)</argsstring>
+        <name>updateVolume</name>
+        <qualifiedname>MPMParticleContainer::updateVolume</qualifiedname>
+        <param>
+          <type>const amrex::Real &amp;</type>
+          <declname>dt</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_particle_container.H" line="43" column="10" bodyfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_particle_timestep.cpp" bodystart="58" bodyend="99"/>
+      </memberdef>
+      <memberdef kind="function" id="class_m_p_m_particle_container_1abbc98179a12272dc1f26b3fb84f416e0" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>amrex::Real</type>
+        <definition>amrex::Real MPMParticleContainer::CalculateExactVelocity</definition>
+        <argsstring>(int modenumber, amrex::Real E, amrex::Real rho, amrex::Real v0, amrex::Real L, amrex::Real time)</argsstring>
+        <name>CalculateExactVelocity</name>
+        <qualifiedname>MPMParticleContainer::CalculateExactVelocity</qualifiedname>
+        <param>
+          <type>int</type>
+          <declname>modenumber</declname>
+        </param>
+        <param>
+          <type>amrex::Real</type>
+          <declname>E</declname>
+        </param>
+        <param>
+          <type>amrex::Real</type>
+          <declname>rho</declname>
+        </param>
+        <param>
+          <type>amrex::Real</type>
+          <declname>v0</declname>
+        </param>
+        <param>
+          <type>amrex::Real</type>
+          <declname>L</declname>
+        </param>
+        <param>
+          <type>amrex::Real</type>
+          <declname>time</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_particle_container.H" line="44" column="17" bodyfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_diagnostics.cpp" bodystart="47" bodyend="54"/>
+      </memberdef>
+      <memberdef kind="function" id="class_m_p_m_particle_container_1abea9db1f110646688005a6723f722857" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void MPMParticleContainer::writeParticles</definition>
+        <argsstring>(std::string prefix_particlefilename, int num_of_digits_in_filenames, const int n)</argsstring>
+        <name>writeParticles</name>
+        <qualifiedname>MPMParticleContainer::writeParticles</qualifiedname>
+        <param>
+          <type>std::string</type>
+          <declname>prefix_particlefilename</declname>
+        </param>
+        <param>
+          <type>int</type>
+          <declname>num_of_digits_in_filenames</declname>
+        </param>
+        <param>
+          <type>const int</type>
+          <declname>n</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_particle_container.H" line="45" column="10" bodyfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_particle_outputs.cpp" bodystart="114" bodyend="187"/>
+      </memberdef>
+      <memberdef kind="function" id="class_m_p_m_particle_container_1a78db58094476ea38c9aa354aabb47de3" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void MPMParticleContainer::writeCheckpointFile</definition>
+        <argsstring>(std::string prefix_particlefilename, int num_of_digits_in_filenames, amrex::Real cur_time, int nstep, int output_it)</argsstring>
+        <name>writeCheckpointFile</name>
+        <qualifiedname>MPMParticleContainer::writeCheckpointFile</qualifiedname>
+        <param>
+          <type>std::string</type>
+          <declname>prefix_particlefilename</declname>
+        </param>
+        <param>
+          <type>int</type>
+          <declname>num_of_digits_in_filenames</declname>
+        </param>
+        <param>
+          <type>amrex::Real</type>
+          <declname>cur_time</declname>
+        </param>
+        <param>
+          <type>int</type>
+          <declname>nstep</declname>
+        </param>
+        <param>
+          <type>int</type>
+          <declname>output_it</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_particle_container.H" line="46" column="10" bodyfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_particle_outputs.cpp" bodystart="227" bodyend="282"/>
+      </memberdef>
+      <memberdef kind="function" id="class_m_p_m_particle_container_1a803012c77705557434735b67ae781bfe" prot="public" static="no" const="yes" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void MPMParticleContainer::WriteHeader</definition>
+        <argsstring>(const std::string &amp;name, bool is_checkpoint, amrex::Real cur_time, int nstep, int EB_generate_max_level, int output_it) const</argsstring>
+        <name>WriteHeader</name>
+        <qualifiedname>MPMParticleContainer::WriteHeader</qualifiedname>
+        <param>
+          <type>const std::string &amp;</type>
+          <declname>name</declname>
+        </param>
+        <param>
+          <type>bool</type>
+          <declname>is_checkpoint</declname>
+        </param>
+        <param>
+          <type>amrex::Real</type>
+          <declname>cur_time</declname>
+        </param>
+        <param>
+          <type>int</type>
+          <declname>nstep</declname>
+        </param>
+        <param>
+          <type>int</type>
+          <declname>EB_generate_max_level</declname>
+        </param>
+        <param>
+          <type>int</type>
+          <declname>output_it</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_particle_container.H" line="47" column="10" bodyfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_particle_outputs.cpp" bodystart="189" bodyend="225"/>
+      </memberdef>
+      <memberdef kind="function" id="class_m_p_m_particle_container_1a3ee7dd5360f5b462938091ac309823a8" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void MPMParticleContainer::readCheckpointFile</definition>
+        <argsstring>(std::string &amp;restart_chkfile, int &amp;nstep, double &amp;cur_time, int &amp;output_it)</argsstring>
+        <name>readCheckpointFile</name>
+        <qualifiedname>MPMParticleContainer::readCheckpointFile</qualifiedname>
+        <param>
+          <type>std::string &amp;</type>
+          <declname>restart_chkfile</declname>
+        </param>
+        <param>
+          <type>int &amp;</type>
+          <declname>nstep</declname>
+        </param>
+        <param>
+          <type>double &amp;</type>
+          <declname>cur_time</declname>
+        </param>
+        <param>
+          <type>int &amp;</type>
+          <declname>output_it</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_particle_container.H" line="48" column="10" bodyfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_particle_outputs.cpp" bodystart="290" bodyend="362"/>
+      </memberdef>
+      <memberdef kind="function" id="class_m_p_m_particle_container_1a4e7c1e8f85b941f1bc21f1bd3e4b0e09" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>int</type>
+        <definition>int MPMParticleContainer::checkifrigidnodespresent</definition>
+        <argsstring>()</argsstring>
+        <name>checkifrigidnodespresent</name>
+        <qualifiedname>MPMParticleContainer::checkifrigidnodespresent</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_particle_container.H" line="49" column="9" bodyfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_particle_grid_ops.cpp" bodystart="4" bodyend="31"/>
+      </memberdef>
+      <memberdef kind="function" id="class_m_p_m_particle_container_1a581b692c3e1021cd255fcee6b3d9eae0" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void MPMParticleContainer::Calculate_Total_Mass_RigidParticles</definition>
+        <argsstring>(int body_id, amrex::Real &amp;total_mass)</argsstring>
+        <name>Calculate_Total_Mass_RigidParticles</name>
+        <qualifiedname>MPMParticleContainer::Calculate_Total_Mass_RigidParticles</qualifiedname>
+        <param>
+          <type>int</type>
+          <declname>body_id</declname>
+        </param>
+        <param>
+          <type>amrex::Real &amp;</type>
+          <declname>total_mass</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_particle_container.H" line="50" column="11" bodyfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_particle_grid_ops.cpp" bodystart="95" bodyend="124"/>
+      </memberdef>
+      <memberdef kind="function" id="class_m_p_m_particle_container_1a604124bcf1e7a7aa8e08ee42391cea84" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>amrex::Real</type>
+        <definition>amrex::Real MPMParticleContainer::Calculate_Total_Vol_RigidParticles</definition>
+        <argsstring>(int body_id)</argsstring>
+        <name>Calculate_Total_Vol_RigidParticles</name>
+        <qualifiedname>MPMParticleContainer::Calculate_Total_Vol_RigidParticles</qualifiedname>
+        <param>
+          <type>int</type>
+          <declname>body_id</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_particle_container.H" line="51" column="17" bodyfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_particle_grid_ops.cpp" bodystart="188" bodyend="213"/>
+      </memberdef>
+      <memberdef kind="function" id="class_m_p_m_particle_container_1a4203fab5fbedf9c1a8861a457f580e85" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>amrex::Real</type>
+        <definition>amrex::Real MPMParticleContainer::GetPosPiston</definition>
+        <argsstring>()</argsstring>
+        <name>GetPosPiston</name>
+        <qualifiedname>MPMParticleContainer::GetPosPiston</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_particle_container.H" line="52" column="17" bodyfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_particle_timestep.cpp" bodystart="374" bodyend="401"/>
+      </memberdef>
+      <memberdef kind="function" id="class_m_p_m_particle_container_1a5c0906136dde910320beccd9ba39a739" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>amrex::Real</type>
+        <definition>amrex::Real MPMParticleContainer::GetPosSpring</definition>
+        <argsstring>()</argsstring>
+        <name>GetPosSpring</name>
+        <qualifiedname>MPMParticleContainer::GetPosSpring</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_particle_container.H" line="53" column="17" bodyfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_particle_timestep.cpp" bodystart="352" bodyend="372"/>
+      </memberdef>
+      <memberdef kind="function" id="class_m_p_m_particle_container_1aa1c77709dd802cbd6bbb72f13d736ac8" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void MPMParticleContainer::CalculateSurfaceIntegralTop</definition>
+        <argsstring>(Array&lt; Real, AMREX_SPACEDIM &gt; gravity, Real &amp;Fy_top, Real &amp;Fy_bottom)</argsstring>
+        <name>CalculateSurfaceIntegralTop</name>
+        <qualifiedname>MPMParticleContainer::CalculateSurfaceIntegralTop</qualifiedname>
+        <param>
+          <type>Array&lt; Real, AMREX_SPACEDIM &gt;</type>
+          <declname>gravity</declname>
+        </param>
+        <param>
+          <type>Real &amp;</type>
+          <declname>Fy_top</declname>
+        </param>
+        <param>
+          <type>Real &amp;</type>
+          <declname>Fy_bottom</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_particle_container.H" line="54" column="10" bodyfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_diagnostics.cpp" bodystart="162" bodyend="196"/>
+      </memberdef>
+      <memberdef kind="function" id="class_m_p_m_particle_container_1ab2bc12f1a460bff5b283f3f166b4d566" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void MPMParticleContainer::deposit_onto_grid</definition>
+        <argsstring>(MultiFab &amp;nodaldata, Array&lt; Real, AMREX_SPACEDIM &gt; gravity, int external_loads_present, Array&lt; Real, AMREX_SPACEDIM &gt; force_slab_lo, Array&lt; Real, AMREX_SPACEDIM &gt; force_slab_hi, Array&lt; Real, AMREX_SPACEDIM &gt; extforce, int update_massvel, int update_forces, amrex::Real mass_tolerance, GpuArray&lt; int, AMREX_SPACEDIM &gt; order_scheme_directional, GpuArray&lt; int, AMREX_SPACEDIM &gt; periodic)</argsstring>
+        <name>deposit_onto_grid</name>
+        <qualifiedname>MPMParticleContainer::deposit_onto_grid</qualifiedname>
+        <param>
+          <type>MultiFab &amp;</type>
+          <declname>nodaldata</declname>
+        </param>
+        <param>
+          <type>Array&lt; Real, AMREX_SPACEDIM &gt;</type>
+          <declname>gravity</declname>
+        </param>
+        <param>
+          <type>int</type>
+          <declname>external_loads_present</declname>
+        </param>
+        <param>
+          <type>Array&lt; Real, AMREX_SPACEDIM &gt;</type>
+          <declname>force_slab_lo</declname>
+        </param>
+        <param>
+          <type>Array&lt; Real, AMREX_SPACEDIM &gt;</type>
+          <declname>force_slab_hi</declname>
+        </param>
+        <param>
+          <type>Array&lt; Real, AMREX_SPACEDIM &gt;</type>
+          <declname>extforce</declname>
+        </param>
+        <param>
+          <type>int</type>
+          <declname>update_massvel</declname>
+        </param>
+        <param>
+          <type>int</type>
+          <declname>update_forces</declname>
+        </param>
+        <param>
+          <type>amrex::Real</type>
+          <declname>mass_tolerance</declname>
+        </param>
+        <param>
+          <type>GpuArray&lt; int, AMREX_SPACEDIM &gt;</type>
+          <declname>order_scheme_directional</declname>
+        </param>
+        <param>
+          <type>GpuArray&lt; int, AMREX_SPACEDIM &gt;</type>
+          <declname>periodic</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_particle_container.H" line="55" column="10" bodyfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_particle_grid_ops.cpp" bodystart="215" bodyend="477"/>
+      </memberdef>
+      <memberdef kind="function" id="class_m_p_m_particle_container_1a88ca46782e4b759762ab6d0adb75f208" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void MPMParticleContainer::calculate_nodal_normal</definition>
+        <argsstring>(MultiFab &amp;nodaldata, amrex::Real mass_tolerance, GpuArray&lt; int, AMREX_SPACEDIM &gt; order_scheme_directional, GpuArray&lt; int, AMREX_SPACEDIM &gt; periodic)</argsstring>
+        <name>calculate_nodal_normal</name>
+        <qualifiedname>MPMParticleContainer::calculate_nodal_normal</qualifiedname>
+        <param>
+          <type>MultiFab &amp;</type>
+          <declname>nodaldata</declname>
+        </param>
+        <param>
+          <type>amrex::Real</type>
+          <declname>mass_tolerance</declname>
+        </param>
+        <param>
+          <type>GpuArray&lt; int, AMREX_SPACEDIM &gt;</type>
+          <declname>order_scheme_directional</declname>
+        </param>
+        <param>
+          <type>GpuArray&lt; int, AMREX_SPACEDIM &gt;</type>
+          <declname>periodic</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_particle_container.H" line="66" column="10" bodyfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_particle_grid_ops.cpp" bodystart="833" bodyend="988"/>
+      </memberdef>
+      <memberdef kind="function" id="class_m_p_m_particle_container_1ad1a3412011e1b23764e37897db2226a5" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void MPMParticleContainer::deposit_onto_grid_rigidnodesonly</definition>
+        <argsstring>(MultiFab &amp;nodaldata, Array&lt; Real, AMREX_SPACEDIM &gt; gravity, int external_loads_present, Array&lt; Real, AMREX_SPACEDIM &gt; force_slab_lo, Array&lt; Real, AMREX_SPACEDIM &gt; force_slab_hi, Array&lt; Real, AMREX_SPACEDIM &gt; extforce, int update_massvel, int update_forces, amrex::Real mass_tolerance, GpuArray&lt; int, AMREX_SPACEDIM &gt; order_scheme_directional, GpuArray&lt; int, AMREX_SPACEDIM &gt; periodic)</argsstring>
+        <name>deposit_onto_grid_rigidnodesonly</name>
+        <qualifiedname>MPMParticleContainer::deposit_onto_grid_rigidnodesonly</qualifiedname>
+        <param>
+          <type>MultiFab &amp;</type>
+          <declname>nodaldata</declname>
+        </param>
+        <param>
+          <type>Array&lt; Real, AMREX_SPACEDIM &gt;</type>
+          <declname>gravity</declname>
+        </param>
+        <param>
+          <type>int</type>
+          <declname>external_loads_present</declname>
+        </param>
+        <param>
+          <type>Array&lt; Real, AMREX_SPACEDIM &gt;</type>
+          <declname>force_slab_lo</declname>
+        </param>
+        <param>
+          <type>Array&lt; Real, AMREX_SPACEDIM &gt;</type>
+          <declname>force_slab_hi</declname>
+        </param>
+        <param>
+          <type>Array&lt; Real, AMREX_SPACEDIM &gt;</type>
+          <declname>extforce</declname>
+        </param>
+        <param>
+          <type>int</type>
+          <declname>update_massvel</declname>
+        </param>
+        <param>
+          <type>int</type>
+          <declname>update_forces</declname>
+        </param>
+        <param>
+          <type>amrex::Real</type>
+          <declname>mass_tolerance</declname>
+        </param>
+        <param>
+          <type>GpuArray&lt; int, AMREX_SPACEDIM &gt;</type>
+          <declname>order_scheme_directional</declname>
+        </param>
+        <param>
+          <type>GpuArray&lt; int, AMREX_SPACEDIM &gt;</type>
+          <declname>periodic</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_particle_container.H" line="71" column="10" bodyfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_particle_grid_ops.cpp" bodystart="482" bodyend="657"/>
+      </memberdef>
+      <memberdef kind="function" id="class_m_p_m_particle_container_1a965f11ac89520f0ccc7ea38458a671fe" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void MPMParticleContainer::checkifallparticlesinsidedomain</definition>
+        <argsstring>()</argsstring>
+        <name>checkifallparticlesinsidedomain</name>
+        <qualifiedname>MPMParticleContainer::checkifallparticlesinsidedomain</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_particle_container.H" line="82" column="10"/>
+      </memberdef>
+      <memberdef kind="function" id="class_m_p_m_particle_container_1ab699ff5acfb12fe7566c01d3aad6f378" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void MPMParticleContainer::UpdateRigidParticleVelocities</definition>
+        <argsstring>(int rigid_body_id, Array&lt; amrex::Real, AMREX_SPACEDIM &gt; velocity)</argsstring>
+        <name>UpdateRigidParticleVelocities</name>
+        <qualifiedname>MPMParticleContainer::UpdateRigidParticleVelocities</qualifiedname>
+        <param>
+          <type>int</type>
+          <declname>rigid_body_id</declname>
+        </param>
+        <param>
+          <type>Array&lt; amrex::Real, AMREX_SPACEDIM &gt;</type>
+          <declname>velocity</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_particle_container.H" line="83" column="10" bodyfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_particle_timestep.cpp" bodystart="404" bodyend="440"/>
+      </memberdef>
+      <memberdef kind="function" id="class_m_p_m_particle_container_1af1f72df21321f4e22bdfe1c5cca8d789" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void MPMParticleContainer::CalculateErrorP2G</definition>
+        <argsstring>(MultiFab &amp;nodaldata, amrex::Real p2g_L, amrex::Real p2g_f, int ncell)</argsstring>
+        <name>CalculateErrorP2G</name>
+        <qualifiedname>MPMParticleContainer::CalculateErrorP2G</qualifiedname>
+        <param>
+          <type>MultiFab &amp;</type>
+          <declname>nodaldata</declname>
+        </param>
+        <param>
+          <type>amrex::Real</type>
+          <declname>p2g_L</declname>
+        </param>
+        <param>
+          <type>amrex::Real</type>
+          <declname>p2g_f</declname>
+        </param>
+        <param>
+          <type>int</type>
+          <declname>ncell</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_particle_container.H" line="84" column="10" bodyfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_diagnostics.cpp" bodystart="233" bodyend="318"/>
+      </memberdef>
+      <memberdef kind="function" id="class_m_p_m_particle_container_1a3daab6fafc8f13ba1f21494914d53fbb" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void MPMParticleContainer::interpolate_from_grid</definition>
+        <argsstring>(MultiFab &amp;nodaldata, int update_vel, int update_strainrate, GpuArray&lt; int, AMREX_SPACEDIM &gt; order_scheme_directional, GpuArray&lt; int, AMREX_SPACEDIM &gt; periodic, amrex::Real alpha_pic_flip, amrex::Real dt)</argsstring>
+        <name>interpolate_from_grid</name>
+        <qualifiedname>MPMParticleContainer::interpolate_from_grid</qualifiedname>
+        <param>
+          <type>MultiFab &amp;</type>
+          <declname>nodaldata</declname>
+        </param>
+        <param>
+          <type>int</type>
+          <declname>update_vel</declname>
+        </param>
+        <param>
+          <type>int</type>
+          <declname>update_strainrate</declname>
+        </param>
+        <param>
+          <type>GpuArray&lt; int, AMREX_SPACEDIM &gt;</type>
+          <declname>order_scheme_directional</declname>
+        </param>
+        <param>
+          <type>GpuArray&lt; int, AMREX_SPACEDIM &gt;</type>
+          <declname>periodic</declname>
+        </param>
+        <param>
+          <type>amrex::Real</type>
+          <declname>alpha_pic_flip</declname>
+        </param>
+        <param>
+          <type>amrex::Real</type>
+          <declname>dt</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_particle_container.H" line="86" column="10" bodyfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_particle_grid_ops.cpp" bodystart="659" bodyend="830"/>
+      </memberdef>
+      <memberdef kind="function" id="class_m_p_m_particle_container_1a23c163535ca793de26e3482813ddca7b" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void MPMParticleContainer::move_particles_from_nodevel</definition>
+        <argsstring>(MultiFab &amp;nodaldata, const amrex::Real &amp;dt, int bclo[AMREX_SPACEDIM], int bchi[AMREX_SPACEDIM], int order_scheme)</argsstring>
+        <name>move_particles_from_nodevel</name>
+        <qualifiedname>MPMParticleContainer::move_particles_from_nodevel</qualifiedname>
+        <param>
+          <type>MultiFab &amp;</type>
+          <declname>nodaldata</declname>
+        </param>
+        <param>
+          <type>const amrex::Real &amp;</type>
+          <declname>dt</declname>
+        </param>
+        <param>
+          <type>int</type>
+          <declname>bclo</declname>
+          <array>[AMREX_SPACEDIM]</array>
+        </param>
+        <param>
+          <type>int</type>
+          <declname>bchi</declname>
+          <array>[AMREX_SPACEDIM]</array>
+        </param>
+        <param>
+          <type>int</type>
+          <declname>order_scheme</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_particle_container.H" line="93" column="10"/>
+      </memberdef>
+      <memberdef kind="function" id="class_m_p_m_particle_container_1aa4c175e9383a3f72796e7a3d093ab353" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void MPMParticleContainer::CalculateEnergies</definition>
+        <argsstring>(Real &amp;TKE, Real &amp;TSE)</argsstring>
+        <name>CalculateEnergies</name>
+        <qualifiedname>MPMParticleContainer::CalculateEnergies</qualifiedname>
+        <param>
+          <type>Real &amp;</type>
+          <declname>TKE</declname>
+        </param>
+        <param>
+          <type>Real &amp;</type>
+          <declname>TSE</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_particle_container.H" line="97" column="10" bodyfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_diagnostics.cpp" bodystart="5" bodyend="45"/>
+      </memberdef>
+      <memberdef kind="function" id="class_m_p_m_particle_container_1ac3bb2d37270f2f10860283418dfbd5d2" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>amrex::Real</type>
+        <definition>amrex::Real MPMParticleContainer::CalculateEffectiveSpringConstant</definition>
+        <argsstring>(amrex::Real Area, amrex::Real L0)</argsstring>
+        <name>CalculateEffectiveSpringConstant</name>
+        <qualifiedname>MPMParticleContainer::CalculateEffectiveSpringConstant</qualifiedname>
+        <param>
+          <type>amrex::Real</type>
+          <declname>Area</declname>
+        </param>
+        <param>
+          <type>amrex::Real</type>
+          <declname>L0</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_particle_container.H" line="98" column="17" bodyfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_diagnostics.cpp" bodystart="367" bodyend="430"/>
+      </memberdef>
+      <memberdef kind="function" id="class_m_p_m_particle_container_1a7e881aad69895e686e98edb1b4f53755" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void MPMParticleContainer::CalculateVelocity</definition>
+        <argsstring>(Real &amp;Vcm)</argsstring>
+        <name>CalculateVelocity</name>
+        <qualifiedname>MPMParticleContainer::CalculateVelocity</qualifiedname>
+        <param>
+          <type>Real &amp;</type>
+          <declname>Vcm</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_particle_container.H" line="99" column="10" bodyfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_diagnostics.cpp" bodystart="56" bodyend="88"/>
+      </memberdef>
+      <memberdef kind="function" id="class_m_p_m_particle_container_1af996311231a60a0a58020a28dc2e9248" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void MPMParticleContainer::CalculateVelocityCantilever</definition>
+        <argsstring>(Real &amp;Vcm)</argsstring>
+        <name>CalculateVelocityCantilever</name>
+        <qualifiedname>MPMParticleContainer::CalculateVelocityCantilever</qualifiedname>
+        <param>
+          <type>Real &amp;</type>
+          <declname>Vcm</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_particle_container.H" line="100" column="10" bodyfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_diagnostics.cpp" bodystart="128" bodyend="160"/>
+      </memberdef>
+      <memberdef kind="function" id="class_m_p_m_particle_container_1a0579a2429ad12fd30836786a3fbb0a8a" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void MPMParticleContainer::Calculate_Total_Number_of_rigid_particles</definition>
+        <argsstring>(int body_id, int &amp;total_num)</argsstring>
+        <name>Calculate_Total_Number_of_rigid_particles</name>
+        <qualifiedname>MPMParticleContainer::Calculate_Total_Number_of_rigid_particles</qualifiedname>
+        <param>
+          <type>int</type>
+          <declname>body_id</declname>
+        </param>
+        <param>
+          <type>int &amp;</type>
+          <declname>total_num</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_particle_container.H" line="101" column="10" bodyfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_particle_grid_ops.cpp" bodystart="33" bodyend="62"/>
+      </memberdef>
+      <memberdef kind="function" id="class_m_p_m_particle_container_1a1c96a6867e96959dc6ce5e1f58646713" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void MPMParticleContainer::Calculate_Total_Number_of_MaterialParticles</definition>
+        <argsstring>(int &amp;total_num)</argsstring>
+        <name>Calculate_Total_Number_of_MaterialParticles</name>
+        <qualifiedname>MPMParticleContainer::Calculate_Total_Number_of_MaterialParticles</qualifiedname>
+        <param>
+          <type>int &amp;</type>
+          <declname>total_num</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_particle_container.H" line="102" column="10" bodyfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_particle_grid_ops.cpp" bodystart="64" bodyend="93"/>
+      </memberdef>
+      <memberdef kind="function" id="class_m_p_m_particle_container_1a75ae27cba3be2dc2c6343a54cc9c6967" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void MPMParticleContainer::Calculate_Total_Mass_MaterialPoints</definition>
+        <argsstring>(Real &amp;total_mass)</argsstring>
+        <name>Calculate_Total_Mass_MaterialPoints</name>
+        <qualifiedname>MPMParticleContainer::Calculate_Total_Mass_MaterialPoints</qualifiedname>
+        <param>
+          <type>Real &amp;</type>
+          <declname>total_mass</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_particle_container.H" line="103" column="10" bodyfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_particle_grid_ops.cpp" bodystart="126" bodyend="155"/>
+      </memberdef>
+      <memberdef kind="function" id="class_m_p_m_particle_container_1a51a2ec64b6a69b121ed270327ea98e2a" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void MPMParticleContainer::Calculate_Total_Vol_MaterialPoints</definition>
+        <argsstring>(Real &amp;total_vol)</argsstring>
+        <name>Calculate_Total_Vol_MaterialPoints</name>
+        <qualifiedname>MPMParticleContainer::Calculate_Total_Vol_MaterialPoints</qualifiedname>
+        <param>
+          <type>Real &amp;</type>
+          <declname>total_vol</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_particle_container.H" line="104" column="10" bodyfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_particle_grid_ops.cpp" bodystart="157" bodyend="186"/>
+      </memberdef>
+      <memberdef kind="function" id="class_m_p_m_particle_container_1a57a0e41ae20b92dd7015867452927a3a" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void MPMParticleContainer::CalculateErrorTVB</definition>
+        <argsstring>(Real tvb_E, Real tvb_v0, Real tvb_L, Real tvb_rho, Real err)</argsstring>
+        <name>CalculateErrorTVB</name>
+        <qualifiedname>MPMParticleContainer::CalculateErrorTVB</qualifiedname>
+        <param>
+          <type>Real</type>
+          <declname>tvb_E</declname>
+        </param>
+        <param>
+          <type>Real</type>
+          <declname>tvb_v0</declname>
+        </param>
+        <param>
+          <type>Real</type>
+          <declname>tvb_L</declname>
+        </param>
+        <param>
+          <type>Real</type>
+          <declname>tvb_rho</declname>
+        </param>
+        <param>
+          <type>Real</type>
+          <declname>err</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_particle_container.H" line="105" column="10" bodyfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_diagnostics.cpp" bodystart="225" bodyend="231"/>
+      </memberdef>
+      <memberdef kind="function" id="class_m_p_m_particle_container_1acdf89041f80f8faee5057ef3cb276d81" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void MPMParticleContainer::WriteDeflectionTVB</definition>
+        <argsstring>(Real tvb_E, Real tvb_v0, Real tvb_L, Real tvb_rho, Real time, int output_it)</argsstring>
+        <name>WriteDeflectionTVB</name>
+        <qualifiedname>MPMParticleContainer::WriteDeflectionTVB</qualifiedname>
+        <param>
+          <type>Real</type>
+          <declname>tvb_E</declname>
+        </param>
+        <param>
+          <type>Real</type>
+          <declname>tvb_v0</declname>
+        </param>
+        <param>
+          <type>Real</type>
+          <declname>tvb_L</declname>
+        </param>
+        <param>
+          <type>Real</type>
+          <declname>tvb_rho</declname>
+        </param>
+        <param>
+          <type>Real</type>
+          <declname>time</declname>
+        </param>
+        <param>
+          <type>int</type>
+          <declname>output_it</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_particle_container.H" line="106" column="10" bodyfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_diagnostics.cpp" bodystart="320" bodyend="365"/>
+      </memberdef>
+      <memberdef kind="function" id="class_m_p_m_particle_container_1a10837cdf321c9350008802a289cc0fc3" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void MPMParticleContainer::WriteDeflectionCantilever</definition>
+        <argsstring>()</argsstring>
+        <name>WriteDeflectionCantilever</name>
+        <qualifiedname>MPMParticleContainer::WriteDeflectionCantilever</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_particle_container.H" line="107" column="10" bodyfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_diagnostics.cpp" bodystart="91" bodyend="126"/>
+      </memberdef>
+      <memberdef kind="function" id="class_m_p_m_particle_container_1ad9f5699600ffadf7cf96e7ca5e46f8ce" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void MPMParticleContainer::FindWaterFront</definition>
+        <argsstring>(Real &amp;Xwf)</argsstring>
+        <name>FindWaterFront</name>
+        <qualifiedname>MPMParticleContainer::FindWaterFront</qualifiedname>
+        <param>
+          <type>Real &amp;</type>
+          <declname>Xwf</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_particle_container.H" line="108" column="10" bodyfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_diagnostics.cpp" bodystart="198" bodyend="223"/>
+      </memberdef>
+      <memberdef kind="function" id="class_m_p_m_particle_container_1a0a6c4e48ef326dd3bffacb85d7fbbb84" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void MPMParticleContainer::apply_constitutive_model</definition>
+        <argsstring>(const amrex::Real &amp;dt, amrex::Real applied_strainrate)</argsstring>
+        <name>apply_constitutive_model</name>
+        <qualifiedname>MPMParticleContainer::apply_constitutive_model</qualifiedname>
+        <param>
+          <type>const amrex::Real &amp;</type>
+          <declname>dt</declname>
+        </param>
+        <param>
+          <type>amrex::Real</type>
+          <declname>applied_strainrate</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_particle_container.H" line="110" column="10" bodyfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_particle_container.cpp" bodystart="7" bodyend="81"/>
+      </memberdef>
+      <memberdef kind="function" id="class_m_p_m_particle_container_1a708947db154604e2985be0de89381970" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void MPMParticleContainer::apply_constitutive_model_delta</definition>
+        <argsstring>(const amrex::Real &amp;dt, amrex::Real applied_strainrate)</argsstring>
+        <name>apply_constitutive_model_delta</name>
+        <qualifiedname>MPMParticleContainer::apply_constitutive_model_delta</qualifiedname>
+        <param>
+          <type>const amrex::Real &amp;</type>
+          <declname>dt</declname>
+        </param>
+        <param>
+          <type>amrex::Real</type>
+          <declname>applied_strainrate</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_particle_container.H" line="111" column="10" bodyfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_particle_container.cpp" bodystart="83" bodyend="159"/>
+      </memberdef>
+      <memberdef kind="function" id="class_m_p_m_particle_container_1a24e13167eb1457bfc21af4ffffc83138" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void MPMParticleContainer::interpolate_mass_from_grid</definition>
+        <argsstring>(MultiFab &amp;nodaldata, int order_scheme)</argsstring>
+        <name>interpolate_mass_from_grid</name>
+        <qualifiedname>MPMParticleContainer::interpolate_mass_from_grid</qualifiedname>
+        <param>
+          <type>MultiFab &amp;</type>
+          <declname>nodaldata</declname>
+        </param>
+        <param>
+          <type>int</type>
+          <declname>order_scheme</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_particle_container.H" line="113" column="10"/>
+      </memberdef>
+      <memberdef kind="function" id="class_m_p_m_particle_container_1ae185fe6ab366018a0769b3bea3860819" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void MPMParticleContainer::update_phase_field</definition>
+        <argsstring>(MultiFab &amp;nodaldata, int refratio, amrex::Real smoothfactor)</argsstring>
+        <name>update_phase_field</name>
+        <qualifiedname>MPMParticleContainer::update_phase_field</qualifiedname>
+        <param>
+          <type>MultiFab &amp;</type>
+          <declname>nodaldata</declname>
+        </param>
+        <param>
+          <type>int</type>
+          <declname>refratio</declname>
+        </param>
+        <param>
+          <type>amrex::Real</type>
+          <declname>smoothfactor</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_particle_container.H" line="115" column="10" bodyfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_particle_outputs.cpp" bodystart="6" bodyend="112"/>
+      </memberdef>
+      <memberdef kind="function" id="class_m_p_m_particle_container_1a0065f9e1f2af7ce37a2aff2b5c62c8c7" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>amrex::Real</type>
+        <definition>amrex::Real MPMParticleContainer::Calculate_time_step</definition>
+        <argsstring>(amrex::Real CFL, amrex::Real dtmax, amrex::Real dtmin)</argsstring>
+        <name>Calculate_time_step</name>
+        <qualifiedname>MPMParticleContainer::Calculate_time_step</qualifiedname>
+        <param>
+          <type>amrex::Real</type>
+          <declname>CFL</declname>
+        </param>
+        <param>
+          <type>amrex::Real</type>
+          <declname>dtmax</declname>
+        </param>
+        <param>
+          <type>amrex::Real</type>
+          <declname>dtmin</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_particle_container.H" line="116" column="17" bodyfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_particle_timestep.cpp" bodystart="6" bodyend="56"/>
+      </memberdef>
+      <memberdef kind="function" id="class_m_p_m_particle_container_1a94aab2e9662595dc56e589631ade979d" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void MPMParticleContainer::removeParticlesInsideEB</definition>
+        <argsstring>()</argsstring>
+        <name>removeParticlesInsideEB</name>
+        <qualifiedname>MPMParticleContainer::removeParticlesInsideEB</qualifiedname>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_particle_container.H" line="117" column="10" bodyfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_init.cpp" bodystart="319" bodyend="363"/>
+      </memberdef>
+    </sectiondef>
+    <sectiondef kind="private-func">
+      <memberdef kind="function" id="class_m_p_m_particle_container_1a9a1b34795a686cbc4ab9645d94d332c0" prot="private" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>ParticleType</type>
+        <definition>MPMParticleContainer::ParticleType MPMParticleContainer::generate_particle</definition>
+        <argsstring>(Real x, Real y, Real z, Real vel[AMREX_SPACEDIM], Real dens, Real vol, int constmodel, Real E, Real nu, Real bulkmod, Real Gama_pres, Real visc)</argsstring>
+        <name>generate_particle</name>
+        <qualifiedname>MPMParticleContainer::generate_particle</qualifiedname>
+        <param>
+          <type>Real</type>
+          <declname>x</declname>
+        </param>
+        <param>
+          <type>Real</type>
+          <declname>y</declname>
+        </param>
+        <param>
+          <type>Real</type>
+          <declname>z</declname>
+        </param>
+        <param>
+          <type>Real</type>
+          <declname>vel</declname>
+          <array>[AMREX_SPACEDIM]</array>
+        </param>
+        <param>
+          <type>Real</type>
+          <declname>dens</declname>
+        </param>
+        <param>
+          <type>Real</type>
+          <declname>vol</declname>
+        </param>
+        <param>
+          <type>int</type>
+          <declname>constmodel</declname>
+        </param>
+        <param>
+          <type>Real</type>
+          <declname>E</declname>
+        </param>
+        <param>
+          <type>Real</type>
+          <declname>nu</declname>
+        </param>
+        <param>
+          <type>Real</type>
+          <declname>bulkmod</declname>
+        </param>
+        <param>
+          <type>Real</type>
+          <declname>Gama_pres</declname>
+        </param>
+        <param>
+          <type>Real</type>
+          <declname>visc</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_particle_container.H" line="121" column="18" bodyfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_init.cpp" bodystart="273" bodyend="316"/>
+      </memberdef>
+    </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <inheritancegraph>
+      <node id="1">
+        <label>MPMParticleContainer</label>
+        <link refid="class_m_p_m_particle_container"/>
+        <childnode refid="2" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="2">
+        <label>amrex::NeighborParticleContainer&lt; realData::count, intData::count &gt;</label>
+      </node>
+    </inheritancegraph>
+    <collaborationgraph>
+      <node id="1">
+        <label>MPMParticleContainer</label>
+        <link refid="class_m_p_m_particle_container"/>
+        <childnode refid="2" relation="public-inheritance">
+        </childnode>
+      </node>
+      <node id="2">
+        <label>amrex::NeighborParticleContainer&lt; realData::count, intData::count &gt;</label>
+      </node>
+    </collaborationgraph>
+    <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_particle_container.H" line="9" column="1" bodyfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_particle_container.H" bodystart="11" bodyend="127"/>
+    <listofallmembers>
+      <member refid="class_m_p_m_particle_container_1a0a6c4e48ef326dd3bffacb85d7fbbb84" prot="public" virt="non-virtual"><scope>MPMParticleContainer</scope><name>apply_constitutive_model</name></member>
+      <member refid="class_m_p_m_particle_container_1a708947db154604e2985be0de89381970" prot="public" virt="non-virtual"><scope>MPMParticleContainer</scope><name>apply_constitutive_model_delta</name></member>
+      <member refid="class_m_p_m_particle_container_1a88ca46782e4b759762ab6d0adb75f208" prot="public" virt="non-virtual"><scope>MPMParticleContainer</scope><name>calculate_nodal_normal</name></member>
+      <member refid="class_m_p_m_particle_container_1a0065f9e1f2af7ce37a2aff2b5c62c8c7" prot="public" virt="non-virtual"><scope>MPMParticleContainer</scope><name>Calculate_time_step</name></member>
+      <member refid="class_m_p_m_particle_container_1a75ae27cba3be2dc2c6343a54cc9c6967" prot="public" virt="non-virtual"><scope>MPMParticleContainer</scope><name>Calculate_Total_Mass_MaterialPoints</name></member>
+      <member refid="class_m_p_m_particle_container_1a581b692c3e1021cd255fcee6b3d9eae0" prot="public" virt="non-virtual"><scope>MPMParticleContainer</scope><name>Calculate_Total_Mass_RigidParticles</name></member>
+      <member refid="class_m_p_m_particle_container_1a1c96a6867e96959dc6ce5e1f58646713" prot="public" virt="non-virtual"><scope>MPMParticleContainer</scope><name>Calculate_Total_Number_of_MaterialParticles</name></member>
+      <member refid="class_m_p_m_particle_container_1a0579a2429ad12fd30836786a3fbb0a8a" prot="public" virt="non-virtual"><scope>MPMParticleContainer</scope><name>Calculate_Total_Number_of_rigid_particles</name></member>
+      <member refid="class_m_p_m_particle_container_1a51a2ec64b6a69b121ed270327ea98e2a" prot="public" virt="non-virtual"><scope>MPMParticleContainer</scope><name>Calculate_Total_Vol_MaterialPoints</name></member>
+      <member refid="class_m_p_m_particle_container_1a604124bcf1e7a7aa8e08ee42391cea84" prot="public" virt="non-virtual"><scope>MPMParticleContainer</scope><name>Calculate_Total_Vol_RigidParticles</name></member>
+      <member refid="class_m_p_m_particle_container_1ac3bb2d37270f2f10860283418dfbd5d2" prot="public" virt="non-virtual"><scope>MPMParticleContainer</scope><name>CalculateEffectiveSpringConstant</name></member>
+      <member refid="class_m_p_m_particle_container_1aa4c175e9383a3f72796e7a3d093ab353" prot="public" virt="non-virtual"><scope>MPMParticleContainer</scope><name>CalculateEnergies</name></member>
+      <member refid="class_m_p_m_particle_container_1af1f72df21321f4e22bdfe1c5cca8d789" prot="public" virt="non-virtual"><scope>MPMParticleContainer</scope><name>CalculateErrorP2G</name></member>
+      <member refid="class_m_p_m_particle_container_1a57a0e41ae20b92dd7015867452927a3a" prot="public" virt="non-virtual"><scope>MPMParticleContainer</scope><name>CalculateErrorTVB</name></member>
+      <member refid="class_m_p_m_particle_container_1abbc98179a12272dc1f26b3fb84f416e0" prot="public" virt="non-virtual"><scope>MPMParticleContainer</scope><name>CalculateExactVelocity</name></member>
+      <member refid="class_m_p_m_particle_container_1aa1c77709dd802cbd6bbb72f13d736ac8" prot="public" virt="non-virtual"><scope>MPMParticleContainer</scope><name>CalculateSurfaceIntegralTop</name></member>
+      <member refid="class_m_p_m_particle_container_1a7e881aad69895e686e98edb1b4f53755" prot="public" virt="non-virtual"><scope>MPMParticleContainer</scope><name>CalculateVelocity</name></member>
+      <member refid="class_m_p_m_particle_container_1af996311231a60a0a58020a28dc2e9248" prot="public" virt="non-virtual"><scope>MPMParticleContainer</scope><name>CalculateVelocityCantilever</name></member>
+      <member refid="class_m_p_m_particle_container_1a965f11ac89520f0ccc7ea38458a671fe" prot="public" virt="non-virtual"><scope>MPMParticleContainer</scope><name>checkifallparticlesinsidedomain</name></member>
+      <member refid="class_m_p_m_particle_container_1a4e7c1e8f85b941f1bc21f1bd3e4b0e09" prot="public" virt="non-virtual"><scope>MPMParticleContainer</scope><name>checkifrigidnodespresent</name></member>
+      <member refid="class_m_p_m_particle_container_1ab2bc12f1a460bff5b283f3f166b4d566" prot="public" virt="non-virtual"><scope>MPMParticleContainer</scope><name>deposit_onto_grid</name></member>
+      <member refid="class_m_p_m_particle_container_1ad1a3412011e1b23764e37897db2226a5" prot="public" virt="non-virtual"><scope>MPMParticleContainer</scope><name>deposit_onto_grid_rigidnodesonly</name></member>
+      <member refid="class_m_p_m_particle_container_1ad9f5699600ffadf7cf96e7ca5e46f8ce" prot="public" virt="non-virtual"><scope>MPMParticleContainer</scope><name>FindWaterFront</name></member>
+      <member refid="class_m_p_m_particle_container_1a9a1b34795a686cbc4ab9645d94d332c0" prot="private" virt="non-virtual"><scope>MPMParticleContainer</scope><name>generate_particle</name></member>
+      <member refid="class_m_p_m_particle_container_1a4203fab5fbedf9c1a8861a457f580e85" prot="public" virt="non-virtual"><scope>MPMParticleContainer</scope><name>GetPosPiston</name></member>
+      <member refid="class_m_p_m_particle_container_1a5c0906136dde910320beccd9ba39a739" prot="public" virt="non-virtual"><scope>MPMParticleContainer</scope><name>GetPosSpring</name></member>
+      <member refid="class_m_p_m_particle_container_1a6d0591a8cc490f07004df522de4356ed" prot="public" virt="non-virtual"><scope>MPMParticleContainer</scope><name>InitParticles</name></member>
+      <member refid="class_m_p_m_particle_container_1af0318df3acf8f3859aae68b14665be51" prot="public" virt="non-virtual"><scope>MPMParticleContainer</scope><name>InitParticles</name></member>
+      <member refid="class_m_p_m_particle_container_1a3daab6fafc8f13ba1f21494914d53fbb" prot="public" virt="non-virtual"><scope>MPMParticleContainer</scope><name>interpolate_from_grid</name></member>
+      <member refid="class_m_p_m_particle_container_1a24e13167eb1457bfc21af4ffffc83138" prot="public" virt="non-virtual"><scope>MPMParticleContainer</scope><name>interpolate_mass_from_grid</name></member>
+      <member refid="class_m_p_m_particle_container_1a23c163535ca793de26e3482813ddca7b" prot="public" virt="non-virtual"><scope>MPMParticleContainer</scope><name>move_particles_from_nodevel</name></member>
+      <member refid="class_m_p_m_particle_container_1a0dd801c985957025a736ebb7034c606e" prot="public" virt="non-virtual"><scope>MPMParticleContainer</scope><name>moveParticles</name></member>
+      <member refid="class_m_p_m_particle_container_1a41bed452e06b20ecea07e6db107d6ab6" prot="public" virt="non-virtual"><scope>MPMParticleContainer</scope><name>MPMParticleContainer</name></member>
+      <member refid="class_m_p_m_particle_container_1a3ee7dd5360f5b462938091ac309823a8" prot="public" virt="non-virtual"><scope>MPMParticleContainer</scope><name>readCheckpointFile</name></member>
+      <member refid="class_m_p_m_particle_container_1a94aab2e9662595dc56e589631ade979d" prot="public" virt="non-virtual"><scope>MPMParticleContainer</scope><name>removeParticlesInsideEB</name></member>
+      <member refid="class_m_p_m_particle_container_1ae185fe6ab366018a0769b3bea3860819" prot="public" virt="non-virtual"><scope>MPMParticleContainer</scope><name>update_phase_field</name></member>
+      <member refid="class_m_p_m_particle_container_1ab699ff5acfb12fe7566c01d3aad6f378" prot="public" virt="non-virtual"><scope>MPMParticleContainer</scope><name>UpdateRigidParticleVelocities</name></member>
+      <member refid="class_m_p_m_particle_container_1ad79cdc2ebdec20a79df168f7cd9b2533" prot="public" virt="non-virtual"><scope>MPMParticleContainer</scope><name>updateVolume</name></member>
+      <member refid="class_m_p_m_particle_container_1a78db58094476ea38c9aa354aabb47de3" prot="public" virt="non-virtual"><scope>MPMParticleContainer</scope><name>writeCheckpointFile</name></member>
+      <member refid="class_m_p_m_particle_container_1a10837cdf321c9350008802a289cc0fc3" prot="public" virt="non-virtual"><scope>MPMParticleContainer</scope><name>WriteDeflectionCantilever</name></member>
+      <member refid="class_m_p_m_particle_container_1acdf89041f80f8faee5057ef3cb276d81" prot="public" virt="non-virtual"><scope>MPMParticleContainer</scope><name>WriteDeflectionTVB</name></member>
+      <member refid="class_m_p_m_particle_container_1a803012c77705557434735b67ae781bfe" prot="public" virt="non-virtual"><scope>MPMParticleContainer</scope><name>WriteHeader</name></member>
+      <member refid="class_m_p_m_particle_container_1abea9db1f110646688005a6723f722857" prot="public" virt="non-virtual"><scope>MPMParticleContainer</scope><name>writeParticles</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

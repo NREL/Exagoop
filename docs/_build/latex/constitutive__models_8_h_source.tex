@@ -1,0 +1,70 @@
+\doxysection{constitutive\+\_\+models.\+H}
+\hypertarget{constitutive__models_8_h_source}{}\label{constitutive__models_8_h_source}\index{E:/Research/02\_CODE\_DEVELOPMENTS/04\_EXAGOOP/Source/constitutive\_models.H@{E:/Research/02\_CODE\_DEVELOPMENTS/04\_EXAGOOP/Source/constitutive\_models.H}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#ifndef\ CONSTITUTIVE\_MODELS\_H\_}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#define\ CONSTITUTIVE\_MODELS\_H\_}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include<constants.H>}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ <AMReX.H>}}
+\DoxyCodeLine{00006\ }
+\DoxyCodeLine{00007\ AMREX\_GPU\_DEVICE\ AMREX\_FORCE\_INLINE}
+\DoxyCodeLine{00008\ \textcolor{keywordtype}{void}\ linear\_elastic(amrex::Real\ eps[NCOMP\_TENSOR],}
+\DoxyCodeLine{00009\ \ \ \ \ \ \ \ \ amrex::Real\ epsdot[NCOMP\_TENSOR],}
+\DoxyCodeLine{00010\ \ \ \ \ \ \ \ \ amrex::Real\ sigma[NCOMP\_TENSOR],}
+\DoxyCodeLine{00011\ \ \ \ \ \ \ \ \ amrex::Real\ E,\ amrex::Real\ v)}
+\DoxyCodeLine{00012\ \{}
+\DoxyCodeLine{00013\ \ \ \ \ amrex::Real\ trace\_eps=eps[XX]+eps[YY]+eps[ZZ];}
+\DoxyCodeLine{00014\ \ \ \ \ amrex::Real\ const1=E/(one+v)/(one-\/two*v);}
+\DoxyCodeLine{00015\ \ \ \ \ amrex::Real\ const2=E/(one+v);}
+\DoxyCodeLine{00016\ }
+\DoxyCodeLine{00017\ \ \ \ \ sigma[XX]=const1*((1-\/v)*eps[XX]\ +\ v*(eps[YY]+eps[ZZ]));}
+\DoxyCodeLine{00018\ \ \ \ \ sigma[YY]=const1*((1-\/v)*eps[YY]\ +\ v*(eps[XX]+eps[ZZ]));}
+\DoxyCodeLine{00019\ \ \ \ \ sigma[ZZ]=const1*((1-\/v)*eps[ZZ]\ +\ v*(eps[XX]+eps[YY]));}
+\DoxyCodeLine{00020\ }
+\DoxyCodeLine{00021\ \ \ \ \ sigma[XY]=const2*eps[XY];}
+\DoxyCodeLine{00022\ \ \ \ \ sigma[XZ]=const2*eps[XZ];}
+\DoxyCodeLine{00023\ \ \ \ \ sigma[YZ]=const2*eps[YZ];}
+\DoxyCodeLine{00024\ \}}
+\DoxyCodeLine{00025\ }
+\DoxyCodeLine{00026\ AMREX\_GPU\_DEVICE\ AMREX\_FORCE\_INLINE}
+\DoxyCodeLine{00027\ \textcolor{keywordtype}{void}\ linear\_elastic(amrex::Real\ delta\_eps[NCOMP\_TENSOR],}
+\DoxyCodeLine{00028\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ amrex::Real\ delta\_sigma[NCOMP\_TENSOR],}
+\DoxyCodeLine{00029\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ amrex::Real\ E,\ amrex::Real\ v)}
+\DoxyCodeLine{00030\ \{}
+\DoxyCodeLine{00031\ \ \ \ \ amrex::Real\ const1=E/(one+v)/(one-\/two*v);}
+\DoxyCodeLine{00032\ \ \ \ \ amrex::Real\ const2=E/(one+v);}
+\DoxyCodeLine{00033\ }
+\DoxyCodeLine{00034\ \ \ \ \ delta\_sigma[XX]=const1*((1-\/v)*delta\_eps[XX]\ +\ v*(delta\_eps[YY]+delta\_eps[ZZ]));}
+\DoxyCodeLine{00035\ \ \ \ \ delta\_sigma[YY]=const1*((1-\/v)*delta\_eps[YY]\ +\ v*(delta\_eps[XX]+delta\_eps[ZZ]));}
+\DoxyCodeLine{00036\ \ \ \ \ delta\_sigma[ZZ]=const1*((1-\/v)*delta\_eps[ZZ]\ +\ v*(delta\_eps[XX]+delta\_eps[YY]));}
+\DoxyCodeLine{00037\ }
+\DoxyCodeLine{00038\ \ \ \ \ delta\_sigma[XY]=const2*delta\_eps[XY];}
+\DoxyCodeLine{00039\ \ \ \ \ delta\_sigma[XZ]=const2*delta\_eps[XZ];}
+\DoxyCodeLine{00040\ \ \ \ \ delta\_sigma[YZ]=const2*delta\_eps[YZ];}
+\DoxyCodeLine{00041\ \}}
+\DoxyCodeLine{00042\ }
+\DoxyCodeLine{00043\ AMREX\_GPU\_DEVICE\ AMREX\_FORCE\_INLINE}
+\DoxyCodeLine{00044\ \textcolor{keywordtype}{void}\ Newtonian\_Fluid(amrex::Real\ epsdot[NCOMP\_TENSOR],}
+\DoxyCodeLine{00045\ \ \ \ \ \ \ \ \ amrex::Real\ sigma[NCOMP\_TENSOR],}
+\DoxyCodeLine{00046\ \ \ \ \ \ \ \ \ amrex::Real\ dyn\_visc,}
+\DoxyCodeLine{00047\ \ \ \ \ \ \ \ \ amrex::Real\ pressure)}
+\DoxyCodeLine{00048\ \{}
+\DoxyCodeLine{00049\ }
+\DoxyCodeLine{00050\ \ \ \ \ amrex::Real\ trace\_epsdot=epsdot[XX]+epsdot[YY]+epsdot[ZZ];}
+\DoxyCodeLine{00051\ \ \ \ \ amrex::Real\ one\_by\_three=1.0/3.0;}
+\DoxyCodeLine{00052\ }
+\DoxyCodeLine{00053\ \ \ \ \ sigma[XX]=2.0*dyn\_visc*(epsdot[XX]-\/one\_by\_three*trace\_epsdot)-\/pressure;}
+\DoxyCodeLine{00054\ \ \ \ \ sigma[YY]=2.0*dyn\_visc*(epsdot[YY]-\/one\_by\_three*trace\_epsdot)-\/pressure;}
+\DoxyCodeLine{00055\ \ \ \ \ sigma[ZZ]=2.0*dyn\_visc*(epsdot[ZZ]-\/one\_by\_three*trace\_epsdot)-\/pressure;}
+\DoxyCodeLine{00056\ }
+\DoxyCodeLine{00057\ \ \ \ \ sigma[XY]=2.0*dyn\_visc*(epsdot[XY]);}
+\DoxyCodeLine{00058\ \ \ \ \ sigma[XZ]=2.0*dyn\_visc*(epsdot[XZ]);}
+\DoxyCodeLine{00059\ \ \ \ \ sigma[YZ]=2.0*dyn\_visc*(epsdot[YZ]);}
+\DoxyCodeLine{00060\ }
+\DoxyCodeLine{00061\ \}}
+\DoxyCodeLine{00062\ }
+\DoxyCodeLine{00063\ }
+\DoxyCodeLine{00064\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

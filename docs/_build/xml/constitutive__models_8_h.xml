@@ -1,0 +1,197 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.14.0" xml:lang="en-US">
+  <compounddef id="constitutive__models_8_h" kind="file" language="C++">
+    <compoundname>constitutive_models.H</compoundname>
+    <includes refid="constants_8_h" local="no">constants.H</includes>
+    <includes local="no">AMReX.H</includes>
+    <includedby refid="mpm__particle__container_8cpp" local="no">E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_particle_container.cpp</includedby>
+    <incdepgraph>
+      <node id="3">
+        <label>AMReX.H</label>
+      </node>
+      <node id="2">
+        <label>constants.H</label>
+        <link refid="constants_8_h_source"/>
+      </node>
+      <node id="1">
+        <label>E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/constitutive_models.H</label>
+        <link refid="constitutive__models_8_h"/>
+        <childnode refid="2" relation="include">
+        </childnode>
+        <childnode refid="3" relation="include">
+        </childnode>
+      </node>
+    </incdepgraph>
+    <sectiondef kind="func">
+      <memberdef kind="function" id="constitutive__models_8_h_1a56b366d4954d86c11aea0c5a28c5dc83" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>AMREX_GPU_DEVICE AMREX_FORCE_INLINE void</type>
+        <definition>AMREX_GPU_DEVICE AMREX_FORCE_INLINE void linear_elastic</definition>
+        <argsstring>(amrex::Real eps[NCOMP_TENSOR], amrex::Real epsdot[NCOMP_TENSOR], amrex::Real sigma[NCOMP_TENSOR], amrex::Real E, amrex::Real v)</argsstring>
+        <name>linear_elastic</name>
+        <param>
+          <type>amrex::Real</type>
+          <declname>eps</declname>
+          <array>[NCOMP_TENSOR]</array>
+        </param>
+        <param>
+          <type>amrex::Real</type>
+          <declname>epsdot</declname>
+          <array>[NCOMP_TENSOR]</array>
+        </param>
+        <param>
+          <type>amrex::Real</type>
+          <declname>sigma</declname>
+          <array>[NCOMP_TENSOR]</array>
+        </param>
+        <param>
+          <type>amrex::Real</type>
+          <declname>E</declname>
+        </param>
+        <param>
+          <type>amrex::Real</type>
+          <declname>v</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/constitutive_models.H" line="8" column="6" bodyfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/constitutive_models.H" bodystart="8" bodyend="24"/>
+      </memberdef>
+      <memberdef kind="function" id="constitutive__models_8_h_1ad267c6134c6ad9796a057ab9bb1e5ede" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>AMREX_GPU_DEVICE AMREX_FORCE_INLINE void</type>
+        <definition>AMREX_GPU_DEVICE AMREX_FORCE_INLINE void linear_elastic</definition>
+        <argsstring>(amrex::Real delta_eps[NCOMP_TENSOR], amrex::Real delta_sigma[NCOMP_TENSOR], amrex::Real E, amrex::Real v)</argsstring>
+        <name>linear_elastic</name>
+        <param>
+          <type>amrex::Real</type>
+          <declname>delta_eps</declname>
+          <array>[NCOMP_TENSOR]</array>
+        </param>
+        <param>
+          <type>amrex::Real</type>
+          <declname>delta_sigma</declname>
+          <array>[NCOMP_TENSOR]</array>
+        </param>
+        <param>
+          <type>amrex::Real</type>
+          <declname>E</declname>
+        </param>
+        <param>
+          <type>amrex::Real</type>
+          <declname>v</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/constitutive_models.H" line="27" column="6" bodyfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/constitutive_models.H" bodystart="27" bodyend="41"/>
+      </memberdef>
+      <memberdef kind="function" id="constitutive__models_8_h_1aefc26e360b741f860bd2be5200a60e6e" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>AMREX_GPU_DEVICE AMREX_FORCE_INLINE void</type>
+        <definition>AMREX_GPU_DEVICE AMREX_FORCE_INLINE void Newtonian_Fluid</definition>
+        <argsstring>(amrex::Real epsdot[NCOMP_TENSOR], amrex::Real sigma[NCOMP_TENSOR], amrex::Real dyn_visc, amrex::Real pressure)</argsstring>
+        <name>Newtonian_Fluid</name>
+        <param>
+          <type>amrex::Real</type>
+          <declname>epsdot</declname>
+          <array>[NCOMP_TENSOR]</array>
+        </param>
+        <param>
+          <type>amrex::Real</type>
+          <declname>sigma</declname>
+          <array>[NCOMP_TENSOR]</array>
+        </param>
+        <param>
+          <type>amrex::Real</type>
+          <declname>dyn_visc</declname>
+        </param>
+        <param>
+          <type>amrex::Real</type>
+          <declname>pressure</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/constitutive_models.H" line="44" column="6" bodyfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/constitutive_models.H" bodystart="44" bodyend="61"/>
+      </memberdef>
+    </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"><highlight class="preprocessor">#ifndef<sp/>CONSTITUTIVE_MODELS_H_</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="2"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>CONSTITUTIVE_MODELS_H_</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="3"><highlight class="normal"></highlight></codeline>
+<codeline lineno="4"><highlight class="normal"></highlight><highlight class="preprocessor">#include&lt;constants.H&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="5"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;AMReX.H&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="6"><highlight class="normal"></highlight></codeline>
+<codeline lineno="7"><highlight class="normal">AMREX_GPU_DEVICE<sp/>AMREX_FORCE_INLINE</highlight></codeline>
+<codeline lineno="8"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>linear_elastic(amrex::Real<sp/>eps[NCOMP_TENSOR],</highlight></codeline>
+<codeline lineno="9"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>amrex::Real<sp/>epsdot[NCOMP_TENSOR],</highlight></codeline>
+<codeline lineno="10"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>amrex::Real<sp/>sigma[NCOMP_TENSOR],</highlight></codeline>
+<codeline lineno="11"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>amrex::Real<sp/>E,<sp/>amrex::Real<sp/>v)</highlight></codeline>
+<codeline lineno="12"><highlight class="normal">{</highlight></codeline>
+<codeline lineno="13"><highlight class="normal"><sp/><sp/><sp/><sp/>amrex::Real<sp/>trace_eps=eps[XX]+eps[YY]+eps[ZZ];</highlight></codeline>
+<codeline lineno="14"><highlight class="normal"><sp/><sp/><sp/><sp/>amrex::Real<sp/>const1=E/(one+v)/(one-two*v);</highlight></codeline>
+<codeline lineno="15"><highlight class="normal"><sp/><sp/><sp/><sp/>amrex::Real<sp/>const2=E/(one+v);</highlight></codeline>
+<codeline lineno="16"><highlight class="normal"></highlight></codeline>
+<codeline lineno="17"><highlight class="normal"><sp/><sp/><sp/><sp/>sigma[XX]=const1*((1-v)*eps[XX]<sp/>+<sp/>v*(eps[YY]+eps[ZZ]));</highlight></codeline>
+<codeline lineno="18"><highlight class="normal"><sp/><sp/><sp/><sp/>sigma[YY]=const1*((1-v)*eps[YY]<sp/>+<sp/>v*(eps[XX]+eps[ZZ]));</highlight></codeline>
+<codeline lineno="19"><highlight class="normal"><sp/><sp/><sp/><sp/>sigma[ZZ]=const1*((1-v)*eps[ZZ]<sp/>+<sp/>v*(eps[XX]+eps[YY]));</highlight></codeline>
+<codeline lineno="20"><highlight class="normal"></highlight></codeline>
+<codeline lineno="21"><highlight class="normal"><sp/><sp/><sp/><sp/>sigma[XY]=const2*eps[XY];</highlight></codeline>
+<codeline lineno="22"><highlight class="normal"><sp/><sp/><sp/><sp/>sigma[XZ]=const2*eps[XZ];</highlight></codeline>
+<codeline lineno="23"><highlight class="normal"><sp/><sp/><sp/><sp/>sigma[YZ]=const2*eps[YZ];</highlight></codeline>
+<codeline lineno="24"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="25"><highlight class="normal"></highlight></codeline>
+<codeline lineno="26"><highlight class="normal">AMREX_GPU_DEVICE<sp/>AMREX_FORCE_INLINE</highlight></codeline>
+<codeline lineno="27"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>linear_elastic(amrex::Real<sp/>delta_eps[NCOMP_TENSOR],</highlight></codeline>
+<codeline lineno="28"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>amrex::Real<sp/>delta_sigma[NCOMP_TENSOR],</highlight></codeline>
+<codeline lineno="29"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>amrex::Real<sp/>E,<sp/>amrex::Real<sp/>v)</highlight></codeline>
+<codeline lineno="30"><highlight class="normal">{</highlight></codeline>
+<codeline lineno="31"><highlight class="normal"><sp/><sp/><sp/><sp/>amrex::Real<sp/>const1=E/(one+v)/(one-two*v);</highlight></codeline>
+<codeline lineno="32"><highlight class="normal"><sp/><sp/><sp/><sp/>amrex::Real<sp/>const2=E/(one+v);</highlight></codeline>
+<codeline lineno="33"><highlight class="normal"></highlight></codeline>
+<codeline lineno="34"><highlight class="normal"><sp/><sp/><sp/><sp/>delta_sigma[XX]=const1*((1-v)*delta_eps[XX]<sp/>+<sp/>v*(delta_eps[YY]+delta_eps[ZZ]));</highlight></codeline>
+<codeline lineno="35"><highlight class="normal"><sp/><sp/><sp/><sp/>delta_sigma[YY]=const1*((1-v)*delta_eps[YY]<sp/>+<sp/>v*(delta_eps[XX]+delta_eps[ZZ]));</highlight></codeline>
+<codeline lineno="36"><highlight class="normal"><sp/><sp/><sp/><sp/>delta_sigma[ZZ]=const1*((1-v)*delta_eps[ZZ]<sp/>+<sp/>v*(delta_eps[XX]+delta_eps[YY]));</highlight></codeline>
+<codeline lineno="37"><highlight class="normal"></highlight></codeline>
+<codeline lineno="38"><highlight class="normal"><sp/><sp/><sp/><sp/>delta_sigma[XY]=const2*delta_eps[XY];</highlight></codeline>
+<codeline lineno="39"><highlight class="normal"><sp/><sp/><sp/><sp/>delta_sigma[XZ]=const2*delta_eps[XZ];</highlight></codeline>
+<codeline lineno="40"><highlight class="normal"><sp/><sp/><sp/><sp/>delta_sigma[YZ]=const2*delta_eps[YZ];</highlight></codeline>
+<codeline lineno="41"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="42"><highlight class="normal"></highlight></codeline>
+<codeline lineno="43"><highlight class="normal">AMREX_GPU_DEVICE<sp/>AMREX_FORCE_INLINE</highlight></codeline>
+<codeline lineno="44"><highlight class="normal"></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>Newtonian_Fluid(amrex::Real<sp/>epsdot[NCOMP_TENSOR],</highlight></codeline>
+<codeline lineno="45"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>amrex::Real<sp/>sigma[NCOMP_TENSOR],</highlight></codeline>
+<codeline lineno="46"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>amrex::Real<sp/>dyn_visc,</highlight></codeline>
+<codeline lineno="47"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>amrex::Real<sp/>pressure)</highlight></codeline>
+<codeline lineno="48"><highlight class="normal">{</highlight></codeline>
+<codeline lineno="49"><highlight class="normal"></highlight></codeline>
+<codeline lineno="50"><highlight class="normal"><sp/><sp/><sp/><sp/>amrex::Real<sp/>trace_epsdot=epsdot[XX]+epsdot[YY]+epsdot[ZZ];</highlight></codeline>
+<codeline lineno="51"><highlight class="normal"><sp/><sp/><sp/><sp/>amrex::Real<sp/>one_by_three=1.0/3.0;</highlight></codeline>
+<codeline lineno="52"><highlight class="normal"></highlight></codeline>
+<codeline lineno="53"><highlight class="normal"><sp/><sp/><sp/><sp/>sigma[XX]=2.0*dyn_visc*(epsdot[XX]-one_by_three*trace_epsdot)-pressure;</highlight></codeline>
+<codeline lineno="54"><highlight class="normal"><sp/><sp/><sp/><sp/>sigma[YY]=2.0*dyn_visc*(epsdot[YY]-one_by_three*trace_epsdot)-pressure;</highlight></codeline>
+<codeline lineno="55"><highlight class="normal"><sp/><sp/><sp/><sp/>sigma[ZZ]=2.0*dyn_visc*(epsdot[ZZ]-one_by_three*trace_epsdot)-pressure;</highlight></codeline>
+<codeline lineno="56"><highlight class="normal"></highlight></codeline>
+<codeline lineno="57"><highlight class="normal"><sp/><sp/><sp/><sp/>sigma[XY]=2.0*dyn_visc*(epsdot[XY]);</highlight></codeline>
+<codeline lineno="58"><highlight class="normal"><sp/><sp/><sp/><sp/>sigma[XZ]=2.0*dyn_visc*(epsdot[XZ]);</highlight></codeline>
+<codeline lineno="59"><highlight class="normal"><sp/><sp/><sp/><sp/>sigma[YZ]=2.0*dyn_visc*(epsdot[YZ]);</highlight></codeline>
+<codeline lineno="60"><highlight class="normal"></highlight></codeline>
+<codeline lineno="61"><highlight class="normal">}</highlight></codeline>
+<codeline lineno="62"><highlight class="normal"></highlight></codeline>
+<codeline lineno="63"><highlight class="normal"></highlight></codeline>
+<codeline lineno="64"><highlight class="normal"></highlight><highlight class="preprocessor">#endif</highlight></codeline>
+    </programlisting>
+    <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/constitutive_models.H"/>
+  </compounddef>
+</doxygen>

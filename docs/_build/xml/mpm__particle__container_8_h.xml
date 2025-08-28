@@ -1,0 +1,217 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.14.0" xml:lang="en-US">
+  <compounddef id="mpm__particle__container_8_h" kind="file" language="C++">
+    <compoundname>mpm_particle_container.H</compoundname>
+    <includes local="no">AMReX_Particles.H</includes>
+    <includes local="no">AMReX_NeighborParticles.H</includes>
+    <includes refid="mpm__specs_8_h" local="no">mpm_specs.H</includes>
+    <includes refid="constants_8_h" local="no">constants.H</includes>
+    <includedby refid="interpolants_8_h" local="no">E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/interpolants.H</includedby>
+    <includedby refid="main_8cpp" local="no">E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/main.cpp</includedby>
+    <includedby refid="mpm__diagnostics_8cpp" local="no">E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_diagnostics.cpp</includedby>
+    <includedby refid="mpm__init_8cpp" local="no">E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_init.cpp</includedby>
+    <includedby refid="mpm__particle__container_8cpp" local="no">E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_particle_container.cpp</includedby>
+    <includedby refid="mpm__particle__grid__ops_8cpp" local="no">E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_particle_grid_ops.cpp</includedby>
+    <includedby refid="mpm__particle__outputs_8cpp" local="no">E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_particle_outputs.cpp</includedby>
+    <includedby refid="mpm__particle__timestep_8cpp" local="no">E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_particle_timestep.cpp</includedby>
+    <incdepgraph>
+      <node id="5">
+        <label>AMReX.H</label>
+      </node>
+      <node id="3">
+        <label>AMReX_NeighborParticles.H</label>
+      </node>
+      <node id="7">
+        <label>AMReX_ParmParse.H</label>
+      </node>
+      <node id="2">
+        <label>AMReX_Particles.H</label>
+      </node>
+      <node id="6">
+        <label>AMReX_REAL.H</label>
+      </node>
+      <node id="8">
+        <label>constants.H</label>
+        <link refid="constants_8_h_source"/>
+      </node>
+      <node id="1">
+        <label>E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_particle_container.H</label>
+        <link refid="mpm__particle__container_8_h"/>
+        <childnode refid="2" relation="include">
+        </childnode>
+        <childnode refid="3" relation="include">
+        </childnode>
+        <childnode refid="4" relation="include">
+        </childnode>
+        <childnode refid="8" relation="include">
+        </childnode>
+      </node>
+      <node id="4">
+        <label>mpm_specs.H</label>
+        <link refid="mpm__specs_8_h_source"/>
+        <childnode refid="5" relation="include">
+        </childnode>
+        <childnode refid="6" relation="include">
+        </childnode>
+        <childnode refid="7" relation="include">
+        </childnode>
+        <childnode refid="8" relation="include">
+        </childnode>
+      </node>
+    </incdepgraph>
+    <invincdepgraph>
+      <node id="2">
+        <label>E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/interpolants.H</label>
+        <link refid="interpolants_8_h_source"/>
+        <childnode refid="3" relation="include">
+        </childnode>
+      </node>
+      <node id="3">
+        <label>E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_eb.H</label>
+        <link refid="mpm__eb_8_h_source"/>
+      </node>
+      <node id="1">
+        <label>E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_particle_container.H</label>
+        <link refid="mpm__particle__container_8_h"/>
+        <childnode refid="2" relation="include">
+        </childnode>
+      </node>
+    </invincdepgraph>
+    <innerclass refid="class_m_p_m_particle_container" prot="public">MPMParticleContainer</innerclass>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <programlisting>
+<codeline lineno="1"><highlight class="preprocessor">#ifndef<sp/>MPM_PARTICLE_CONTAINER_H_</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="2"><highlight class="normal"></highlight><highlight class="preprocessor">#define<sp/>MPM_PARTICLE_CONTAINER_H_</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="3"><highlight class="normal"></highlight></codeline>
+<codeline lineno="4"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;AMReX_Particles.H&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="5"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;AMReX_NeighborParticles.H&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="6"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;mpm_specs.H&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="7"><highlight class="normal"></highlight><highlight class="preprocessor">#include<sp/>&lt;constants.H&gt;</highlight><highlight class="normal"></highlight></codeline>
+<codeline lineno="8"><highlight class="normal"></highlight></codeline>
+<codeline lineno="9" refid="class_m_p_m_particle_container" refkind="compound"><highlight class="normal"></highlight><highlight class="keyword">class<sp/></highlight><highlight class="normal">MPMParticleContainer</highlight></codeline>
+<codeline lineno="10"><highlight class="normal"><sp/><sp/><sp/><sp/>:<sp/></highlight><highlight class="keyword">public</highlight><highlight class="normal"><sp/>amrex::NeighborParticleContainer&lt;realData::count,<sp/>intData::count&gt;</highlight></codeline>
+<codeline lineno="11"><highlight class="normal">{</highlight></codeline>
+<codeline lineno="12"><highlight class="normal"></highlight></codeline>
+<codeline lineno="13"><highlight class="normal"></highlight><highlight class="keyword">public</highlight><highlight class="normal">:</highlight></codeline>
+<codeline lineno="14"><highlight class="normal"></highlight></codeline>
+<codeline lineno="15"><highlight class="normal"><sp/><sp/><sp/><sp/>MPMParticleContainer<sp/>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>amrex::Geometry<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>geom,</highlight></codeline>
+<codeline lineno="16"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>amrex::DistributionMapping<sp/><sp/><sp/>dmap,</highlight></codeline>
+<codeline lineno="17"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>amrex::BoxArray<sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>ba,</highlight></codeline>
+<codeline lineno="18"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>numcells)</highlight></codeline>
+<codeline lineno="19"><highlight class="normal"></highlight></codeline>
+<codeline lineno="20"><highlight class="normal"><sp/><sp/><sp/><sp/>:<sp/>NeighborParticleContainer&lt;realData::count,<sp/>intData::count&gt;(geom,<sp/>dmap,<sp/>ba,<sp/>numcells)</highlight></codeline>
+<codeline lineno="21"><highlight class="normal"><sp/><sp/><sp/><sp/>{</highlight></codeline>
+<codeline lineno="22"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="23"><highlight class="normal"><sp/><sp/><sp/><sp/>}</highlight></codeline>
+<codeline lineno="24"><highlight class="normal"></highlight></codeline>
+<codeline lineno="25"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>InitParticles<sp/>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>std::string<sp/>&amp;<sp/>filename,Real<sp/>&amp;total_mass,<sp/>Real<sp/>&amp;total_vol,<sp/>Real<sp/>&amp;total_rigid_mass,<sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>&amp;index_rigid_body_read_so_far,<sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>&amp;ifrigidnodespresent);</highlight></codeline>
+<codeline lineno="26"><highlight class="normal"></highlight></codeline>
+<codeline lineno="27"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>InitParticles<sp/>(Real<sp/>mincoords[AMREX_SPACEDIM],Real<sp/>maxcoords[AMREX_SPACEDIM],<sp/></highlight></codeline>
+<codeline lineno="28"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>Real<sp/>vel[AMREX_SPACEDIM],</highlight></codeline>
+<codeline lineno="29"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>Real<sp/>dens,<sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>constmodel,<sp/></highlight></codeline>
+<codeline lineno="30"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>Real<sp/>E,<sp/>Real<sp/>nu,Real<sp/>bulkMod,<sp/>Real<sp/>Gama_pres,Real<sp/>visc,</highlight></codeline>
+<codeline lineno="31"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>do_multi_part_per_cell,Real<sp/>&amp;total_mass,Real<sp/>&amp;total_vol);</highlight></codeline>
+<codeline lineno="32"><highlight class="normal"></highlight></codeline>
+<codeline lineno="33"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>moveParticles<sp/>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>amrex::Real&amp;<sp/>dt,</highlight></codeline>
+<codeline lineno="34"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>bclo[AMREX_SPACEDIM],</highlight></codeline>
+<codeline lineno="35"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>bchi[AMREX_SPACEDIM],</highlight></codeline>
+<codeline lineno="36"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>lsetbc,</highlight></codeline>
+<codeline lineno="37"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>amrex::Real<sp/>wall_mu_lo[AMREX_SPACEDIM],</highlight></codeline>
+<codeline lineno="38"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>amrex::Real<sp/>wall_mu_hi[AMREX_SPACEDIM],</highlight></codeline>
+<codeline lineno="39"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>amrex::Real<sp/>wall_vel_lo[AMREX_SPACEDIM*AMREX_SPACEDIM],</highlight></codeline>
+<codeline lineno="40"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>amrex::Real<sp/>wall_vel_hi[AMREX_SPACEDIM*AMREX_SPACEDIM],</highlight></codeline>
+<codeline lineno="41"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>amrex::Real<sp/>lset_wall_mu);</highlight></codeline>
+<codeline lineno="42"><highlight class="normal"></highlight></codeline>
+<codeline lineno="43"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>updateVolume<sp/>(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>amrex::Real&amp;<sp/>dt);</highlight></codeline>
+<codeline lineno="44"><highlight class="normal"><sp/><sp/><sp/><sp/>amrex::Real<sp/>CalculateExactVelocity(</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>modenumber,amrex::Real<sp/>E,<sp/>amrex::Real<sp/>rho,<sp/>amrex::Real<sp/>v0,amrex::Real<sp/>L,<sp/>amrex::Real<sp/>time);</highlight></codeline>
+<codeline lineno="45"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>writeParticles<sp/>(std::string<sp/>prefix_particlefilename,<sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>num_of_digits_in_filenames,<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>n);</highlight></codeline>
+<codeline lineno="46"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>writeCheckpointFile(std::string<sp/>prefix_particlefilename,<sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>num_of_digits_in_filenames,<sp/>amrex::Real<sp/>cur_time,<sp/><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>nstep,<sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>output_it);</highlight></codeline>
+<codeline lineno="47"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>WriteHeader(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>std::string&amp;<sp/>name,<sp/></highlight><highlight class="keywordtype">bool</highlight><highlight class="normal"><sp/>is_checkpoint,<sp/>amrex::Real<sp/>cur_time,<sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>nstep,<sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>EB_generate_max_level,<sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>output_it)<sp/></highlight><highlight class="keyword">const</highlight><highlight class="normal">;</highlight></codeline>
+<codeline lineno="48"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>readCheckpointFile(std::string<sp/>&amp;<sp/>restart_chkfile,<sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>&amp;nstep,<sp/></highlight><highlight class="keywordtype">double</highlight><highlight class="normal"><sp/>&amp;cur_time,<sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>&amp;output_it);</highlight></codeline>
+<codeline lineno="49"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>checkifrigidnodespresent();</highlight></codeline>
+<codeline lineno="50"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/><sp/>Calculate_Total_Mass_RigidParticles(</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>body_id,<sp/>amrex::Real<sp/>&amp;total_mass);</highlight></codeline>
+<codeline lineno="51"><highlight class="normal"><sp/><sp/><sp/><sp/>amrex::Real<sp/>Calculate_Total_Vol_RigidParticles(</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>body_id);</highlight></codeline>
+<codeline lineno="52"><highlight class="normal"><sp/><sp/><sp/><sp/>amrex::Real<sp/>GetPosPiston();</highlight></codeline>
+<codeline lineno="53"><highlight class="normal"><sp/><sp/><sp/><sp/>amrex::Real<sp/>GetPosSpring();</highlight></codeline>
+<codeline lineno="54"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>CalculateSurfaceIntegralTop(Array&lt;Real,AMREX_SPACEDIM&gt;<sp/>gravity,<sp/>Real<sp/>&amp;Fy_top,<sp/>Real<sp/>&amp;Fy_bottom);</highlight></codeline>
+<codeline lineno="55"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>deposit_onto_grid(MultiFab&amp;<sp/>nodaldata,</highlight></codeline>
+<codeline lineno="56"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>Array&lt;Real,AMREX_SPACEDIM&gt;<sp/>gravity,</highlight></codeline>
+<codeline lineno="57"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>external_loads_present,</highlight></codeline>
+<codeline lineno="58"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>Array&lt;Real,AMREX_SPACEDIM&gt;<sp/>force_slab_lo,</highlight></codeline>
+<codeline lineno="59"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>Array&lt;Real,AMREX_SPACEDIM&gt;<sp/>force_slab_hi,</highlight></codeline>
+<codeline lineno="60"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>Array&lt;Real,AMREX_SPACEDIM&gt;<sp/>extforce,</highlight></codeline>
+<codeline lineno="61"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>update_massvel,</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>update_forces,<sp/></highlight></codeline>
+<codeline lineno="62"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>amrex::Real<sp/>mass_tolerance,</highlight></codeline>
+<codeline lineno="63"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>GpuArray&lt;int,<sp/>AMREX_SPACEDIM&gt;<sp/>order_scheme_directional,</highlight></codeline>
+<codeline lineno="64"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>GpuArray&lt;int,<sp/>AMREX_SPACEDIM&gt;<sp/>periodic);</highlight></codeline>
+<codeline lineno="65"><highlight class="normal"></highlight></codeline>
+<codeline lineno="66"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>calculate_nodal_normal<sp/>(<sp/><sp/><sp/>MultiFab&amp;<sp/>nodaldata,</highlight></codeline>
+<codeline lineno="67"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>amrex::Real<sp/>mass_tolerance,</highlight></codeline>
+<codeline lineno="68"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>GpuArray&lt;int,AMREX_SPACEDIM&gt;<sp/>order_scheme_directional,</highlight></codeline>
+<codeline lineno="69"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>GpuArray&lt;int,AMREX_SPACEDIM&gt;<sp/>periodic);</highlight></codeline>
+<codeline lineno="70"><highlight class="normal"></highlight></codeline>
+<codeline lineno="71"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>deposit_onto_grid_rigidnodesonly(MultiFab&amp;<sp/>nodaldata,</highlight></codeline>
+<codeline lineno="72"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>Array&lt;Real,AMREX_SPACEDIM&gt;<sp/>gravity,</highlight></codeline>
+<codeline lineno="73"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>external_loads_present,</highlight></codeline>
+<codeline lineno="74"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>Array&lt;Real,AMREX_SPACEDIM&gt;<sp/>force_slab_lo,</highlight></codeline>
+<codeline lineno="75"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>Array&lt;Real,AMREX_SPACEDIM&gt;<sp/>force_slab_hi,</highlight></codeline>
+<codeline lineno="76"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>Array&lt;Real,AMREX_SPACEDIM&gt;<sp/>extforce,</highlight></codeline>
+<codeline lineno="77"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>update_massvel,</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>update_forces,</highlight></codeline>
+<codeline lineno="78"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>amrex::Real<sp/>mass_tolerance,</highlight></codeline>
+<codeline lineno="79"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>GpuArray&lt;int,<sp/>AMREX_SPACEDIM&gt;<sp/>order_scheme_directional,</highlight></codeline>
+<codeline lineno="80"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>GpuArray&lt;int,<sp/>AMREX_SPACEDIM&gt;<sp/>periodic);</highlight></codeline>
+<codeline lineno="81"><highlight class="normal"></highlight></codeline>
+<codeline lineno="82"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>checkifallparticlesinsidedomain();</highlight></codeline>
+<codeline lineno="83"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>UpdateRigidParticleVelocities(</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>rigid_body_id,Array<sp/>&lt;amrex::Real,AMREX_SPACEDIM&gt;<sp/>velocity);</highlight></codeline>
+<codeline lineno="84"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>CalculateErrorP2G(MultiFab&amp;<sp/>nodaldata,amrex::Real<sp/>p2g_L,amrex::Real<sp/>p2g_f,</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>ncell);</highlight></codeline>
+<codeline lineno="85"><highlight class="normal"></highlight></codeline>
+<codeline lineno="86"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>interpolate_from_grid(MultiFab&amp;<sp/>nodaldata,</highlight></codeline>
+<codeline lineno="87"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>update_vel,</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>update_strainrate,</highlight></codeline>
+<codeline lineno="88"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>GpuArray<sp/>&lt;int,AMREX_SPACEDIM&gt;<sp/>order_scheme_directional,</highlight></codeline>
+<codeline lineno="89"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>GpuArray<sp/>&lt;int,AMREX_SPACEDIM&gt;<sp/>periodic,</highlight></codeline>
+<codeline lineno="90"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>amrex::Real<sp/>alpha_pic_flip,</highlight></codeline>
+<codeline lineno="91"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>amrex::Real<sp/>dt);</highlight></codeline>
+<codeline lineno="92"><highlight class="normal"></highlight></codeline>
+<codeline lineno="93"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>move_particles_from_nodevel(MultiFab&amp;<sp/>nodaldata,</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>amrex::Real&amp;<sp/>dt,</highlight></codeline>
+<codeline lineno="94"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>bclo[AMREX_SPACEDIM],</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>bchi[AMREX_SPACEDIM],</highlight></codeline>
+<codeline lineno="95"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>order_scheme);</highlight></codeline>
+<codeline lineno="96"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight></codeline>
+<codeline lineno="97"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>CalculateEnergies(Real<sp/>&amp;TKE,Real<sp/>&amp;TSE);</highlight></codeline>
+<codeline lineno="98"><highlight class="normal"><sp/><sp/><sp/><sp/>amrex::Real<sp/>CalculateEffectiveSpringConstant(amrex::Real<sp/>Area,amrex::Real<sp/>L0);</highlight></codeline>
+<codeline lineno="99"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>CalculateVelocity(Real<sp/>&amp;Vcm);</highlight></codeline>
+<codeline lineno="100"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>CalculateVelocityCantilever(Real<sp/>&amp;Vcm);</highlight></codeline>
+<codeline lineno="101"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>Calculate_Total_Number_of_rigid_particles(</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>body_id,</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>&amp;total_num);</highlight></codeline>
+<codeline lineno="102"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>Calculate_Total_Number_of_MaterialParticles(</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>&amp;total_num);</highlight></codeline>
+<codeline lineno="103"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>Calculate_Total_Mass_MaterialPoints(Real<sp/>&amp;total_mass);</highlight></codeline>
+<codeline lineno="104"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>Calculate_Total_Vol_MaterialPoints(Real<sp/>&amp;total_vol);</highlight></codeline>
+<codeline lineno="105"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>CalculateErrorTVB(Real<sp/>tvb_E,Real<sp/>tvb_v0,Real<sp/>tvb_L,Real<sp/>tvb_rho,Real<sp/>err);</highlight></codeline>
+<codeline lineno="106"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>WriteDeflectionTVB(Real<sp/>tvb_E,Real<sp/>tvb_v0,Real<sp/>tvb_L,Real<sp/>tvb_rho,<sp/>Real<sp/>time,<sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>output_it);</highlight></codeline>
+<codeline lineno="107"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>WriteDeflectionCantilever();</highlight></codeline>
+<codeline lineno="108"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>FindWaterFront(Real<sp/>&amp;Xwf);</highlight></codeline>
+<codeline lineno="109"><highlight class="normal"></highlight></codeline>
+<codeline lineno="110"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>apply_constitutive_model(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>amrex::Real&amp;<sp/>dt,amrex::Real<sp/>applied_strainrate);</highlight></codeline>
+<codeline lineno="111"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>apply_constitutive_model_delta(</highlight><highlight class="keyword">const</highlight><highlight class="normal"><sp/>amrex::Real&amp;<sp/>dt,amrex::Real<sp/>applied_strainrate);</highlight></codeline>
+<codeline lineno="112"><highlight class="normal"></highlight></codeline>
+<codeline lineno="113"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>interpolate_mass_from_grid(MultiFab&amp;<sp/>nodaldata,</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>order_scheme);</highlight></codeline>
+<codeline lineno="114"><highlight class="normal"></highlight></codeline>
+<codeline lineno="115"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>update_phase_field(MultiFab&amp;<sp/>nodaldata,</highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>refratio,amrex::Real<sp/>smoothfactor);</highlight></codeline>
+<codeline lineno="116"><highlight class="normal"><sp/><sp/><sp/><sp/>amrex::Real<sp/>Calculate_time_step(amrex::Real<sp/>CFL,<sp/>amrex::Real<sp/>dtmax,amrex::Real<sp/>dtmin);</highlight></codeline>
+<codeline lineno="117"><highlight class="normal"><sp/><sp/><sp/><sp/></highlight><highlight class="keywordtype">void</highlight><highlight class="normal"><sp/>removeParticlesInsideEB();</highlight></codeline>
+<codeline lineno="118"><highlight class="normal"></highlight></codeline>
+<codeline lineno="119"><highlight class="normal"></highlight><highlight class="keyword">private</highlight><highlight class="normal">:</highlight></codeline>
+<codeline lineno="120"><highlight class="normal"></highlight></codeline>
+<codeline lineno="121"><highlight class="normal"><sp/><sp/><sp/><sp/>ParticleType<sp/>generate_particle</highlight></codeline>
+<codeline lineno="122"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>(Real<sp/>x,Real<sp/>y,Real<sp/>z,</highlight></codeline>
+<codeline lineno="123"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>Real<sp/>vel[AMREX_SPACEDIM],</highlight></codeline>
+<codeline lineno="124"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>Real<sp/>dens,<sp/>Real<sp/>vol,<sp/></highlight><highlight class="keywordtype">int</highlight><highlight class="normal"><sp/>constmodel,<sp/>Real<sp/>E,<sp/>Real<sp/>nu,</highlight></codeline>
+<codeline lineno="125"><highlight class="normal"><sp/><sp/><sp/><sp/><sp/><sp/><sp/><sp/>Real<sp/>bulkmod,<sp/>Real<sp/>Gama_pres,Real<sp/>visc);</highlight></codeline>
+<codeline lineno="126"><highlight class="normal"></highlight></codeline>
+<codeline lineno="127"><highlight class="normal">};</highlight></codeline>
+<codeline lineno="128"><highlight class="normal"></highlight><highlight class="preprocessor">#endif</highlight></codeline>
+    </programlisting>
+    <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_particle_container.H"/>
+  </compounddef>
+</doxygen>

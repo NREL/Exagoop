@@ -1,0 +1,127 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.14.0" xml:lang="en-US">
+  <compounddef id="namespacempm__ebtools" kind="namespace" language="C++">
+    <compoundname>mpm_ebtools</compoundname>
+    <sectiondef kind="var">
+      <memberdef kind="variable" id="mpm__eb_8cpp_1aa93a1b54305f329fd5ae700c073e19c3" prot="public" static="no" mutable="no">
+        <type>EBFArrayBoxFactory *</type>
+        <definition>EBFArrayBoxFactory * mpm_ebtools::ebfactory</definition>
+        <argsstring></argsstring>
+        <name>ebfactory</name>
+        <qualifiedname>mpm_ebtools::ebfactory</qualifiedname>
+        <initializer>=NULL</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_eb.cpp" line="8" column="24" bodyfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_eb.cpp" bodystart="8" bodyend="-1" declfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_eb.H" declline="29" declcolumn="31"/>
+      </memberdef>
+      <memberdef kind="variable" id="mpm__eb_8cpp_1a491946e5e875a7f42cd9100c93646c7d" prot="public" static="no" mutable="no">
+        <type>MultiFab *</type>
+        <definition>MultiFab * mpm_ebtools::lsphi</definition>
+        <argsstring></argsstring>
+        <name>lsphi</name>
+        <qualifiedname>mpm_ebtools::lsphi</qualifiedname>
+        <initializer>=NULL</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_eb.cpp" line="9" column="14" bodyfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_eb.cpp" bodystart="9" bodyend="-1" declfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_eb.H" declline="30" declcolumn="21"/>
+      </memberdef>
+      <memberdef kind="variable" id="mpm__eb_8cpp_1acfa1a2b7b6c9b891df2029060b375032" prot="public" static="no" mutable="no">
+        <type>int</type>
+        <definition>int mpm_ebtools::ls_refinement</definition>
+        <argsstring></argsstring>
+        <name>ls_refinement</name>
+        <qualifiedname>mpm_ebtools::ls_refinement</qualifiedname>
+        <initializer>=1</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_eb.cpp" line="10" column="9" bodyfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_eb.cpp" bodystart="10" bodyend="-1" declfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_eb.H" declline="31" declcolumn="16"/>
+      </memberdef>
+      <memberdef kind="variable" id="mpm__eb_8cpp_1a1139b1420489329a30f5465bdbc78b22" prot="public" static="no" mutable="no">
+        <type>bool</type>
+        <definition>bool mpm_ebtools::using_levelset_geometry</definition>
+        <argsstring></argsstring>
+        <name>using_levelset_geometry</name>
+        <qualifiedname>mpm_ebtools::using_levelset_geometry</qualifiedname>
+        <initializer>=false</initializer>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_eb.cpp" line="11" column="10" bodyfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_eb.cpp" bodystart="11" bodyend="-1" declfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_eb.H" declline="32" declcolumn="17"/>
+      </memberdef>
+    </sectiondef>
+    <sectiondef kind="func">
+      <memberdef kind="function" id="mpm__eb_8cpp_1a1252f668ded83432bb95558f47e8b978" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void mpm_ebtools::make_wedge_hopper_levelset</definition>
+        <argsstring>(const Geometry &amp;geom, const BoxArray &amp;ba, const DistributionMapping &amp;dm)</argsstring>
+        <name>make_wedge_hopper_levelset</name>
+        <qualifiedname>mpm_ebtools::make_wedge_hopper_levelset</qualifiedname>
+        <param>
+          <type>const Geometry &amp;</type>
+          <declname>geom</declname>
+        </param>
+        <param>
+          <type>const BoxArray &amp;</type>
+          <declname>ba</declname>
+        </param>
+        <param>
+          <type>const DistributionMapping &amp;</type>
+          <declname>dm</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_eb.cpp" line="13" column="10" bodyfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_eb.cpp" bodystart="13" bodyend="104" declfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_eb.H" declline="35" declcolumn="10"/>
+      </memberdef>
+      <memberdef kind="function" id="mpm__eb_8cpp_1a8bce20e9f204d2dff3c22e4b15a8efaf" prot="public" static="no" const="no" explicit="no" inline="no" virt="non-virtual">
+        <type>void</type>
+        <definition>void mpm_ebtools::init_eb</definition>
+        <argsstring>(const Geometry &amp;geom, const BoxArray &amp;ba, const DistributionMapping &amp;dm)</argsstring>
+        <name>init_eb</name>
+        <qualifiedname>mpm_ebtools::init_eb</qualifiedname>
+        <param>
+          <type>const Geometry &amp;</type>
+          <declname>geom</declname>
+        </param>
+        <param>
+          <type>const BoxArray &amp;</type>
+          <declname>ba</declname>
+        </param>
+        <param>
+          <type>const DistributionMapping &amp;</type>
+          <declname>dm</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_eb.cpp" line="106" column="10" bodyfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_eb.cpp" bodystart="106" bodyend="170" declfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_eb.H" declline="33" declcolumn="10"/>
+      </memberdef>
+    </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_eb.cpp" line="6" column="1"/>
+  </compounddef>
+</doxygen>

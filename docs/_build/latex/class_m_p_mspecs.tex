@@ -1,0 +1,310 @@
+\doxysection{MPMspecs Class Reference}
+\hypertarget{class_m_p_mspecs}{}\label{class_m_p_mspecs}\index{MPMspecs@{MPMspecs}}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_m_p_mspecs_a3319b1f48198a6c7b6aec4f2ee426d5e}\label{class_m_p_mspecs_a3319b1f48198a6c7b6aec4f2ee426d5e} 
+void {\bfseries read\+\_\+mpm\+\_\+specs} ()
+\item 
+\Hypertarget{class_m_p_mspecs_a48055653f95244bd6d6c734d56ae8324}\label{class_m_p_mspecs_a48055653f95244bd6d6c734d56ae8324} 
+std\+::string {\bfseries Convert\+\_\+arr\+\_\+string} (Array$<$ Real, AMREX\+\_\+\+SPACEDIM $>$arr)
+\item 
+\Hypertarget{class_m_p_mspecs_aa770c65ab72c9641825c55752ed5a978}\label{class_m_p_mspecs_aa770c65ab72c9641825c55752ed5a978} 
+void {\bfseries Print\+Simulation\+Params} ()
+\item 
+\Hypertarget{class_m_p_mspecs_af404e58c8085622cd0b686078399d158}\label{class_m_p_mspecs_af404e58c8085622cd0b686078399d158} 
+void {\bfseries Three\+DOF\+\_\+\+Solver} (amrex\+::\+Real dt)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_m_p_mspecs_a542ca96b9b59b09b2ee1181077c94f87}\label{class_m_p_mspecs_a542ca96b9b59b09b2ee1181077c94f87} 
+Array$<$ Real, AMREX\+\_\+\+SPACEDIM $>$ {\bfseries plo} \{AMREX\+\_\+\+D\+\_\+\+DECL(0.\+0, 0.\+0, 0.\+0)\}
+\item 
+\Hypertarget{class_m_p_mspecs_a5a6218f941f7d9e8798615e7a60c3cb9}\label{class_m_p_mspecs_a5a6218f941f7d9e8798615e7a60c3cb9} 
+Array$<$ Real, AMREX\+\_\+\+SPACEDIM $>$ {\bfseries phi} \{AMREX\+\_\+\+D\+\_\+\+DECL(0.\+0, 0.\+0, 0.\+0)\}
+\item 
+\Hypertarget{class_m_p_mspecs_a9dfe1a5dc143ae717f04a7103c4c1c7c}\label{class_m_p_mspecs_a9dfe1a5dc143ae717f04a7103c4c1c7c} 
+Array$<$ int, AMREX\+\_\+\+SPACEDIM $>$ {\bfseries ncells} \{AMREX\+\_\+\+D\+\_\+\+DECL(0, 0, 0)\}
+\item 
+\Hypertarget{class_m_p_mspecs_ab92ca35619466a1203727da2d4da3495}\label{class_m_p_mspecs_ab92ca35619466a1203727da2d4da3495} 
+Gpu\+Array$<$ int, AMREX\+\_\+\+SPACEDIM $>$ {\bfseries periodic} \{AMREX\+\_\+\+D\+\_\+\+DECL(0, 0, 0)\}
+\item 
+\Hypertarget{class_m_p_mspecs_a7fbabd30c07bba21a60f5bc95d0d1935}\label{class_m_p_mspecs_a7fbabd30c07bba21a60f5bc95d0d1935} 
+Array$<$ Real, AMREX\+\_\+\+SPACEDIM $>$ {\bfseries gravity} \{AMREX\+\_\+\+D\+\_\+\+DECL(0.\+0, -\/ACCG, 0.\+0)\}
+\item 
+\Hypertarget{class_m_p_mspecs_a1c4639b93d3ff39d1ec3f922b670644d}\label{class_m_p_mspecs_a1c4639b93d3ff39d1ec3f922b670644d} 
+Array$<$ Real, AMREX\+\_\+\+SPACEDIM $>$ {\bfseries force\+\_\+slab\+\_\+lo} \{AMREX\+\_\+\+D\+\_\+\+DECL(0.\+0, 0.\+0, 0.\+0)\}
+\item 
+\Hypertarget{class_m_p_mspecs_af347eac4bff2d51c5f216ab4a2f9b599}\label{class_m_p_mspecs_af347eac4bff2d51c5f216ab4a2f9b599} 
+Array$<$ Real, AMREX\+\_\+\+SPACEDIM $>$ {\bfseries force\+\_\+slab\+\_\+hi} \{AMREX\+\_\+\+D\+\_\+\+DECL(0.\+0, 0.\+0, 0.\+0)\}
+\item 
+\Hypertarget{class_m_p_mspecs_abda4c74c124b325543720e7283d27445}\label{class_m_p_mspecs_abda4c74c124b325543720e7283d27445} 
+Array$<$ Real, AMREX\+\_\+\+SPACEDIM $>$ {\bfseries extforce} \{AMREX\+\_\+\+D\+\_\+\+DECL(0.\+0, 0.\+0, 0.\+0)\}
+\item 
+\Hypertarget{class_m_p_mspecs_a5f9b0bb080606b4361e7b0a5c4808221}\label{class_m_p_mspecs_a5f9b0bb080606b4361e7b0a5c4808221} 
+Real {\bfseries timestep} =0.\+0
+\item 
+\Hypertarget{class_m_p_mspecs_ab2c9b30c92c56c4574f28672dc22cc28}\label{class_m_p_mspecs_ab2c9b30c92c56c4574f28672dc22cc28} 
+int {\bfseries num\+\_\+redist} =10
+\item 
+\Hypertarget{class_m_p_mspecs_a90f6d3d9b8730fc846b1b6c54d974f1c}\label{class_m_p_mspecs_a90f6d3d9b8730fc846b1b6c54d974f1c} 
+int {\bfseries max\+\_\+grid\+\_\+size} =8
+\item 
+\Hypertarget{class_m_p_mspecs_aaeed8d5dcfbc006ba514d25b3e057f20}\label{class_m_p_mspecs_aaeed8d5dcfbc006ba514d25b3e057f20} 
+Real {\bfseries final\+\_\+time}
+\item 
+\Hypertarget{class_m_p_mspecs_a8123df5c4ed8ab1faf4a1b1192129ded}\label{class_m_p_mspecs_a8123df5c4ed8ab1faf4a1b1192129ded} 
+Real {\bfseries write\+\_\+output\+\_\+time}
+\item 
+\Hypertarget{class_m_p_mspecs_a42c23cc35f47f62e1ac5657efb239c32}\label{class_m_p_mspecs_a42c23cc35f47f62e1ac5657efb239c32} 
+Real {\bfseries screen\+\_\+output\+\_\+time}
+\item 
+\Hypertarget{class_m_p_mspecs_ad97d6401481f539451c8c03a59ac29bb}\label{class_m_p_mspecs_ad97d6401481f539451c8c03a59ac29bb} 
+int {\bfseries maxsteps} =1
+\item 
+\Hypertarget{class_m_p_mspecs_a14ea23afbc20f13f6f3f9c94e55dabc4}\label{class_m_p_mspecs_a14ea23afbc20f13f6f3f9c94e55dabc4} 
+std\+::string {\bfseries particlefilename}
+\item 
+\Hypertarget{class_m_p_mspecs_a4971e2008d51d625ff234f67cbef62d7}\label{class_m_p_mspecs_a4971e2008d51d625ff234f67cbef62d7} 
+std\+::string {\bfseries restart\+\_\+checkfile}
+\item 
+\Hypertarget{class_m_p_mspecs_a4d4f1fabfcb272dc2075a3722134d2fe}\label{class_m_p_mspecs_a4d4f1fabfcb272dc2075a3722134d2fe} 
+std\+::string {\bfseries prefix\+\_\+particlefilename} = "{}plt"{}
+\item 
+\Hypertarget{class_m_p_mspecs_af4cfe41c8746541fd167b5a81160a3c8}\label{class_m_p_mspecs_af4cfe41c8746541fd167b5a81160a3c8} 
+std\+::string {\bfseries prefix\+\_\+gridfilename} = "{}plt"{}
+\item 
+\Hypertarget{class_m_p_mspecs_a392050cede128087629f30086abe7323}\label{class_m_p_mspecs_a392050cede128087629f30086abe7323} 
+std\+::string {\bfseries prefix\+\_\+densityfilename} = "{}plt"{}
+\item 
+\Hypertarget{class_m_p_mspecs_a2d74a6570e8be4e5bcf2366f46d7a40b}\label{class_m_p_mspecs_a2d74a6570e8be4e5bcf2366f46d7a40b} 
+std\+::string {\bfseries prefix\+\_\+checkpointfilename} = "{}chk"{}
+\item 
+\Hypertarget{class_m_p_mspecs_a56c46c81b3d8c8bb6af8f01d00b860dd}\label{class_m_p_mspecs_a56c46c81b3d8c8bb6af8f01d00b860dd} 
+int {\bfseries num\+\_\+of\+\_\+digits\+\_\+in\+\_\+filenames} =6
+\item 
+\Hypertarget{class_m_p_mspecs_a79e1917f2fc52a87c61d0deaeabd13b6}\label{class_m_p_mspecs_a79e1917f2fc52a87c61d0deaeabd13b6} 
+int {\bfseries print\+\_\+diagnostics} =0
+\item 
+\Hypertarget{class_m_p_mspecs_aaa639b93f92a6bb21b2d4d75a29b0050}\label{class_m_p_mspecs_aaa639b93f92a6bb21b2d4d75a29b0050} 
+int {\bfseries ifrigidnodespresent} =0
+\item 
+\Hypertarget{class_m_p_mspecs_a39c12140fe1c2cef19a7da5c71fed1d0}\label{class_m_p_mspecs_a39c12140fe1c2cef19a7da5c71fed1d0} 
+bool {\bfseries is\+\_\+standard\+\_\+test} = true
+\item 
+\Hypertarget{class_m_p_mspecs_a062b427a5f2a633097cf55f39eb379aa}\label{class_m_p_mspecs_a062b427a5f2a633097cf55f39eb379aa} 
+int {\bfseries test\+\_\+number} = 0
+\item 
+\Hypertarget{class_m_p_mspecs_a82c2595bc7498c83192009c9086ade30}\label{class_m_p_mspecs_a82c2595bc7498c83192009c9086ade30} 
+int {\bfseries no\+\_\+of\+\_\+rigidbodies\+\_\+present} =0
+\item 
+\Hypertarget{class_m_p_mspecs_a39fa82b6cf4707bcb9d736e74b3950a5}\label{class_m_p_mspecs_a39fa82b6cf4707bcb9d736e74b3950a5} 
+amrex\+::\+Real {\bfseries total\+\_\+mass\+\_\+phase\+\_\+0} =0.\+0
+\item 
+\Hypertarget{class_m_p_mspecs_aed7b2e9aa3b6b2f0781ffd38d59f49cb}\label{class_m_p_mspecs_aed7b2e9aa3b6b2f0781ffd38d59f49cb} 
+amrex\+::\+Real {\bfseries total\+\_\+vol\+\_\+phase\+\_\+0} =0.\+0
+\item 
+\Hypertarget{class_m_p_mspecs_a9fac5f461f3001477811f47c516b1a24}\label{class_m_p_mspecs_a9fac5f461f3001477811f47c516b1a24} 
+\mbox{\hyperlink{struct_rigid___bodies}{Rigid\+\_\+\+Bodies}} \texorpdfstring{$\ast$}{*} {\bfseries Rb}
+\item 
+\Hypertarget{class_m_p_mspecs_a6185e507e37d8e33cb485af5684be47c}\label{class_m_p_mspecs_a6185e507e37d8e33cb485af5684be47c} 
+amrex\+::\+Real {\bfseries axial\+\_\+bar\+\_\+E} = 100.\+0
+\item 
+\Hypertarget{class_m_p_mspecs_a54894c7a8f1254c63c21b1cbbdec423e}\label{class_m_p_mspecs_a54894c7a8f1254c63c21b1cbbdec423e} 
+amrex\+::\+Real {\bfseries axial\+\_\+bar\+\_\+rho} = 1.\+0
+\item 
+\Hypertarget{class_m_p_mspecs_a03aa0480488a8cd33a378a37156ac9d6}\label{class_m_p_mspecs_a03aa0480488a8cd33a378a37156ac9d6} 
+amrex\+::\+Real {\bfseries axial\+\_\+bar\+\_\+L} = 25.\+0
+\item 
+\Hypertarget{class_m_p_mspecs_a8a7650587390384c17d63e4ec541959d}\label{class_m_p_mspecs_a8a7650587390384c17d63e4ec541959d} 
+int {\bfseries axial\+\_\+bar\+\_\+modenumber} = 1
+\item 
+\Hypertarget{class_m_p_mspecs_a13dd23c34110a7ca31f4b843659be1aa}\label{class_m_p_mspecs_a13dd23c34110a7ca31f4b843659be1aa} 
+amrex\+::\+Real {\bfseries axial\+\_\+bar\+\_\+v0} = 0.\+1
+\item 
+\Hypertarget{class_m_p_mspecs_ad44d96a644e9f283dac8c8b2049bc3b7}\label{class_m_p_mspecs_ad44d96a644e9f283dac8c8b2049bc3b7} 
+amrex\+::\+Real {\bfseries dam\+\_\+break\+\_\+\+H1} = 0.\+2
+\item 
+\Hypertarget{class_m_p_mspecs_a18f200f97476df7277b2d98e5e16a9e2}\label{class_m_p_mspecs_a18f200f97476df7277b2d98e5e16a9e2} 
+amrex\+::\+Real {\bfseries dam\+\_\+break\+\_\+g} = ACCG
+\item 
+\Hypertarget{class_m_p_mspecs_a7d91b2af3f2e963c2bd29bfe0f7d9fdc}\label{class_m_p_mspecs_a7d91b2af3f2e963c2bd29bfe0f7d9fdc} 
+amrex\+::\+Real {\bfseries tvb\+\_\+E} = 50.\+0
+\item 
+\Hypertarget{class_m_p_mspecs_a8fe5fecdbac3bc081aef794ea976af5d}\label{class_m_p_mspecs_a8fe5fecdbac3bc081aef794ea976af5d} 
+amrex\+::\+Real {\bfseries tvb\+\_\+L} = 0.\+1
+\item 
+\Hypertarget{class_m_p_mspecs_ade44aa9e398af79414611d170fedca84}\label{class_m_p_mspecs_ade44aa9e398af79414611d170fedca84} 
+amrex\+::\+Real {\bfseries tvb\+\_\+rho} = 25.\+0
+\item 
+\Hypertarget{class_m_p_mspecs_ada43720ea6c9adf009e2e6cb725db0f6}\label{class_m_p_mspecs_ada43720ea6c9adf009e2e6cb725db0f6} 
+amrex\+::\+Real {\bfseries tvb\+\_\+v0} = 0.\+0
+\item 
+\Hypertarget{class_m_p_mspecs_addedd8f6243265bc666e123d7e510997}\label{class_m_p_mspecs_addedd8f6243265bc666e123d7e510997} 
+amrex\+::\+Real {\bfseries p2g\+\_\+L} = 1.\+0
+\item 
+\Hypertarget{class_m_p_mspecs_aca4f75bf15aecce7d3c4199c84174f6a}\label{class_m_p_mspecs_aca4f75bf15aecce7d3c4199c84174f6a} 
+amrex\+::\+Real {\bfseries p2g\+\_\+f} = 1.\+0
+\item 
+\Hypertarget{class_m_p_mspecs_a11b485d801e1bc733436b215a14b9269}\label{class_m_p_mspecs_a11b485d801e1bc733436b215a14b9269} 
+int {\bfseries p2g\+\_\+ncell} =0
+\item 
+\Hypertarget{class_m_p_mspecs_abfe02ddbb0fbc5f7f1490c0a4302149b}\label{class_m_p_mspecs_abfe02ddbb0fbc5f7f1490c0a4302149b} 
+amrex\+::\+Real {\bfseries mem\+\_\+compaction\+\_\+area} =1.\+0
+\item 
+\Hypertarget{class_m_p_mspecs_a8ef3595102b71c5f9abbf3cc7f44f48e}\label{class_m_p_mspecs_a8ef3595102b71c5f9abbf3cc7f44f48e} 
+amrex\+::\+Real {\bfseries mem\+\_\+compaction\+\_\+dampcoeff} =1.\+0
+\item 
+\Hypertarget{class_m_p_mspecs_a023fc8129575e3098c3892d5542474b2}\label{class_m_p_mspecs_a023fc8129575e3098c3892d5542474b2} 
+amrex\+::\+Real {\bfseries mem\+\_\+compaction\+\_\+\+L0} =1.\+0
+\item 
+\Hypertarget{class_m_p_mspecs_a2403d35d4e28c488b1c7e8371a386066}\label{class_m_p_mspecs_a2403d35d4e28c488b1c7e8371a386066} 
+int {\bfseries mem\+\_\+compaction\+\_\+restoring\+\_\+force\+\_\+calc\+\_\+method} = 1
+\item 
+\Hypertarget{class_m_p_mspecs_a149d82a9382831c6af40cb7a9f02ee6f}\label{class_m_p_mspecs_a149d82a9382831c6af40cb7a9f02ee6f} 
+amrex\+::\+Real {\bfseries spring\+\_\+alone\+\_\+area} = 0.\+1
+\item 
+\Hypertarget{class_m_p_mspecs_aea81e2d5bfb9a9447384ff2cbceab0b3}\label{class_m_p_mspecs_aea81e2d5bfb9a9447384ff2cbceab0b3} 
+amrex\+::\+Real {\bfseries spring\+\_\+alone\+\_\+length} = 0.\+0
+\item 
+\Hypertarget{class_m_p_mspecs_a3925715e8ff99008cdc27d5c720dd787}\label{class_m_p_mspecs_a3925715e8ff99008cdc27d5c720dd787} 
+amrex\+::\+Real {\bfseries spring\+\_\+alone\+\_\+E} = 0.\+0
+\item 
+\Hypertarget{class_m_p_mspecs_a9202ff2199f86245c781d4fa18707520}\label{class_m_p_mspecs_a9202ff2199f86245c781d4fa18707520} 
+amrex\+::\+Real {\bfseries spring\+\_\+alone\+\_\+exact\+\_\+deflection} = 0.\+0
+\item 
+\Hypertarget{class_m_p_mspecs_aa028414dd6934eaf7de6baee6b386bca}\label{class_m_p_mspecs_aa028414dd6934eaf7de6baee6b386bca} 
+amrex\+::\+Real {\bfseries spring\+\_\+alone\+\_\+exact\+\_\+delta} = 0.\+0
+\item 
+\Hypertarget{class_m_p_mspecs_a8bff4fe95dea7cddf3358fbc54250fb4}\label{class_m_p_mspecs_a8bff4fe95dea7cddf3358fbc54250fb4} 
+int {\bfseries order\+\_\+scheme} =1
+\item 
+\Hypertarget{class_m_p_mspecs_a4759097fff8b93bc3a80bc98778841aa}\label{class_m_p_mspecs_a4759097fff8b93bc3a80bc98778841aa} 
+Real {\bfseries applied\+\_\+strainrate} =0.\+0
+\item 
+\Hypertarget{class_m_p_mspecs_abc8e5baccf617e175cab0b17e7f5a325}\label{class_m_p_mspecs_abc8e5baccf617e175cab0b17e7f5a325} 
+Real {\bfseries applied\+\_\+strainrate\+\_\+time} =0.\+0
+\item 
+\Hypertarget{class_m_p_mspecs_a31ec7760e087271c35f7c69cc431f3a6}\label{class_m_p_mspecs_a31ec7760e087271c35f7c69cc431f3a6} 
+int {\bfseries phasefield\+\_\+output} =0
+\item 
+\Hypertarget{class_m_p_mspecs_a1a5b5046ae23460e7dd0b80ee893a7a4}\label{class_m_p_mspecs_a1a5b5046ae23460e7dd0b80ee893a7a4} 
+int {\bfseries phasefield\+\_\+gridratio} =1
+\item 
+\Hypertarget{class_m_p_mspecs_abe2641683b1b234fc2997b36876ace9d}\label{class_m_p_mspecs_abe2641683b1b234fc2997b36876ace9d} 
+Real {\bfseries phasefield\+\_\+smoothfactor} =1.\+0
+\item 
+\Hypertarget{class_m_p_mspecs_a4ca7f20cb57d6b9390c07e221c716c98}\label{class_m_p_mspecs_a4ca7f20cb57d6b9390c07e221c716c98} 
+int {\bfseries external\+\_\+loads\+\_\+present} =0.\+0
+\item 
+\Hypertarget{class_m_p_mspecs_a20441c2479a07677d1cb8d3d8f2e4f2a}\label{class_m_p_mspecs_a20441c2479a07677d1cb8d3d8f2e4f2a} 
+int {\bfseries fixed\+\_\+timestep} = 0
+\item 
+\Hypertarget{class_m_p_mspecs_ad3bd314b4548c5cb4a558a90bff02462}\label{class_m_p_mspecs_ad3bd314b4548c5cb4a558a90bff02462} 
+Real {\bfseries dt\+\_\+max\+\_\+limit} =1e0
+\item 
+\Hypertarget{class_m_p_mspecs_af5bc13e924367009df74ab10dab4eea8}\label{class_m_p_mspecs_af5bc13e924367009df74ab10dab4eea8} 
+Real {\bfseries dt\+\_\+min\+\_\+limit} =1e-\/12
+\item 
+\Hypertarget{class_m_p_mspecs_ac6740549f341b5fa8bcb60d11f84cd60}\label{class_m_p_mspecs_ac6740549f341b5fa8bcb60d11f84cd60} 
+Real {\bfseries CFL} =0.\+1
+\item 
+\Hypertarget{class_m_p_mspecs_ae6e9a7e534e3d68683ed542efcfdfc87}\label{class_m_p_mspecs_ae6e9a7e534e3d68683ed542efcfdfc87} 
+Real {\bfseries mass\+\_\+tolerance} = 1e-\/8
+\item 
+\Hypertarget{class_m_p_mspecs_a717b7eb9291297afe8c47b204ab75b76}\label{class_m_p_mspecs_a717b7eb9291297afe8c47b204ab75b76} 
+Real {\bfseries alpha\+\_\+pic\+\_\+flip} = 0.\+95
+\item 
+\Hypertarget{class_m_p_mspecs_a4b9cdf5ab4c5c6e7c2135f504b3c2108}\label{class_m_p_mspecs_a4b9cdf5ab4c5c6e7c2135f504b3c2108} 
+Real {\bfseries total\+\_\+mass} = 0.\+0
+\item 
+\Hypertarget{class_m_p_mspecs_aebfa0f88857bc4b4ad00603cb3d90305}\label{class_m_p_mspecs_aebfa0f88857bc4b4ad00603cb3d90305} 
+Real {\bfseries total\+\_\+rigid\+\_\+mass} = 0.\+0
+\item 
+\Hypertarget{class_m_p_mspecs_ab16ff53ac90b0f5bd14b7720db28c852}\label{class_m_p_mspecs_ab16ff53ac90b0f5bd14b7720db28c852} 
+Real {\bfseries total\+\_\+vol} = 0.\+0
+\item 
+\Hypertarget{class_m_p_mspecs_af5f688648c33dc8e4876bcdd7ef2d628}\label{class_m_p_mspecs_af5f688648c33dc8e4876bcdd7ef2d628} 
+Real {\bfseries mem\+\_\+compaction\+\_\+vnew} =0.\+0
+\item 
+\Hypertarget{class_m_p_mspecs_a451697128a18b175c8ceb0a18a6e30c3}\label{class_m_p_mspecs_a451697128a18b175c8ceb0a18a6e30c3} 
+Real {\bfseries mem\+\_\+compaction\+\_\+vold} =0.\+0
+\item 
+\Hypertarget{class_m_p_mspecs_ad1fc57a3a8e2a770c60c04ef1d71bf46}\label{class_m_p_mspecs_ad1fc57a3a8e2a770c60c04ef1d71bf46} 
+int {\bfseries stress\+\_\+update\+\_\+scheme} =1
+\item 
+\Hypertarget{class_m_p_mspecs_ae888da118575ca42805fe753335806a2}\label{class_m_p_mspecs_ae888da118575ca42805fe753335806a2} 
+int {\bfseries calculate\+\_\+strain\+\_\+based\+\_\+on\+\_\+delta} =0
+\item 
+\Hypertarget{class_m_p_mspecs_a3b2b71f09ae5bbed08d69b76573f0407}\label{class_m_p_mspecs_a3b2b71f09ae5bbed08d69b76573f0407} 
+Vector$<$ int $>$ {\bfseries bclo}
+\item 
+\Hypertarget{class_m_p_mspecs_a3ccb155133faa51dc614afcc8839c962}\label{class_m_p_mspecs_a3ccb155133faa51dc614afcc8839c962} 
+Vector$<$ int $>$ {\bfseries bchi}
+\item 
+\Hypertarget{class_m_p_mspecs_a9bf705b474a4976c06c08f15b1210059}\label{class_m_p_mspecs_a9bf705b474a4976c06c08f15b1210059} 
+Gpu\+Array$<$ int, AMREX\+\_\+\+SPACEDIM $>$ {\bfseries order\+\_\+scheme\+\_\+directional} \{AMREX\+\_\+\+D\+\_\+\+DECL(1,1,1)\}
+\item 
+\Hypertarget{class_m_p_mspecs_ae6403efc833af3d15f5a52c025967598}\label{class_m_p_mspecs_ae6403efc833af3d15f5a52c025967598} 
+int {\bfseries use\+\_\+autogen} =0
+\item 
+\Hypertarget{class_m_p_mspecs_a8d219ebd5b4520916229ca91af59601f}\label{class_m_p_mspecs_a8d219ebd5b4520916229ca91af59601f} 
+Vector$<$ Real $>$ {\bfseries autogen\+\_\+mincoords}
+\item 
+\Hypertarget{class_m_p_mspecs_a9c5403efbc775dc1521fc19c1c71a087}\label{class_m_p_mspecs_a9c5403efbc775dc1521fc19c1c71a087} 
+Vector$<$ Real $>$ {\bfseries autogen\+\_\+maxcoords}
+\item 
+\Hypertarget{class_m_p_mspecs_ae8f980672462feb60ce38e94b8bf67f3}\label{class_m_p_mspecs_ae8f980672462feb60ce38e94b8bf67f3} 
+Vector$<$ Real $>$ {\bfseries autogen\+\_\+vel}
+\item 
+\Hypertarget{class_m_p_mspecs_a8d68c8a70698d6cd5a6af0f9fc3f2db1}\label{class_m_p_mspecs_a8d68c8a70698d6cd5a6af0f9fc3f2db1} 
+int {\bfseries autogen\+\_\+multi\+\_\+part\+\_\+per\+\_\+cell} =1
+\item 
+\Hypertarget{class_m_p_mspecs_a1112ceaa8e45841fd234e110d90ca720}\label{class_m_p_mspecs_a1112ceaa8e45841fd234e110d90ca720} 
+Real {\bfseries autogen\+\_\+dens} =1000.\+0
+\item 
+\Hypertarget{class_m_p_mspecs_a1967124b6951e2d43a0493f5e1952bf8}\label{class_m_p_mspecs_a1967124b6951e2d43a0493f5e1952bf8} 
+int {\bfseries autogen\+\_\+constmodel} =1
+\item 
+\Hypertarget{class_m_p_mspecs_af32c5b1ea9a8d4feb60bdf39f6c75a60}\label{class_m_p_mspecs_af32c5b1ea9a8d4feb60bdf39f6c75a60} 
+Real {\bfseries autogen\+\_\+E} =1e9
+\item 
+\Hypertarget{class_m_p_mspecs_a8b2727bb34b40c27a7caabc086e9c8db}\label{class_m_p_mspecs_a8b2727bb34b40c27a7caabc086e9c8db} 
+Real {\bfseries autogen\+\_\+nu} =0.\+1
+\item 
+\Hypertarget{class_m_p_mspecs_a0482ad1a26ade70a8bc44340ed13591a}\label{class_m_p_mspecs_a0482ad1a26ade70a8bc44340ed13591a} 
+Real {\bfseries autogen\+\_\+bulkmod} =0.\+0
+\item 
+\Hypertarget{class_m_p_mspecs_aa6ad23a13e7f19b40fb05f3941a5d367}\label{class_m_p_mspecs_aa6ad23a13e7f19b40fb05f3941a5d367} 
+Real {\bfseries autogen\+\_\+\+Gama\+\_\+pres} =1.\+4
+\item 
+\Hypertarget{class_m_p_mspecs_a991d3d66076630033ae8d4b50929042d}\label{class_m_p_mspecs_a991d3d66076630033ae8d4b50929042d} 
+Real {\bfseries autogen\+\_\+visc} =0.\+001
+\item 
+\Hypertarget{class_m_p_mspecs_ab6bf956158f4fd53604810b340f7b9da}\label{class_m_p_mspecs_ab6bf956158f4fd53604810b340f7b9da} 
+int {\bfseries levelset\+\_\+bc} =1
+\item 
+\Hypertarget{class_m_p_mspecs_aea82fabb297af79085c34707b4dcbc5f}\label{class_m_p_mspecs_aea82fabb297af79085c34707b4dcbc5f} 
+Real {\bfseries levelset\+\_\+wall\+\_\+mu} =0.\+1
+\item 
+\Hypertarget{class_m_p_mspecs_a998760865ecccac70c232eee520fb7bf}\label{class_m_p_mspecs_a998760865ecccac70c232eee520fb7bf} 
+Array$<$ Real, AMREX\+\_\+\+SPACEDIM $>$ {\bfseries wall\+\_\+mu\+\_\+lo} \{AMREX\+\_\+\+D\+\_\+\+DECL(0.\+1, 0.\+1, 0.\+1)\}
+\item 
+\Hypertarget{class_m_p_mspecs_a0f9d89121925a4e03de80ae2a0cccd1e}\label{class_m_p_mspecs_a0f9d89121925a4e03de80ae2a0cccd1e} 
+Array$<$ Real, AMREX\+\_\+\+SPACEDIM $>$ {\bfseries wall\+\_\+mu\+\_\+hi} \{AMREX\+\_\+\+D\+\_\+\+DECL(0.\+1, 0.\+1, 0.\+1)\}
+\item 
+\Hypertarget{class_m_p_mspecs_a8be5ab0574100f8fca3f47dc9efb64d7}\label{class_m_p_mspecs_a8be5ab0574100f8fca3f47dc9efb64d7} 
+Array$<$ Real, AMREX\+\_\+\+SPACEDIM \texorpdfstring{$\ast$}{*}AMREX\+\_\+\+SPACEDIM $>$ {\bfseries wall\+\_\+vel\+\_\+lo} \{0.\+0\}
+\item 
+\Hypertarget{class_m_p_mspecs_adaa4ac1432e09cdaf67968519caa8498}\label{class_m_p_mspecs_adaa4ac1432e09cdaf67968519caa8498} 
+Array$<$ Real, AMREX\+\_\+\+SPACEDIM \texorpdfstring{$\ast$}{*}AMREX\+\_\+\+SPACEDIM $>$ {\bfseries wall\+\_\+vel\+\_\+hi} \{0.\+0\}
+\item 
+\Hypertarget{class_m_p_mspecs_a8092737f3f5c67a890c4087350d488df}\label{class_m_p_mspecs_a8092737f3f5c67a890c4087350d488df} 
+Real {\bfseries levset\+\_\+mu} =0.\+1
+\end{DoxyCompactItemize}
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+E\+:/\+Research/02\+\_\+\+CODE\+\_\+\+DEVELOPMENTS/04\+\_\+\+EXAGOOP/\+Source/mpm\+\_\+specs.\+H\end{DoxyCompactItemize}

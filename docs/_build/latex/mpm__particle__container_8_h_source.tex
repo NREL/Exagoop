@@ -1,0 +1,134 @@
+\doxysection{mpm\+\_\+particle\+\_\+container.\+H}
+\hypertarget{mpm__particle__container_8_h_source}{}\label{mpm__particle__container_8_h_source}\index{E:/Research/02\_CODE\_DEVELOPMENTS/04\_EXAGOOP/Source/mpm\_particle\_container.H@{E:/Research/02\_CODE\_DEVELOPMENTS/04\_EXAGOOP/Source/mpm\_particle\_container.H}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#ifndef\ MPM\_PARTICLE\_CONTAINER\_H\_}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#define\ MPM\_PARTICLE\_CONTAINER\_H\_}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ <AMReX\_Particles.H>}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ <AMReX\_NeighborParticles.H>}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ <mpm\_specs.H>}}
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ <constants.H>}}
+\DoxyCodeLine{00008\ }
+\DoxyCodeLine{00009\ \textcolor{keyword}{class\ }MPMParticleContainer}
+\DoxyCodeLine{00010\ \ \ \ \ :\ \textcolor{keyword}{public}\ amrex::NeighborParticleContainer<realData::count,\ intData::count>}
+\DoxyCodeLine{00011\ \{}
+\DoxyCodeLine{00012\ }
+\DoxyCodeLine{00013\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00014\ }
+\DoxyCodeLine{00015\ \ \ \ \ MPMParticleContainer\ (\textcolor{keyword}{const}\ amrex::Geometry\ \ \ \ \ \ \ \ \ \ \ \ geom,}
+\DoxyCodeLine{00016\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ amrex::DistributionMapping\ \ \ dmap,}
+\DoxyCodeLine{00017\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ amrex::BoxArray\ \ \ \ \ \ \ \ \ \ \ \ \ \ ba,}
+\DoxyCodeLine{00018\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ numcells)}
+\DoxyCodeLine{00019\ }
+\DoxyCodeLine{00020\ \ \ \ \ :\ NeighborParticleContainer<realData::count,\ intData::count>(geom,\ dmap,\ ba,\ numcells)}
+\DoxyCodeLine{00021\ \ \ \ \ \{}
+\DoxyCodeLine{00022\ \ \ \ \ }
+\DoxyCodeLine{00023\ \ \ \ \ \}}
+\DoxyCodeLine{00024\ }
+\DoxyCodeLine{00025\ \ \ \ \ \textcolor{keywordtype}{void}\ InitParticles\ (\textcolor{keyword}{const}\ std::string\ \&\ filename,Real\ \&total\_mass,\ Real\ \&total\_vol,\ Real\ \&total\_rigid\_mass,\ \textcolor{keywordtype}{int}\ \&index\_rigid\_body\_read\_so\_far,\ \textcolor{keywordtype}{int}\ \&ifrigidnodespresent);}
+\DoxyCodeLine{00026\ }
+\DoxyCodeLine{00027\ \ \ \ \ \textcolor{keywordtype}{void}\ InitParticles\ (Real\ mincoords[AMREX\_SPACEDIM],Real\ maxcoords[AMREX\_SPACEDIM],\ }
+\DoxyCodeLine{00028\ \ \ \ \ \ \ \ \ Real\ vel[AMREX\_SPACEDIM],}
+\DoxyCodeLine{00029\ \ \ \ \ \ \ \ \ Real\ dens,\ \textcolor{keywordtype}{int}\ constmodel,\ }
+\DoxyCodeLine{00030\ \ \ \ \ \ \ \ \ Real\ E,\ Real\ nu,Real\ bulkMod,\ Real\ Gama\_pres,Real\ visc,}
+\DoxyCodeLine{00031\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ do\_multi\_part\_per\_cell,Real\ \&total\_mass,Real\ \&total\_vol);}
+\DoxyCodeLine{00032\ }
+\DoxyCodeLine{00033\ \ \ \ \ \textcolor{keywordtype}{void}\ moveParticles\ (\textcolor{keyword}{const}\ amrex::Real\&\ dt,}
+\DoxyCodeLine{00034\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ bclo[AMREX\_SPACEDIM],}
+\DoxyCodeLine{00035\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ bchi[AMREX\_SPACEDIM],}
+\DoxyCodeLine{00036\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ lsetbc,}
+\DoxyCodeLine{00037\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ amrex::Real\ wall\_mu\_lo[AMREX\_SPACEDIM],}
+\DoxyCodeLine{00038\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ amrex::Real\ wall\_mu\_hi[AMREX\_SPACEDIM],}
+\DoxyCodeLine{00039\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ amrex::Real\ wall\_vel\_lo[AMREX\_SPACEDIM*AMREX\_SPACEDIM],}
+\DoxyCodeLine{00040\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ amrex::Real\ wall\_vel\_hi[AMREX\_SPACEDIM*AMREX\_SPACEDIM],}
+\DoxyCodeLine{00041\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ amrex::Real\ lset\_wall\_mu);}
+\DoxyCodeLine{00042\ }
+\DoxyCodeLine{00043\ \ \ \ \ \textcolor{keywordtype}{void}\ updateVolume\ (\textcolor{keyword}{const}\ amrex::Real\&\ dt);}
+\DoxyCodeLine{00044\ \ \ \ \ amrex::Real\ CalculateExactVelocity(\textcolor{keywordtype}{int}\ modenumber,amrex::Real\ E,\ amrex::Real\ rho,\ amrex::Real\ v0,amrex::Real\ L,\ amrex::Real\ time);}
+\DoxyCodeLine{00045\ \ \ \ \ \textcolor{keywordtype}{void}\ writeParticles\ (std::string\ prefix\_particlefilename,\ \textcolor{keywordtype}{int}\ num\_of\_digits\_in\_filenames,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ n);}
+\DoxyCodeLine{00046\ \ \ \ \ \textcolor{keywordtype}{void}\ writeCheckpointFile(std::string\ prefix\_particlefilename,\ \textcolor{keywordtype}{int}\ num\_of\_digits\_in\_filenames,\ amrex::Real\ cur\_time,\ \ \textcolor{keywordtype}{int}\ nstep,\ \textcolor{keywordtype}{int}\ output\_it);}
+\DoxyCodeLine{00047\ \ \ \ \ \textcolor{keywordtype}{void}\ WriteHeader(\textcolor{keyword}{const}\ std::string\&\ name,\ \textcolor{keywordtype}{bool}\ is\_checkpoint,\ amrex::Real\ cur\_time,\ \textcolor{keywordtype}{int}\ nstep,\ \textcolor{keywordtype}{int}\ EB\_generate\_max\_level,\ \textcolor{keywordtype}{int}\ output\_it)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00048\ \ \ \ \ \textcolor{keywordtype}{void}\ readCheckpointFile(std::string\ \&\ restart\_chkfile,\ \textcolor{keywordtype}{int}\ \&nstep,\ \textcolor{keywordtype}{double}\ \&cur\_time,\ \textcolor{keywordtype}{int}\ \&output\_it);}
+\DoxyCodeLine{00049\ \ \ \ \ \textcolor{keywordtype}{int}\ checkifrigidnodespresent();}
+\DoxyCodeLine{00050\ \ \ \ \ \textcolor{keywordtype}{void}\ \ Calculate\_Total\_Mass\_RigidParticles(\textcolor{keywordtype}{int}\ body\_id,\ amrex::Real\ \&total\_mass);}
+\DoxyCodeLine{00051\ \ \ \ \ amrex::Real\ Calculate\_Total\_Vol\_RigidParticles(\textcolor{keywordtype}{int}\ body\_id);}
+\DoxyCodeLine{00052\ \ \ \ \ amrex::Real\ GetPosPiston();}
+\DoxyCodeLine{00053\ \ \ \ \ amrex::Real\ GetPosSpring();}
+\DoxyCodeLine{00054\ \ \ \ \ \textcolor{keywordtype}{void}\ CalculateSurfaceIntegralTop(Array<Real,AMREX\_SPACEDIM>\ gravity,\ Real\ \&Fy\_top,\ Real\ \&Fy\_bottom);}
+\DoxyCodeLine{00055\ \ \ \ \ \textcolor{keywordtype}{void}\ deposit\_onto\_grid(MultiFab\&\ nodaldata,}
+\DoxyCodeLine{00056\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ Array<Real,AMREX\_SPACEDIM>\ gravity,}
+\DoxyCodeLine{00057\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ external\_loads\_present,}
+\DoxyCodeLine{00058\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ Array<Real,AMREX\_SPACEDIM>\ force\_slab\_lo,}
+\DoxyCodeLine{00059\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ Array<Real,AMREX\_SPACEDIM>\ force\_slab\_hi,}
+\DoxyCodeLine{00060\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ Array<Real,AMREX\_SPACEDIM>\ extforce,}
+\DoxyCodeLine{00061\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ update\_massvel,\textcolor{keywordtype}{int}\ update\_forces,\ }
+\DoxyCodeLine{00062\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ amrex::Real\ mass\_tolerance,}
+\DoxyCodeLine{00063\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ GpuArray<int,\ AMREX\_SPACEDIM>\ order\_scheme\_directional,}
+\DoxyCodeLine{00064\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ GpuArray<int,\ AMREX\_SPACEDIM>\ periodic);}
+\DoxyCodeLine{00065\ }
+\DoxyCodeLine{00066\ \ \ \ \ \textcolor{keywordtype}{void}\ calculate\_nodal\_normal\ (\ \ \ MultiFab\&\ nodaldata,}
+\DoxyCodeLine{00067\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ amrex::Real\ mass\_tolerance,}
+\DoxyCodeLine{00068\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ GpuArray<int,AMREX\_SPACEDIM>\ order\_scheme\_directional,}
+\DoxyCodeLine{00069\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ GpuArray<int,AMREX\_SPACEDIM>\ periodic);}
+\DoxyCodeLine{00070\ }
+\DoxyCodeLine{00071\ \ \ \ \ \textcolor{keywordtype}{void}\ deposit\_onto\_grid\_rigidnodesonly(MultiFab\&\ nodaldata,}
+\DoxyCodeLine{00072\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ Array<Real,AMREX\_SPACEDIM>\ gravity,}
+\DoxyCodeLine{00073\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ external\_loads\_present,}
+\DoxyCodeLine{00074\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ Array<Real,AMREX\_SPACEDIM>\ force\_slab\_lo,}
+\DoxyCodeLine{00075\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ Array<Real,AMREX\_SPACEDIM>\ force\_slab\_hi,}
+\DoxyCodeLine{00076\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ Array<Real,AMREX\_SPACEDIM>\ extforce,}
+\DoxyCodeLine{00077\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ update\_massvel,\textcolor{keywordtype}{int}\ update\_forces,}
+\DoxyCodeLine{00078\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ amrex::Real\ mass\_tolerance,}
+\DoxyCodeLine{00079\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ GpuArray<int,\ AMREX\_SPACEDIM>\ order\_scheme\_directional,}
+\DoxyCodeLine{00080\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ GpuArray<int,\ AMREX\_SPACEDIM>\ periodic);}
+\DoxyCodeLine{00081\ }
+\DoxyCodeLine{00082\ \ \ \ \ \textcolor{keywordtype}{void}\ checkifallparticlesinsidedomain();}
+\DoxyCodeLine{00083\ \ \ \ \ \textcolor{keywordtype}{void}\ UpdateRigidParticleVelocities(\textcolor{keywordtype}{int}\ rigid\_body\_id,Array\ <amrex::Real,AMREX\_SPACEDIM>\ velocity);}
+\DoxyCodeLine{00084\ \ \ \ \ \textcolor{keywordtype}{void}\ CalculateErrorP2G(MultiFab\&\ nodaldata,amrex::Real\ p2g\_L,amrex::Real\ p2g\_f,\textcolor{keywordtype}{int}\ ncell);}
+\DoxyCodeLine{00085\ }
+\DoxyCodeLine{00086\ \ \ \ \ \textcolor{keywordtype}{void}\ interpolate\_from\_grid(MultiFab\&\ nodaldata,}
+\DoxyCodeLine{00087\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ update\_vel,\textcolor{keywordtype}{int}\ update\_strainrate,}
+\DoxyCodeLine{00088\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ GpuArray\ <int,AMREX\_SPACEDIM>\ order\_scheme\_directional,}
+\DoxyCodeLine{00089\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ GpuArray\ <int,AMREX\_SPACEDIM>\ periodic,}
+\DoxyCodeLine{00090\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ amrex::Real\ alpha\_pic\_flip,}
+\DoxyCodeLine{00091\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ amrex::Real\ dt);}
+\DoxyCodeLine{00092\ }
+\DoxyCodeLine{00093\ \ \ \ \ \textcolor{keywordtype}{void}\ move\_particles\_from\_nodevel(MultiFab\&\ nodaldata,\textcolor{keyword}{const}\ amrex::Real\&\ dt,}
+\DoxyCodeLine{00094\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ bclo[AMREX\_SPACEDIM],\textcolor{keywordtype}{int}\ bchi[AMREX\_SPACEDIM],}
+\DoxyCodeLine{00095\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ order\_scheme);}
+\DoxyCodeLine{00096\ \ \ \ \ }
+\DoxyCodeLine{00097\ \ \ \ \ \textcolor{keywordtype}{void}\ CalculateEnergies(Real\ \&TKE,Real\ \&TSE);}
+\DoxyCodeLine{00098\ \ \ \ \ amrex::Real\ CalculateEffectiveSpringConstant(amrex::Real\ Area,amrex::Real\ L0);}
+\DoxyCodeLine{00099\ \ \ \ \ \textcolor{keywordtype}{void}\ CalculateVelocity(Real\ \&Vcm);}
+\DoxyCodeLine{00100\ \ \ \ \ \textcolor{keywordtype}{void}\ CalculateVelocityCantilever(Real\ \&Vcm);}
+\DoxyCodeLine{00101\ \ \ \ \ \textcolor{keywordtype}{void}\ Calculate\_Total\_Number\_of\_rigid\_particles(\textcolor{keywordtype}{int}\ body\_id,\textcolor{keywordtype}{int}\ \&total\_num);}
+\DoxyCodeLine{00102\ \ \ \ \ \textcolor{keywordtype}{void}\ Calculate\_Total\_Number\_of\_MaterialParticles(\textcolor{keywordtype}{int}\ \&total\_num);}
+\DoxyCodeLine{00103\ \ \ \ \ \textcolor{keywordtype}{void}\ Calculate\_Total\_Mass\_MaterialPoints(Real\ \&total\_mass);}
+\DoxyCodeLine{00104\ \ \ \ \ \textcolor{keywordtype}{void}\ Calculate\_Total\_Vol\_MaterialPoints(Real\ \&total\_vol);}
+\DoxyCodeLine{00105\ \ \ \ \ \textcolor{keywordtype}{void}\ CalculateErrorTVB(Real\ tvb\_E,Real\ tvb\_v0,Real\ tvb\_L,Real\ tvb\_rho,Real\ err);}
+\DoxyCodeLine{00106\ \ \ \ \ \textcolor{keywordtype}{void}\ WriteDeflectionTVB(Real\ tvb\_E,Real\ tvb\_v0,Real\ tvb\_L,Real\ tvb\_rho,\ Real\ time,\ \textcolor{keywordtype}{int}\ output\_it);}
+\DoxyCodeLine{00107\ \ \ \ \ \textcolor{keywordtype}{void}\ WriteDeflectionCantilever();}
+\DoxyCodeLine{00108\ \ \ \ \ \textcolor{keywordtype}{void}\ FindWaterFront(Real\ \&Xwf);}
+\DoxyCodeLine{00109\ }
+\DoxyCodeLine{00110\ \ \ \ \ \textcolor{keywordtype}{void}\ apply\_constitutive\_model(\textcolor{keyword}{const}\ amrex::Real\&\ dt,amrex::Real\ applied\_strainrate);}
+\DoxyCodeLine{00111\ \ \ \ \ \textcolor{keywordtype}{void}\ apply\_constitutive\_model\_delta(\textcolor{keyword}{const}\ amrex::Real\&\ dt,amrex::Real\ applied\_strainrate);}
+\DoxyCodeLine{00112\ }
+\DoxyCodeLine{00113\ \ \ \ \ \textcolor{keywordtype}{void}\ interpolate\_mass\_from\_grid(MultiFab\&\ nodaldata,\textcolor{keywordtype}{int}\ order\_scheme);}
+\DoxyCodeLine{00114\ }
+\DoxyCodeLine{00115\ \ \ \ \ \textcolor{keywordtype}{void}\ update\_phase\_field(MultiFab\&\ nodaldata,\textcolor{keywordtype}{int}\ refratio,amrex::Real\ smoothfactor);}
+\DoxyCodeLine{00116\ \ \ \ \ amrex::Real\ Calculate\_time\_step(amrex::Real\ CFL,\ amrex::Real\ dtmax,amrex::Real\ dtmin);}
+\DoxyCodeLine{00117\ \ \ \ \ \textcolor{keywordtype}{void}\ removeParticlesInsideEB();}
+\DoxyCodeLine{00118\ }
+\DoxyCodeLine{00119\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00120\ }
+\DoxyCodeLine{00121\ \ \ \ \ ParticleType\ generate\_particle}
+\DoxyCodeLine{00122\ \ \ \ \ \ \ \ \ (Real\ x,Real\ y,Real\ z,}
+\DoxyCodeLine{00123\ \ \ \ \ \ \ \ \ Real\ vel[AMREX\_SPACEDIM],}
+\DoxyCodeLine{00124\ \ \ \ \ \ \ \ \ Real\ dens,\ Real\ vol,\ \textcolor{keywordtype}{int}\ constmodel,\ Real\ E,\ Real\ nu,}
+\DoxyCodeLine{00125\ \ \ \ \ \ \ \ \ Real\ bulkmod,\ Real\ Gama\_pres,Real\ visc);}
+\DoxyCodeLine{00126\ }
+\DoxyCodeLine{00127\ \};}
+\DoxyCodeLine{00128\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

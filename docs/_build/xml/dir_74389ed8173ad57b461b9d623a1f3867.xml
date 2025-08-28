@@ -1,0 +1,29 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.14.0" xml:lang="en-US">
+  <compounddef id="dir_74389ed8173ad57b461b9d623a1f3867" kind="dir">
+    <compoundname>E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source</compoundname>
+    <innerfile refid="constants_8_h">constants.H</innerfile>
+    <innerfile refid="constitutive__models_8_h">constitutive_models.H</innerfile>
+    <innerfile refid="interpolants_8_h">interpolants.H</innerfile>
+    <innerfile refid="main_8cpp">main.cpp</innerfile>
+    <innerfile refid="mpm__check__pair_8_h">mpm_check_pair.H</innerfile>
+    <innerfile refid="mpm__diagnostics_8cpp">mpm_diagnostics.cpp</innerfile>
+    <innerfile refid="mpm__eb_8cpp">mpm_eb.cpp</innerfile>
+    <innerfile refid="mpm__eb_8_h">mpm_eb.H</innerfile>
+    <innerfile refid="mpm__init_8cpp">mpm_init.cpp</innerfile>
+    <innerfile refid="mpm__kernels_8_h">mpm_kernels.H</innerfile>
+    <innerfile refid="mpm__particle__container_8cpp">mpm_particle_container.cpp</innerfile>
+    <innerfile refid="mpm__particle__container_8_h">mpm_particle_container.H</innerfile>
+    <innerfile refid="mpm__particle__grid__ops_8cpp">mpm_particle_grid_ops.cpp</innerfile>
+    <innerfile refid="mpm__particle__outputs_8cpp">mpm_particle_outputs.cpp</innerfile>
+    <innerfile refid="mpm__particle__timestep_8cpp">mpm_particle_timestep.cpp</innerfile>
+    <innerfile refid="mpm__specs_8_h">mpm_specs.H</innerfile>
+    <innerfile refid="nodal__data__ops_8cpp">nodal_data_ops.cpp</innerfile>
+    <innerfile refid="nodal__data__ops_8_h">nodal_data_ops.H</innerfile>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/"/>
+  </compounddef>
+</doxygen>

@@ -1,0 +1,60 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.14.0" xml:lang="en-US">
+  <compounddef id="structint_data" kind="struct" language="C++" prot="public">
+    <compoundname>intData</compoundname>
+    <sectiondef kind="public-type">
+      <memberdef kind="enum" id="structint_data_1a25584e8fdef485c2f65ac79f2e566143" prot="public" static="no" strong="no">
+        <type></type>
+        <name></name>
+        <qualifiedname>intData</qualifiedname>
+        <enumvalue id="structint_data_1a25584e8fdef485c2f65ac79f2e566143a081e64fd42cd3bec8bc59964d2ca495c" prot="public">
+          <name>phase</name>
+          <initializer>= 0</initializer>
+          <briefdescription>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="structint_data_1a25584e8fdef485c2f65ac79f2e566143a1033d0268971f4a883dab918758d3d35" prot="public">
+          <name>rigid_body_id</name>
+          <briefdescription>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="structint_data_1a25584e8fdef485c2f65ac79f2e566143a5519686f1748f2304cf1a6a9311cb038" prot="public">
+          <name>constitutive_model</name>
+          <briefdescription>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <enumvalue id="structint_data_1a25584e8fdef485c2f65ac79f2e566143a42c136d7fde6db7408e2c7dc36b23c63" prot="public">
+          <name>count</name>
+          <briefdescription>
+          </briefdescription>
+          <detaileddescription>
+          </detaileddescription>
+        </enumvalue>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_specs.H" line="44" column="5" bodyfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_specs.H" bodystart="45" bodyend="50"/>
+      </memberdef>
+    </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_specs.H" line="42" column="1" bodyfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_specs.H" bodystart="43" bodyend="51"/>
+    <listofallmembers>
+      <member refid="structint_data_1a25584e8fdef485c2f65ac79f2e566143a5519686f1748f2304cf1a6a9311cb038" prot="public" virt="non-virtual"><scope>intData</scope><name>constitutive_model</name></member>
+      <member refid="structint_data_1a25584e8fdef485c2f65ac79f2e566143a42c136d7fde6db7408e2c7dc36b23c63" prot="public" virt="non-virtual"><scope>intData</scope><name>count</name></member>
+      <member refid="structint_data_1a25584e8fdef485c2f65ac79f2e566143a081e64fd42cd3bec8bc59964d2ca495c" prot="public" virt="non-virtual"><scope>intData</scope><name>phase</name></member>
+      <member refid="structint_data_1a25584e8fdef485c2f65ac79f2e566143a1033d0268971f4a883dab918758d3d35" prot="public" virt="non-virtual"><scope>intData</scope><name>rigid_body_id</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

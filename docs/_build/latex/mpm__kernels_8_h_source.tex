@@ -1,0 +1,87 @@
+\doxysection{mpm\+\_\+kernels.\+H}
+\hypertarget{mpm__kernels_8_h_source}{}\label{mpm__kernels_8_h_source}\index{E:/Research/02\_CODE\_DEVELOPMENTS/04\_EXAGOOP/Source/mpm\_kernels.H@{E:/Research/02\_CODE\_DEVELOPMENTS/04\_EXAGOOP/Source/mpm\_kernels.H}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#ifndef\ MPM\_KERNELS\_H\_}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#define\ MPM\_KERNELS\_H\_}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ <AMReX.H>}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ <AMReX\_MultiFab.H>}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ <constants.H>}}
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ <AMReX\_PlotFileUtil.H>}}
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#include\ <AMReX\_MultiFabUtil.H>}}
+\DoxyCodeLine{00009\ }
+\DoxyCodeLine{00010\ AMREX\_GPU\_DEVICE\ AMREX\_FORCE\_INLINE}
+\DoxyCodeLine{00011\ \textcolor{keywordtype}{int}\ \ applybc(Real\ relvel\_in[AMREX\_SPACEDIM],}
+\DoxyCodeLine{00012\ \ \ \ \ \ \ \ \ Real\ relvel\_out[AMREX\_SPACEDIM],}
+\DoxyCodeLine{00013\ \ \ \ \ \ \ \ \ Real\ wall\_mu,\ Real\ normaldir[AMREX\_SPACEDIM],\ \textcolor{keywordtype}{int}\ bc)}
+\DoxyCodeLine{00014\ \{}
+\DoxyCodeLine{00015\ \ \ \ \ }
+\DoxyCodeLine{00016\ \ \ \ \ \textcolor{comment}{//look\ at\ section\ 8}}
+\DoxyCodeLine{00017\ \ \ \ \ \textcolor{comment}{//Stomakhin\ et\ al.,\ "{}A\ material\ point\ method\ for\ snow\ simulation"{},}}
+\DoxyCodeLine{00018\ \ \ \ \ \textcolor{comment}{//ACS\ Trans.\ Graphics,\ 32,\ 4,\ 102,\ 2013}}
+\DoxyCodeLine{00019\ \ \ \ \ \textcolor{comment}{//Warning!(Sreejith):\ veln}}
+\DoxyCodeLine{00020\ \ \ \ \ \textcolor{keywordtype}{int}\ modify\_pos=\textcolor{keyword}{false};}
+\DoxyCodeLine{00021\ \ \ \ \ Real\ velt[AMREX\_SPACEDIM],velt\_hat[AMREX\_SPACEDIM];}
+\DoxyCodeLine{00022\ \ \ \ \ Real\ veln=relvel\_in[XDIR]*normaldir[XDIR]+relvel\_in[YDIR]*normaldir[YDIR]+relvel\_in[ZDIR]*normaldir[ZDIR];}
+\DoxyCodeLine{00023\ }
+\DoxyCodeLine{00024\ \ \ \ \ velt[XDIR]=relvel\_in[XDIR]-\/veln*normaldir[XDIR];}
+\DoxyCodeLine{00025\ \ \ \ \ velt[YDIR]=relvel\_in[YDIR]-\/veln*normaldir[YDIR];}
+\DoxyCodeLine{00026\ \ \ \ \ velt[ZDIR]=relvel\_in[ZDIR]-\/veln*normaldir[ZDIR];}
+\DoxyCodeLine{00027\ }
+\DoxyCodeLine{00028\ \ \ \ \ Real\ veltmag=std::sqrt(velt[XDIR]*velt[XDIR]+velt[YDIR]*velt[YDIR]+velt[ZDIR]*velt[ZDIR]);}
+\DoxyCodeLine{00029\ }
+\DoxyCodeLine{00030\ \ \ \ \ velt\_hat[XDIR]=velt[XDIR]/(veltmag+TINYVAL);}
+\DoxyCodeLine{00031\ \ \ \ \ velt\_hat[YDIR]=velt[YDIR]/(veltmag+TINYVAL);}
+\DoxyCodeLine{00032\ \ \ \ \ velt\_hat[ZDIR]=velt[ZDIR]/(veltmag+TINYVAL);}
+\DoxyCodeLine{00033\ }
+\DoxyCodeLine{00034\ \ \ \ \ \textcolor{keywordflow}{if}(bc==BC\_NOSLIPWALL)}
+\DoxyCodeLine{00035\ \ \ \ \ \{}
+\DoxyCodeLine{00036\ \ \ \ \ \ \ \ \ modify\_pos=\textcolor{keyword}{true};}
+\DoxyCodeLine{00037\ \ \ \ \ \ \ \ \ relvel\_out[XDIR]=zero;}
+\DoxyCodeLine{00038\ \ \ \ \ \ \ \ \ relvel\_out[YDIR]=zero;}
+\DoxyCodeLine{00039\ \ \ \ \ \ \ \ \ relvel\_out[ZDIR]=zero;}
+\DoxyCodeLine{00040\ \ \ \ \ \}}
+\DoxyCodeLine{00041\ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}(bc==BC\_SLIPWALL)}
+\DoxyCodeLine{00042\ \ \ \ \ \{}
+\DoxyCodeLine{00043\ \ \ \ \ \ \ \ \ \textcolor{comment}{//normal\ is\ into\ the\ domain}}
+\DoxyCodeLine{00044\ \ \ \ \ \ \ \ \ modify\_pos=\textcolor{keyword}{true};}
+\DoxyCodeLine{00045\ \ \ \ \ \ \ \ \ relvel\_out[XDIR]=velt[XDIR];}
+\DoxyCodeLine{00046\ \ \ \ \ \ \ \ \ relvel\_out[YDIR]=velt[YDIR];}
+\DoxyCodeLine{00047\ \ \ \ \ \ \ \ \ relvel\_out[ZDIR]=velt[ZDIR];}
+\DoxyCodeLine{00048\ \ \ \ \ \}}
+\DoxyCodeLine{00049\ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}(bc==BC\_PARTIALSLIPWALL)}
+\DoxyCodeLine{00050\ \ \ \ \ \{}
+\DoxyCodeLine{00051\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(veln<=zero)}
+\DoxyCodeLine{00052\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00053\ \ \ \ \ \ \ \ \ \ \ \ \ modify\_pos=\textcolor{keyword}{true};}
+\DoxyCodeLine{00054\ }
+\DoxyCodeLine{00055\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(veltmag\ <=\ -\/wall\_mu*veln)}
+\DoxyCodeLine{00056\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00057\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ relvel\_out[XDIR]=zero;}
+\DoxyCodeLine{00058\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ relvel\_out[YDIR]=zero;}
+\DoxyCodeLine{00059\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ relvel\_out[ZDIR]=zero;}
+\DoxyCodeLine{00060\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00061\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{00062\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00063\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ relvel\_out[XDIR]=(veltmag+wall\_mu*veln)*velt\_hat[XDIR];}
+\DoxyCodeLine{00064\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ relvel\_out[YDIR]=(veltmag+wall\_mu*veln)*velt\_hat[YDIR];}
+\DoxyCodeLine{00065\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ relvel\_out[ZDIR]=(veltmag+wall\_mu*veln)*velt\_hat[ZDIR];}
+\DoxyCodeLine{00066\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00067\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00068\ \ \ \ \ \}}
+\DoxyCodeLine{00069\ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}(bc==BC\_PERIODIC)\ \textcolor{comment}{//nothing\ to\ do\ if\ periodic/outflow}}
+\DoxyCodeLine{00070\ \ \ \ \ \{}
+\DoxyCodeLine{00071\ }
+\DoxyCodeLine{00072\ \ \ \ \ \}}
+\DoxyCodeLine{00073\ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{00074\ \ \ \ \ \{}
+\DoxyCodeLine{00075\ \ \ \ \ \ \ \ \ amrex::Abort(\textcolor{stringliteral}{"{}\(\backslash\)nUnknown\ boundary\ condition"{}});}
+\DoxyCodeLine{00076\ \ \ \ \ \}}
+\DoxyCodeLine{00077\ \ \ \ \ }
+\DoxyCodeLine{00078\ \ \ \ \ \textcolor{keywordflow}{return}(modify\_pos);}
+\DoxyCodeLine{00079\ \}}
+\DoxyCodeLine{00080\ }
+\DoxyCodeLine{00081\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

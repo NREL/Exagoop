@@ -1,0 +1,43 @@
+<?xml version='1.0' encoding='UTF-8' standalone='no'?>
+<doxygen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="compound.xsd" version="1.14.0" xml:lang="en-US">
+  <compounddef id="struct_check_pair" kind="struct" language="C++" prot="public">
+    <compoundname>CheckPair</compoundname>
+    <sectiondef kind="public-func">
+      <memberdef kind="function" id="struct_check_pair_1a0d99779883af9c23cb4fb2f5402ffb26" prot="public" static="no" const="yes" explicit="no" inline="yes" virt="non-virtual">
+        <templateparamlist>
+          <param>
+            <type>class P</type>
+          </param>
+        </templateparamlist>
+        <type>AMREX_GPU_DEVICE AMREX_FORCE_INLINE bool</type>
+        <definition>AMREX_GPU_DEVICE AMREX_FORCE_INLINE bool CheckPair::operator()</definition>
+        <argsstring>(const P &amp;p1, const P &amp;p2) const</argsstring>
+        <name>operator()</name>
+        <qualifiedname>CheckPair::operator()</qualifiedname>
+        <param>
+          <type>const P &amp;</type>
+          <declname>p1</declname>
+        </param>
+        <param>
+          <type>const P &amp;</type>
+          <declname>p2</declname>
+        </param>
+        <briefdescription>
+        </briefdescription>
+        <detaileddescription>
+        </detaileddescription>
+        <inbodydescription>
+        </inbodydescription>
+        <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_check_pair.H" line="10" column="10" bodyfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_check_pair.H" bodystart="10" bodyend="20"/>
+      </memberdef>
+    </sectiondef>
+    <briefdescription>
+    </briefdescription>
+    <detaileddescription>
+    </detaileddescription>
+    <location file="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_check_pair.H" line="6" column="1" bodyfile="E:/Research/02_CODE_DEVELOPMENTS/04_EXAGOOP/Source/mpm_check_pair.H" bodystart="7" bodyend="21"/>
+    <listofallmembers>
+      <member refid="struct_check_pair_1a0d99779883af9c23cb4fb2f5402ffb26" prot="public" virt="non-virtual"><scope>CheckPair</scope><name>operator()</name></member>
+    </listofallmembers>
+  </compounddef>
+</doxygen>

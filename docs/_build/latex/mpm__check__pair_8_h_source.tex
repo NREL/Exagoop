@@ -1,0 +1,29 @@
+\doxysection{mpm\+\_\+check\+\_\+pair.\+H}
+\hypertarget{mpm__check__pair_8_h_source}{}\label{mpm__check__pair_8_h_source}\index{E:/Research/02\_CODE\_DEVELOPMENTS/04\_EXAGOOP/Source/mpm\_check\_pair.H@{E:/Research/02\_CODE\_DEVELOPMENTS/04\_EXAGOOP/Source/mpm\_check\_pair.H}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#ifndef\ MPM\_CHECK\_PAIR\_H\_}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#define\ MPM\_CHECK\_PAIR\_H\_}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ <mpm\_specs.H>}}
+\DoxyCodeLine{00005\ }
+\DoxyCodeLine{00006\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_check_pair}{CheckPair}}}
+\DoxyCodeLine{00007\ \{}
+\DoxyCodeLine{00008\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{class}\ P>}
+\DoxyCodeLine{00009\ \ \ \ \ AMREX\_GPU\_DEVICE\ AMREX\_FORCE\_INLINE}
+\DoxyCodeLine{00010\ \ \ \ \ \textcolor{keywordtype}{bool}\ operator()(\textcolor{keyword}{const}\ P\&\ p1,\ \textcolor{keyword}{const}\ P\&\ p2)\textcolor{keyword}{\ const}}
+\DoxyCodeLine{00011\ \textcolor{keyword}{\ \ \ \ }\{}
+\DoxyCodeLine{00012\ \ \ \ \ \ \ \ \ amrex::Real\ d0\ =\ (p1.pos(0)\ -\/\ p2.pos(0));}
+\DoxyCodeLine{00013\ \ \ \ \ \ \ \ \ amrex::Real\ d1\ =\ (p1.pos(1)\ -\/\ p2.pos(1));}
+\DoxyCodeLine{00014\ \ \ \ \ \ \ \ \ amrex::Real\ d2\ =\ (p1.pos(2)\ -\/\ p2.pos(2));\ \ \ \ }
+\DoxyCodeLine{00015\ \ \ \ \ \ \ \ \ amrex::Real\ dsquared\ =\ d0*d0\ +\ d1*d1\ +\ d2*d2;}
+\DoxyCodeLine{00016\ }
+\DoxyCodeLine{00017\ \ \ \ \ \ \ \ \ amrex::Real\ search\_radius=0.5*(p1.rdata(realData::radius)+p2.rdata(realData::radius));}
+\DoxyCodeLine{00018\ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00019\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ (dsquared\ <=\ 9.0*search\_radius*search\_radius);}
+\DoxyCodeLine{00020\ \ \ \ \ \}}
+\DoxyCodeLine{00021\ \};}
+\DoxyCodeLine{00022\ }
+\DoxyCodeLine{00023\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

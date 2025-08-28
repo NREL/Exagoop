@@ -1,0 +1,643 @@
+\doxysection{interpolants.\+H}
+\hypertarget{interpolants_8_h_source}{}\label{interpolants_8_h_source}\index{E:/Research/02\_CODE\_DEVELOPMENTS/04\_EXAGOOP/Source/interpolants.H@{E:/Research/02\_CODE\_DEVELOPMENTS/04\_EXAGOOP/Source/interpolants.H}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#ifndef\ PARTICLEBASIS\_H\_}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#define\ PARTICLEBASIS\_H\_}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include<constants.H>}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ <AMReX.H>}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include<mpm\_particle\_container.H>}}
+\DoxyCodeLine{00007\ }
+\DoxyCodeLine{00008\ AMREX\_GPU\_DEVICE\ AMREX\_FORCE\_INLINE}
+\DoxyCodeLine{00009\ amrex::Real\ spherical\_gaussian(amrex::Real\ xi[3],amrex::Real\ xp[3],amrex::Real\ r0)}
+\DoxyCodeLine{00010\ \{}
+\DoxyCodeLine{00011\ \ \ amrex::Real\ f;}
+\DoxyCodeLine{00012\ \ \ amrex::Real\ r2;}
+\DoxyCodeLine{00013\ }
+\DoxyCodeLine{00014\ \ \ r2=(xi[0]-\/xp[0])*(xi[0]-\/xp[0])+(xi[1]-\/xp[1])*(xi[1]-\/xp[1])+(xi[2]-\/xp[2])*(xi[2]-\/xp[2]);}
+\DoxyCodeLine{00015\ \ \ f=std::exp(-\/r2/(r0*r0))*std::pow(PI,-\/1.5)*std::pow(r0,-\/3.0);}
+\DoxyCodeLine{00016\ }
+\DoxyCodeLine{00017\ \ \ \textcolor{keywordflow}{return}(f);}
+\DoxyCodeLine{00018\ \}}
+\DoxyCodeLine{00019\ }
+\DoxyCodeLine{00020\ AMREX\_GPU\_DEVICE\ AMREX\_FORCE\_INLINE}
+\DoxyCodeLine{00021\ amrex::Real\ box\_kernel(amrex::Real\ xi[3],amrex::Real\ xp[3],amrex::Real\ r0)}
+\DoxyCodeLine{00022\ \{}
+\DoxyCodeLine{00023\ \ \ \ \ amrex::Real\ r2=(xi[0]-\/xp[0])*(xi[0]-\/xp[0])+(xi[1]-\/xp[1])*(xi[1]-\/xp[1])+(xi[2]-\/xp[2])*(xi[2]-\/xp[2]);}
+\DoxyCodeLine{00024\ \ \ \ \ amrex::Real\ f=(r2<r0*r0)?1.0:0.0;}
+\DoxyCodeLine{00025\ }
+\DoxyCodeLine{00026\ \ \ \ \ \textcolor{keywordflow}{return}(f);}
+\DoxyCodeLine{00027\ \}}
+\DoxyCodeLine{00028\ }
+\DoxyCodeLine{00029\ AMREX\_GPU\_DEVICE\ AMREX\_FORCE\_INLINE}
+\DoxyCodeLine{00030\ amrex::Real\ hat1d(amrex::Real\ xi,amrex::Real\ xp,amrex::Real\ hatsize)}
+\DoxyCodeLine{00031\ \{}
+\DoxyCodeLine{00032\ \ \ \ \ amrex::Real\ zeta=xi-\/xp;}
+\DoxyCodeLine{00033\ \ \ \ \ amrex::Real\ halfhatsize=hatsize*half;}
+\DoxyCodeLine{00034\ \ \ \ \ amrex::Real\ funcval=zero;}
+\DoxyCodeLine{00035\ \ \ \ \ amrex::Real\ maxval=one/halfhatsize;}
+\DoxyCodeLine{00036\ \ \ \ \ amrex::Real\ slope=four/(hatsize*hatsize);}
+\DoxyCodeLine{00037\ }
+\DoxyCodeLine{00038\ \ \ \ \ \textcolor{keywordflow}{if}(amrex::Math::abs(zeta)\ <\ halfhatsize)}
+\DoxyCodeLine{00039\ \ \ \ \ \{}
+\DoxyCodeLine{00040\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(zeta>0.0)}
+\DoxyCodeLine{00041\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00042\ \ \ \ \ \ \ \ \ \ \ \ \ funcval\ =\ -\/slope*zeta\ +\ maxval;\ \ \ \ \ \ \ }
+\DoxyCodeLine{00043\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00044\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{00045\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00046\ \ \ \ \ \ \ \ \ \ \ \ \ funcval\ =\ \ slope*zeta\ +\ maxval;}
+\DoxyCodeLine{00047\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00048\ \ \ \ \ \}}
+\DoxyCodeLine{00049\ \ \ \ \ \textcolor{keywordflow}{return}(funcval);}
+\DoxyCodeLine{00050\ \}}
+\DoxyCodeLine{00051\ }
+\DoxyCodeLine{00052\ AMREX\_GPU\_DEVICE\ AMREX\_FORCE\_INLINE}
+\DoxyCodeLine{00053\ amrex::Real\ hat3d(amrex::Real\ xi[AMREX\_SPACEDIM],\ amrex::Real\ xp[AMREX\_SPACEDIM],}
+\DoxyCodeLine{00054\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ amrex::Real\ hatsize[AMREX\_SPACEDIM])}
+\DoxyCodeLine{00055\ \{}
+\DoxyCodeLine{00056\ \ \ \ \ amrex::Real\ funcval=one;}
+\DoxyCodeLine{00057\ \ \ \ \ funcval\ *=\ hat1d(xi[XDIR],xp[XDIR],hatsize[XDIR]);}
+\DoxyCodeLine{00058\ \ \ \ \ funcval\ *=\ hat1d(xi[YDIR],xp[YDIR],hatsize[YDIR]);}
+\DoxyCodeLine{00059\ \ \ \ \ funcval\ *=\ hat1d(xi[ZDIR],xp[ZDIR],hatsize[ZDIR]);}
+\DoxyCodeLine{00060\ }
+\DoxyCodeLine{00061\ \ \ \ \ \textcolor{keywordflow}{return}(funcval);}
+\DoxyCodeLine{00062\ \}}
+\DoxyCodeLine{00063\ }
+\DoxyCodeLine{00064\ AMREX\_GPU\_DEVICE\ AMREX\_FORCE\_INLINE}
+\DoxyCodeLine{00065\ amrex::Real\ bilin\_interp(amrex::Real\ xp[AMREX\_SPACEDIM],\ \textcolor{keywordtype}{int}\ i,\ \textcolor{keywordtype}{int}\ j,\ \textcolor{keywordtype}{int}\ k,\ }
+\DoxyCodeLine{00066\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ amrex::GpuArray<amrex::Real,\ AMREX\_SPACEDIM>\ plo,\ }
+\DoxyCodeLine{00067\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ amrex::GpuArray<amrex::Real,\ AMREX\_SPACEDIM>\ dx,}
+\DoxyCodeLine{00068\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ amrex::Array4<amrex::Real>\ nodaldata,}
+\DoxyCodeLine{00069\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ comp)}
+\DoxyCodeLine{00070\ \{}
+\DoxyCodeLine{00071\ }
+\DoxyCodeLine{00072\ \ \ \ \ amrex::Real\ alpha,beta,gama;}
+\DoxyCodeLine{00073\ \ \ \ \ amrex::Real\ value=zero;}
+\DoxyCodeLine{00074\ }
+\DoxyCodeLine{00075\ \ \ \ \ alpha\ =\ (xp[XDIR]-\/(plo[XDIR]+i*dx[XDIR]))/dx[XDIR];}
+\DoxyCodeLine{00076\ \ \ \ \ beta\ \ =\ (xp[YDIR]-\/(plo[YDIR]+j*dx[YDIR]))/dx[YDIR];}
+\DoxyCodeLine{00077\ \ \ \ \ gama\ \ =\ (xp[ZDIR]-\/(plo[ZDIR]+k*dx[ZDIR]))/dx[ZDIR];}
+\DoxyCodeLine{00078\ }
+\DoxyCodeLine{00079\ }
+\DoxyCodeLine{00080\ \ \ \ \ value\ +=\ (1.0-\/alpha)\ *\ (1-\/beta)\ *\ (1-\/gama)\ *\ nodaldata(i,j,k,comp);}
+\DoxyCodeLine{00081\ \ \ \ \ value\ +=\ alpha\ \ \ \ \ \ \ *\ (1-\/beta)\ *\ (1-\/gama)\ *\ nodaldata(i+1,j,k,comp);}
+\DoxyCodeLine{00082\ \ \ \ \ value\ +=\ (1.0-\/alpha)\ *\ beta\ \ \ \ \ *\ (1-\/gama)\ *\ nodaldata(i,j+1,k,comp);}
+\DoxyCodeLine{00083\ \ \ \ \ value\ +=\ alpha\ \ \ \ \ \ \ *\ beta\ \ \ \ \ *\ (1-\/gama)\ *\ nodaldata(i+1,j+1,k,comp);}
+\DoxyCodeLine{00084\ }
+\DoxyCodeLine{00085\ \ \ \ \ value\ +=\ (1.0-\/alpha)\ *\ (1-\/beta)\ \ *\ gama\ \ *\ nodaldata(i,j,k+1,comp);}
+\DoxyCodeLine{00086\ \ \ \ \ value\ +=\ alpha\ \ \ \ \ \ \ *\ (1-\/beta)\ \ *\ gama\ \ *\ nodaldata(i+1,j,k+1,comp);}
+\DoxyCodeLine{00087\ \ \ \ \ value\ +=\ (1.0-\/alpha)\ *\ beta\ \ \ \ \ \ *\ gama\ \ *\ nodaldata(i,j+1,k+1,comp);}
+\DoxyCodeLine{00088\ \ \ \ \ value\ +=\ alpha\ \ \ \ \ \ \ *\ beta\ \ \ \ \ \ *\ gama\ \ *\ nodaldata(i+1,j+1,k+1,comp);}
+\DoxyCodeLine{00089\ }
+\DoxyCodeLine{00090\ \ \ \ \ \textcolor{keywordflow}{return}(value);}
+\DoxyCodeLine{00091\ \}}
+\DoxyCodeLine{00092\ }
+\DoxyCodeLine{00093\ }
+\DoxyCodeLine{00094\ AMREX\_GPU\_DEVICE\ AMREX\_FORCE\_INLINE}
+\DoxyCodeLine{00095\ amrex::Real\ cubicspline\_1d\_der(\textcolor{keywordtype}{int}\ shapefunctiontype,amrex::\ Real\ zi)}
+\DoxyCodeLine{00096\ \{}
+\DoxyCodeLine{00097\ \ \ \ \ amrex::Real\ value=0.0;}
+\DoxyCodeLine{00098\ \ \ \ \ \textcolor{keywordflow}{if}(shapefunctiontype==1)\ \ \ \ \textcolor{comment}{//Boundary\ node}}
+\DoxyCodeLine{00099\ \ \ \ \ \{}
+\DoxyCodeLine{00100\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(zi>=-\/2\ \&\&\ zi<=-\/1)}
+\DoxyCodeLine{00101\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00102\ \ \ \ \ \ \ \ \ \ \ \ \ value=zi*zi/2.0+2*zi+2.0;}
+\DoxyCodeLine{00103\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00104\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}(zi>=-\/1\ \&\&\ zi<=0)}
+\DoxyCodeLine{00105\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00106\ \ \ \ \ \ \ \ \ \ \ \ \ value=-\/zi*zi/2.0+1.0;}
+\DoxyCodeLine{00107\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00108\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}(zi>=0\ \&\&\ zi<=1)}
+\DoxyCodeLine{00109\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00110\ \ \ \ \ \ \ \ \ \ \ \ \ value=zi*zi/2.0-\/1.0;}
+\DoxyCodeLine{00111\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00112\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}(zi>=1\ \&\&\ zi<=2.0)}
+\DoxyCodeLine{00113\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00114\ \ \ \ \ \ \ \ \ \ \ \ \ value=-\/zi*zi/2.0+2*zi-\/2.0;}
+\DoxyCodeLine{00115\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00116\ \ \ \ \ \}}
+\DoxyCodeLine{00117\ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}(shapefunctiontype==2)\ \ \ \textcolor{comment}{//Near\ Boundary\ node}}
+\DoxyCodeLine{00118\ \ \ \ \ \{}
+\DoxyCodeLine{00119\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(zi>=-\/1\ \&\&\ zi<=0)}
+\DoxyCodeLine{00120\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00121\ \ \ \ \ \ \ \ \ \ \ \ \ value=-\/zi*zi-\/2.0*zi;}
+\DoxyCodeLine{00122\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00123\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}(zi>=0\ \&\&\ zi<=1)}
+\DoxyCodeLine{00124\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00125\ \ \ \ \ \ \ \ \ \ \ \ \ value=3.0*zi*zi/2.0-\/2.0*zi;}
+\DoxyCodeLine{00126\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00127\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}(zi>=1\ \&\&\ zi<=2.0)}
+\DoxyCodeLine{00128\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00129\ \ \ \ \ \ \ \ \ \ \ \ \ value=-\/zi*zi/2.0+2*zi-\/2.0;}
+\DoxyCodeLine{00130\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00131\ \ \ \ \ \}}
+\DoxyCodeLine{00132\ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}(shapefunctiontype==3)\ \ \ \textcolor{comment}{//Interior\ node}}
+\DoxyCodeLine{00133\ \ \ \ \ \{}
+\DoxyCodeLine{00134\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(zi>=-\/2\ \&\&\ zi<=-\/1)}
+\DoxyCodeLine{00135\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00136\ \ \ \ \ \ \ \ \ \ \ \ \ value=zi*zi/2.0+2*zi+2.0;}
+\DoxyCodeLine{00137\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00138\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}(zi>=-\/1\ \&\&\ zi<=0)}
+\DoxyCodeLine{00139\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00140\ \ \ \ \ \ \ \ \ \ \ \ \ value=-\/3.0*zi*zi/2.0-\/2.0*zi;}
+\DoxyCodeLine{00141\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00142\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}(zi>=0\ \&\&\ zi<=1)}
+\DoxyCodeLine{00143\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00144\ \ \ \ \ \ \ \ \ \ \ \ \ value=3.0*zi*zi/2.0-\/2.0*zi;}
+\DoxyCodeLine{00145\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00146\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}(zi>=1\ \&\&\ zi<=2.0)}
+\DoxyCodeLine{00147\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00148\ \ \ \ \ \ \ \ \ \ \ \ \ value=-\/zi*zi/2.0+2*zi-\/2.0;}
+\DoxyCodeLine{00149\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00150\ \ \ \ \ \}}
+\DoxyCodeLine{00151\ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}(shapefunctiontype==4)\ \ \ \textcolor{comment}{//Interior\ node}}
+\DoxyCodeLine{00152\ \ \ \ \ \{}
+\DoxyCodeLine{00153\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(zi>=-\/2\ \&\&\ zi<=-\/1)}
+\DoxyCodeLine{00154\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00155\ \ \ \ \ \ \ \ \ \ \ \ \ value=zi*zi/2.0+2*zi+2.0;}
+\DoxyCodeLine{00156\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00157\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}(zi>=-\/1\ \&\&\ zi<=0)}
+\DoxyCodeLine{00158\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00159\ \ \ \ \ \ \ \ \ \ \ \ \ value=-\/3.0*zi*zi/2.0-\/2.0*zi;}
+\DoxyCodeLine{00160\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00161\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}(zi>=0\ \&\&\ zi<=1)}
+\DoxyCodeLine{00162\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00163\ \ \ \ \ \ \ \ \ \ \ \ \ value=zi*zi-\/2.0*zi;}
+\DoxyCodeLine{00164\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00165\ \ \ \ \ \}}
+\DoxyCodeLine{00166\ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{00167\ \ \ \ \ \{}
+\DoxyCodeLine{00168\ \textcolor{preprocessor}{\#ifndef\ AMREX\_USE\_GPU}}
+\DoxyCodeLine{00169\ \ \ \ \ \ \ \ \ amrex::Print()<<\textcolor{stringliteral}{"{}\(\backslash\)n\ Shapefunction\ =\ "{}}<<shapefunctiontype;}
+\DoxyCodeLine{00170\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00171\ \ \ \ \ \ \ \ \ amrex::Abort(\textcolor{stringliteral}{"{}\(\backslash\)n\ Incorrect\ shape\ function\ type\ in\ cubicspline\_1d\_der"{}});}
+\DoxyCodeLine{00172\ \ \ \ \ \}}
+\DoxyCodeLine{00173\ \ \ \ \ \textcolor{keywordflow}{return}\ value;}
+\DoxyCodeLine{00174\ }
+\DoxyCodeLine{00175\ \}}
+\DoxyCodeLine{00176\ }
+\DoxyCodeLine{00177\ AMREX\_GPU\_DEVICE\ AMREX\_FORCE\_INLINE}
+\DoxyCodeLine{00178\ \ \ \ \ \ \ \ \ amrex::Real\ cubicspline\_1d(\textcolor{keywordtype}{int}\ shapefunctiontype,amrex::\ Real\ zi,\textcolor{keywordtype}{int}\ dir)}
+\DoxyCodeLine{00179\ \{}
+\DoxyCodeLine{00180\ \ \ \ \ amrex::Real\ value=0.0;}
+\DoxyCodeLine{00181\ \ \ \ \ \textcolor{keywordflow}{if}(shapefunctiontype==1)\ \ \ \ \textcolor{comment}{//Boundary\ node}}
+\DoxyCodeLine{00182\ \ \ \ \ \{}
+\DoxyCodeLine{00183\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(zi>=-\/2\ \&\&\ zi<=-\/1)}
+\DoxyCodeLine{00184\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00185\ \ \ \ \ \ \ \ \ \ \ \ \ value=zi*zi*zi/6.0+zi*zi+2.0*zi+4.0/3.0;}
+\DoxyCodeLine{00186\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00187\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}(zi>=-\/1\ \&\&\ zi<=0)}
+\DoxyCodeLine{00188\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00189\ \ \ \ \ \ \ \ \ \ \ \ \ value=-\/zi*zi*zi/6.0+zi+1.0;}
+\DoxyCodeLine{00190\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00191\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}(zi>=0\ \&\&\ zi<=1)}
+\DoxyCodeLine{00192\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00193\ \ \ \ \ \ \ \ \ \ \ \ \ value=zi*zi*zi/6.0-\/zi+1.0;}
+\DoxyCodeLine{00194\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00195\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}(zi>=1\ \&\&\ zi<=2.0)}
+\DoxyCodeLine{00196\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00197\ \ \ \ \ \ \ \ \ \ \ \ \ value=-\/zi*zi*zi/6.0+zi*zi-\/2.0*zi+4.0/3.0;}
+\DoxyCodeLine{00198\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00199\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{00200\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00201\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \#ifndef\ AMREX\_USE\_GPU}}
+\DoxyCodeLine{00202\ \ \ \ \ \ \ \ \ \ \ \ \ amrex::Print()<<\textcolor{stringliteral}{"{}\(\backslash\)n\ Error\ in\ shape\ func\ 1:\ "{}}<<zi;}
+\DoxyCodeLine{00203\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \#endif}}
+\DoxyCodeLine{00204\ }
+\DoxyCodeLine{00205\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00206\ \ \ \ \ \}}
+\DoxyCodeLine{00207\ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}(shapefunctiontype==2)\ \ \ \textcolor{comment}{//Near\ Boundary\ node}}
+\DoxyCodeLine{00208\ \ \ \ \ \{}
+\DoxyCodeLine{00209\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(zi>=-\/1\ \&\&\ zi<=0)}
+\DoxyCodeLine{00210\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00211\ \ \ \ \ \ \ \ \ \ \ \ \ value=-\/zi*zi*zi/3.0-\/zi*zi+2.0/3.0;}
+\DoxyCodeLine{00212\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00213\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}(zi>=0\ \&\&\ zi<=1)}
+\DoxyCodeLine{00214\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00215\ \ \ \ \ \ \ \ \ \ \ \ \ value=zi*zi*zi/2.0-\/zi*zi+2.0/3.0;}
+\DoxyCodeLine{00216\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00217\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}(zi>=1\ \&\&\ zi<=2.0)}
+\DoxyCodeLine{00218\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00219\ \ \ \ \ \ \ \ \ \ \ \ \ value=-\/zi*zi*zi/6.0+zi*zi-\/2.0*zi+4.0/3.0;}
+\DoxyCodeLine{00220\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00221\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{00222\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00223\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \#ifndef\ AMREX\_USE\_GPU}}
+\DoxyCodeLine{00224\ \ \ \ \ \ \ \ \ \ \ \ \ amrex::Print()<<\textcolor{stringliteral}{"{}\(\backslash\)n\ Error\ in\ shape\ func\ 2:\ "{}}<<zi<<\textcolor{stringliteral}{"{}\ dir\ =\ "{}}<<dir;}
+\DoxyCodeLine{00225\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \#endif}}
+\DoxyCodeLine{00226\ }
+\DoxyCodeLine{00227\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00228\ \ \ \ \ \}}
+\DoxyCodeLine{00229\ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}(shapefunctiontype==3)\ \ \ \textcolor{comment}{//Interior\ node}}
+\DoxyCodeLine{00230\ \ \ \ \ \{}
+\DoxyCodeLine{00231\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(zi>=-\/2\ \&\&\ zi<=-\/1)}
+\DoxyCodeLine{00232\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00233\ \ \ \ \ \ \ \ \ \ \ \ \ value=zi*zi*zi/6.0+zi*zi+2.0*zi+4.0/3.0;}
+\DoxyCodeLine{00234\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00235\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}(zi>=-\/1\ \&\&\ zi<=0)}
+\DoxyCodeLine{00236\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00237\ \ \ \ \ \ \ \ \ \ \ \ \ value=-\/zi*zi*zi/2.0-\/zi*zi+2.0/3.0;}
+\DoxyCodeLine{00238\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00239\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}(zi>=0\ \&\&\ zi<=1)}
+\DoxyCodeLine{00240\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00241\ \ \ \ \ \ \ \ \ \ \ \ \ value=zi*zi*zi/2.0-\/zi*zi+2.0/3.0;}
+\DoxyCodeLine{00242\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00243\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}(zi>=1\ \&\&\ zi<=2.0)}
+\DoxyCodeLine{00244\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00245\ \ \ \ \ \ \ \ \ \ \ \ \ value=-\/zi*zi*zi/6.0+zi*zi-\/2.0*zi+4.0/3.0;}
+\DoxyCodeLine{00246\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00247\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{00248\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00249\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \#ifndef\ AMREX\_USE\_GPU}}
+\DoxyCodeLine{00250\ \ \ \ \ \ \ \ \ \ \ \ \ amrex::Print()<<\textcolor{stringliteral}{"{}\(\backslash\)n\ Error\ in\ shape\ func\ 3:\ "{}}<<zi;}
+\DoxyCodeLine{00251\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \#endif}}
+\DoxyCodeLine{00252\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00253\ \ \ \ \ \}}
+\DoxyCodeLine{00254\ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}(shapefunctiontype==4)\ \ \ \textcolor{comment}{//Interior\ node}}
+\DoxyCodeLine{00255\ \ \ \ \ \{}
+\DoxyCodeLine{00256\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(zi>=-\/2\ \&\&\ zi<=-\/1)}
+\DoxyCodeLine{00257\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00258\ \ \ \ \ \ \ \ \ \ \ \ \ value=zi*zi*zi/6.0+zi*zi+2.0*zi+4.0/3.0;}
+\DoxyCodeLine{00259\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00260\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}(zi>=-\/1\ \&\&\ zi<=0)}
+\DoxyCodeLine{00261\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00262\ \ \ \ \ \ \ \ \ \ \ \ \ value=-\/zi*zi*zi/2.0-\/zi*zi+2.0/3.0;}
+\DoxyCodeLine{00263\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00264\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}(zi>=0\ \&\&\ zi<=1)}
+\DoxyCodeLine{00265\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00266\ \ \ \ \ \ \ \ \ \ \ \ \ value=zi*zi*zi/3.0-\/zi*zi+2.0/3.0;}
+\DoxyCodeLine{00267\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00268\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{00269\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00270\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \#ifndef\ AMREX\_USE\_GPU}}
+\DoxyCodeLine{00271\ \ \ \ \ \ \ \ \ \ \ \ \ amrex::Print()<<\textcolor{stringliteral}{"{}\(\backslash\)n\ Error\ in\ shape\ func\ 4:\ "{}}<<zi<<\textcolor{stringliteral}{"{}\ dir=\ "{}}<<dir;}
+\DoxyCodeLine{00272\ \textcolor{preprocessor}{\ \ \ \ \ \ \ \ \ \ \ \ \#endif}}
+\DoxyCodeLine{00273\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00274\ \ \ \ \ \}}
+\DoxyCodeLine{00275\ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{00276\ \ \ \ \ \{}
+\DoxyCodeLine{00277\ \textcolor{preprocessor}{\#ifndef\ AMREX\_USE\_GPU}}
+\DoxyCodeLine{00278\ \ \ \ \ \ \ \ \ amrex::Print()<<\textcolor{stringliteral}{"{}\(\backslash\)n\ Shapefunction\ =\ "{}}<<shapefunctiontype;}
+\DoxyCodeLine{00279\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00280\ \ \ \ \ \ \ \ \ amrex::Abort(\textcolor{stringliteral}{"{}\(\backslash\)n\ Incorrect\ shape\ function\ type\ in\ cubicspline\_1d"{}});}
+\DoxyCodeLine{00281\ \ \ \ \ \}}
+\DoxyCodeLine{00282\ \ \ \ \ \textcolor{keywordflow}{return}\ value;}
+\DoxyCodeLine{00283\ }
+\DoxyCodeLine{00284\ \}}
+\DoxyCodeLine{00285\ }
+\DoxyCodeLine{00286\ AMREX\_GPU\_DEVICE\ AMREX\_FORCE\_INLINE}
+\DoxyCodeLine{00287\ \ \ \ \ \ \ \ \ amrex::Real\ cubic\_interp(amrex::Real\ xp[AMREX\_SPACEDIM],}
+\DoxyCodeLine{00288\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ i,\ \textcolor{keywordtype}{int}\ j,\ \textcolor{keywordtype}{int}\ k,}
+\DoxyCodeLine{00289\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ lmin,\textcolor{keywordtype}{int}\ mmin,\textcolor{keywordtype}{int}\ nmin,\textcolor{keywordtype}{int}\ lmax,\textcolor{keywordtype}{int}\ mmax,\ \textcolor{keywordtype}{int}\ nmax,}
+\DoxyCodeLine{00290\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ amrex::GpuArray<amrex::Real,\ AMREX\_SPACEDIM>\ plo,}
+\DoxyCodeLine{00291\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ amrex::GpuArray<amrex::Real,\ AMREX\_SPACEDIM>\ dx,}
+\DoxyCodeLine{00292\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ amrex::Array4<amrex::Real>\ nodaldata,}
+\DoxyCodeLine{00293\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ comp,\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}*\ lo,\textcolor{keyword}{const}\ \textcolor{keywordtype}{int}*\ hi)}
+\DoxyCodeLine{00294\ \{}
+\DoxyCodeLine{00295\ }
+\DoxyCodeLine{00296\ \ \ \ \ amrex::Real\ rx,ry,rz;}
+\DoxyCodeLine{00297\ \ \ \ \ amrex::Real\ lval,mval,nval;}
+\DoxyCodeLine{00298\ \ \ \ \ amrex::Real\ value=zero;}
+\DoxyCodeLine{00299\ \ \ \ \ \textcolor{keywordtype}{int}\ shapetypex,shapetypey,shapetypez;}
+\DoxyCodeLine{00300\ }
+\DoxyCodeLine{00301\ \ \ \ \ \textcolor{keywordflow}{for}(\textcolor{keywordtype}{int}\ n=nmin;n<nmax;n++)}
+\DoxyCodeLine{00302\ \ \ \ \ \{}
+\DoxyCodeLine{00303\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(\textcolor{keywordtype}{int}\ m=mmin;m<mmax;m++)}
+\DoxyCodeLine{00304\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00305\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(\textcolor{keywordtype}{int}\ l=lmin;l<lmax;l++)}
+\DoxyCodeLine{00306\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00307\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(i+l==lo[0])\ shapetypex=1;}
+\DoxyCodeLine{00308\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}(i+l==lo[0]+1)\ shapetypex=2;}
+\DoxyCodeLine{00309\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}(i+l==hi[0]+1)\ shapetypex=1;}
+\DoxyCodeLine{00310\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}(i+l==hi[0])\ shapetypex=4;}
+\DoxyCodeLine{00311\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ shapetypex=3;}
+\DoxyCodeLine{00312\ }
+\DoxyCodeLine{00313\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(j+m==lo[1])\ shapetypey=1;}
+\DoxyCodeLine{00314\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}(j+m==lo[1]+1)\ shapetypey=2;}
+\DoxyCodeLine{00315\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}(j+m==hi[1]+1)\ shapetypey=1;}
+\DoxyCodeLine{00316\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}(j+m==hi[1])\ shapetypey=4;}
+\DoxyCodeLine{00317\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ shapetypey=3;}
+\DoxyCodeLine{00318\ }
+\DoxyCodeLine{00319\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(k+n==lo[2])\ shapetypez=1;}
+\DoxyCodeLine{00320\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}(k+n==lo[2]+1)\ shapetypez=2;}
+\DoxyCodeLine{00321\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}(k+n==hi[2]+1)\ shapetypez=1;}
+\DoxyCodeLine{00322\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}(k+n==hi[2])\ shapetypez=4;}
+\DoxyCodeLine{00323\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}\ shapetypez=3;}
+\DoxyCodeLine{00324\ }
+\DoxyCodeLine{00325\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ rx\ =\ (xp[XDIR]-\/(plo[XDIR]+(i+l)*dx[XDIR]))/dx[XDIR];}
+\DoxyCodeLine{00326\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ ry\ \ =\ (xp[YDIR]-\/(plo[YDIR]+(j+m)*dx[YDIR]))/dx[YDIR];}
+\DoxyCodeLine{00327\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ rz\ \ =\ (xp[ZDIR]-\/(plo[ZDIR]+(k+n)*dx[ZDIR]))/dx[ZDIR];}
+\DoxyCodeLine{00328\ }
+\DoxyCodeLine{00329\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//amrex::Print()<<"{}\(\backslash\)n\ dx\ =\ "{}<<dx[XDIR]<<"{}\ "{}<<dx[YDIR]<<"{}\ "{}<<dx[ZDIR];}}
+\DoxyCodeLine{00330\ }
+\DoxyCodeLine{00331\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ lval=cubicspline\_1d(shapetypex,rx,0);}
+\DoxyCodeLine{00332\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ mval=cubicspline\_1d(shapetypey,ry,1);}
+\DoxyCodeLine{00333\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ nval=cubicspline\_1d(shapetypez,rz,2);}
+\DoxyCodeLine{00334\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ value\ +=\ lval*mval*nval*\ nodaldata(i+l,j+m,k+n,comp);}
+\DoxyCodeLine{00335\ }
+\DoxyCodeLine{00336\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00337\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00338\ \ \ \ \ \}}
+\DoxyCodeLine{00339\ }
+\DoxyCodeLine{00340\ \ \ \ \ \textcolor{keywordflow}{return}(value);}
+\DoxyCodeLine{00341\ \}}
+\DoxyCodeLine{00342\ }
+\DoxyCodeLine{00343\ }
+\DoxyCodeLine{00344\ AMREX\_GPU\_DEVICE\ AMREX\_FORCE\_INLINE}
+\DoxyCodeLine{00345\ \ \ \ \ \ \ \ \ amrex::Real\ basisval(\textcolor{keywordtype}{int}\ l,\textcolor{keywordtype}{int}\ m,\textcolor{keywordtype}{int}\ n,\ \textcolor{keywordtype}{int}\ i,\ \textcolor{keywordtype}{int}\ j,\ \textcolor{keywordtype}{int}\ k,}
+\DoxyCodeLine{00346\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ amrex::Real\ xp[AMREX\_SPACEDIM],\ }
+\DoxyCodeLine{00347\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ amrex::GpuArray<amrex::Real,\ AMREX\_SPACEDIM>\ plo,\ }
+\DoxyCodeLine{00348\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ amrex::GpuArray<amrex::Real,\ AMREX\_SPACEDIM>\ dx,}
+\DoxyCodeLine{00349\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ GpuArray\ <int,\ AMREX\_SPACEDIM>\ order\_scheme\_directional,}
+\DoxyCodeLine{00350\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ GpuArray\ <int,\ AMREX\_SPACEDIM>\ periodic,}
+\DoxyCodeLine{00351\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ *lo,}
+\DoxyCodeLine{00352\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ *hi)}
+\DoxyCodeLine{00353\ \{}
+\DoxyCodeLine{00354\ \ \ \ \ amrex::Real\ lval,mval,nval;}
+\DoxyCodeLine{00355\ \ \ \ \ amrex::Real\ rx,ry,rz;}
+\DoxyCodeLine{00356\ }
+\DoxyCodeLine{00357\ \ \ \ \ \textcolor{keywordtype}{int}\ order\_scheme\_dir[]=\{AMREX\_D\_DECL(order\_scheme\_directional[XDIR],order\_scheme\_directional[YDIR],order\_scheme\_directional[ZDIR])\};}
+\DoxyCodeLine{00358\ }
+\DoxyCodeLine{00359\ \ \ \ \ lval=0.0;}
+\DoxyCodeLine{00360\ \ \ \ \ mval=0.0;}
+\DoxyCodeLine{00361\ \ \ \ \ nval=0.0;}
+\DoxyCodeLine{00362\ \ \ \ \ }
+\DoxyCodeLine{00363\ \ \ \ \ \textcolor{keywordtype}{int}\ shapefunctype;}
+\DoxyCodeLine{00364\ }
+\DoxyCodeLine{00365\ \ \ \ \ rx\ \ =\ (xp[XDIR]-\/(plo[XDIR]+i*dx[XDIR]))/dx[XDIR];}
+\DoxyCodeLine{00366\ \ \ \ \ ry\ \ =\ (xp[YDIR]-\/(plo[YDIR]+j*dx[YDIR]))/dx[YDIR];}
+\DoxyCodeLine{00367\ \ \ \ \ rz\ \ =\ (xp[ZDIR]-\/(plo[ZDIR]+k*dx[ZDIR]))/dx[ZDIR];}
+\DoxyCodeLine{00368\ }
+\DoxyCodeLine{00369\ \ \ \ \ \textcolor{keywordflow}{if}(order\_scheme\_dir[0]==1)}
+\DoxyCodeLine{00370\ \ \ \ \ \{}
+\DoxyCodeLine{00371\ \ \ \ \ \ \ \ \ lval=(l==0)?(one-\/rx):rx;}
+\DoxyCodeLine{00372\ \ \ \ \ \}}
+\DoxyCodeLine{00373\ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{00374\ \ \ \ \ \{}
+\DoxyCodeLine{00375\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(periodic[0]==0)}
+\DoxyCodeLine{00376\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00377\ \ \ \ \ \ \ \ \ \ \ \ \ shapefunctype\ =\ ((i+l)==lo[XDIR]\ ||\ (i+l)==hi[XDIR]+1)?1:((i+l==lo[XDIR]+1)?2:((i+l==hi[XDIR]))?4:3);}
+\DoxyCodeLine{00378\ \ \ \ \ \ \ \ \ \ \ \ \ rx\ =\ (xp[XDIR]-\/(plo[XDIR]+(i+l)*dx[XDIR]))/dx[XDIR];}
+\DoxyCodeLine{00379\ \ \ \ \ \ \ \ \ \ \ \ \ lval=cubicspline\_1d(shapefunctype,rx,0);}
+\DoxyCodeLine{00380\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00381\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{00382\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00383\ \ \ \ \ \ \ \ \ \ \ \ \ shapefunctype\ =\ 3;}
+\DoxyCodeLine{00384\ \ \ \ \ \ \ \ \ \ \ \ \ rx\ =\ (xp[XDIR]-\/(plo[XDIR]+(i+l)*dx[XDIR]))/dx[XDIR];}
+\DoxyCodeLine{00385\ \ \ \ \ \ \ \ \ \ \ \ \ lval=cubicspline\_1d(shapefunctype,rx,0);}
+\DoxyCodeLine{00386\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00387\ \ \ \ \ \}}
+\DoxyCodeLine{00388\ }
+\DoxyCodeLine{00389\ \ \ \ \ \textcolor{keywordflow}{if}(order\_scheme\_dir[1]==1)}
+\DoxyCodeLine{00390\ \ \ \ \ \{}
+\DoxyCodeLine{00391\ \ \ \ \ \ \ \ \ mval=(m==0)?(one-\/ry):ry;}
+\DoxyCodeLine{00392\ \ \ \ \ \}}
+\DoxyCodeLine{00393\ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{00394\ \ \ \ \ \{}
+\DoxyCodeLine{00395\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(periodic[1]==0)}
+\DoxyCodeLine{00396\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00397\ \ \ \ \ \ \ \ \ \ \ \ \ shapefunctype\ =\ ((j+m)==lo[YDIR]\ ||\ (j+m)==hi[YDIR]+1)?1:((j+m==lo[YDIR]+1)?2:((j+m==hi[YDIR]))?4:3);}
+\DoxyCodeLine{00398\ \ \ \ \ \ \ \ \ \ \ \ \ ry\ =\ (xp[YDIR]-\/(plo[YDIR]+(j+m)*dx[YDIR]))/dx[YDIR];}
+\DoxyCodeLine{00399\ \ \ \ \ \ \ \ \ \ \ \ \ mval=cubicspline\_1d(shapefunctype,ry,1);}
+\DoxyCodeLine{00400\ }
+\DoxyCodeLine{00401\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00402\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{00403\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00404\ \ \ \ \ \ \ \ \ \ \ \ \ shapefunctype\ =\ 3;}
+\DoxyCodeLine{00405\ \ \ \ \ \ \ \ \ \ \ \ \ ry\ =\ (xp[YDIR]-\/(plo[YDIR]+(j+m)*dx[YDIR]))/dx[YDIR];}
+\DoxyCodeLine{00406\ \ \ \ \ \ \ \ \ \ \ \ \ mval=cubicspline\_1d(shapefunctype,ry,1);}
+\DoxyCodeLine{00407\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00408\ \ \ \ \ \}}
+\DoxyCodeLine{00409\ }
+\DoxyCodeLine{00410\ \ \ \ \ \textcolor{keywordflow}{if}(order\_scheme\_dir[2]==1)}
+\DoxyCodeLine{00411\ \ \ \ \ \{}
+\DoxyCodeLine{00412\ \ \ \ \ \ \ \ \ nval=(n==0)?(one-\/rz):rz;}
+\DoxyCodeLine{00413\ \ \ \ \ \}}
+\DoxyCodeLine{00414\ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{00415\ \ \ \ \ \{}
+\DoxyCodeLine{00416\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(periodic[2]==0)}
+\DoxyCodeLine{00417\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00418\ \ \ \ \ \ \ \ \ \ \ \ \ shapefunctype\ =\ ((k+n)==lo[ZDIR]\ ||\ (k+n)==hi[ZDIR]+1)?1:((k+n==lo[ZDIR]+1)?2:((k+n==hi[ZDIR]))?4:3);}
+\DoxyCodeLine{00419\ \ \ \ \ \ \ \ \ \ \ \ \ rz\ =\ (xp[ZDIR]-\/(plo[ZDIR]+(k+n)*dx[ZDIR]))/dx[ZDIR];}
+\DoxyCodeLine{00420\ \ \ \ \ \ \ \ \ \ \ \ \ nval=cubicspline\_1d(shapefunctype,rz,2);}
+\DoxyCodeLine{00421\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00422\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{00423\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00424\ \ \ \ \ \ \ \ \ \ \ \ \ shapefunctype\ =\ 3;}
+\DoxyCodeLine{00425\ \ \ \ \ \ \ \ \ \ \ \ \ rz\ =\ (xp[ZDIR]-\/(plo[ZDIR]+(k+n)*dx[ZDIR]))/dx[ZDIR];}
+\DoxyCodeLine{00426\ \ \ \ \ \ \ \ \ \ \ \ \ nval=cubicspline\_1d(shapefunctype,rz,2);}
+\DoxyCodeLine{00427\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00428\ \ \ \ \ \}}
+\DoxyCodeLine{00429\ \ \ \ \ \textcolor{keywordflow}{return}(lval*mval*nval);}
+\DoxyCodeLine{00430\ \}}
+\DoxyCodeLine{00431\ }
+\DoxyCodeLine{00432\ AMREX\_GPU\_DEVICE\ AMREX\_FORCE\_INLINE}
+\DoxyCodeLine{00433\ \ \ \ \ \ \ \ \ amrex::Real\ basisvalder(\textcolor{keywordtype}{int}\ dir,\ \textcolor{keywordtype}{int}\ l,\textcolor{keywordtype}{int}\ m,\textcolor{keywordtype}{int}\ n,\ \textcolor{keywordtype}{int}\ i,\ \textcolor{keywordtype}{int}\ j,\ \textcolor{keywordtype}{int}\ k,\ }
+\DoxyCodeLine{00434\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ amrex::Real\ xp[AMREX\_SPACEDIM],\ }
+\DoxyCodeLine{00435\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ amrex::GpuArray<amrex::Real,\ AMREX\_SPACEDIM>\ plo,\ }
+\DoxyCodeLine{00436\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ amrex::GpuArray<amrex::Real,\ AMREX\_SPACEDIM>\ dx,}
+\DoxyCodeLine{00437\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ GpuArray\ <int,\ AMREX\_SPACEDIM>\ order\_scheme\_directional,}
+\DoxyCodeLine{00438\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ GpuArray\ <int,\ AMREX\_SPACEDIM>\ periodic,}
+\DoxyCodeLine{00439\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ *lo,}
+\DoxyCodeLine{00440\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ *hi)}
+\DoxyCodeLine{00441\ \{}
+\DoxyCodeLine{00442\ \ \ \ \ amrex::Real\ lval,mval,nval;}
+\DoxyCodeLine{00443\ \ \ \ \ amrex::Real\ rx,ry,rz;}
+\DoxyCodeLine{00444\ \ \ \ \ amrex::Real\ dxinv[AMREX\_SPACEDIM];}
+\DoxyCodeLine{00445\ }
+\DoxyCodeLine{00446\ \ \ \ \ \textcolor{keywordtype}{int}\ shapefunctype;}
+\DoxyCodeLine{00447\ }
+\DoxyCodeLine{00448\ \ \ \ \ dxinv[XDIR]=one/dx[XDIR];}
+\DoxyCodeLine{00449\ \ \ \ \ dxinv[YDIR]=one/dx[YDIR];}
+\DoxyCodeLine{00450\ \ \ \ \ dxinv[ZDIR]=one/dx[ZDIR];}
+\DoxyCodeLine{00451\ }
+\DoxyCodeLine{00452\ \ \ \ \ rx\ \ =\ (xp[XDIR]-\/(plo[XDIR]+i*dx[XDIR]))/dx[XDIR];}
+\DoxyCodeLine{00453\ \ \ \ \ ry\ \ =\ (xp[YDIR]-\/(plo[YDIR]+j*dx[YDIR]))/dx[YDIR];}
+\DoxyCodeLine{00454\ \ \ \ \ rz\ \ =\ (xp[ZDIR]-\/(plo[ZDIR]+k*dx[ZDIR]))/dx[ZDIR];}
+\DoxyCodeLine{00455\ }
+\DoxyCodeLine{00456\ \ \ \ \ \textcolor{keywordflow}{if}(order\_scheme\_directional[0]==1)}
+\DoxyCodeLine{00457\ \ \ \ \ \{}
+\DoxyCodeLine{00458\ \ \ \ \ \ \ \ \ lval=(l==0)?(one-\/rx):rx;}
+\DoxyCodeLine{00459\ \ \ \ \ \}}
+\DoxyCodeLine{00460\ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}(order\_scheme\_directional[0]==3)}
+\DoxyCodeLine{00461\ \ \ \ \ \{}
+\DoxyCodeLine{00462\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(periodic[0]==0)}
+\DoxyCodeLine{00463\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00464\ \ \ \ \ \ \ \ \ \ \ \ \ shapefunctype\ =\ ((i+l)==lo[XDIR]\ ||\ (i+l)==hi[XDIR]+1)?1:((i+l==lo[XDIR]+1)?2:((i+l==hi[XDIR]))?4:3);}
+\DoxyCodeLine{00465\ \ \ \ \ \ \ \ \ \ \ \ \ rx\ =\ (xp[XDIR]-\/(plo[XDIR]+(i+l)*dx[XDIR]))/dx[XDIR];}
+\DoxyCodeLine{00466\ \ \ \ \ \ \ \ \ \ \ \ \ lval=cubicspline\_1d(shapefunctype,rx,0);}
+\DoxyCodeLine{00467\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00468\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{00469\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00470\ \ \ \ \ \ \ \ \ \ \ \ \ shapefunctype\ =\ 3;}
+\DoxyCodeLine{00471\ \ \ \ \ \ \ \ \ \ \ \ \ rx\ =\ (xp[XDIR]-\/(plo[XDIR]+(i+l)*dx[XDIR]))/dx[XDIR];}
+\DoxyCodeLine{00472\ \ \ \ \ \ \ \ \ \ \ \ \ lval=cubicspline\_1d(shapefunctype,rx,0);}
+\DoxyCodeLine{00473\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00474\ \ \ \ \ \}}
+\DoxyCodeLine{00475\ }
+\DoxyCodeLine{00476\ \ \ \ \ \textcolor{keywordflow}{if}(order\_scheme\_directional[1]==1)}
+\DoxyCodeLine{00477\ \ \ \ \ \{}
+\DoxyCodeLine{00478\ \ \ \ \ \ \ \ \ mval=(m==0)?(one-\/ry):ry;}
+\DoxyCodeLine{00479\ \ \ \ \ \}}
+\DoxyCodeLine{00480\ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}(order\_scheme\_directional[1]==3)}
+\DoxyCodeLine{00481\ \ \ \ \ \{}
+\DoxyCodeLine{00482\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(periodic[1]==0)}
+\DoxyCodeLine{00483\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00484\ \ \ \ \ \ \ \ \ \ \ \ \ shapefunctype\ =\ ((j+m)==lo[YDIR]\ ||\ (j+m)==hi[YDIR]+1)?1:((j+m==lo[YDIR]+1)?2:((j+m==hi[YDIR]))?4:3);}
+\DoxyCodeLine{00485\ \ \ \ \ \ \ \ \ \ \ \ \ ry\ =\ (xp[YDIR]-\/(plo[YDIR]+(j+m)*dx[YDIR]))/dx[YDIR];}
+\DoxyCodeLine{00486\ \ \ \ \ \ \ \ \ \ \ \ \ mval=cubicspline\_1d(shapefunctype,ry,1);}
+\DoxyCodeLine{00487\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00488\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{00489\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00490\ \ \ \ \ \ \ \ \ \ \ \ \ shapefunctype\ =\ 3;}
+\DoxyCodeLine{00491\ \ \ \ \ \ \ \ \ \ \ \ \ ry\ =\ (xp[YDIR]-\/(plo[YDIR]+(j+m)*dx[YDIR]))/dx[YDIR];}
+\DoxyCodeLine{00492\ \ \ \ \ \ \ \ \ \ \ \ \ mval=cubicspline\_1d(shapefunctype,ry,1);}
+\DoxyCodeLine{00493\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00494\ \ \ \ \ \}}
+\DoxyCodeLine{00495\ }
+\DoxyCodeLine{00496\ \ \ \ \ \textcolor{keywordflow}{if}(order\_scheme\_directional[2]==1)}
+\DoxyCodeLine{00497\ \ \ \ \ \{}
+\DoxyCodeLine{00498\ \ \ \ \ \ \ \ \ nval=(n==0)?(one-\/rz):rz;}
+\DoxyCodeLine{00499\ \ \ \ \ \}}
+\DoxyCodeLine{00500\ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}(order\_scheme\_directional[2]==3)}
+\DoxyCodeLine{00501\ \ \ \ \ \{}
+\DoxyCodeLine{00502\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(periodic[2]==0)}
+\DoxyCodeLine{00503\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00504\ \ \ \ \ \ \ \ \ \ \ \ \ shapefunctype\ =\ ((k+n)==lo[ZDIR]\ ||\ (k+n)==hi[ZDIR]+1)?1:((k+n==lo[ZDIR]+1)?2:((k+n==hi[ZDIR]))?4:3);}
+\DoxyCodeLine{00505\ \ \ \ \ \ \ \ \ \ \ \ \ rz\ =\ (xp[ZDIR]-\/(plo[ZDIR]+(k+n)*dx[ZDIR]))/dx[ZDIR];}
+\DoxyCodeLine{00506\ \ \ \ \ \ \ \ \ \ \ \ \ nval=cubicspline\_1d(shapefunctype,rz,2);}
+\DoxyCodeLine{00507\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00508\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{00509\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00510\ \ \ \ \ \ \ \ \ \ \ \ \ shapefunctype\ =\ 3;}
+\DoxyCodeLine{00511\ \ \ \ \ \ \ \ \ \ \ \ \ rz\ =\ (xp[ZDIR]-\/(plo[ZDIR]+(k+n)*dx[ZDIR]))/dx[ZDIR];}
+\DoxyCodeLine{00512\ \ \ \ \ \ \ \ \ \ \ \ \ nval=cubicspline\_1d(shapefunctype,rz,2);}
+\DoxyCodeLine{00513\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00514\ \ \ \ \ \}}
+\DoxyCodeLine{00515\ }
+\DoxyCodeLine{00516\ \ \ \ \ \textcolor{keywordflow}{if}(dir==0)}
+\DoxyCodeLine{00517\ \ \ \ \ \{}
+\DoxyCodeLine{00518\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(order\_scheme\_directional[0]==1)}
+\DoxyCodeLine{00519\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00520\ \ \ \ \ \ \ \ \ \ \ \ \ lval=(l==0)?-\/dxinv[XDIR]:dxinv[XDIR];}
+\DoxyCodeLine{00521\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00522\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{00523\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00524\ \ \ \ \ \ \ \ \ \ \ \ \ shapefunctype\ =\ ((i+l)==lo[XDIR]\ ||\ (i+l)==hi[XDIR]+1)?1:((i+l==lo[XDIR]+1)?2:((i+l==hi[XDIR]))?4:3);}
+\DoxyCodeLine{00525\ \ \ \ \ \ \ \ \ \ \ \ \ rx\ =\ (xp[XDIR]-\/(plo[XDIR]+(i+l)*dx[XDIR]))/dx[XDIR];}
+\DoxyCodeLine{00526\ \ \ \ \ \ \ \ \ \ \ \ \ lval=cubicspline\_1d\_der(shapefunctype,rx)*dxinv[XDIR];}
+\DoxyCodeLine{00527\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00528\ \ \ \ \ \}}
+\DoxyCodeLine{00529\ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}(dir==1)}
+\DoxyCodeLine{00530\ \ \ \ \ \{}
+\DoxyCodeLine{00531\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(order\_scheme\_directional[1]==1)}
+\DoxyCodeLine{00532\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00533\ \ \ \ \ \ \ \ \ \ \ \ \ mval=(m==0)?-\/dxinv[YDIR]:dxinv[YDIR];}
+\DoxyCodeLine{00534\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00535\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{00536\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00537\ \ \ \ \ \ \ \ \ \ \ \ \ shapefunctype\ =\ ((j+m)==lo[YDIR]\ ||\ (j+m)==hi[YDIR]+1)?1:((j+m==lo[YDIR]+1)?2:((j+m==hi[YDIR]))?4:3);}
+\DoxyCodeLine{00538\ \ \ \ \ \ \ \ \ \ \ \ \ ry\ =\ (xp[YDIR]-\/(plo[YDIR]+(j+m)*dx[YDIR]))/dx[YDIR];}
+\DoxyCodeLine{00539\ \ \ \ \ \ \ \ \ \ \ \ \ mval=cubicspline\_1d\_der(shapefunctype,ry)*dxinv[YDIR];}
+\DoxyCodeLine{00540\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00541\ \ \ \ \ \}}
+\DoxyCodeLine{00542\ \ \ \ \ \textcolor{keywordflow}{else}\ \textcolor{keywordflow}{if}(dir==2)}
+\DoxyCodeLine{00543\ \ \ \ \ \{}
+\DoxyCodeLine{00544\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(order\_scheme\_directional[2]==1)}
+\DoxyCodeLine{00545\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00546\ \ \ \ \ \ \ \ \ \ \ \ \ nval=(n==0)?-\/dxinv[ZDIR]:dxinv[ZDIR];}
+\DoxyCodeLine{00547\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00548\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{00549\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00550\ \ \ \ \ \ \ \ \ \ \ \ \ shapefunctype\ =\ ((k+n)==lo[ZDIR]\ ||\ (k+n)==hi[ZDIR]+1)?1:((k+n==lo[ZDIR]+1)?2:((k+n==hi[ZDIR]))?4:3);}
+\DoxyCodeLine{00551\ \ \ \ \ \ \ \ \ \ \ \ \ rz\ =\ (xp[ZDIR]-\/(plo[ZDIR]+(k+n)*dx[ZDIR]))/dx[ZDIR];}
+\DoxyCodeLine{00552\ \ \ \ \ \ \ \ \ \ \ \ \ nval=cubicspline\_1d\_der(shapefunctype,rz)*dxinv[ZDIR];}
+\DoxyCodeLine{00553\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00554\ \ \ \ \ \}}
+\DoxyCodeLine{00555\ }
+\DoxyCodeLine{00556\ \ \ \ \ \textcolor{keywordflow}{return}(lval*mval*nval);}
+\DoxyCodeLine{00557\ \}}
+\DoxyCodeLine{00558\ }
+\DoxyCodeLine{00559\ }
+\DoxyCodeLine{00560\ AMREX\_GPU\_DEVICE\ AMREX\_FORCE\_INLINE}
+\DoxyCodeLine{00561\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ get\_tensor(MPMParticleContainer::ParticleType\ \&p,\textcolor{keywordtype}{int}\ start\_index,}
+\DoxyCodeLine{00562\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ amrex::Real\ tens[AMREX\_SPACEDIM*AMREX\_SPACEDIM])}
+\DoxyCodeLine{00563\ \{}
+\DoxyCodeLine{00564\ \ \ \ \textcolor{keywordtype}{int}\ ind=0;}
+\DoxyCodeLine{00565\ \ \ \ \textcolor{keywordflow}{for}(\textcolor{keywordtype}{int}\ i=0;i<AMREX\_SPACEDIM;i++)}
+\DoxyCodeLine{00566\ \ \ \ \{}
+\DoxyCodeLine{00567\ \ \ \ \ \ \ \textcolor{keywordflow}{for}(\textcolor{keywordtype}{int}\ j=i;j<AMREX\_SPACEDIM;j++)}
+\DoxyCodeLine{00568\ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00569\ \ \ \ \ \ \ \ \ tens[i*AMREX\_SPACEDIM+j]=p.rdata(start\_index+ind);}
+\DoxyCodeLine{00570\ \ \ \ \ \ \ \ \ tens[j*AMREX\_SPACEDIM+i]=p.rdata(start\_index+ind);}
+\DoxyCodeLine{00571\ \ \ \ \ \ \ \ \ ind++;}
+\DoxyCodeLine{00572\ \ \ \ \ \ \ \}\ \ \ \ }
+\DoxyCodeLine{00573\ \ \ \ \}}
+\DoxyCodeLine{00574\ \}}
+\DoxyCodeLine{00575\ }
+\DoxyCodeLine{00576\ AMREX\_GPU\_DEVICE\ AMREX\_FORCE\_INLINE}
+\DoxyCodeLine{00577\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ get\_deformation\_gradient\_tensor(MPMParticleContainer::ParticleType\ \&p,\textcolor{keywordtype}{int}\ start\_index,}
+\DoxyCodeLine{00578\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ amrex::Real\ gradvp[AMREX\_SPACEDIM][AMREX\_SPACEDIM],amrex::Real\ dt)}
+\DoxyCodeLine{00579\ \{}
+\DoxyCodeLine{00580\ \ \ \ \ amrex::Real\ Lp[AMREX\_SPACEDIM][AMREX\_SPACEDIM];}
+\DoxyCodeLine{00581\ \ \ \ \ amrex::Real\ Fp[AMREX\_SPACEDIM][AMREX\_SPACEDIM];}
+\DoxyCodeLine{00582\ }
+\DoxyCodeLine{00583\ \ \ \ \ \textcolor{keywordflow}{for}(\textcolor{keywordtype}{int}\ i=0;i<AMREX\_SPACEDIM;i++)}
+\DoxyCodeLine{00584\ \ \ \ \ \{}
+\DoxyCodeLine{00585\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(\textcolor{keywordtype}{int}\ j=0;j<AMREX\_SPACEDIM;j++)}
+\DoxyCodeLine{00586\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00587\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(i==j)}
+\DoxyCodeLine{00588\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00589\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ Lp[i][j]=1.0+gradvp[i][j]*dt;}
+\DoxyCodeLine{00590\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00591\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{else}}
+\DoxyCodeLine{00592\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00593\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ Lp[i][j]=gradvp[i][j]*dt;}
+\DoxyCodeLine{00594\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00595\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00596\ \ \ \ \ \}}
+\DoxyCodeLine{00597\ }
+\DoxyCodeLine{00598\ \ \ \ \ Fp[0][0]=p.rdata(start\_index+0);}
+\DoxyCodeLine{00599\ \ \ \ \ Fp[0][1]=p.rdata(start\_index+1);}
+\DoxyCodeLine{00600\ \ \ \ \ Fp[0][2]=p.rdata(start\_index+2);}
+\DoxyCodeLine{00601\ \ \ \ \ Fp[1][0]=p.rdata(start\_index+3);}
+\DoxyCodeLine{00602\ \ \ \ \ Fp[1][1]=p.rdata(start\_index+4);}
+\DoxyCodeLine{00603\ \ \ \ \ Fp[1][2]=p.rdata(start\_index+5);}
+\DoxyCodeLine{00604\ \ \ \ \ Fp[2][0]=p.rdata(start\_index+6);}
+\DoxyCodeLine{00605\ \ \ \ \ Fp[2][1]=p.rdata(start\_index+7);}
+\DoxyCodeLine{00606\ \ \ \ \ Fp[2][2]=p.rdata(start\_index+8);}
+\DoxyCodeLine{00607\ }
+\DoxyCodeLine{00608\ \ \ \ \ \textcolor{comment}{//Lp\ *\ Fp}}
+\DoxyCodeLine{00609\ \ \ \ \ p.rdata(start\_index+0)=\ Lp[0][0]*Fp[0][0]+Lp[0][1]*Fp[1][0]+Lp[0][2]*Fp[2][0];}
+\DoxyCodeLine{00610\ \ \ \ \ p.rdata(start\_index+1)=\ Lp[0][0]*Fp[0][1]+Lp[0][1]*Fp[1][1]+Lp[0][2]*Fp[2][1];}
+\DoxyCodeLine{00611\ \ \ \ \ p.rdata(start\_index+2)=\ Lp[0][0]*Fp[0][2]+Lp[0][1]*Fp[1][2]+Lp[0][2]*Fp[2][2];}
+\DoxyCodeLine{00612\ \ \ \ \ p.rdata(start\_index+3)=\ Lp[1][0]*Fp[0][0]+Lp[1][1]*Fp[1][0]+Lp[1][2]*Fp[2][0];}
+\DoxyCodeLine{00613\ \ \ \ \ p.rdata(start\_index+4)=\ Lp[1][0]*Fp[0][1]+Lp[1][1]*Fp[1][1]+Lp[1][2]*Fp[2][1];}
+\DoxyCodeLine{00614\ \ \ \ \ p.rdata(start\_index+5)=\ Lp[1][0]*Fp[0][2]+Lp[1][1]*Fp[1][2]+Lp[1][2]*Fp[2][2];}
+\DoxyCodeLine{00615\ \ \ \ \ p.rdata(start\_index+6)=\ Lp[2][0]*Fp[0][0]+Lp[2][1]*Fp[1][0]+Lp[2][2]*Fp[2][0];}
+\DoxyCodeLine{00616\ \ \ \ \ p.rdata(start\_index+7)=\ Lp[2][0]*Fp[0][1]+Lp[2][1]*Fp[1][1]+Lp[2][2]*Fp[2][1];}
+\DoxyCodeLine{00617\ \ \ \ \ p.rdata(start\_index+8)=\ Lp[2][0]*Fp[0][2]+Lp[2][1]*Fp[1][2]+Lp[2][2]*Fp[2][2];}
+\DoxyCodeLine{00618\ }
+\DoxyCodeLine{00619\ \}}
+\DoxyCodeLine{00620\ }
+\DoxyCodeLine{00621\ AMREX\_GPU\_DEVICE\ AMREX\_FORCE\_INLINE}
+\DoxyCodeLine{00622\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ tensor\_vector\_pdt(amrex::Real\ tens[AMREX\_SPACEDIM*AMREX\_SPACEDIM],}
+\DoxyCodeLine{00623\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ amrex::Real\ vect[AMREX\_SPACEDIM],amrex::Real\ tensvect[AMREX\_SPACEDIM])}
+\DoxyCodeLine{00624\ \{}
+\DoxyCodeLine{00625\ \ \ \ \ \textcolor{keywordflow}{for}(\textcolor{keywordtype}{int}\ i=0;i<AMREX\_SPACEDIM;i++)}
+\DoxyCodeLine{00626\ \ \ \ \ \{}
+\DoxyCodeLine{00627\ \ \ \ \ \ \ \ \ tensvect[i]=zero;}
+\DoxyCodeLine{00628\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(\textcolor{keywordtype}{int}\ j=0;j<AMREX\_SPACEDIM;j++)}
+\DoxyCodeLine{00629\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00630\ \ \ \ \ \ \ \ \ \ \ \ \ tensvect[i]\ +=\ tens[i*AMREX\_SPACEDIM+j]*vect[j];}
+\DoxyCodeLine{00631\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00632\ \ \ \ \ \}}
+\DoxyCodeLine{00633\ \}}
+\DoxyCodeLine{00634\ }
+\DoxyCodeLine{00635\ }
+\DoxyCodeLine{00636\ }
+\DoxyCodeLine{00637\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

@@ -1,0 +1,131 @@
+\doxysection{mpm\+\_\+eb.\+H}
+\hypertarget{mpm__eb_8_h_source}{}\label{mpm__eb_8_h_source}\index{E:/Research/02\_CODE\_DEVELOPMENTS/04\_EXAGOOP/Source/mpm\_eb.H@{E:/Research/02\_CODE\_DEVELOPMENTS/04\_EXAGOOP/Source/mpm\_eb.H}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#ifndef\ \_MPM\_EB\_H\_}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#define\ \_MPM\_EB\_H\_}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ <AMReX.H>}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ <AMReX\_ParmParse.H>}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ <AMReX\_MultiFab.H>}}
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ <AMReX\_EB2\_IF\_Cylinder.H>}}
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#include\ <AMReX\_EBFArrayBox.H>}}
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#include\ <AMReX\_EBFabFactory.H>}}
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#include\ <AMReX\_PlotFileUtil.H>}}
+\DoxyCodeLine{00011\ }
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#include\ <AMReX\_EB2.H>}}
+\DoxyCodeLine{00013\ \textcolor{preprocessor}{\#include\ <AMReX\_EB2\_IF.H>}}
+\DoxyCodeLine{00014\ \textcolor{preprocessor}{\#include\ <AMReX\_EB2\_IF\_Plane.H>}}
+\DoxyCodeLine{00015\ \textcolor{preprocessor}{\#include\ <AMReX\_EB2\_IF\_Polynomial.H>}}
+\DoxyCodeLine{00016\ \textcolor{preprocessor}{\#include\ <AMReX\_EB2\_IF\_Intersection.H>}}
+\DoxyCodeLine{00017\ \textcolor{preprocessor}{\#include\ <AMReX\_EB2\_IF\_Union.H>}}
+\DoxyCodeLine{00018\ \textcolor{preprocessor}{\#include\ <AMReX\_EB2\_IF\_Intersection.H>}}
+\DoxyCodeLine{00019\ \textcolor{preprocessor}{\#include\ <AMReX\_EB2\_IF\_Translation.H>}}
+\DoxyCodeLine{00020\ }
+\DoxyCodeLine{00021\ \textcolor{preprocessor}{\#include\ <AMReX\_EB\_utils.H>}}
+\DoxyCodeLine{00022\ \textcolor{preprocessor}{\#include\ <constants.H>}}
+\DoxyCodeLine{00023\ \textcolor{preprocessor}{\#include\ <interpolants.H>}}
+\DoxyCodeLine{00024\ }
+\DoxyCodeLine{00025\ \textcolor{keyword}{using\ namespace\ }amrex;}
+\DoxyCodeLine{00026\ }
+\DoxyCodeLine{00027\ \textcolor{keyword}{namespace\ }mpm\_ebtools}
+\DoxyCodeLine{00028\ \{}
+\DoxyCodeLine{00029\ \ \ \ \ \textcolor{keyword}{extern}\ EBFArrayBoxFactory*\ ebfactory;}
+\DoxyCodeLine{00030\ \ \ \ \ \textcolor{keyword}{extern}\ MultiFab\ *lsphi;}
+\DoxyCodeLine{00031\ \ \ \ \ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{int}\ ls\_refinement;}
+\DoxyCodeLine{00032\ \ \ \ \ \textcolor{keyword}{extern}\ \textcolor{keywordtype}{bool}\ using\_levelset\_geometry;}
+\DoxyCodeLine{00033\ \ \ \ \ \textcolor{keywordtype}{void}\ init\_eb(\textcolor{keyword}{const}\ Geometry\ \&geom,\textcolor{keyword}{const}\ BoxArray\ \&ba,}
+\DoxyCodeLine{00034\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ DistributionMapping\ \&dm);}
+\DoxyCodeLine{00035\ \ \ \ \ \textcolor{keywordtype}{void}\ make\_wedge\_hopper\_levelset(\textcolor{keyword}{const}\ Geometry\ \&geom,\textcolor{keyword}{const}\ BoxArray\ \&ba,\textcolor{keyword}{const}\ DistributionMapping\ \&dm);}
+\DoxyCodeLine{00036\ \}}
+\DoxyCodeLine{00037\ }
+\DoxyCodeLine{00038\ AMREX\_GPU\_DEVICE}
+\DoxyCodeLine{00039\ AMREX\_FORCE\_INLINE}
+\DoxyCodeLine{00040\ amrex::Real\ get\_levelset\_value(amrex::Array4<amrex::Real>\ phi,}
+\DoxyCodeLine{00041\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ amrex::GpuArray<amrex::Real,\ AMREX\_SPACEDIM>\ problo,}
+\DoxyCodeLine{00042\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ amrex::GpuArray<amrex::Real,\ AMREX\_SPACEDIM>\ dx,}
+\DoxyCodeLine{00043\ \ \ \ \ \ \ \ \ amrex::Real\ ptxyz[AMREX\_SPACEDIM],}
+\DoxyCodeLine{00044\ \ \ \ \ \ \ \ \ amrex::Real\ lsref)}
+\DoxyCodeLine{00045\ \{}
+\DoxyCodeLine{00046\ \ \ \ \ \textcolor{comment}{//assuming\ a\ redistribute\ was\ done\ and\ no}}
+\DoxyCodeLine{00047\ \ \ \ \ \textcolor{comment}{//particle\ is\ outside\ of\ the\ tilebox}}
+\DoxyCodeLine{00048\ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{00049\ \ \ \ \ amrex::GpuArray<amrex::Real,AMREX\_SPACEDIM>\ ls\_dx;}
+\DoxyCodeLine{00050\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ lo[AMREX\_SPACEDIM]=\{0\};}
+\DoxyCodeLine{00051\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ hi[AMREX\_SPACEDIM]=\{0\};}
+\DoxyCodeLine{00052\ \ \ \ \ \textcolor{keyword}{const}\ GpuArray<int,\ AMREX\_SPACEDIM>\ order\_scheme\_pseudo=\{1,1,1\};}
+\DoxyCodeLine{00053\ \ \ \ \ \textcolor{keyword}{const}\ GpuArray<int,\ AMREX\_SPACEDIM>\ periodic\_pseudo=\{1,1,1\};}
+\DoxyCodeLine{00054\ }
+\DoxyCodeLine{00055\ \ \ \ \ ls\_dx[XDIR]=dx[XDIR]/lsref;}
+\DoxyCodeLine{00056\ \ \ \ \ ls\_dx[YDIR]=dx[YDIR]/lsref;}
+\DoxyCodeLine{00057\ \ \ \ \ ls\_dx[ZDIR]=dx[ZDIR]/lsref;}
+\DoxyCodeLine{00058\ }
+\DoxyCodeLine{00059\ \ \ \ \ \textcolor{keywordtype}{int}\ i=amrex::Math::floor((ptxyz[XDIR]-\/problo[XDIR]+TINYVAL)/ls\_dx[XDIR]);}
+\DoxyCodeLine{00060\ \ \ \ \ \textcolor{keywordtype}{int}\ j=amrex::Math::floor((ptxyz[YDIR]-\/problo[YDIR]+TINYVAL)/ls\_dx[YDIR]);}
+\DoxyCodeLine{00061\ \ \ \ \ \textcolor{keywordtype}{int}\ k=amrex::Math::floor((ptxyz[ZDIR]-\/problo[ZDIR]+TINYVAL)/ls\_dx[ZDIR]);}
+\DoxyCodeLine{00062\ }
+\DoxyCodeLine{00063\ \ \ \ \ amrex::Real\ lsval=0.0;}
+\DoxyCodeLine{00064\ \ \ \ \ \textcolor{keywordflow}{for}(\textcolor{keywordtype}{int}\ n=0;n<2;n++)}
+\DoxyCodeLine{00065\ \ \ \ \ \{}
+\DoxyCodeLine{00066\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(\textcolor{keywordtype}{int}\ m=0;m<2;m++)}
+\DoxyCodeLine{00067\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00068\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(\textcolor{keywordtype}{int}\ l=0;l<2;l++)}
+\DoxyCodeLine{00069\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00070\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ lsval\ +=\ phi(i+l,j+m,k+n)*}
+\DoxyCodeLine{00071\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ basisval(l,m,n,i,j,k,ptxyz,problo,ls\_dx,order\_scheme\_pseudo,periodic\_pseudo,lo,hi);}
+\DoxyCodeLine{00072\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00073\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00074\ \ \ \ \ \}}
+\DoxyCodeLine{00075\ }
+\DoxyCodeLine{00076\ \ \ \ \ \textcolor{keywordflow}{return}(lsval);}
+\DoxyCodeLine{00077\ \}}
+\DoxyCodeLine{00078\ }
+\DoxyCodeLine{00079\ AMREX\_GPU\_DEVICE\ }
+\DoxyCodeLine{00080\ AMREX\_FORCE\_INLINE}
+\DoxyCodeLine{00081\ \textcolor{keywordtype}{void}\ get\_levelset\_grad(amrex::Array4<amrex::Real>\ phi,}
+\DoxyCodeLine{00082\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ amrex::GpuArray<amrex::Real,\ AMREX\_SPACEDIM>\ problo,}
+\DoxyCodeLine{00083\ \ \ \ \ \ \ \ \ \textcolor{keyword}{const}\ amrex::GpuArray<amrex::Real,\ AMREX\_SPACEDIM>\ dx,}
+\DoxyCodeLine{00084\ \ \ \ \ \ \ \ \ amrex::Real\ ptxyz[AMREX\_SPACEDIM],}
+\DoxyCodeLine{00085\ \ \ \ \ \ \ \ \ amrex::Real\ lsref,amrex::Real\ lsgrad[AMREX\_SPACEDIM])}
+\DoxyCodeLine{00086\ \{}
+\DoxyCodeLine{00087\ \ \ \ \ \textcolor{comment}{//assuming\ a\ redistribute\ was\ done\ and\ no}}
+\DoxyCodeLine{00088\ \ \ \ \ \textcolor{comment}{//particle\ is\ outside\ of\ the\ tilebox}}
+\DoxyCodeLine{00089\ \ \ \ \ \textcolor{comment}{//}}
+\DoxyCodeLine{00090\ \ \ \ \ amrex::GpuArray<amrex::Real,AMREX\_SPACEDIM>\ ls\_dx;}
+\DoxyCodeLine{00091\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ lo[AMREX\_SPACEDIM]=\{0\};}
+\DoxyCodeLine{00092\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{int}\ hi[AMREX\_SPACEDIM]=\{0\};}
+\DoxyCodeLine{00093\ \ \ \ \ }
+\DoxyCodeLine{00094\ \ \ \ \ \textcolor{keyword}{const}\ GpuArray<int,\ AMREX\_SPACEDIM>\ order\_scheme\_pseudo=\{1,1,1\};}
+\DoxyCodeLine{00095\ \ \ \ \ \textcolor{keyword}{const}\ GpuArray<int,\ AMREX\_SPACEDIM>\ periodic\_pseudo=\{1,1,1\};}
+\DoxyCodeLine{00096\ }
+\DoxyCodeLine{00097\ \ \ \ \ }
+\DoxyCodeLine{00098\ \ \ \ \ ls\_dx[XDIR]=dx[XDIR]/lsref;}
+\DoxyCodeLine{00099\ \ \ \ \ ls\_dx[YDIR]=dx[YDIR]/lsref;}
+\DoxyCodeLine{00100\ \ \ \ \ ls\_dx[ZDIR]=dx[ZDIR]/lsref;}
+\DoxyCodeLine{00101\ }
+\DoxyCodeLine{00102\ \ \ \ \ \textcolor{keywordtype}{int}\ i=amrex::Math::floor((ptxyz[XDIR]-\/problo[XDIR]+TINYVAL)/ls\_dx[XDIR]);}
+\DoxyCodeLine{00103\ \ \ \ \ \textcolor{keywordtype}{int}\ j=amrex::Math::floor((ptxyz[YDIR]-\/problo[YDIR]+TINYVAL)/ls\_dx[YDIR]);}
+\DoxyCodeLine{00104\ \ \ \ \ \textcolor{keywordtype}{int}\ k=amrex::Math::floor((ptxyz[ZDIR]-\/problo[ZDIR]+TINYVAL)/ls\_dx[ZDIR]);}
+\DoxyCodeLine{00105\ }
+\DoxyCodeLine{00106\ \ \ \ \ lsgrad[XDIR]=0.0;}
+\DoxyCodeLine{00107\ \ \ \ \ lsgrad[YDIR]=0.0;}
+\DoxyCodeLine{00108\ \ \ \ \ lsgrad[ZDIR]=0.0;}
+\DoxyCodeLine{00109\ \ \ \ \ \textcolor{keywordflow}{for}(\textcolor{keywordtype}{int}\ n=0;n<2;n++)}
+\DoxyCodeLine{00110\ \ \ \ \ \{}
+\DoxyCodeLine{00111\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(\textcolor{keywordtype}{int}\ m=0;m<2;m++)}
+\DoxyCodeLine{00112\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00113\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{for}(\textcolor{keywordtype}{int}\ l=0;l<2;l++)}
+\DoxyCodeLine{00114\ \ \ \ \ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00115\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ lsgrad[XDIR]\ +=\ phi(i+l,j+m,k+n)*}
+\DoxyCodeLine{00116\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ basisvalder(XDIR,l,m,n,i,j,k,ptxyz,problo,ls\_dx,order\_scheme\_pseudo,periodic\_pseudo,lo,hi);}
+\DoxyCodeLine{00117\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ lsgrad[YDIR]\ +=\ phi(i+l,j+m,k+n)*}
+\DoxyCodeLine{00118\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ basisvalder(YDIR,l,m,n,i,j,k,ptxyz,problo,ls\_dx,order\_scheme\_pseudo,periodic\_pseudo,lo,hi);}
+\DoxyCodeLine{00119\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ lsgrad[ZDIR]\ +=\ phi(i+l,j+m,k+n)*}
+\DoxyCodeLine{00120\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ basisvalder(ZDIR,l,m,n,i,j,k,ptxyz,problo,ls\_dx,order\_scheme\_pseudo,periodic\_pseudo,lo,hi);}
+\DoxyCodeLine{00121\ \ \ \ \ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00122\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00123\ \ \ \ \ \}}
+\DoxyCodeLine{00124\ \}}
+\DoxyCodeLine{00125\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}
