@@ -17,7 +17,7 @@ release = '1.0'
 extensions = ['breathe']
 breathe_projects = {"ExaGOOP","_build/xml"}
 breathe_default_project = "ExaGOOP"
-html_theme = "sphinx_rtd_theme"
+html_theme = "furo"
 
 templates_path = ['_templates']
 exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
