@@ -1,0 +1,287 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Governing Equations of MPM &mdash; PeleLMeX 22.12 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="_static/theme.css?v=df66b05f" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=d09052ea"></script>
+      <script src="_static/doctools.js?v=9a2dae69"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="PeleLMeX controls" href="LMeXControls.html" />
+    <link rel="prev" title="Governing equations of continuum mechanics" href="theory.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            PeleLMeX
+              <img src="_static/swirlH2Fast_OH_vort_256.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Introduction:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="intro.html">Introduction</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Theory:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="theory.html">Governing equations of continuum mechanics</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Governing Equations of MPM</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#particle-to-grid-interpolation-p2g">Particle to Grid Interpolation (P2G)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#temporal-integration-at-grid-nodes">Temporal integration at grid nodes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#grid-to-particle-g2p-interpolation">Grid to Particle (G2P) Interpolation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#material-point-position-update-and-grid-reset">Material point position update and grid reset</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Usage:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="LMeXControls.html">PeleLMeX controls</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Troubleshooting.html">Troubleshooting</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorials:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Tutorials.html">Tutorials</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">PeleLMeX</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Governing Equations of MPM</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/mpm_equations.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="governing-equations-of-mpm">
+<h1>Governing Equations of MPM<a class="headerlink" href="#governing-equations-of-mpm" title="Link to this heading"></a></h1>
+<p>The full set of governing equations for the membrane compaction problem
+discussed in the previous section is summarized as,</p>
+<div class="math notranslate nohighlight">
+\[\begin{aligned}
+\rho J-\rho_0=0
+\label{Eq:mce}
+\end{aligned}\]</div>
+<div class="math notranslate nohighlight">
+\[\begin{aligned}
+\rho \dot{\mathbf{v}} = \rho \mathbf{b} + \nabla . \sigma
+\end{aligned}\]</div>
+<p>The equation ofconservation of mass is not solved explicitly. Instead it
+is used to calculate the updated density field in the computations
+through Eq. <a class="reference external" href="#Eq:mce">[Eq:mce]</a>. Like in many finite-element
+formulations, the method of weighted residuals is used to reduce the
+residual (error) to zero in an average sense. By taking the virtual
+displacement
+<span class="math notranslate nohighlight">\(\delta u_j \in \Re_0, \Re_0=\left\{\delta u_j\left|\delta u_j \in C^0, \delta u_j\right|_{\Gamma_u}=0\right\}\)</span>
+as the test function, one obtains the weak form of the governing
+equations and the traction boundary condition as,</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{aligned}
+    \begin{array}{r}
+\int_{\Omega} \delta u_i\left(\sigma_{i j, j}+\rho b_i-\rho \ddot{u}_i\right) \mathrm{d} V=0, \\
+\int_{\Gamma_t} \delta u_i\left(\sigma_{i j} n_j-\bar{t}_i\right) \mathrm{d} V=0,
+\end{array}
+\end{aligned}\end{split}\]</div>
+<p>which upon simplification is shown below.</p>
+<div class="math notranslate nohighlight">
+\[\begin{aligned}
+\int_{\Omega} \rho \ddot{u}_i \delta u_i \mathrm{~d} V+\int_{\Omega} \rho \sigma_{i j}^s \delta u_{i, j} \mathrm{~d} V-\int_{\Omega} \rho b_i \delta u_i \mathrm{~d} V-\int_{\Gamma_t} \rho \bar{t}_i^s \delta u_i \mathrm{~d} A=0
+\label{Eq:GovEqMPM}
+\end{aligned}\]</div>
+<p>In the standard formulation of MPM used in this study, the density field
+in the domain is approximated as,</p>
+<div class="math notranslate nohighlight">
+\[\begin{aligned}
+\rho(\boldsymbol{x})=\sum_{p=1}^{n_p} m_p \delta\left(\boldsymbol{x}-\boldsymbol{x}_p\right)
+\label{Eq:rho_def}
+\end{aligned}\]</div>
+<p>In the above equation, <span class="math notranslate nohighlight">\({n_p}\)</span> is the number of material points.
+Substituting Eq. <a class="reference external" href="#Eq:rho_def">[Eq:rho_def]</a> in
+Eq. <a class="reference external" href="#Eq:GovEqMPM">[Eq:GovEqMPM]</a> and invoking particle quadrature,
+one obtains the numerical governing equation of MPM.</p>
+<div class="math notranslate nohighlight">
+\[\begin{aligned}
+\sum_{p=1}^{n_p} m_p \ddot{u}_{i p} \delta u_{i p}+\sum_{p=1}^{n_p} m_p \sigma_{i j p}^s \delta u_{i p, j}-\sum_{p=1}^{n_p} m_p b_{i p} \delta u_{i p}-\sum_{p=1}^{n_p} m_p \bar{t}_{i p}^s h^{-1} \delta u_{i p}=0
+\label{Eq:NumEqMPM}
+\end{aligned}\]</div>
+<p>The subscipts <span class="math notranslate nohighlight">\(p\)</span> and <span class="math notranslate nohighlight">\(i\)</span> refer to the particle and spatial
+dimension respectively. The solution of the numerical governing equation
+above is carried out in four stages as briefly discussed in the
+following sub-sections.</p>
+<section id="particle-to-grid-interpolation-p2g">
+<h2>Particle to Grid Interpolation (P2G)<a class="headerlink" href="#particle-to-grid-interpolation-p2g" title="Link to this heading"></a></h2>
+<p>In this step, the material points are assumed to be attached to the
+background grid as shown in Figure <a class="reference external" href="#Fig:MPM_Steps">1</a>(a). The
+background grid is then considered similar to a finite element grid and
+based on the shape function defined at the grid node <span class="math notranslate nohighlight">\(I\)</span> the
+unknown quantities in Eq. <a class="reference external" href="#Eq:NumEqMPM">[Eq:NumEqMPM]</a> are
+calculated as,</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{aligned}
+\begin{array}{r}
+u_{i p}  =N_{I p} u_{i I} \\
+u_{i p, j}  =N_{I p, j} u_{i I}\\
+\delta u_{i p} =N_{I p} \delta u_{i I}
+\end{array}
+\label{Eq:shape}
+\end{aligned}\end{split}\]</div>
+<p>In the equations above, subscript <span class="math notranslate nohighlight">\(I\)</span> is used to denote the grid
+node and <span class="math notranslate nohighlight">\(N_I\)</span> indicate the shape function defined at node
+<span class="math notranslate nohighlight">\(I\)</span>. In this study, two shape functions namely, the linear-hat and
+cubic spline shape functions are considered. Substituting equations
+Eq. <a class="reference external" href="#Eq:shape">[Eq:shape]</a> in Eq. <a class="reference external" href="#Eq:NumEqMPM">[Eq:NumEqMPM]</a>
+and cancelling the common virtual displacement term
+<span class="math notranslate nohighlight">\(\delta u_{i I}\)</span>, one obtains,</p>
+<div class="math notranslate nohighlight">
+\[\begin{aligned}
+m_{I J} \dot{u}_{i J}=f_{i I}^{\mathrm{int}}+f_{i I}^{\mathrm{ext}}, \quad x_I \notin \Gamma_u
+\end{aligned}\]</div>
+<p>where <span class="math notranslate nohighlight">\(m_{I J}\)</span> is the elements of the mass matrix defined as,</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{aligned}
+m_{I J}=\sum_{p=1}^{n_p} m_p N_{I p} N_{J p}\\
+\end{aligned}\end{split}\]</div>
+<p>and <span class="math notranslate nohighlight">\(f_{i I}^{\mathrm{int}}\)</span> and <span class="math notranslate nohighlight">\(f_{i I}^{\mathrm{ext}}\)</span>
+are the internal and external forces respectively and given by,</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{aligned}
+f_{i I}^{\mathrm{int}}=-\sum_{p=1}^{n_p} N_{I p, j} \sigma_{i j p} \frac{m_p}{\rho_p} \\
+f_{i I}^{\mathrm{ext}}=\sum_{p=1}^{n_p} m_p N_{I p} b_{i p}+\sum_{p=1}^{n_p} N_{I p} \bar{t}_{i p} h^{-1} \frac{m_p}{\rho_p}
+\end{aligned}\end{split}\]</div>
+<p>Hence, this step of the MPM solution procedure involves ’projecting’
+properties from material points to grid nodes and is shown schematically
+in Figure <a class="reference external" href="#Fig:MPM_Steps">1</a>(a).</p>
+</section>
+<section id="temporal-integration-at-grid-nodes">
+<h2>Temporal integration at grid nodes<a class="headerlink" href="#temporal-integration-at-grid-nodes" title="Link to this heading"></a></h2>
+<p>Once the grid nodal properties are calculated in the P2G operation, the
+updated velocity at grid nodes are calculated. In this study, a simple
+forward Euler time integration procedure is used. Since this procedure
+in its original form involves costly inversion of the mass matrix
+<span class="math notranslate nohighlight">\(m_{I J}\)</span>, the following mass-lumping approximation is made,</p>
+<div class="math notranslate nohighlight">
+\[\begin{aligned}
+m_I=\sum_{J=1}^{n_g} m_{I J}=\sum_{p=1}^{n_p} m_p N_{I p}
+\end{aligned}\]</div>
+<p>The velocity components at the nodes are then calculated as,</p>
+<div class="math notranslate nohighlight">
+\[\begin{aligned}
+\mathbf{v_{I}}^{t+\Delta t}=\mathbf{v_{I}}^{t}+\frac{1}{m_I} \left(\mathbf{f_{i I}}^{\mathrm{int}}+\mathbf{f_{i I}}^{\mathrm{ext}}\right)
+\end{aligned}\]</div>
+<p>where <span class="math notranslate nohighlight">\(\Delta t\)</span> is the time step used in time integration and is
+calculated from the following equation,</p>
+<div class="math notranslate nohighlight">
+\[\begin{aligned}
+\Delta t= CFL \min \left(\frac{h_x}{c_x}, \frac{h_y}{c_y}, \frac{h_z}{c_z}\right)
+\end{aligned}\]</div>
+<p>Here, <span class="math notranslate nohighlight">\(c_()\)</span> and <span class="math notranslate nohighlight">\(h_()\)</span> refer to characteristic velocity and
+grid sizes in different directions respectively.</p>
+</section>
+<section id="grid-to-particle-g2p-interpolation">
+<h2>Grid to Particle (G2P) Interpolation<a class="headerlink" href="#grid-to-particle-g2p-interpolation" title="Link to this heading"></a></h2>
+<p>Once the updated velocities at grid nodes are obtained, the velocities
+and their gradients at the material points are obtained in this step as,</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{aligned}
+\mathbf{v}_p^{t+\Delta t}=\alpha_{P-F}\left(\mathbf{v}_p^t+\sum_I N_I \left[{\mathbf{v}}_I^{t+\Delta t}-\mathbf{v}_I^t\right]\right)+(1-\alpha_{P-F}) \sum_I N_I {\mathbf{v}}_I^{t+\Delta t}\\
+\nabla \mathbf{v}_p^{t+\Delta t}=\sum_I^{ng} \nabla N_I \mathbf{v}_I^{t+\Delta t}
+\end{aligned}\end{split}\]</div>
+<p>The term <span class="math notranslate nohighlight">\(\alpha_{P-F}\)</span> used in the material point velocity update
+step above determines the level of blending between Particle-in-Cell
+(PIC) and Fluid Implicit Particle Method (FLIP) like updates. The
+velocity gradient thus calculated at the material point is used to
+compute the stress tensor through the user-provided constitutive
+relation.</p>
+</section>
+<section id="material-point-position-update-and-grid-reset">
+<h2>Material point position update and grid reset<a class="headerlink" href="#material-point-position-update-and-grid-reset" title="Link to this heading"></a></h2>
+<p>At this step, the updated velocity at the material point is already
+obtained and is used to update the material point position as,</p>
+<div class="math notranslate nohighlight">
+\[\begin{aligned}
+\mathbf{x}_{p}^{t+\Delta t}=\mathbf{x}_{p}^{t} +\Delta t \: \mathbf{v}_p^{t+\Delta t}
+\end{aligned}\]</div>
+<p>The background grid in MPM is used only as a scratch pad to calculate
+gradients and for time integration and hence is often reset or
+regenerated at the end of each MPM step.</p>
+<div class="float docutils container" id="fig-mpm-steps">
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="theory.html" class="btn btn-neutral float-left" title="Governing equations of continuum mechanics" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="LMeXControls.html" class="btn btn-neutral float-right" title="PeleLMeX controls" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021-2022, PeleTeam.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,204 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Welcome to ExaGOOP’s documentation! &mdash; PeleLMeX 22.12 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="_static/theme.css?v=df66b05f" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=d09052ea"></script>
+      <script src="_static/doctools.js?v=9a2dae69"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Key Features" href="intro.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="#" class="icon icon-home">
+            PeleLMeX
+              <img src="_static/swirlH2Fast_OH_vort_256.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">The ExaGOOP MPM Solver:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="intro.html">Key Features</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Theory:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="theory.html">Governing equations of continuum mechanics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mpm_equations.html">Governing Equations of MPM</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Usage:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="LMeXControls.html">PeleLMeX controls</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Troubleshooting.html">Troubleshooting</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorials:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Tutorials.html">Tutorials</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="#">PeleLMeX</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="#" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Welcome to ExaGOOP’s documentation!</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/index.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="welcome-to-exagoop-s-documentation">
+<h1>Welcome to ExaGOOP’s documentation!<a class="headerlink" href="#welcome-to-exagoop-s-documentation" title="Link to this heading"></a></h1>
+<p>Numerical simulations have become an indispensable part of engineering analysis today. They serve as an effective alternative to costly experiments and are often used to selectively identify optimal designs for experimental testing. The conventional and oldest numerical methods applied in continuum mechanics include Finite Volume Methods (FVMs), Finite Element Methods (FEMs), and Finite Difference Methods (FDMs). The first two methods rely on the integral form of the governing equations, while the last method is based on the differential form, approximating derivatives using algebraic expressions. A common aspect of these three methods is the necessity of a computational grid to solve the governing equations. This grid consists of a collection of numbered points (or nodes) that are interconnected by edges (in 2D) or faces (in 3D) to form the entire computational domain. In solid mechanics, these methods are typically used in conjunction with the Lagrangian form of the governing equations. In this context, the grid nodes are attached to the material and move as the material deforms. However, when the material experiences severe deformation, the movement of the mesh nodes can lead to grid entanglement, resulting in numerical instabilities and causing the solver to stop abruptly. In contrast, Eulerian-based methods do not require grid movement; instead, the material moves across fixed grid cells, decoupling it from the grid nodes. While this formulation is numerically stable, it is less suitable for problems involving moving interfaces and materials with history-dependent properties.</p>
+<p>The Material Point Method (MPM) is a ‘mesh-free’ technique that has gained considerable attention for its ability to simulate problems involving significant deformations. MPM is a Lagrangian, particle-based numerical method that draws inspiration from the Particle-In-Cell (PIC) and Fluid-Implicit Particle (FLIP) methods. Although MPM was initially developed for solid mechanics problems, it has since been expanded for use in fluid simulations as well. In the MPM, the entire material domain is discretized using particles or material points, where all material properties—such as velocity, density, strain rates, and stresses—are stored. This aspect of MPM makes it particularly useful for modeling history-dependent constitutive models. The absence of a grid connecting these material points allows MPM to effectively simulate scenarios with severe material deformations, such as solid fractures, foam deformations, and granular flows. Although a background grid is necessary for MPM, it is merely used as a scratch pad to perform certain numerical operations that are not computationally intensive. These unique features make MPM a promising candidate for studying membrane compaction problems.</p>
+<div class="toctree-wrapper compound">
+<p class="caption" role="heading"><span class="caption-text">The ExaGOOP MPM Solver:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="intro.html">Key Features</a></li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<p class="caption" role="heading"><span class="caption-text">Theory:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="theory.html">Governing equations of continuum mechanics</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="theory.html#deformation-gradient-tensor">Deformation gradient tensor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="theory.html#velocity-gradient-tensor">Velocity gradient tensor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="theory.html#jacobian">Jacobian</a></li>
+<li class="toctree-l2"><a class="reference internal" href="theory.html#stress-tensor-and-constitutive-models">Stress tensor and Constitutive models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="theory.html#equation-of-conservation-of-mass">Equation of conservation of mass</a></li>
+<li class="toctree-l2"><a class="reference internal" href="theory.html#conservation-of-momentum">Conservation of momentum</a></li>
+<li class="toctree-l2"><a class="reference internal" href="theory.html#initial-and-boundary-conditions">Initial and Boundary conditions</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="mpm_equations.html">Governing Equations of MPM</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="mpm_equations.html#particle-to-grid-interpolation-p2g">Particle to Grid Interpolation (P2G)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mpm_equations.html#temporal-integration-at-grid-nodes">Temporal integration at grid nodes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mpm_equations.html#grid-to-particle-g2p-interpolation">Grid to Particle (G2P) Interpolation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mpm_equations.html#material-point-position-update-and-grid-reset">Material point position update and grid reset</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<p class="caption" role="heading"><span class="caption-text">Usage:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="LMeXControls.html">PeleLMeX controls</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="LMeXControls.html#computational-domain-definition">Computational domain definition</a></li>
+<li class="toctree-l2"><a class="reference internal" href="LMeXControls.html#grid-amr-parameters">Grid/AMR parameters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="LMeXControls.html#load-balancing">Load balancing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="LMeXControls.html#time-stepping-parameters">Time stepping parameters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="LMeXControls.html#io-parameters">IO parameters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="LMeXControls.html#refinement-controls">Refinement controls</a></li>
+<li class="toctree-l2"><a class="reference internal" href="LMeXControls.html#pelelmex-derived-variables">PeleLMeX derived variables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="LMeXControls.html#pelelmex-algorithm">PeleLMeX algorithm</a></li>
+<li class="toctree-l2"><a class="reference internal" href="LMeXControls.html#transport-coefficients-and-les">Transport coefficients and LES</a></li>
+<li class="toctree-l2"><a class="reference internal" href="LMeXControls.html#turbulent-forcing-and-velocity-plotfile">Turbulent Forcing and Velocity Plotfile</a></li>
+<li class="toctree-l2"><a class="reference internal" href="LMeXControls.html#chemistry-integrator">Chemistry integrator</a></li>
+<li class="toctree-l2"><a class="reference internal" href="LMeXControls.html#embedded-geometry">Embedded Geometry</a></li>
+<li class="toctree-l2"><a class="reference internal" href="LMeXControls.html#linear-solvers">Linear solvers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="LMeXControls.html#active-control">Active control</a></li>
+<li class="toctree-l2"><a class="reference internal" href="LMeXControls.html#run-time-diagnostics">Run-time diagnostics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="LMeXControls.html#run-time-control">Run-time control</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="Troubleshooting.html">Troubleshooting</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="Troubleshooting.html#linear-solver-failure">Linear solver failure</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Troubleshooting.html#chemistry-integration-failure">Chemistry integration failure</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<p class="caption" role="heading"><span class="caption-text">Tutorials:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Tutorials.html">Tutorials</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="Tutorials_HotBubble.html">Rising light bubble</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Tutorials_FlameSheet.html">Premixed flame sheet with harmonic perturbations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Tutorials_FlowPastCyl.html">Non-reacting flow past a cylinder</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Tutorials_BFSFlame.html">Backward facing step anchored premixed flame</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Tutorials_TripleFlame.html">A simple triple flame</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
+<section id="indices-and-tables">
+<h1>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Link to this heading"></a></h1>
+<ul class="simple">
+<li><p><a class="reference internal" href="genindex.html"><span class="std std-ref">Index</span></a></p></li>
+<li><p><a class="reference internal" href="py-modindex.html"><span class="std std-ref">Module Index</span></a></p></li>
+<li><p><a class="reference internal" href="search.html"><span class="std std-ref">Search Page</span></a></p></li>
+</ul>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="intro.html" class="btn btn-neutral float-right" title="Key Features" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021-2022, PeleTeam.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
