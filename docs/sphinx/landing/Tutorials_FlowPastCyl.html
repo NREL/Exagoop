@@ -6,10 +6,11 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Non-reacting flow past a cylinder &mdash; PeleLMeX 22.12 documentation</title>
+  <title>Non-reacting flow past a cylinder &mdash; ExaGOOP 22.12 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="_static/theme.css?v=df66b05f" />
+      <link rel="stylesheet" type="text/css" href="_static/css/custom.css?v=a0fb6060" />
 
   
       <script src="_static/jquery.js?v=5d32c60e"></script>
@@ -17,12 +18,11 @@
       <script src="_static/documentation_options.js?v=d09052ea"></script>
       <script src="_static/doctools.js?v=9a2dae69"></script>
       <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
-      <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+      <script>window.MathJax = {"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "displayMath": [["$$", "$$"], ["\\[", "\\]"]]}}</script>
+      <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
-    <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Backward facing step anchored premixed flame" href="Tutorials_BFSFlame.html" />
-    <link rel="prev" title="Premixed flame sheet with harmonic perturbations" href="Tutorials_FlameSheet.html" /> 
+    <link rel="search" title="Search" href="search.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -34,8 +34,8 @@
           
           
           <a href="index.html" class="icon icon-home">
-            PeleLMeX
-              <img src="_static/swirlH2Fast_OH_vort_256.png" class="logo" alt="Logo"/>
+            ExaGOOP
+              <img src="_static/ExaGOOP_Logo.png" class="logo" alt="Logo"/>
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
@@ -53,36 +53,17 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="theory.html">Governing equations of continuum mechanics</a></li>
 <li class="toctree-l1"><a class="reference internal" href="mpm_equations.html">Governing Equations of MPM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mpm_equations.html#mpm-descretisation-steps">MPM descretisation steps</a></li>
 </ul>
-<p class="caption" role="heading"><span class="caption-text">Usage:</span></p>
+<p class="caption" role="heading"><span class="caption-text">Validation and Verification:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="LMeXControls.html">PeleLMeX controls</a></li>
-<li class="toctree-l1"><a class="reference internal" href="Troubleshooting.html">Troubleshooting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Validation.html">Axial vibration of an elastic bar</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Validation.html#collision-of-two-dimensional-elastic-disks">Collision of two-dimensional elastic disks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Validation.html#dam-break-simulation">Dam break simulation</a></li>
 </ul>
-<p class="caption" role="heading"><span class="caption-text">Tutorials:</span></p>
-<ul class="current">
-<li class="toctree-l1 current"><a class="reference internal" href="Tutorials.html">Tutorials</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="Tutorials_HotBubble.html">Rising light bubble</a></li>
-<li class="toctree-l2"><a class="reference internal" href="Tutorials_FlameSheet.html">Premixed flame sheet with harmonic perturbations</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">Non-reacting flow past a cylinder</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#introduction">Introduction</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#setting-up-your-environment">Setting-up your environment</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#numerical-setup">Numerical setup</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#test-case-and-boundary-conditions">Test case and boundary conditions</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#problem-specifications">Problem specifications</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#initial-solution">Initial solution</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#numerical-scheme">Numerical scheme</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="#building-the-executable">Building the executable</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#running-the-problem-on-a-coarse-grid">Running the problem on a coarse grid</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#refinement-of-the-computation">Refinement of the computation</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="Tutorials_BFSFlame.html">Backward facing step anchored premixed flame</a></li>
-<li class="toctree-l2"><a class="reference internal" href="Tutorials_TripleFlame.html">A simple triple flame</a></li>
-</ul>
-</li>
+<p class="caption" role="heading"><span class="caption-text">References:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="zreferences.html">References</a></li>
 </ul>
 
         </div>
@@ -91,7 +72,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="index.html">PeleLMeX</a>
+          <a href="index.html">ExaGOOP</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -99,7 +80,6 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
-          <li class="breadcrumb-item"><a href="Tutorials.html">Tutorials</a></li>
       <li class="breadcrumb-item active">Non-reacting flow past a cylinder</li>
       <li class="wy-breadcrumbs-aside">
             <a href="_sources/Tutorials_FlowPastCyl.rst.txt" rel="nofollow"> View page source</a>
@@ -179,13 +159,13 @@ environment variables you might have previously defined when using this <cite>GN
 The base grid is decomposed into 192x64 cells and up to 3 levels of refinement (although we will start with a single level).
 The refinement ratio between each level is set to 2.
 The maximum box size is fixed at 64, and the base (level 0) grid is composed of 3 boxes,
-as shown in <a class="reference internal" href="#fpc-domain"><span class="std std-numref">Fig. 7</span></a>.</p>
+as shown in <code class="xref std std-numref docutils literal notranslate"><span class="pre">FPC_Domain</span></code>.</p>
 <p>Periodic boundary conditions are used in the transverse (<span class="math notranslate nohighlight">\(y\)</span>) direction, while <code class="docutils literal notranslate"><span class="pre">Inflow</span></code> (dirichlet) and <code class="docutils literal notranslate"><span class="pre">Outflow</span></code> (neumann) boundary conditions are used in the main flow direction (<span class="math notranslate nohighlight">\(x\)</span>). The flow goes from left to right.
 A cylinder of radius 0.0035 m is placed in the middle of the flow at (0.0:0.0).</p>
 <figure class="align-center" id="fpc-domain" style="width: 80%">
 <img alt="_images/FPC_SetupSketch.png" src="_images/FPC_SetupSketch.png" />
 <figcaption>
-<p><span class="caption-number">Fig. 7 </span><span class="caption-text">: Sketch of the computational domain with level 0 box decomposition.</span><a class="headerlink" href="#fpc-domain" title="Link to this image"></a></p>
+<p><span class="caption-text">: Sketch of the computational domain with level 0 box decomposition.</span><a class="headerlink" href="#fpc-domain" title="Link to this image"></a></p>
 </figcaption>
 </figure>
 <p>The geometry of the problem is specified in the first block of the <code class="docutils literal notranslate"><span class="pre">input.2d-Re500</span></code>:</p>
@@ -196,7 +176,7 @@ geometry.prob_lo     = -0.02 -0.02     # x_lo y_lo
 geometry.prob_hi     =  0.10  0.02     # x_hi y_hi
 </pre></div>
 </div>
-<p>The second block determines the boundary conditions. Note that <cite>Interior</cite> is used to indicate periodic boundary conditions. Refer to <a class="reference internal" href="#fpc-domain"><span class="std std-numref">Fig. 7</span></a>:</p>
+<p>The second block determines the boundary conditions. Note that <cite>Interior</cite> is used to indicate periodic boundary conditions. Refer to <code class="xref std std-numref docutils literal notranslate"><span class="pre">FPC_Domain</span></code>:</p>
 <div class="highlight-rst notranslate"><div class="highlight"><pre><span></span>#--------------------------BC FLAGS-----------------------------
 # Interior, Inflow, Outflow, Symmetry,
 # SlipWallAdiab, NoSlipWallAdiab, SlipWallIsotherm, NoSlipWallIsotherm
@@ -366,12 +346,12 @@ We have specified here that a checkpoint file will be generated every 50 ms and 
 <figure class="align-center" id="fpc-coarse" style="width: 80%">
 <img alt="_images/FPC_Coarse_25ms.png" src="_images/FPC_Coarse_25ms.png" />
 <figcaption>
-<p><span class="caption-number">Fig. 8 </span><span class="caption-text">: Contour plots of velocity components, vorticity, pressure and volume fraction at t = 25 ms on the coarse grid.</span><a class="headerlink" href="#fpc-coarse" title="Link to this image"></a></p>
+<p><span class="caption-text">: Contour plots of velocity components, vorticity, pressure and volume fraction at t = 25 ms on the coarse grid.</span><a class="headerlink" href="#fpc-coarse" title="Link to this image"></a></p>
 </figcaption>
 </figure>
 <p>At this point, you have established a flow with a large recirculation zone in the wake of the cylinder, but the flow has not yet fully transitioned to periodic vortex shedding.
-The flow is depicted in <a class="reference internal" href="#fpc-coarse"><span class="std std-numref">Fig. 8</span></a> showing a few of the available contour plots at 25 ms. Note that the value of the fully covered cells is set to zero.</p>
-<p>As can be seen from <a class="reference internal" href="#fpc-coarse"><span class="std std-numref">Fig. 8</span></a>, the flow has not yet transitioned to the familiar Von-Karman alleys and two aspects of the current simulation can delay or even prevent the onset of vortex shedding:</p>
+The flow is depicted in <code class="xref std std-numref docutils literal notranslate"><span class="pre">FPC_Coarse</span></code> showing a few of the available contour plots at 25 ms. Note that the value of the fully covered cells is set to zero.</p>
+<p>As can be seen from <code class="xref std std-numref docutils literal notranslate"><span class="pre">FPC_Coarse</span></code>, the flow has not yet transitioned to the familiar Von-Karman alleys and two aspects of the current simulation can delay or even prevent the onset of vortex shedding:</p>
 <blockquote>
 <div><ul class="simple">
 <li><p>the flow is initially symmetric and the transition to the familiar periodic flow is due to the growth of infinitesimal perturbations in the shear layer of the wake. Because the flow is artificially too symmetric, this transition can be delayed until round-off errors sufficiently accumulate.</p></li>
@@ -440,12 +420,12 @@ As a final step, we will add another level of refinement, only at the vicinity o
 <div class="highlight-rst notranslate"><div class="highlight"><pre><span></span>mpirun -n 4 ./PeleLMeX2d.gnu.MPI.ex input.2d-Re500 &gt; log3Levels.dat &amp;
 </pre></div>
 </div>
-<p>You should obtain a flow with a vorticity field similar to <a class="reference internal" href="#fpc-vortfinal"><span class="std std-numref">Fig. 9</span></a>.
+<p>You should obtain a flow with a vorticity field similar to <code class="xref std std-numref docutils literal notranslate"><span class="pre">FPC_VortFinal</span></code>.
 For the purpose of the present tutorial, this will be our final solution but one can see that the flow has not yet return to a periodic vortex shedding and additional resolution could be added locally to obtain smoother flow features.</p>
 <figure class="align-center" id="fpc-vortfinal" style="width: 80%">
 <img alt="_images/FPC_VorticityFinal.png" src="_images/FPC_VorticityFinal.png" />
 <figcaption>
-<p><span class="caption-number">Fig. 9 </span><span class="caption-text">: Contour plots of vorticity at t = 350 ms with 2 levels of refinements.</span><a class="headerlink" href="#fpc-vortfinal" title="Link to this image"></a></p>
+<p><span class="caption-text">: Contour plots of vorticity at t = 350 ms with 2 levels of refinements.</span><a class="headerlink" href="#fpc-vortfinal" title="Link to this image"></a></p>
 </figcaption>
 </figure>
 </section>
@@ -454,10 +434,7 @@ For the purpose of the present tutorial, this will be our final solution but one
 
            </div>
           </div>
-          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="Tutorials_FlameSheet.html" class="btn btn-neutral float-left" title="Premixed flame sheet with harmonic perturbations" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="Tutorials_BFSFlame.html" class="btn btn-neutral float-right" title="Backward facing step anchored premixed flame" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
-    </div>
+          <footer>
 
   <hr/>
 

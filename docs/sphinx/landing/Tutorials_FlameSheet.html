@@ -6,10 +6,11 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Premixed flame sheet with harmonic perturbations &mdash; PeleLMeX 22.12 documentation</title>
+  <title>Premixed flame sheet with harmonic perturbations &mdash; ExaGOOP 22.12 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="_static/theme.css?v=df66b05f" />
+      <link rel="stylesheet" type="text/css" href="_static/css/custom.css?v=a0fb6060" />
 
   
       <script src="_static/jquery.js?v=5d32c60e"></script>
@@ -17,12 +18,11 @@
       <script src="_static/documentation_options.js?v=d09052ea"></script>
       <script src="_static/doctools.js?v=9a2dae69"></script>
       <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
-      <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+      <script>window.MathJax = {"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "displayMath": [["$$", "$$"], ["\\[", "\\]"]]}}</script>
+      <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
-    <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Non-reacting flow past a cylinder" href="Tutorials_FlowPastCyl.html" />
-    <link rel="prev" title="Rising light bubble" href="Tutorials_HotBubble.html" /> 
+    <link rel="search" title="Search" href="search.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -34,8 +34,8 @@
           
           
           <a href="index.html" class="icon icon-home">
-            PeleLMeX
-              <img src="_static/swirlH2Fast_OH_vort_256.png" class="logo" alt="Logo"/>
+            ExaGOOP
+              <img src="_static/ExaGOOP_Logo.png" class="logo" alt="Logo"/>
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
@@ -53,35 +53,17 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="theory.html">Governing equations of continuum mechanics</a></li>
 <li class="toctree-l1"><a class="reference internal" href="mpm_equations.html">Governing Equations of MPM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mpm_equations.html#mpm-descretisation-steps">MPM descretisation steps</a></li>
 </ul>
-<p class="caption" role="heading"><span class="caption-text">Usage:</span></p>
+<p class="caption" role="heading"><span class="caption-text">Validation and Verification:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="LMeXControls.html">PeleLMeX controls</a></li>
-<li class="toctree-l1"><a class="reference internal" href="Troubleshooting.html">Troubleshooting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Validation.html">Axial vibration of an elastic bar</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Validation.html#collision-of-two-dimensional-elastic-disks">Collision of two-dimensional elastic disks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Validation.html#dam-break-simulation">Dam break simulation</a></li>
 </ul>
-<p class="caption" role="heading"><span class="caption-text">Tutorials:</span></p>
-<ul class="current">
-<li class="toctree-l1 current"><a class="reference internal" href="Tutorials.html">Tutorials</a><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="Tutorials_HotBubble.html">Rising light bubble</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">Premixed flame sheet with harmonic perturbations</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#introduction">Introduction</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#setting-up-your-environment">Setting-up your environment</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#case-setup">Case setup</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#geometry-grid-and-boundary-conditions">Geometry, grid and boundary conditions</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#problem-specifications">Problem specifications</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#numerical-parameters">Numerical parameters</a></li>
-</ul>
-</li>
-<li class="toctree-l3"><a class="reference internal" href="#building-the-executable">Building the executable</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#checking-the-initial-conditions">Checking the initial conditions</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#advance-the-solution">Advance the solution</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="Tutorials_FlowPastCyl.html">Non-reacting flow past a cylinder</a></li>
-<li class="toctree-l2"><a class="reference internal" href="Tutorials_BFSFlame.html">Backward facing step anchored premixed flame</a></li>
-<li class="toctree-l2"><a class="reference internal" href="Tutorials_TripleFlame.html">A simple triple flame</a></li>
-</ul>
-</li>
+<p class="caption" role="heading"><span class="caption-text">References:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="zreferences.html">References</a></li>
 </ul>
 
         </div>
@@ -90,7 +72,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="index.html">PeleLMeX</a>
+          <a href="index.html">ExaGOOP</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -98,7 +80,6 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
-          <li class="breadcrumb-item"><a href="Tutorials.html">Tutorials</a></li>
       <li class="breadcrumb-item active">Premixed flame sheet with harmonic perturbations</li>
       <li class="wy-breadcrumbs-aside">
             <a href="_sources/Tutorials_FlameSheet.rst.txt" rel="nofollow"> View page source</a>
@@ -434,11 +415,11 @@ listed in the input file. To do so, use:</p>
 <li><p>Saving the initial solution to <cite>plt00000</cite> file.</p></li>
 </ol>
 <p>Use Amrvis, Paraview or yt to visualize the plot file. Using Amrvis, the solution should look
-similar to <a class="reference internal" href="#fs-initsol"><span class="std std-numref">Fig. 3</span></a>.</p>
+similar to <code class="xref std std-numref docutils literal notranslate"><span class="pre">FS_InitSol</span></code>.</p>
 <figure class="align-center" id="fs-initsol" style="width: 80%">
 <img alt="_images/FS_InitSolDefault.png" src="_images/FS_InitSolDefault.png" />
 <figcaption>
-<p><span class="caption-number">Fig. 3 </span><span class="caption-text">: Contour plots of density, velocity components and velocity divergence constraint after initialization.</span><a class="headerlink" href="#fs-initsol" title="Link to this image"></a></p>
+<p><span class="caption-text">: Contour plots of density, velocity components and velocity divergence constraint after initialization.</span><a class="headerlink" href="#fs-initsol" title="Link to this image"></a></p>
 </figcaption>
 </figure>
 <p>It is interesting to note that the initial solution has a transverse velocity component
@@ -450,11 +431,11 @@ the initialization process and the solution will rapidly relax to adapt to the <
 <p>Let’s now play with the problem parameters to see how the initial solution changes. For instance,
 decrease the amplitude of the perturbation, change the <code class="docutils literal notranslate"><span class="pre">standoff</span></code> parameter or deactivate the
 initial projection by adding <code class="docutils literal notranslate"><span class="pre">peleLM.do_init_proj=0</span></code> to the <code class="docutils literal notranslate"><span class="pre">PeleLMeX</span> <span class="pre">CONTROL</span></code> block. Examples
-of the initial solution varying these parameters are displayed in <a class="reference internal" href="#fs-inittweaks"><span class="std std-numref">Fig. 4</span></a>.</p>
+of the initial solution varying these parameters are displayed in <code class="xref std std-numref docutils literal notranslate"><span class="pre">FS_InitTweaks</span></code>.</p>
 <figure class="align-center" id="fs-inittweaks" style="width: 80%">
 <img alt="_images/FS_InitSolTweaks.png" src="_images/FS_InitSolTweaks.png" />
 <figcaption>
-<p><span class="caption-number">Fig. 4 </span><span class="caption-text">: Contour plots of velocity components without initial projection and temperature using tweaked problem parameter.</span><a class="headerlink" href="#fs-inittweaks" title="Link to this image"></a></p>
+<p><span class="caption-text">: Contour plots of velocity components without initial projection and temperature using tweaked problem parameter.</span><a class="headerlink" href="#fs-inittweaks" title="Link to this image"></a></p>
 </figcaption>
 </figure>
 </section>
@@ -524,11 +505,11 @@ over the course of the 50 steps.</p>
 changed much from the initial solution at this point (only a fraction of
 a microsecond runtime has been reached). It is still interesting to
 look more closely at <cite>divU</cite>, <cite>FunctCall</cite>, the thermodynamic pressure and
-an intermediate species such as CH3 in <a class="reference internal" href="#fs-50steps"><span class="std std-numref">Fig. 5</span></a>.</p>
+an intermediate species such as CH3 in <code class="xref std std-numref docutils literal notranslate"><span class="pre">FS_50steps</span></code>.</p>
 <figure class="align-center" id="fs-50steps" style="width: 80%">
 <img alt="_images/FS_50steps.png" src="_images/FS_50steps.png" />
 <figcaption>
-<p><span class="caption-number">Fig. 5 </span><span class="caption-text">: Contour plots of <cite>divU</cite>, <cite>FunctCall</cite>, thermodynamic pressure and CH3 mass fraction after 50 steps.</span><a class="headerlink" href="#fs-50steps" title="Link to this image"></a></p>
+<p><span class="caption-text">: Contour plots of <cite>divU</cite>, <cite>FunctCall</cite>, thermodynamic pressure and CH3 mass fraction after 50 steps.</span><a class="headerlink" href="#fs-50steps" title="Link to this image"></a></p>
 </figcaption>
 </figure>
 <p>The <cite>divU</cite> is now mostly positive, consistent with the thermal expansion occurring across a
@@ -585,7 +566,7 @@ amr.yH.field_name    = Y(H)
 is other part of the domain. Note also that if we were to add another level
 of refinement, the <code class="docutils literal notranslate"><span class="pre">amr.yH.max_level</span></code> should be increased in order to
 trigger refinement up to level 4 with this criteria.</p>
-<p><a class="reference internal" href="#fs-120steps"><span class="std std-numref">Fig. 6</span></a> shows the same variables as <a class="reference internal" href="#fs-50steps"><span class="std std-numref">Fig. 5</span></a>.
+<p><code class="xref std std-numref docutils literal notranslate"><span class="pre">FS_120steps</span></code> shows the same variables as <code class="xref std std-numref docutils literal notranslate"><span class="pre">FS_50steps</span></code>.
 <cite>divU</cite> is now almost entirely positive and shows lower values near the tip
 of the flame cusps as expected from a lean methane/air flame (the amount of
 hydrogen in the inlet stream is small). The scale of <cite>FunctCall</cite> increased
@@ -599,7 +580,7 @@ necessary if this species was of special interest).</p>
 <figure class="align-center" id="fs-120steps" style="width: 80%">
 <img alt="_images/FS_120steps.png" src="_images/FS_120steps.png" />
 <figcaption>
-<p><span class="caption-number">Fig. 6 </span><span class="caption-text">: Contour plots of <cite>divU</cite>, <cite>FunctCall</cite>, thermodynamic pressure and CH3 mass fraction after 120 steps.</span><a class="headerlink" href="#fs-120steps" title="Link to this image"></a></p>
+<p><span class="caption-text">: Contour plots of <cite>divU</cite>, <cite>FunctCall</cite>, thermodynamic pressure and CH3 mass fraction after 120 steps.</span><a class="headerlink" href="#fs-120steps" title="Link to this image"></a></p>
 </figcaption>
 </figure>
 <p>This is the end of this short tutorial introducing the basics of reactive flow simulations
@@ -612,10 +593,7 @@ to set their own case.</p>
 
            </div>
           </div>
-          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="Tutorials_HotBubble.html" class="btn btn-neutral float-left" title="Rising light bubble" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="Tutorials_FlowPastCyl.html" class="btn btn-neutral float-right" title="Non-reacting flow past a cylinder" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
-    </div>
+          <footer>
 
   <hr/>
 

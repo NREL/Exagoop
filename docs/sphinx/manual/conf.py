@@ -17,9 +17,9 @@ import sys
 
 # -- Project information -----------------------------------------------------
 
-project = 'PeleLMeX'
-copyright = '2021-2022, PeleTeam'
-author = 'PeleTeam'
+project = 'ExaGOOP'
+copyright = '2021-2022, ExaGOOPTeam'
+author = 'ExaGOOPTeam'
 
 # The full version, including alpha/beta/rc tags
 release = '22.12'
@@ -43,7 +43,19 @@ master_doc = 'index'
 # Add any Sphinx extension module names here, as strings. They can be
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
-extensions = [ 'sphinx.ext.mathjax']
+extensions = [ 'sphinx.ext.mathjax', 'sphinxcontrib.bibtex']
+
+mathjax3_config = {
+    'tex2jax': {'inlineMath': [['$', '$'], ['\\(', '\\)']],'displayMath': [['$$', '$$'], ['\\[', '\\]']] }}
+
+
+#mathjax3_config = {
+#    'tex': {
+#        'tags': 'all',  # Enables numbering for all equations
+#       'tagSide': 'right',  # Places number on the right
+#        'tagIndent': '0em'
+#    }
+#}
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
@@ -58,7 +70,7 @@ pygments_style = 'sphinx'
 
 # The name of an image file (relative to this directory) to place at the top
 # of the sidebar.
-html_logo = "_static/swirlH2Fast_OH_vort_256.png"
+html_logo = "_static/ExaGOOP_Logo.png"
 
 numfig = True
 numfig_format = {'figure': 'Fig. %s', 'table': 'Table %s', 'code-block': '%s'}
@@ -75,11 +87,19 @@ html_theme = 'sphinx_rtd_theme'
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
 html_static_path = ['_static']
+html_css_files = ["css/custom.css"]
+
+bibtex_bibfiles = ['refs.bib']  # Your BibTeX file
+bibtex_default_style = 'plain'
+#bibtex_footbibliography = False
+#bibtex_cite_id_filter = None  # Include all citations
+
+
 
 # -- Options for HTMLHelp output ------------------------------------------
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = 'PeleLMeXdoc'
+htmlhelp_basename = 'ExaGOOPdoc'
 
 def setup(app):
     app.add_css_file('theme.css')

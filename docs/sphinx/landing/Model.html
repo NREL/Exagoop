@@ -6,10 +6,11 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>The PeleLMeX Model &mdash; PeleLMeX 22.12 documentation</title>
+  <title>The PeleLMeX Model &mdash; ExaGOOP 22.12 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="_static/theme.css?v=df66b05f" />
+      <link rel="stylesheet" type="text/css" href="_static/css/custom.css?v=a0fb6060" />
 
   
       <script src="_static/jquery.js?v=5d32c60e"></script>
@@ -17,12 +18,11 @@
       <script src="_static/documentation_options.js?v=d09052ea"></script>
       <script src="_static/doctools.js?v=9a2dae69"></script>
       <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
-      <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+      <script>window.MathJax = {"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "displayMath": [["$$", "$$"], ["\\[", "\\]"]]}}</script>
+      <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
-    <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Source code" href="Implementation.html" />
-    <link rel="prev" title="Welcome to PeleLMeX’s documentation!" href="index.html" /> 
+    <link rel="search" title="Search" href="search.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -34,8 +34,8 @@
           
           
           <a href="index.html" class="icon icon-home">
-            PeleLMeX
-              <img src="_static/swirlH2Fast_OH_vort_256.png" class="logo" alt="Logo"/>
+            ExaGOOP
+              <img src="_static/ExaGOOP_Logo.png" class="logo" alt="Logo"/>
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
@@ -45,37 +45,25 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p class="caption" role="heading"><span class="caption-text">Theory:</span></p>
-<ul class="current">
-<li class="toctree-l1 current"><a class="current reference internal" href="#">The <cite>PeleLMeX</cite> Model</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#overview-of-pelelmex">Overview of <cite>PeleLMeX</cite></a></li>
-<li class="toctree-l2"><a class="reference internal" href="#mathematical-background">Mathematical background</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#the-low-mach-number-flow-equations">The low Mach number flow equations</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#confined-domain-ambient-pressure">Confined domain ambient pressure</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="#pelelmex-algorithm">PeleLMeX Algorithm</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#low-mach-number-projection-scheme">Low Mach number projection scheme</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#advection-schemes">Advection schemes</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#amr-extension">AMR extension</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#geometry-with-embedded-boundaries">Geometry with Embedded Boundaries</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#large-eddy-simulation">Large Eddy Simulation</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="Implementation.html">Source code</a></li>
-<li class="toctree-l1"><a class="reference internal" href="Validation.html">PeleLMeX Verification &amp; Validations</a></li>
-<li class="toctree-l1"><a class="reference internal" href="Performances.html">Performances</a></li>
-</ul>
-<p class="caption" role="heading"><span class="caption-text">Usage:</span></p>
+              <p class="caption" role="heading"><span class="caption-text">The ExaGOOP MPM Solver:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="LMeXControls.html">PeleLMeX controls</a></li>
-<li class="toctree-l1"><a class="reference internal" href="Troubleshooting.html">Troubleshooting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="intro.html">Key Features</a></li>
 </ul>
-<p class="caption" role="heading"><span class="caption-text">Tutorials:</span></p>
+<p class="caption" role="heading"><span class="caption-text">Theory:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="Tutorials.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="theory.html">Governing equations of continuum mechanics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mpm_equations.html">Governing Equations of MPM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mpm_equations.html#mpm-descretisation-steps">MPM descretisation steps</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Validation and Verification:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Validation.html">Axial vibration of an elastic bar</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Validation.html#collision-of-two-dimensional-elastic-disks">Collision of two-dimensional elastic disks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Validation.html#dam-break-simulation">Dam break simulation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">References:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="zreferences.html">References</a></li>
 </ul>
 
         </div>
@@ -84,7 +72,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="index.html">PeleLMeX</a>
+          <a href="index.html">ExaGOOP</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -241,11 +229,11 @@ adaptive mesh refinement (AMR) code that solves the reacting Navier-Stokes equat
 </section>
 <section id="pelelmex-algorithm">
 <h2>PeleLMeX Algorithm<a class="headerlink" href="#pelelmex-algorithm" title="Link to this heading"></a></h2>
-<p>An overview of <cite>PeleLMeX</cite> time-advance function is provided in <a class="reference internal" href="#lmex-algo"><span class="std std-numref">Fig. 1</span></a> and details are provided in the following subsections.</p>
+<p>An overview of <cite>PeleLMeX</cite> time-advance function is provided in <code class="xref std std-numref docutils literal notranslate"><span class="pre">LMeX_Algo</span></code> and details are provided in the following subsections.</p>
 <figure class="align-center" id="lmex-algo" style="width: 50%">
 <img alt="_images/PeleLMeX_Algorithm.png" src="_images/PeleLMeX_Algorithm.png" />
 <figcaption>
-<p><span class="caption-number">Fig. 1 </span><span class="caption-text">: Flowchart of the <em>PeleLMeX</em> advance function.</span><a class="headerlink" href="#lmex-algo" title="Link to this image"></a></p>
+<p><span class="caption-text">: Flowchart of the <em>PeleLMeX</em> advance function.</span><a class="headerlink" href="#lmex-algo" title="Link to this image"></a></p>
 </figcaption>
 </figure>
 <p>The three steps of the low Mach number projection scheme described <a class="reference internal" href="#ssec-projscheme"><span class="std std-ref">below</span></a> are referenced to better
@@ -437,10 +425,7 @@ be used with PLASMA.</p>
 
            </div>
           </div>
-          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="index.html" class="btn btn-neutral float-left" title="Welcome to PeleLMeX’s documentation!" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="Implementation.html" class="btn btn-neutral float-right" title="Source code" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
-    </div>
+          <footer>
 
   <hr/>
 

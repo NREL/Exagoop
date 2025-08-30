@@ -1,422 +1,372 @@
-PeleLMeX Verification & Validations
-===================================
 
-This section assembles results of `PeleLMeX` simulations on a set a test cases
-for which a reference solution can be obtained from the literature or an
-analytical solution exists.
+ExaGOOP utilizes the formulation outlined in the previous section. This section presents three validation and verification test cases using ExaGOOP.
 
-Laminar premixed flame
-~~~~~~~~~~~~~~~~~~~~~~
+Axial vibration of an elastic bar
+---------------------------------
 
-The case of a laminar premixed flame is a foundational test case for a reactive
-flow solver. A laminar premixed flame setup is available in ``Exec/RegTests/FlameSheet``.
-The case reported hereafter is that of a planar laminar methane/air flame at
-atmospheric conditions and a lean equivalence ratio of 0.9. The initial condition
-is obtained from a Cantera simulation using
-the DRM19 mechanism and the simulation is conducted starting with a coarse resolution
-:math:`d_{l,0}/\delta_x = 3.5` (3.5 grid cells in the flame thermal thickness) and progressively
-refined to :math:`d_{l,0}/\delta_x = 110` using AMR. Note that the simulation is carried for
-about 30 :math:`\tau_f = d_{l,0} / S_{l,0}` before adding refinement levels ensuring that initial
-numerical noise introduced by interpolating the Cantera solution onto the cartesian grid is
-completely removed.
+In this test case, the free, axial vibration of a continuum bar made of a linearly elastic material is studied. This is one of the test cases for which the exact solution is known.
 
-The `PeleLMeX` results obtained with the finest grid are compared to that of Cantera in :numref:`PMFLMeXCantera`.
-Profiles of major and intermediate species as well as temperature across the flame front are
-displayed, with Cantera results shown as black ticked lined underlying each continuous line obtained
-with `PeleLMeX`, demonstrating the solver accuracy.
+.. raw:: html
 
-.. figure:: images/validations/PremixedFlame/LMeX_DRM19_Phi0p9.png
-   :name: PMFLMeXCantera
-   :align: center
-   :figwidth: 50%
+   <div class="figure-grid" style="display: flex; flex-wrap: wrap; gap: 1em; justify-content: center;">
+     <div style="flex: 0 0 100%;">
+       <img src="../landing/_images/AxBar_PDT.png" alt="Inlet Flow" style="width: 100%;">
+       <p style="text-align: center;"><strong>(a)</strong> The physical domain of the bar</p>
+     </div>
+     <div style="flex: 0 0 100%;">
+       <img src="../landing/_images/AxBar_PDMPM.png" alt="Outlet Jet" style="width: 100%;">
+       <p style="text-align: center;"><strong>(b)</strong> Modeling of the bar in ExaGOOP</p>
+     </div>
+   </div>
+.. figure:: ../landing/_images/none.png
+   :name: fig-axbar
+   :height: 0
+   :width: 0   
+   :figwidth: 100%
+   :align: center   
+   :alt: Simulation Snapshots Overview
+            
+   Axial vibration of a bar. (a) Configuration of test case (b) Corresponding MPM model. Gray lines indicate the background Eulerian grid, and the gray circles are the material points located at time t = 0.
+   
 
-   : One-dimentional flame profiles with PeleLMeX and Cantera (underlying black dashed lines)
+The test case configuration is shown in :numref:`fig-axbar` (a). The bar has a length :math:`L` with an area of cross-section :math:`A` and is made up of a linear elastic material with Young’s modulus :math:`E`. The Poisson’s ratio of the material is set as zero. The bar is fixed at one end and left free at the other. The equation governing the vibration of the bar is given by,
 
-It is interesting to see how resolution affect the prediction of `PeleLMeX`. The :numref:`PMFTableResolution`
-shows the laminar flame speed, obtained by numerically integrating the fuel consumption rate, at
-increasing level of refinement. For each AMR level addition, simulation are conducted for about 10 :math:`\tau_f`,
-until the flame speed stabilizes. With only a handful of cells across the flame thermal thickness, the flame
-speed is recovered with an accuracy close to 1.5%.
+.. math:: :label: goveq_axial_bar
 
-.. list-table:: Effect of resolution on the laminar flame speed
-    :name: PMFTableResolution
-    :align: center
-    :widths: 50 25 25 25 25 25 25
-    :header-rows: 1
+   \begin{aligned}
+       \frac{\partial^2 u}{\partial t^2}=c^2 \frac{\partial^2 u}{\partial x^2}   
+   \end{aligned}
 
-    * - :math:`d_{l,0}/\delta_x` [-]
-      - 3.44
-      - 6.88
-      - 13.8
-      - 27.5
-      - 55
-      - 110
-    * - :math:`S_{l,0}` [m/s]
-      - 0.35696
-      - 0.35144
-      - 0.35408
-      - 0.35473
-      - 0.35488
-      - 0.35494
-    * - Error (vs. Cantera) [%]
-      - 0.02
-      - 1.54
-      - 0.8
-      - 0.6
-      - 0.58
-      - 0.57
+where :math:`u` is the axial displacement and :math:`c` is the speed of
+sound in the elastic medium. The bar is subjected to the following
+boundary conditions:
 
-Additionally, :numref:`PMFLMeXCrseFine` compares profiles of major and intermediate species as well as
-temperature across the flame front for the coarsest and the finest resolution employed. Results
-indicates that major species (or temperature) are well captured whereas short lived species peak
-values are locally off due to the lack of resolution but are still reasonably well located within
-the flame front.
+.. math:: :label: bc_axial_bar
 
-.. figure:: images/validations/PremixedFlame/LMeX_FinevsCoarse.png
-   :name: PMFLMeXCrseFine
-   :align: center
-   :figwidth: 50%
+   \begin{aligned}
+       u(0,t)=0\\
+       \frac{\partial u}{\partial x} (L,t) = 0
+   \end{aligned}
 
-   : Comparison of a coarsed and finely resolved 1D flame in PeleLMeX
-
-Laminar Poiseuille flow
-~~~~~~~~~~~~~~~~~~~~~~~
-
-The laminar pipe flow or Poiseuille flow, is a basic test case for wall bounded flows.
-In the present configuration, the geometry consist of a circular channel of radius :math:`R` = 1 cm
-aligned with the :math:`x`-direction, where no-slip boundary conditions are imposed on
-EB surface. The flow is periodic in the :math:`x`-direction and a background pressure
-gradient :math:`dp /dx` is used to drive the flow.
-
-The exact solution at steady state is:
+When an initial axial velocity :math:`v(x,0)= V_0 \sin \left(\frac{\pi x}{2 L}\right)` is imposed on the bar, the analytical solution to the governing equation Eq :eq:`goveq_axial_bar` subjected to the boundary conditions Eqs. :eq:`bc_axial_bar` is given by,
 
 .. math::
-   u(r) = \frac{G}{4 \mu} (R^2 - r^2)
 
-where :math:`G = -dp/dx`, and :math:`\mu` is the dynamic viscosity.
-The test case can be found in ``Exec/RegTests/EB_PipeFlow``, where
-the input parameters are very similar to the PeleC counterpart of
-this case.
+   \begin{aligned}
+   & u(x, t)=\frac{V_0}{\omega_1} \sin \left(\frac{\pi x}{2 L}\right) \sin \left(\omega_1 t\right) \\
+   & v(x, t)=V_0 \sin \left(\frac{\pi x}{2 L}\right) \cos \left(\omega_1 t\right)
+   \end{aligned}
 
-The steady-state :math:`x`-velocity profiles across the pipe diameter
-at increasing resolution are plotted along with the theorerical profile in :numref:`PoiseuilleVelProf`:
+where :math:`\omega_1` is the fundamental frequency of the first mode of
+vibration.
 
-.. figure:: images/validations/Poiseuille3D/PoiseuilleVelProf.png
-   :name: PoiseuilleVelProf
-   :align: center
-   :figwidth: 50%
+Numerical simulations of this test case are performed using ExaGOOP. The properties of the bar are set as :math:`E=100, L=25` and :math:`V_0 = 0.1`. The density of the material, :math:`\rho` is set equal to unity. The length of the bar is discretized using :math:`25` material points located equidistant from each other so that each material point simulates one unit length of the bar. Even though this test case involves only one-dimension in space, a three-dimensional, structured background grid with unit grid length is generated by ExaGOOP . The grid has :math:`29` cells in the axial direction and three cells in the other two directions. At the initial time, each material point is located at the center of the cell as shown in :numref:`fig-axbar` (b). Four grid cells are left as a buffer region between the right-most material point and the right boundary of the background grid. No-slip and slip wall boundary conditions are imposed on the left and the right boundaries, respectively, while periodic boundary conditions are imposed in the other two directions. Simulations are performed using both the linear-hat shape functions as well as the cubic B-spline shape functions, and for :math:`\alpha_{P-F}` equal to zero and one, respectively. The CFL numbers are varied across different simulations. For ease of presentation, the comparisons between the exact solution and the MPM solutions obtained using are shown here using the center of mass velocity of the bar, :math:`v_{cm}` and using system energies. The exact center of mass velocity is given by :math:`v_{\mathrm{cm}}^{\mathrm{exa}}(t)=\frac{V_0 c}{\omega_1 L} \cos \left(\omega_1 t\right)` and its MPM counterpart is calculated as :math:`v_{\mathrm{cm}}^{\mathrm{num}}(t)=\frac{\sum v_p(t) m_p}{\sum m_p}`. Three different forms of system energy is shown for comparison, namely the kinetic energy (:math:`KE=\frac{1}{2} \sum_{p=1}^{n_p} \mathbf{v}_p \cdot \mathbf{v}_p m_p`), the strain energy (:math:`SE=\frac{1}{2} \sum_{p=1}^{n_p} \sigma_{p} \epsilon_{p} V_p`) and the total energy (:math:`TE=KE+SE`).
 
-   : Axial velocity profile at increasing resolution with PeleLMeX
+Effect of :math:`\alpha_{P-F}`
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-A more quantitative evaluation of PeleLMeX results is obtained by calculating
-the L2 norm of the error against the analytical profile:
+.. raw:: html
+
+   <div class="figure-grid" style="display: flex; flex-wrap: wrap; gap: 1em; justify-content: center;">
+     <div style="flex: 0 0 45%;">
+       <img src="../landing/_images/AVB_Effect_of_alpha_Vel_1Order_a=0.png" alt="Inlet Flow" style="width: 100%;">
+       <p style="text-align: center;"><strong>(a)</strong> alpha=0</p>
+     </div>
+     <div style="flex: 0 0 45%;">
+       <img src="../landing/_images/AVB_Effect_of_alpha_Vel_1Order_a=1.png" alt="Outlet Jet" style="width: 100%;">
+       <p style="text-align: center;"><strong>(b)</strong> alpha=1</p>
+     </div>
+   </div>
+.. figure:: ../landing/_images/none.png
+   :name: fig-axbar-effofalpha
+   :height: 0
+   :width: 0   
+   :figwidth: 100%
+   :align: center   
+   :alt: Simulation Snapshots Overview
+   
+   Effect of :math:`\alpha_{P-F}` on the center of mass velocity of the axial bar
+   
+   
+:numref:`fig-axbar-effofalpha` shows the  variation of :math:`v_{cm}` as a function of time for two different values of :math:`\alpha_{P-F}` (:math:`0` and :math:`1`). It is observed that for :math:`\alpha_{P-F}=0`, the center of mass velocity decreases with time in contrast to the exact solution where the amplitude remains unchanged. On the other hand, for :math:`\alpha_{P-F}=1` the exact nature of the solution is well captured by ExaGOOP solution.
 
 
-.. figure:: images/validations/Poiseuille3D/PoiseuilleConvergence.png
-   :name: PoiseuilleConvergence
-   :align: center
-   :figwidth: 50%
+This dissipative nature of the numerical solution at low values of :math:`\alpha_{P-F}` can also be observed from the temporal evolution of
+energies plotted in :numref:`fig-axbar-effofalpha-energy`. Both kinetic and strain energy (and hence the total energy as well) is found
+to decrease and ultimately reach zero with time for :math:`\alpha_{P-F}=0` while :math:`\alpha_{P-F}=1` captures the non-dissipative nature of the exact solution accurately.
 
-   : L2-norm of the axial velocity profile as function of the number of cells across the pipe diameter
+.. raw:: html
 
-showing second-order convergence for this diffusion dominated flow.
-
-Taylor-Green vortex breakdown
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-The Taylor-Green vortex breakdown case is a classical CFD test case
-described in `here <https://www1.grc.nasa.gov/research-and-engineering/hiocfd/>`_
-(case C3.3). It is intended to test the capability of the code to capture turbulence accurately,
-with the flow transitioning to turbulence, with the creation of small scales, followed
-by a decay phase similar to decaying homogeneous turbulence.
-
-Building and running
-####################
-
-The test case can be found in ``Exec/RegTests/TaylorGreen``.
-
-.. code-block:: bash
-
-   $ make -j 16 DIM=3 USE_MPI=TRUE TPL
-   $ make -j 16 DIM=3 USE_MPI=TRUE
-   $ mpiexec -n 16 $EXECUTABLE inputs_3d amr.ncell=64 64 64
-
-The user can run a convergence study by varying ``amr.ncell``.
-
-Results
-#######
-
-The following figures shows the kinetic energy, the dissipation rate and
-the enstrophy as function of time (all quantities are non-dimensional)
-for increasing resolutions (ranging from 64^3 to 512^3) and compared
-to the results of a high-order spectral solver with a 512^3 resolution.
-`PeleLMeX` results are obtained with the *Godunov_PPM* scheme and show
-that even though `PeleLMeX` uses a 2nd-order scheme, reasonable
-accuracy compared to the spectral results is obtained when the resolution is sufficient.
-
-.. |TGKinEnergy| image:: images/validations/TaylorGreen/KinEnergy.png
-   :width: 48%
-
-.. |TGDiss| image:: images/validations/TaylorGreen/Dissipation.png
-   :width: 48%
-
-.. |TGEnstrophy| image:: images/validations/TaylorGreen/Enstrophy.png
-   :width: 48%
-
-|TGKinEnergy| |TGDiss|
-
-|TGEnstrophy|
-
-Additionally, it is interesting to compare the different advection schemes
-available in `PeleLMeX` (namely, *Godunov_PLM*, *Godunov_PPM*, *Godunov_BDS*,
-*Godunov_PPM_WENOZ*) at a fixed 256^3 spatial resolution:
-
-.. figure:: images/validations/TaylorGreen/Enstrophy_AllSchemes.png
-   :align: center
-   :figwidth: 48%
-
-On this particular case, the differences between the advection schemes are fairly
-marginal compared to those observed at different grid resolutions.
-
-Channel Flow using EB
+   <div class="figure-grid" style="display: flex; flex-wrap: wrap; gap: 1em; justify-content: center;">
+     <div style="flex: 0 0 45%;">
+       <img src="../landing/_images/AVB_Effect_of_alpha_Engy_1Order_a=0.png" alt="Inlet Flow" style="width: 100%;">
+       <p style="text-align: center;"><strong>(a)</strong> alpha=0</p>
+     </div>
+     <div style="flex: 0 0 45%;">
+       <img src="../landing/_images/AVB_Effect_of_alpha_Engy_1Order_a=1.png" alt="Outlet Jet" style="width: 100%;">
+       <p style="text-align: center;"><strong>(b)</strong> alpha=1</p>
+     </div>
+   </div>
+.. figure:: ../landing/_images/none.png
+   :name: fig-axbar-effofalpha-energy
+   :height: 0
+   :width: 0   
+   :figwidth: 100%
+   :align: center   
+   :alt: Simulation Snapshots Overview
+   
+   Effect of :math:`\alpha_{P-F}` on the kinetic (KE), strain (SE) and total (TE) of the axial bar
+   
+Effect of :math:`CFL`
 ~~~~~~~~~~~~~~~~~~~~~
 
-We present results of the classical periodic channel flow, available in the
-``Exec/RegTests/EB_PipeFlow`` folder. Simulations are performed at three
-stress Reynold number :math:`Re_{\tau}` = 180, 395 and 934 corresponding
-to the cases described in `Kim et al., 1986 <https://doi.org/10.1017/S0022112087000892>`_,
-`Moser et al., 1999 <https://doi.org/10.1063/1.869966>`_ and
-`Hoyas and Jimenez, 2006 <https://doi.org/10.1063/1.2162185>`_, respectively. A first
-DNS is performed at :math:`Re_{\tau}` = 180, then the LES models implementation is tested
-at higher Reynold numbers.
+It is also interesting to study the effect of :math:`CFL` on the solution accuracy. :numref:`fig-axbar-effofcfl` shows the time evolution of :math:`v_{cm}` for values of :math:`CFL=0.01,0.1` and :math:`0.5`. The results shown are obtained using the cubic spline shape functions and for :math:`\alpha_{P-F}=0`. It is observed that the magnitude of :math:`v_{cm}` reduces over time for this numerical parameters.  It is also observed that the MPM solution deviates from the exact solution as the :math:`CFL` is reduced. The solution is observed to be more dissipative as the CFL number is reduced. Results obtained using the linear hat shape functions also show a similar trend and hence are not shown here.
 
-For all cases, the configuration is periodic in the :math:`x` and :math:`z` directions and wall boundaries are
-imposed in the :math:`y` direction using Embedded Boundaries.
+.. raw:: html
 
-DNS results at :math:`Re_{\tau}` = 180
-######################################
-
-The channel half width :math:`\delta` is set to 0.005 m, and the computational domain extend
-in +/- 0.0052 m in :math:`y` with EB intersecting the domain at +/- :math:`\delta`. A background pressure gradient in
-imposed in the :math:`x` to compensate wall friction. The base grid and two levels of refinement are described in :numref:`EBCDomain`:
-
-.. list-table:: DNS Channel flow domain
-    :name: EBCDomain
-    :align: center
-    :widths: 50 25 25 25
-    :header-rows: 1
-
-    * -
-      - :math:`x`
-      - :math:`y`
-      - :math:`z`
-    * - Domain size
-      - 6.24 :math:`\delta`
-      - 2.08 :math:`\delta`
-      - 3.12 :math:`\delta`
-    * - Base grid L0
-      - 384
-      - 128
-      - 192
-    * - L1
-      - 768
-      - 256
-      - 384
-    * - L2
-      - 1536
-      - 512
-      - 768
-
-The fluid in the simulation is air at ambient pressure and a temperature of 750.0 K, the physical
-property of which are summarized in :numref:`EBCFluidProp`:
-
-.. list-table:: Fluid properties
-    :name: EBCFluidProp
-    :align: center
-    :widths: 25 25 25 25 25 25
-    :header-rows: 1
-
-    * -
-      - Pressure
-      - Temperature
-      - Density
-      - :math:`\mu`
-      - :math:`\nu`
-    * - Value [MKS]
-      - 102325.0
-      - 750.0
-      - 0.468793
-      - 3.57816e-5
-      - 7.63271e-5
-
-The characteristics of the flows are reported in :numref:`EBCFlowChar`:
-
-.. list-table:: DNS Channel flow characteristics
-    :name: EBCFlowChar
-    :align: center
-    :widths: 25 25 25 25 35
-    :header-rows: 1
-
-    * - :math:`Re_{\tau}`
-      - :math:`u_{\tau}`
-      - :math:`\tau_w`
-      - :math:`dp/dx`
-      - :math:`t^* = \delta/u_{\tau}`
-    * - 180.2
-      - 2.75122
-      - 3.5485
-      - -709.79
-      - 1.817e-3
-
-Two levels of refinement, targeted on the EB, are employed in order to sufficiently resolve the boundary
-layer. The mesh characteristics are summarized in :numref:`EBCMeshes`. The :math:`y^+` value is that of
-the cell center of the first full cell (uncut by the EB).
-
-.. list-table:: Mesh characteristics
-    :name: EBCMeshes
-    :align: center
-    :widths: 25 25 25 25 35
-    :header-rows: 1
-
-    * - :math:`Re_{\tau}`
-      - :math:`\Delta y^+ L0`
-      - :math:`\Delta y^+ Lmax`
-      - :math:`y^+`
-      - Cells count
-    * - 180.2
-      - 2.93
-      - 0.732
-      - 0.479
-      - 56.6 M
-
-Simulations are carried out for 20 eddy turn over time :math:`t^*` to reach statistically steady
-conditions and data are then spatially averaged in the periodic directions and averaged in time over 10 :math:`t^*`
-to get the velocity statistics in the direction normal to the wall.
-
-.. |DNS180Uplus| image:: images/validations/EBChannelFlow/Uplus_Re180_DNS_LMeX.png
-   :width: 48%
-
-.. |DNS180Urms| image:: images/validations/EBChannelFlow/VelRMSplus_Re180_DNS_LMeX.png
-   :width: 48%
-
-|DNS180Uplus| |DNS180Urms|
-
-Results indicate that `PeleLMeX` is able to reproduce accurately the DNS data obtained with
-a high-order spectral solver, provided sufficient resolution at the wall.
-
-LES results at :math:`Re_{\tau}` = 395, 934
-###########################################
-
-The channel half width :math:`\delta` is set to 0.01 m, and the computational domain extend
-in +/- 0.0101 m in :math:`y` with EB intersecting the domain at +/- :math:`\delta`. The base grid is coarser
-than the DNS one by a factor of 2. A background pressure gradient in imposed in the :math:`x` to compensate
-wall friction. The fluid conditions are similar to that of the DNS case and the flow
-and mesh characteristics are summarized in :numref:`EBCLESFlowsChar`:
-
-.. list-table:: LES Channel flow characteristics
-    :name: EBCLESFlowsChar
-    :align: center
-    :widths: 25 25 25 25 25 25 25
-    :header-rows: 1
-
-    * - :math:`Re_{\tau}`
-      - :math:`u_{\tau}`
-      - :math:`\tau_w`
-      - :math:`dp/dx`
-      - :math:`t^* = \delta/u_{\tau}`
-      - :math:`\Delta y^+ L0`
-      - :math:`\Delta y^+ Lmax`
-    * - 395
-      - 3.01492
-      - 4.26121
-      - -426.121
-      - 3.3317e-3
-      - 12.467
-      - 6.2336
-    * - 934
-      - 7.12895
-      - 23.8250
-      - -2382.50
-      - 1.4027e-3
-      - 29.479
-      - 7.36984
-
-Note that a single level of refinement is employed for the :math:`Re_{\tau}` = 395 while two are
-used for :math:`Re_{\tau}` = 934 in order to provide sufficient (but still below :math:`y^+=1`)
-resolution near the walls.
-
-Simulations are performed with the WALE LES SGS model. The plots below shows that `PeleLMeX` is
-able to reproduce the normalized velocity profile reasonably well even though the resolution
-requirements for a Wall Resolved LES are not quite attained with the grid employed here.
-
-.. |LES395Uplus| image:: images/validations/EBChannelFlow/Uplus_Re395_LES_LMeX.png
-   :width: 48%
-
-.. |LES395Urms| image:: images/validations/EBChannelFlow/VelRMSplus_Re395_LES_LMeX.png
-   :width: 48%
-
-|LES395Uplus| |LES395Urms|
-
-.. |LES934Uplus| image:: images/validations/EBChannelFlow/Uplus_Re934_LES_LMeX.png
-   :width: 48%
-
-.. |LES934Urms| image:: images/validations/EBChannelFlow/VelRMSplus_Re934_LES_LMeX.png
-   :width: 48%
-
-|LES934Uplus| |LES934Urms|
-
-The velocity variance in the plot above show distinctive drops around coarse/fine interfaces,
-where the filter size change and a the subgrid-scale contribution increases as depicted on the figure below showing the
-subgrid-scale viscosity for the :math:`Re_{\tau}` = 934 case.
-
-.. figure:: images/validations/EBChannelFlow/nu_t_Re934_LES_LMeX.png
-   :align: center
-   :figwidth: 48%
-
-Further work is ongoing to assess how to better handle large LES filter size changes in the context
-of AMR-LES
-
-Laminar counterflow diffusion flame
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-The laminar counterflow diffusion flame is a fundamental test case for non-premixed reactive flows. A 
-laminar counterflow diffusion flame setup is available in ``Exec/Production/CounterFlow``. 
-In the present configuration, the geometry consists of a 1.5 cm x 1.5 cm domain with inflow at the left 
-and right boundaries and outflow at the top and bottom boundaries. The left and right inflow boundaries 
-correspond to the oxidizer and fuel inlet sides respectively, with an oxidizer/fuel jet section of 
-diameter :math:`d_{jet} = 0.5 cm` (``prob.jet_radius`` of 0.0025) centered at the boundary. The
-remainder of the inflow boundary consists of inert inflow sections with composition of pure N2. 
-The oxidizer jet section composition is that of air, while the fuel jet section composition is pure 
-gaseous Dodecane. The inert inflow velocity on the left and right is set equal to the oxidizer and fuel 
-jet velocities, respectively, in order to eliminate shear interactions between the inert and jet 
-streams. The oxidizer and fuel jet velocities are 15.0 cm/s and 6.17 cm/s, respectively, corresponding 
-to a global strain rate of :math:`40 s^{-1}`. The initial condition corresponds to air composition 
-filling the left half of the domain and gaseous Dodecane composition filling the right half of the 
-domain with a hyperbolic tangent smoothly transitioning species mass fractions in the center of the 
-domain. Ignition is performed by patching a spherical kernel of elevated temperature (in this case 
-1000 K) with radius of 0.3 cm in the center of the domain as to cause autoignition. Grid refinement 
-criteria based on the gradient of temperature is used and solution convergence is achieved with 
-``amr.max_level`` of 2.
-
-The `PeleLMeX` results obtained using the specified grid refinement criteria are compared to that of 
-Cantera in spatial and mixture fraction space in :numref:`CounterflowLMeXCantera_Spatial` and 
-:numref:`CounterflowLMeXCantera_Mixture`, respectively. Centerline profiles of major species as well as 
-temperature across the flame front at steady-state are displayed, with PeleLMeX results indicated by 
-solid colored lines and Cantera results indicated by black ticked lines. The results show very good 
-agreement between the PeleLMeX and Cantera centerline profiles, with only small differences visible 
-when plotting versus spatial coordinate due to differences in geometry (1-D vs. 2-D). 
-
-
-.. figure:: images/validations/CounterflowFlame/Dodecane_Counterflow_Spatial_Dodecane_Added.png
-   :name: CounterflowLMeXCantera_Spatial
-   :align: center
-   :figwidth: 50%
-
-   : One-dimentional flame spatial profiles with PeleLMeX and Cantera (underlying black dashed lines)
+   <div class="figure-grid" style="display: flex; flex-wrap: wrap; gap: 1em; justify-content: center;">
+     <div style="flex: 0 0 32%;">
+       <img src="../landing/_images/AVB_Effect_of_CFL_Vel_3Order_a=0_CFL_0p01.png" alt="Inlet Flow" style="width: 100%;">
+       <p style="text-align: center;"><strong>(a)</strong> CFL=0.01</p>
+     </div>
+     <div style="flex: 0 0 32%;">
+       <img src="../landing/_images/AVB_Effect_of_CFL_Vel_3Order_a=0_CFL_0p1.png" alt="Outlet Jet" style="width: 100%;">
+       <p style="text-align: center;"><strong>(b)</strong> CFL=0.1</p>
+     </div>
+     <div style="flex: 0 0 32%;">
+       <img src="../landing/_images/AVB_Effect_of_CFL_Vel_3Order_a=0_CFL_0p5.png" alt="Outlet Jet" style="width: 100%;">
+       <p style="text-align: center;"><strong>(b)</strong> CFL=0.5</p>
+     </div>
+   </div>
+.. figure:: ../landing/_images/none.png
+   :name: fig-axbar-effofcfl
+   :height: 0
+   :width: 0   
+   :figwidth: 100%
+   :align: center   
+   :alt: Simulation Snapshots Overview
    
-.. figure:: images/validations/CounterflowFlame/Dodecane_Counterflow_Mixture_Dodecane_Added.png
-   :name: CounterflowLMeXCantera_Mixture
-   :align: center
-   :figwidth: 50%
+   Effect of :math:`CFL` on the center of mass velocity of the axial bar (alpha=0)
 
-   : One-dimentional flame profiles (mixture fraction space) with PeleLMeX and Cantera (underlying black dashed lines)
+On the contrary, very minimal deviations from the exact solution are observed for all :math:`CFL` numbers for :math:`\alpha_{P-F}=1` as shown
+in :numref:`fig-axbar-effofcfl_a1`. This again highlights the significance of chosing a high value of :math:`\alpha_{P-F}` (0.9-1.0) for accurate simulations. This trend also holds for the solution computed using the linear hat shape functions.
+
+.. raw:: html
+
+   <div class="figure-grid" style="display: flex; flex-wrap: wrap; gap: 1em; justify-content: center;">
+     <div style="flex: 0 0 32%;">
+       <img src="../landing/_images/AVB_Effect_of_CFL_Vel_3Order_a=1_CFL_0p01.png" alt="Inlet Flow" style="width: 100%;">
+       <p style="text-align: center;"><strong>(a)</strong> CFL=0.01</p>
+     </div>
+     <div style="flex: 0 0 32%;">
+       <img src="../landing/_images/AVB_Effect_of_CFL_Vel_3Order_a=1_CFL_0p1.png" alt="Outlet Jet" style="width: 100%;">
+       <p style="text-align: center;"><strong>(b)</strong> CFL=0.1</p>
+     </div>
+     <div style="flex: 0 0 32%;">
+       <img src="../landing/_images/AVB_Effect_of_CFL_Vel_3Order_a=1_CFL_0p5.png" alt="Outlet Jet" style="width: 100%;">
+       <p style="text-align: center;"><strong>(b)</strong> CFL=0.5</p>
+     </div>
+   </div>
+.. figure:: ../landing/_images/none.png
+   :name: fig-axbar-effofcfl_a1
+   :height: 0
+   :width: 0   
+   :figwidth: 100%
+   :align: center   
+   :alt: Simulation Snapshots Overview
+   
+   Effect of :math:`CFL` on the center of mass velocity of the axial bar (alpha=1)
+
+Hence, it is concluded that lower values of :math:`\alpha_{P-F}` lead to dissipative solution. The dissipative nature further worsens with smaller
+values of CFL number. Hence, for all MPM simulations a typical value of :math:`\alpha_{P-F}=0.95-1.0` is suggested.
+
+Collision of two-dimensional elastic disks
+------------------------------------------
+
+.. raw:: html
+
+   <div class="figure-grid" style="display: flex; flex-wrap: wrap; gap: 1em; justify-content: center;">
+     <div style="flex: 0 0 32%;">
+       <img src="../landing/_images/EDC_PDT.png" alt="Inlet Flow" style="width: 100%;">
+       <p style="text-align: center;"><strong>(a)</strong> </p>
+     </div>
+     <div style="flex: 0 0 32%;">
+       <img src="../landing/_images/EDC_PDMPM.png" alt="Outlet Jet" style="width: 100%;">
+       <p style="text-align: center;"><strong>(b)</strong></p>
+     </div>     
+   </div>
+.. figure:: ../landing/_images/none.png
+   :name: f-edc
+   :height: 0
+   :width: 0   
+   :figwidth: 100%
+   :align: center   
+   :alt: Simulation Snapshots Overview
+   
+   Elastic collision of two circular disks. (a) Problem definition (b) ExaGOOP models
+
+This test case is used to verify ExaGOOP's capability to simulate problems involving contact detection. The two-dimensional test case configuration is
+shown in :numref:`f-edc` (a) and consists of two elastic disks, each of radius :math:`r` and separated by a distance :math:`d`. At time :math:`t=0`, both the disks have a velocity :math:`v` and are directed towards each other. As time progresses, both disks approach each other at constant velocity and collide. After collision, the disks rebound and move away from each other. Since the collision is elastic, the total energy of the disks remains constant in time.
+
+For simulating this test case in ExaGOOP, the value of Young’s modulus :math:`E` and density :math:`\rho` is chosen as :math:`1000`. The
+Poisson's ratio is set as 0.3. The radius of the disks is set to 0.2 m each and the disks are separated by a distance of :math:`d=0.6\sqrt{2}` m.
+The background grid is a square of side :math:`L=2`\ m and consists of 20 cells each in the x and y directions. The two disks are modeled
+using linear elastic material points with four material points located inside each cell. Simulations are carried out using both the linear hat and the
+cubic B-spline shape functions. Based on the conclusions from the previous test case, the value of CFL and :math:`\alpha_{P-F}` are chosen as 0.1
+and 0.95, respectively.
+
+.. raw:: html
+
+   <div class="figure-grid" style="display: flex; flex-wrap: wrap; gap: 1em; justify-content: center;">
+     <div style="flex: 0 0 45%;">
+       <img src="../landing/_images/EDC1.png" alt="Inlet Flow" style="width: 100%;">
+       <p style="text-align: center;"><strong>(a)</strong> </p>
+     </div>
+     <div style="flex: 0 0 45%;">
+       <img src="../landing/_images/EDC2.png" alt="Outlet Jet" style="width: 100%;">
+       <p style="text-align: center;"><strong>(b)</strong></p>
+     </div>     
+     <div style="flex: 0 0 45%;">
+       <img src="../landing/_images/EDC3.png" alt="Outlet Jet" style="width: 100%;">
+       <p style="text-align: center;"><strong>(b)</strong></p>
+     </div>     
+     <div style="flex: 0 0 45%;">
+       <img src="../landing/_images/EDC4.png" alt="Outlet Jet" style="width: 100%;">
+       <p style="text-align: center;"><strong>(b)</strong></p>
+     </div>     
+   </div>
+.. figure:: ../landing/_images/none.png
+   :name: f-edc-coll
+   :height: 0
+   :width: 0   
+   :figwidth: 100%
+   :align: center   
+   :alt: Simulation Snapshots Overview
+   
+   Various stages of disks motion and collision simulated using ExaGOOP
+
+:numref:`f-edc-coll` (a) and (b) show the approach of the disks towards each other. :numref:`f-edc-coll` (c) shows the instant at which the disks collide and :numref:`f-edc-coll` (d) shows the disks rebounding after collision.
+
+:numref:`f-edc-energy` (a) and (b) show the time evolution of the energies of both disks simulated using linear hat and cubic B-spline shape functions. From the initial time until the moment of collision, only kinetic energy exists for both disks due to their initial velocities.
+
+.. raw:: html
+
+   <div class="figure-grid" style="display: flex; flex-wrap: wrap; gap: 1em; justify-content: center;">
+     <div style="flex: 0 0 45%;">
+       <img src="../landing/_images/EDC_Energy_LH.png" alt="Inlet Flow" style="width: 100%;">
+       <p style="text-align: center;"><strong>(a)</strong> </p>
+     </div>
+     <div style="flex: 0 0 45%;">
+       <img src="../landing/_images/EDC_Energy_CS.png" alt="Outlet Jet" style="width: 100%;">
+       <p style="text-align: center;"><strong>(b)</strong></p>
+     </div>     
+   </div>
+.. figure:: ../landing/_images/none.png
+   :name: f-edc-energy
+   :height: 0
+   :width: 0   
+   :figwidth: 100%
+   :align: center   
+   :alt: Simulation Snapshots Overview
+   
+   Time evolution of kinetic, strain and total energies of both the disks
+
+
+Once the disks collide, a portion of the total energy is converted to strain energy. Since there are no dissipative mechanisms modeled in this
+problem, the total energy of the disks should be conserved. Both the linear hat and the cubic spline shape function are able to recover the
+total energy completely. A temporary loss of total energy is observed during the time of collision. This is due to the mass lumping algorithm
+adopted which tend to make the solution slightly dissipative. The exact time of contact happens at time :math:`t=1.58`\ sec while the numerical
+simulations tend to predict the contact much early. This is because, the contact in MPM occurs through the background grid nodes and not through
+material points. This inaccuracy can be reduced by refining the background grid further.
+
+Dam break simulation
+--------------------
+
+ExaGOOP's capability in simulating fluids is demonstrated using the 2-D dam break test case. The test case consists of an initial column of
+water of height :math:`H_0` and width :math:`L_0` located inside a square domain, as shown in :numref:`f-dambreak-compdom` (a). When :math:`t=0`, the water column is released, allowing it to flow downward due to gravity. Over time, the water gradually fills the entire domain. Experimental measurements of the water front are available :cite:`martin1952` for comparison with MPM results.
+
+For the MPM simulations, the domain is structured as shown in :numref:`f-dambreak-compdom` (b). A square domain with a side length of 0.4m is selected to create the background grid, which is discretized into 100 cells in each direction. The height of the water column is set at 0.2 m, and the width is 0.1 m. Unlike previous test cases discussed, water is treated as a fluid, necessitating the specification of an appropriate equation of state. In this study, water is modelled using a barotopic equation of state that relates pressure to the density of water as,
+
+.. math::
+
+   \begin{aligned}
+   p=\kappa\left[\left(\frac{\rho}{\rho_0}\right)^\gamma-1\right]
+   \end{aligned}
+
+The value of :math:`\kappa` and :math:`\gamma` is set as 20000 and 7.0 respectively. The density of water is initialised as 1000 kg/m3.
+Simulation is performed using :math:`CFL=0.1` and :math:`\alpha_{P-F}=0.95`. The spatial discretization scheme employed is cubic B-spline. The simulation snapshots at various time intervals are shown in :numref:`f-dambreak-sim`.
+
+.. raw:: html
+
+   <div class="figure-grid" style="display: flex; flex-wrap: wrap; gap: 1em; justify-content: center;">
+     <div style="flex: 0 0 45%;">
+       <img src="../landing/_images/DB_PDT.png" alt="Inlet Flow" style="width: 100%;">
+       <p style="text-align: center;"><strong>(a)</strong> </p>
+     </div>
+     <div style="flex: 0 0 45%;">
+       <img src="../landing/_images/DB1.png" alt="Outlet Jet" style="width: 100%;">
+       <p style="text-align: center;"><strong>(b)</strong></p>
+     </div>     
+   </div>
+.. figure:: ../landing/_images/none.png
+   :name: f-dambreak-compdom
+   :height: 0
+   :width: 0   
+   :figwidth: 100%
+   :align: center   
+   :alt: Simulation Snapshots Overview
+   
+   Two-dimensional dam break test case (a) the physical problem definition and (b) the corresponding MPM model
+
+:numref:`f-dambreak-mpm_exp` presents a comparison of the water front calculated using ExaGOOP and the experimentally obtained water front values
+:cite:`martin1952` at various times. The solid line indicates the ExaGOOP solution and the red circles denote the experimental data from :cite:`martin1952`. A strong correlation is observed between the numerical and experimental values, thereby validating the solver.
+
+.. raw:: html
+
+   <div class="figure-grid" style="display: flex; flex-wrap: wrap; gap: 1em; justify-content: center;">
+     <div style="flex: 0 0 23%;">
+       <img src="../landing/_images/DB1.png" alt="Inlet Flow" style="width: 100%;">
+       <p style="text-align: center;"><strong>(a) t = 0.0 s</strong> </p>
+     </div>
+     <div style="flex: 0 0 23%;">
+       <img src="../landing/_images/DB2.png" alt="Outlet Jet" style="width: 100%;">
+       <p style="text-align: center;"><strong>(b) t = 0.15 s</strong></p>
+     </div>     
+     <div style="flex: 0 0 23%;">
+       <img src="../landing/_images/DB3.png" alt="Inlet Flow" style="width: 100%;">
+       <p style="text-align: center;"><strong>(c) t = 0.22 s</strong> </p>
+     </div>
+     <div style="flex: 0 0 23%;">
+       <img src="../landing/_images/DB4.png" alt="Inlet Flow" style="width: 100%;">
+       <p style="text-align: center;"><strong>(d) t = 0.29 s</strong> </p>
+     </div>
+   </div>
+.. figure:: ../landing/_images/none.png
+   :name: f-dambreak-sim
+   :height: 0
+   :width: 0   
+   :figwidth: 100%
+   :align: center   
+   :alt: Simulation Snapshots Overview
+   
+   Evolution of water front in the 2-D dam break test case
+   
+.. raw:: html
+
+   <div class="figure-grid" style="display: flex; flex-wrap: wrap; gap: 1em; justify-content: center;">
+     <div style="flex: 0 0 50%;">
+       <img src="../landing/_images/DB_Res2.png" alt="Inlet Flow" style="width: 100%;">
+       <p style="text-align: center;"><strong>(a)</strong> </p>
+     </div>   
+   </div>
+.. figure:: ../landing/_images/none.png
+   :name: f-dambreak-mpm_exp
+   :height: 0
+   :width: 0   
+   :figwidth: 100%
+   :align: center   
+   :alt: Simulation Snapshots Overview
+   
+   Comparison of the water front location with time. Solid line shows ExaGOOP solution and red circles indicate experimental data from :cite:`martin1952`
+
+

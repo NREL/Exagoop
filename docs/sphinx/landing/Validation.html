@@ -6,10 +6,11 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PeleLMeX Verification &amp; Validations &mdash; PeleLMeX 22.12 documentation</title>
+  <title>Axial vibration of an elastic bar &mdash; ExaGOOP 22.12 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="_static/theme.css?v=df66b05f" />
+      <link rel="stylesheet" type="text/css" href="_static/css/custom.css?v=a0fb6060" />
 
   
       <script src="_static/jquery.js?v=5d32c60e"></script>
@@ -17,12 +18,13 @@
       <script src="_static/documentation_options.js?v=d09052ea"></script>
       <script src="_static/doctools.js?v=9a2dae69"></script>
       <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
-      <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+      <script>window.MathJax = {"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "displayMath": [["$$", "$$"], ["\\[", "\\]"]]}}</script>
+      <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Performances" href="Performances.html" />
-    <link rel="prev" title="Source code" href="Implementation.html" /> 
+    <link rel="next" title="References" href="zreferences.html" />
+    <link rel="prev" title="Governing Equations of MPM" href="mpm_equations.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -34,8 +36,8 @@
           
           
           <a href="index.html" class="icon icon-home">
-            PeleLMeX
-              <img src="_static/swirlH2Fast_OH_vort_256.png" class="logo" alt="Logo"/>
+            ExaGOOP
+              <img src="_static/ExaGOOP_Logo.png" class="logo" alt="Logo"/>
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
@@ -45,36 +47,29 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p class="caption" role="heading"><span class="caption-text">Theory:</span></p>
+              <p class="caption" role="heading"><span class="caption-text">The ExaGOOP MPM Solver:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="intro.html">Key Features</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Theory:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="theory.html">Governing equations of continuum mechanics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mpm_equations.html">Governing Equations of MPM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mpm_equations.html#mpm-descretisation-steps">MPM descretisation steps</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Validation and Verification:</span></p>
 <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="intro.html">Introduction</a></li>
-<li class="toctree-l1"><a class="reference internal" href="Implementation.html">Source code</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">PeleLMeX Verification &amp; Validations</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#laminar-premixed-flame">Laminar premixed flame</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#laminar-poiseuille-flow">Laminar Poiseuille flow</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#taylor-green-vortex-breakdown">Taylor-Green vortex breakdown</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#building-and-running">Building and running</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#results">Results</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Axial vibration of an elastic bar</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#effect-of-alpha-p-f">Effect of <span class="math notranslate nohighlight">\(\alpha_{P-F}\)</span></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#effect-of-cfl">Effect of <span class="math notranslate nohighlight">\(CFL\)</span></a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="#channel-flow-using-eb">Channel Flow using EB</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#dns-results-at-re-tau-180">DNS results at <span class="math notranslate nohighlight">\(Re_{\tau}\)</span> = 180</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#les-results-at-re-tau-395-934">LES results at <span class="math notranslate nohighlight">\(Re_{\tau}\)</span> = 395, 934</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#collision-of-two-dimensional-elastic-disks">Collision of two-dimensional elastic disks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#dam-break-simulation">Dam break simulation</a></li>
 </ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="#laminar-counterflow-diffusion-flame">Laminar counterflow diffusion flame</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="Performances.html">Performances</a></li>
-</ul>
-<p class="caption" role="heading"><span class="caption-text">Usage:</span></p>
+<p class="caption" role="heading"><span class="caption-text">References:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="LMeXControls.html">PeleLMeX controls</a></li>
-<li class="toctree-l1"><a class="reference internal" href="Troubleshooting.html">Troubleshooting</a></li>
-</ul>
-<p class="caption" role="heading"><span class="caption-text">Tutorials:</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="Tutorials.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="zreferences.html">References</a></li>
 </ul>
 
         </div>
@@ -83,7 +78,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="index.html">PeleLMeX</a>
+          <a href="index.html">ExaGOOP</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -91,7 +86,7 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
-      <li class="breadcrumb-item active">PeleLMeX Verification &amp; Validations</li>
+      <li class="breadcrumb-item active">Axial vibration of an elastic bar</li>
       <li class="wy-breadcrumbs-aside">
             <a href="_sources/Validation.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -101,429 +96,290 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="pelelmex-verification-validations">
-<h1>PeleLMeX Verification &amp; Validations<a class="headerlink" href="#pelelmex-verification-validations" title="Link to this heading"></a></h1>
-<p>This section assembles results of <cite>PeleLMeX</cite> simulations on a set a test cases
-for which a reference solution can be obtained from the literature or an
-analytical solution exists.</p>
-<section id="laminar-premixed-flame">
-<h2>Laminar premixed flame<a class="headerlink" href="#laminar-premixed-flame" title="Link to this heading"></a></h2>
-<p>The case of a laminar premixed flame is a foundational test case for a reactive
-flow solver. A laminar premixed flame setup is available in <code class="docutils literal notranslate"><span class="pre">Exec/RegTests/FlameSheet</span></code>.
-The case reported hereafter is that of a planar laminar methane/air flame at
-atmospheric conditions and a lean equivalence ratio of 0.9. The initial condition
-is obtained from a Cantera simulation using
-the DRM19 mechanism and the simulation is conducted starting with a coarse resolution
-<span class="math notranslate nohighlight">\(d_{l,0}/\delta_x = 3.5\)</span> (3.5 grid cells in the flame thermal thickness) and progressively
-refined to <span class="math notranslate nohighlight">\(d_{l,0}/\delta_x = 110\)</span> using AMR. Note that the simulation is carried for
-about 30 <span class="math notranslate nohighlight">\(\tau_f = d_{l,0} / S_{l,0}\)</span> before adding refinement levels ensuring that initial
-numerical noise introduced by interpolating the Cantera solution onto the cartesian grid is
-completely removed.</p>
-<p>The <cite>PeleLMeX</cite> results obtained with the finest grid are compared to that of Cantera in <a class="reference internal" href="#pmflmexcantera"><span class="std std-numref">Fig. 1</span></a>.
-Profiles of major and intermediate species as well as temperature across the flame front are
-displayed, with Cantera results shown as black ticked lined underlying each continuous line obtained
-with <cite>PeleLMeX</cite>, demonstrating the solver accuracy.</p>
-<figure class="align-center" id="pmflmexcantera" style="width: 50%">
-<img alt="_images/LMeX_DRM19_Phi0p9.png" src="_images/LMeX_DRM19_Phi0p9.png" />
+  <p>ExaGOOP utilizes the formulation outlined in the previous section. This section presents three validation and verification test cases using ExaGOOP.</p>
+<section id="axial-vibration-of-an-elastic-bar">
+<h1>Axial vibration of an elastic bar<a class="headerlink" href="#axial-vibration-of-an-elastic-bar" title="Link to this heading"></a></h1>
+<p>In this test case, the free, axial vibration of a continuum bar made of a linearly elastic material is studied. This is one of the test cases for which the exact solution is known.</p>
+<div class="figure-grid" style="display: flex; flex-wrap: wrap; gap: 1em; justify-content: center;">
+  <div style="flex: 0 0 100%;">
+    <img src="../landing/_images/AxBar_PDT.png" alt="Inlet Flow" style="width: 100%;">
+    <p style="text-align: center;"><strong>(a)</strong> The physical domain of the bar</p>
+  </div>
+  <div style="flex: 0 0 100%;">
+    <img src="../landing/_images/AxBar_PDMPM.png" alt="Outlet Jet" style="width: 100%;">
+    <p style="text-align: center;"><strong>(b)</strong> Modeling of the bar in ExaGOOP</p>
+  </div>
+</div><figure class="align-center" id="fig-axbar" style="width: 100%">
+<a class="reference internal image-reference" href="_images/none.png"><img alt="Simulation Snapshots Overview" src="_images/none.png" style="width: 0px; height: 0px;" />
+</a>
 <figcaption>
-<p><span class="caption-number">Fig. 1 </span><span class="caption-text">: One-dimentional flame profiles with PeleLMeX and Cantera (underlying black dashed lines)</span><a class="headerlink" href="#pmflmexcantera" title="Link to this image"></a></p>
+<p><span class="caption-number">Fig. 3 </span><span class="caption-text">Axial vibration of a bar. (a) Configuration of test case (b) Corresponding MPM model. Gray lines indicate the background Eulerian grid, and the gray circles are the material points located at time t = 0.</span><a class="headerlink" href="#fig-axbar" title="Link to this image"></a></p>
 </figcaption>
 </figure>
-<p>It is interesting to see how resolution affect the prediction of <cite>PeleLMeX</cite>. The <a class="reference internal" href="#pmftableresolution"><span class="std std-numref">Table 1</span></a>
-shows the laminar flame speed, obtained by numerically integrating the fuel consumption rate, at
-increasing level of refinement. For each AMR level addition, simulation are conducted for about 10 <span class="math notranslate nohighlight">\(\tau_f\)</span>,
-until the flame speed stabilizes. With only a handful of cells across the flame thermal thickness, the flame
-speed is recovered with an accuracy close to 1.5%.</p>
-<table class="docutils align-center" id="pmftableresolution">
-<caption><span class="caption-number">Table 1 </span><span class="caption-text">Effect of resolution on the laminar flame speed</span><a class="headerlink" href="#pmftableresolution" title="Link to this table"></a></caption>
-<colgroup>
-<col style="width: 25.0%" />
-<col style="width: 12.5%" />
-<col style="width: 12.5%" />
-<col style="width: 12.5%" />
-<col style="width: 12.5%" />
-<col style="width: 12.5%" />
-<col style="width: 12.5%" />
-</colgroup>
-<thead>
-<tr class="row-odd"><th class="head"><p><span class="math notranslate nohighlight">\(d_{l,0}/\delta_x\)</span> [-]</p></th>
-<th class="head"><p>3.44</p></th>
-<th class="head"><p>6.88</p></th>
-<th class="head"><p>13.8</p></th>
-<th class="head"><p>27.5</p></th>
-<th class="head"><p>55</p></th>
-<th class="head"><p>110</p></th>
-</tr>
-</thead>
-<tbody>
-<tr class="row-even"><td><p><span class="math notranslate nohighlight">\(S_{l,0}\)</span> [m/s]</p></td>
-<td><p>0.35696</p></td>
-<td><p>0.35144</p></td>
-<td><p>0.35408</p></td>
-<td><p>0.35473</p></td>
-<td><p>0.35488</p></td>
-<td><p>0.35494</p></td>
-</tr>
-<tr class="row-odd"><td><p>Error (vs. Cantera) [%]</p></td>
-<td><p>0.02</p></td>
-<td><p>1.54</p></td>
-<td><p>0.8</p></td>
-<td><p>0.6</p></td>
-<td><p>0.58</p></td>
-<td><p>0.57</p></td>
-</tr>
-</tbody>
-</table>
-<p>Additionally, <a class="reference internal" href="#pmflmexcrsefine"><span class="std std-numref">Fig. 2</span></a> compares profiles of major and intermediate species as well as
-temperature across the flame front for the coarsest and the finest resolution employed. Results
-indicates that major species (or temperature) are well captured whereas short lived species peak
-values are locally off due to the lack of resolution but are still reasonably well located within
-the flame front.</p>
-<figure class="align-center" id="pmflmexcrsefine" style="width: 50%">
-<img alt="_images/LMeX_FinevsCoarse.png" src="_images/LMeX_FinevsCoarse.png" />
-<figcaption>
-<p><span class="caption-number">Fig. 2 </span><span class="caption-text">: Comparison of a coarsed and finely resolved 1D flame in PeleLMeX</span><a class="headerlink" href="#pmflmexcrsefine" title="Link to this image"></a></p>
-</figcaption>
-</figure>
-</section>
-<section id="laminar-poiseuille-flow">
-<h2>Laminar Poiseuille flow<a class="headerlink" href="#laminar-poiseuille-flow" title="Link to this heading"></a></h2>
-<p>The laminar pipe flow or Poiseuille flow, is a basic test case for wall bounded flows.
-In the present configuration, the geometry consist of a circular channel of radius <span class="math notranslate nohighlight">\(R\)</span> = 1 cm
-aligned with the <span class="math notranslate nohighlight">\(x\)</span>-direction, where no-slip boundary conditions are imposed on
-EB surface. The flow is periodic in the <span class="math notranslate nohighlight">\(x\)</span>-direction and a background pressure
-gradient <span class="math notranslate nohighlight">\(dp /dx\)</span> is used to drive the flow.</p>
-<p>The exact solution at steady state is:</p>
+<p>The test case configuration is shown in <a class="reference internal" href="#fig-axbar"><span class="std std-numref">Fig. 3</span></a> (a). The bar has a length <span class="math notranslate nohighlight">\(L\)</span> with an area of cross-section <span class="math notranslate nohighlight">\(A\)</span> and is made up of a linear elastic material with Young’s modulus <span class="math notranslate nohighlight">\(E\)</span>. The Poisson’s ratio of the material is set as zero. The bar is fixed at one end and left free at the other. The equation governing the vibration of the bar is given by,</p>
+<div class="math notranslate nohighlight" id="equation-goveq-axial-bar">
+<span class="eqno">(6)<a class="headerlink" href="#equation-goveq-axial-bar" title="Link to this equation"></a></span>\[\begin{aligned}
+    \frac{\partial^2 u}{\partial t^2}=c^2 \frac{\partial^2 u}{\partial x^2}
+\end{aligned}\]</div>
+<p>where <span class="math notranslate nohighlight">\(u\)</span> is the axial displacement and <span class="math notranslate nohighlight">\(c\)</span> is the speed of
+sound in the elastic medium. The bar is subjected to the following
+boundary conditions:</p>
+<div class="math notranslate nohighlight" id="equation-bc-axial-bar">
+<span class="eqno">(7)<a class="headerlink" href="#equation-bc-axial-bar" title="Link to this equation"></a></span>\[\begin{split}\begin{aligned}
+    u(0,t)=0\\
+    \frac{\partial u}{\partial x} (L,t) = 0
+\end{aligned}\end{split}\]</div>
+<p>When an initial axial velocity <span class="math notranslate nohighlight">\(v(x,0)= V_0 \sin \left(\frac{\pi x}{2 L}\right)\)</span> is imposed on the bar, the analytical solution to the governing equation Eq <a class="reference internal" href="#equation-goveq-axial-bar">(6)</a> subjected to the boundary conditions Eqs. <a class="reference internal" href="#equation-bc-axial-bar">(7)</a> is given by,</p>
 <div class="math notranslate nohighlight">
-\[u(r) = \frac{G}{4 \mu} (R^2 - r^2)\]</div>
-<p>where <span class="math notranslate nohighlight">\(G = -dp/dx\)</span>, and <span class="math notranslate nohighlight">\(\mu\)</span> is the dynamic viscosity.
-The test case can be found in <code class="docutils literal notranslate"><span class="pre">Exec/RegTests/EB_PipeFlow</span></code>, where
-the input parameters are very similar to the PeleC counterpart of
-this case.</p>
-<p>The steady-state <span class="math notranslate nohighlight">\(x\)</span>-velocity profiles across the pipe diameter
-at increasing resolution are plotted along with the theorerical profile in <a class="reference internal" href="#poiseuillevelprof"><span class="std std-numref">Fig. 3</span></a>:</p>
-<figure class="align-center" id="poiseuillevelprof" style="width: 50%">
-<img alt="_images/PoiseuilleVelProf.png" src="_images/PoiseuilleVelProf.png" />
+\[\begin{split}\begin{aligned}
+&amp; u(x, t)=\frac{V_0}{\omega_1} \sin \left(\frac{\pi x}{2 L}\right) \sin \left(\omega_1 t\right) \\
+&amp; v(x, t)=V_0 \sin \left(\frac{\pi x}{2 L}\right) \cos \left(\omega_1 t\right)
+\end{aligned}\end{split}\]</div>
+<p>where <span class="math notranslate nohighlight">\(\omega_1\)</span> is the fundamental frequency of the first mode of
+vibration.</p>
+<p>Numerical simulations of this test case are performed using ExaGOOP. The properties of the bar are set as <span class="math notranslate nohighlight">\(E=100, L=25\)</span> and <span class="math notranslate nohighlight">\(V_0 = 0.1\)</span>. The density of the material, <span class="math notranslate nohighlight">\(\rho\)</span> is set equal to unity. The length of the bar is discretized using <span class="math notranslate nohighlight">\(25\)</span> material points located equidistant from each other so that each material point simulates one unit length of the bar. Even though this test case involves only one-dimension in space, a three-dimensional, structured background grid with unit grid length is generated by ExaGOOP . The grid has <span class="math notranslate nohighlight">\(29\)</span> cells in the axial direction and three cells in the other two directions. At the initial time, each material point is located at the center of the cell as shown in <a class="reference internal" href="#fig-axbar"><span class="std std-numref">Fig. 3</span></a> (b). Four grid cells are left as a buffer region between the right-most material point and the right boundary of the background grid. No-slip and slip wall boundary conditions are imposed on the left and the right boundaries, respectively, while periodic boundary conditions are imposed in the other two directions. Simulations are performed using both the linear-hat shape functions as well as the cubic B-spline shape functions, and for <span class="math notranslate nohighlight">\(\alpha_{P-F}\)</span> equal to zero and one, respectively. The CFL numbers are varied across different simulations. For ease of presentation, the comparisons between the exact solution and the MPM solutions obtained using are shown here using the center of mass velocity of the bar, <span class="math notranslate nohighlight">\(v_{cm}\)</span> and using system energies. The exact center of mass velocity is given by <span class="math notranslate nohighlight">\(v_{\mathrm{cm}}^{\mathrm{exa}}(t)=\frac{V_0 c}{\omega_1 L} \cos \left(\omega_1 t\right)\)</span> and its MPM counterpart is calculated as <span class="math notranslate nohighlight">\(v_{\mathrm{cm}}^{\mathrm{num}}(t)=\frac{\sum v_p(t) m_p}{\sum m_p}\)</span>. Three different forms of system energy is shown for comparison, namely the kinetic energy (<span class="math notranslate nohighlight">\(KE=\frac{1}{2} \sum_{p=1}^{n_p} \mathbf{v}_p \cdot \mathbf{v}_p m_p\)</span>), the strain energy (<span class="math notranslate nohighlight">\(SE=\frac{1}{2} \sum_{p=1}^{n_p} \sigma_{p} \epsilon_{p} V_p\)</span>) and the total energy (<span class="math notranslate nohighlight">\(TE=KE+SE\)</span>).</p>
+<section id="effect-of-alpha-p-f">
+<h2>Effect of <span class="math notranslate nohighlight">\(\alpha_{P-F}\)</span><a class="headerlink" href="#effect-of-alpha-p-f" title="Link to this heading"></a></h2>
+<div class="figure-grid" style="display: flex; flex-wrap: wrap; gap: 1em; justify-content: center;">
+  <div style="flex: 0 0 45%;">
+    <img src="../landing/_images/AVB_Effect_of_alpha_Vel_1Order_a=0.png" alt="Inlet Flow" style="width: 100%;">
+    <p style="text-align: center;"><strong>(a)</strong> alpha=0</p>
+  </div>
+  <div style="flex: 0 0 45%;">
+    <img src="../landing/_images/AVB_Effect_of_alpha_Vel_1Order_a=1.png" alt="Outlet Jet" style="width: 100%;">
+    <p style="text-align: center;"><strong>(b)</strong> alpha=1</p>
+  </div>
+</div><figure class="align-center" id="fig-axbar-effofalpha" style="width: 100%">
+<a class="reference internal image-reference" href="_images/none.png"><img alt="Simulation Snapshots Overview" src="_images/none.png" style="width: 0px; height: 0px;" />
+</a>
 <figcaption>
-<p><span class="caption-number">Fig. 3 </span><span class="caption-text">: Axial velocity profile at increasing resolution with PeleLMeX</span><a class="headerlink" href="#poiseuillevelprof" title="Link to this image"></a></p>
+<p><span class="caption-number">Fig. 4 </span><span class="caption-text">Effect of <span class="math notranslate nohighlight">\(\alpha_{P-F}\)</span> on the center of mass velocity of the axial bar</span><a class="headerlink" href="#fig-axbar-effofalpha" title="Link to this image"></a></p>
 </figcaption>
 </figure>
-<p>A more quantitative evaluation of PeleLMeX results is obtained by calculating
-the L2 norm of the error against the analytical profile:</p>
-<figure class="align-center" id="poiseuilleconvergence" style="width: 50%">
-<img alt="_images/PoiseuilleConvergence.png" src="_images/PoiseuilleConvergence.png" />
+<p><a class="reference internal" href="#fig-axbar-effofalpha"><span class="std std-numref">Fig. 4</span></a> shows the  variation of <span class="math notranslate nohighlight">\(v_{cm}\)</span> as a function of time for two different values of <span class="math notranslate nohighlight">\(\alpha_{P-F}\)</span> (<span class="math notranslate nohighlight">\(0\)</span> and <span class="math notranslate nohighlight">\(1\)</span>). It is observed that for <span class="math notranslate nohighlight">\(\alpha_{P-F}=0\)</span>, the center of mass velocity decreases with time in contrast to the exact solution where the amplitude remains unchanged. On the other hand, for <span class="math notranslate nohighlight">\(\alpha_{P-F}=1\)</span> the exact nature of the solution is well captured by ExaGOOP solution.</p>
+<p>This dissipative nature of the numerical solution at low values of <span class="math notranslate nohighlight">\(\alpha_{P-F}\)</span> can also be observed from the temporal evolution of
+energies plotted in <a class="reference internal" href="#fig-axbar-effofalpha-energy"><span class="std std-numref">Fig. 5</span></a>. Both kinetic and strain energy (and hence the total energy as well) is found
+to decrease and ultimately reach zero with time for <span class="math notranslate nohighlight">\(\alpha_{P-F}=0\)</span> while <span class="math notranslate nohighlight">\(\alpha_{P-F}=1\)</span> captures the non-dissipative nature of the exact solution accurately.</p>
+<div class="figure-grid" style="display: flex; flex-wrap: wrap; gap: 1em; justify-content: center;">
+  <div style="flex: 0 0 45%;">
+    <img src="../landing/_images/AVB_Effect_of_alpha_Engy_1Order_a=0.png" alt="Inlet Flow" style="width: 100%;">
+    <p style="text-align: center;"><strong>(a)</strong> alpha=0</p>
+  </div>
+  <div style="flex: 0 0 45%;">
+    <img src="../landing/_images/AVB_Effect_of_alpha_Engy_1Order_a=1.png" alt="Outlet Jet" style="width: 100%;">
+    <p style="text-align: center;"><strong>(b)</strong> alpha=1</p>
+  </div>
+</div><figure class="align-center" id="fig-axbar-effofalpha-energy" style="width: 100%">
+<a class="reference internal image-reference" href="_images/none.png"><img alt="Simulation Snapshots Overview" src="_images/none.png" style="width: 0px; height: 0px;" />
+</a>
 <figcaption>
-<p><span class="caption-number">Fig. 4 </span><span class="caption-text">: L2-norm of the axial velocity profile as function of the number of cells across the pipe diameter</span><a class="headerlink" href="#poiseuilleconvergence" title="Link to this image"></a></p>
-</figcaption>
-</figure>
-<p>showing second-order convergence for this diffusion dominated flow.</p>
-</section>
-<section id="taylor-green-vortex-breakdown">
-<h2>Taylor-Green vortex breakdown<a class="headerlink" href="#taylor-green-vortex-breakdown" title="Link to this heading"></a></h2>
-<p>The Taylor-Green vortex breakdown case is a classical CFD test case
-described in <a class="reference external" href="https://www1.grc.nasa.gov/research-and-engineering/hiocfd/">here</a>
-(case C3.3). It is intended to test the capability of the code to capture turbulence accurately,
-with the flow transitioning to turbulence, with the creation of small scales, followed
-by a decay phase similar to decaying homogeneous turbulence.</p>
-<section id="building-and-running">
-<h3>Building and running<a class="headerlink" href="#building-and-running" title="Link to this heading"></a></h3>
-<p>The test case can be found in <code class="docutils literal notranslate"><span class="pre">Exec/RegTests/TaylorGreen</span></code>.</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>make<span class="w"> </span>-j<span class="w"> </span><span class="m">16</span><span class="w"> </span><span class="nv">DIM</span><span class="o">=</span><span class="m">3</span><span class="w"> </span><span class="nv">USE_MPI</span><span class="o">=</span>TRUE<span class="w"> </span>TPL
-$<span class="w"> </span>make<span class="w"> </span>-j<span class="w"> </span><span class="m">16</span><span class="w"> </span><span class="nv">DIM</span><span class="o">=</span><span class="m">3</span><span class="w"> </span><span class="nv">USE_MPI</span><span class="o">=</span>TRUE
-$<span class="w"> </span>mpiexec<span class="w"> </span>-n<span class="w"> </span><span class="m">16</span><span class="w"> </span><span class="nv">$EXECUTABLE</span><span class="w"> </span>inputs_3d<span class="w"> </span>amr.ncell<span class="o">=</span><span class="m">64</span><span class="w"> </span><span class="m">64</span><span class="w"> </span><span class="m">64</span>
-</pre></div>
-</div>
-<p>The user can run a convergence study by varying <code class="docutils literal notranslate"><span class="pre">amr.ncell</span></code>.</p>
-</section>
-<section id="results">
-<h3>Results<a class="headerlink" href="#results" title="Link to this heading"></a></h3>
-<p>The following figures shows the kinetic energy, the dissipation rate and
-the enstrophy as function of time (all quantities are non-dimensional)
-for increasing resolutions (ranging from 64^3 to 512^3) and compared
-to the results of a high-order spectral solver with a 512^3 resolution.
-<cite>PeleLMeX</cite> results are obtained with the <em>Godunov_PPM</em> scheme and show
-that even though <cite>PeleLMeX</cite> uses a 2nd-order scheme, reasonable
-accuracy compared to the spectral results is obtained when the resolution is sufficient.</p>
-<p><a class="reference internal" href="_images/KinEnergy.png"><img alt="TGKinEnergy" src="_images/KinEnergy.png" style="width: 48%;" /></a> <a class="reference internal" href="_images/Dissipation.png"><img alt="TGDiss" src="_images/Dissipation.png" style="width: 48%;" /></a></p>
-<p><a class="reference internal" href="_images/Enstrophy.png"><img alt="TGEnstrophy" src="_images/Enstrophy.png" style="width: 48%;" /></a></p>
-<p>Additionally, it is interesting to compare the different advection schemes
-available in <cite>PeleLMeX</cite> (namely, <em>Godunov_PLM</em>, <em>Godunov_PPM</em>, <em>Godunov_BDS</em>,
-<em>Godunov_PPM_WENOZ</em>) at a fixed 256^3 spatial resolution:</p>
-<figure class="align-center" style="width: 48%">
-<img alt="_images/Enstrophy_AllSchemes.png" src="_images/Enstrophy_AllSchemes.png" />
-</figure>
-<p>On this particular case, the differences between the advection schemes are fairly
-marginal compared to those observed at different grid resolutions.</p>
-</section>
-</section>
-<section id="channel-flow-using-eb">
-<h2>Channel Flow using EB<a class="headerlink" href="#channel-flow-using-eb" title="Link to this heading"></a></h2>
-<p>We present results of the classical periodic channel flow, available in the
-<code class="docutils literal notranslate"><span class="pre">Exec/RegTests/EB_PipeFlow</span></code> folder. Simulations are performed at three
-stress Reynold number <span class="math notranslate nohighlight">\(Re_{\tau}\)</span> = 180, 395 and 934 corresponding
-to the cases described in <a class="reference external" href="https://doi.org/10.1017/S0022112087000892">Kim et al., 1986</a>,
-<a class="reference external" href="https://doi.org/10.1063/1.869966">Moser et al., 1999</a> and
-<a class="reference external" href="https://doi.org/10.1063/1.2162185">Hoyas and Jimenez, 2006</a>, respectively. A first
-DNS is performed at <span class="math notranslate nohighlight">\(Re_{\tau}\)</span> = 180, then the LES models implementation is tested
-at higher Reynold numbers.</p>
-<p>For all cases, the configuration is periodic in the <span class="math notranslate nohighlight">\(x\)</span> and <span class="math notranslate nohighlight">\(z\)</span> directions and wall boundaries are
-imposed in the <span class="math notranslate nohighlight">\(y\)</span> direction using Embedded Boundaries.</p>
-<section id="dns-results-at-re-tau-180">
-<h3>DNS results at <span class="math notranslate nohighlight">\(Re_{\tau}\)</span> = 180<a class="headerlink" href="#dns-results-at-re-tau-180" title="Link to this heading"></a></h3>
-<p>The channel half width <span class="math notranslate nohighlight">\(\delta\)</span> is set to 0.005 m, and the computational domain extend
-in +/- 0.0052 m in <span class="math notranslate nohighlight">\(y\)</span> with EB intersecting the domain at +/- <span class="math notranslate nohighlight">\(\delta\)</span>. A background pressure gradient in
-imposed in the <span class="math notranslate nohighlight">\(x\)</span> to compensate wall friction. The base grid and two levels of refinement are described in <a class="reference internal" href="#ebcdomain"><span class="std std-numref">Table 2</span></a>:</p>
-<table class="docutils align-center" id="ebcdomain">
-<caption><span class="caption-number">Table 2 </span><span class="caption-text">DNS Channel flow domain</span><a class="headerlink" href="#ebcdomain" title="Link to this table"></a></caption>
-<colgroup>
-<col style="width: 40.0%" />
-<col style="width: 20.0%" />
-<col style="width: 20.0%" />
-<col style="width: 20.0%" />
-</colgroup>
-<thead>
-<tr class="row-odd"><th class="head"></th>
-<th class="head"><p><span class="math notranslate nohighlight">\(x\)</span></p></th>
-<th class="head"><p><span class="math notranslate nohighlight">\(y\)</span></p></th>
-<th class="head"><p><span class="math notranslate nohighlight">\(z\)</span></p></th>
-</tr>
-</thead>
-<tbody>
-<tr class="row-even"><td><p>Domain size</p></td>
-<td><p>6.24 <span class="math notranslate nohighlight">\(\delta\)</span></p></td>
-<td><p>2.08 <span class="math notranslate nohighlight">\(\delta\)</span></p></td>
-<td><p>3.12 <span class="math notranslate nohighlight">\(\delta\)</span></p></td>
-</tr>
-<tr class="row-odd"><td><p>Base grid L0</p></td>
-<td><p>384</p></td>
-<td><p>128</p></td>
-<td><p>192</p></td>
-</tr>
-<tr class="row-even"><td><p>L1</p></td>
-<td><p>768</p></td>
-<td><p>256</p></td>
-<td><p>384</p></td>
-</tr>
-<tr class="row-odd"><td><p>L2</p></td>
-<td><p>1536</p></td>
-<td><p>512</p></td>
-<td><p>768</p></td>
-</tr>
-</tbody>
-</table>
-<p>The fluid in the simulation is air at ambient pressure and a temperature of 750.0 K, the physical
-property of which are summarized in <a class="reference internal" href="#ebcfluidprop"><span class="std std-numref">Table 3</span></a>:</p>
-<table class="docutils align-center" id="ebcfluidprop">
-<caption><span class="caption-number">Table 3 </span><span class="caption-text">Fluid properties</span><a class="headerlink" href="#ebcfluidprop" title="Link to this table"></a></caption>
-<colgroup>
-<col style="width: 16.7%" />
-<col style="width: 16.7%" />
-<col style="width: 16.7%" />
-<col style="width: 16.7%" />
-<col style="width: 16.7%" />
-<col style="width: 16.7%" />
-</colgroup>
-<thead>
-<tr class="row-odd"><th class="head"></th>
-<th class="head"><p>Pressure</p></th>
-<th class="head"><p>Temperature</p></th>
-<th class="head"><p>Density</p></th>
-<th class="head"><p><span class="math notranslate nohighlight">\(\mu\)</span></p></th>
-<th class="head"><p><span class="math notranslate nohighlight">\(\nu\)</span></p></th>
-</tr>
-</thead>
-<tbody>
-<tr class="row-even"><td><p>Value [MKS]</p></td>
-<td><p>102325.0</p></td>
-<td><p>750.0</p></td>
-<td><p>0.468793</p></td>
-<td><p>3.57816e-5</p></td>
-<td><p>7.63271e-5</p></td>
-</tr>
-</tbody>
-</table>
-<p>The characteristics of the flows are reported in <a class="reference internal" href="#ebcflowchar"><span class="std std-numref">Table 4</span></a>:</p>
-<table class="docutils align-center" id="ebcflowchar">
-<caption><span class="caption-number">Table 4 </span><span class="caption-text">DNS Channel flow characteristics</span><a class="headerlink" href="#ebcflowchar" title="Link to this table"></a></caption>
-<colgroup>
-<col style="width: 18.5%" />
-<col style="width: 18.5%" />
-<col style="width: 18.5%" />
-<col style="width: 18.5%" />
-<col style="width: 25.9%" />
-</colgroup>
-<thead>
-<tr class="row-odd"><th class="head"><p><span class="math notranslate nohighlight">\(Re_{\tau}\)</span></p></th>
-<th class="head"><p><span class="math notranslate nohighlight">\(u_{\tau}\)</span></p></th>
-<th class="head"><p><span class="math notranslate nohighlight">\(\tau_w\)</span></p></th>
-<th class="head"><p><span class="math notranslate nohighlight">\(dp/dx\)</span></p></th>
-<th class="head"><p><span class="math notranslate nohighlight">\(t^* = \delta/u_{\tau}\)</span></p></th>
-</tr>
-</thead>
-<tbody>
-<tr class="row-even"><td><p>180.2</p></td>
-<td><p>2.75122</p></td>
-<td><p>3.5485</p></td>
-<td><p>-709.79</p></td>
-<td><p>1.817e-3</p></td>
-</tr>
-</tbody>
-</table>
-<p>Two levels of refinement, targeted on the EB, are employed in order to sufficiently resolve the boundary
-layer. The mesh characteristics are summarized in <a class="reference internal" href="#ebcmeshes"><span class="std std-numref">Table 5</span></a>. The <span class="math notranslate nohighlight">\(y^+\)</span> value is that of
-the cell center of the first full cell (uncut by the EB).</p>
-<table class="docutils align-center" id="ebcmeshes">
-<caption><span class="caption-number">Table 5 </span><span class="caption-text">Mesh characteristics</span><a class="headerlink" href="#ebcmeshes" title="Link to this table"></a></caption>
-<colgroup>
-<col style="width: 18.5%" />
-<col style="width: 18.5%" />
-<col style="width: 18.5%" />
-<col style="width: 18.5%" />
-<col style="width: 25.9%" />
-</colgroup>
-<thead>
-<tr class="row-odd"><th class="head"><p><span class="math notranslate nohighlight">\(Re_{\tau}\)</span></p></th>
-<th class="head"><p><span class="math notranslate nohighlight">\(\Delta y^+ L0\)</span></p></th>
-<th class="head"><p><span class="math notranslate nohighlight">\(\Delta y^+ Lmax\)</span></p></th>
-<th class="head"><p><span class="math notranslate nohighlight">\(y^+\)</span></p></th>
-<th class="head"><p>Cells count</p></th>
-</tr>
-</thead>
-<tbody>
-<tr class="row-even"><td><p>180.2</p></td>
-<td><p>2.93</p></td>
-<td><p>0.732</p></td>
-<td><p>0.479</p></td>
-<td><p>56.6 M</p></td>
-</tr>
-</tbody>
-</table>
-<p>Simulations are carried out for 20 eddy turn over time <span class="math notranslate nohighlight">\(t^*\)</span> to reach statistically steady
-conditions and data are then spatially averaged in the periodic directions and averaged in time over 10 <span class="math notranslate nohighlight">\(t^*\)</span>
-to get the velocity statistics in the direction normal to the wall.</p>
-<p><a class="reference internal" href="_images/Uplus_Re180_DNS_LMeX.png"><img alt="DNS180Uplus" src="_images/Uplus_Re180_DNS_LMeX.png" style="width: 48%;" /></a> <a class="reference internal" href="_images/VelRMSplus_Re180_DNS_LMeX.png"><img alt="DNS180Urms" src="_images/VelRMSplus_Re180_DNS_LMeX.png" style="width: 48%;" /></a></p>
-<p>Results indicate that <cite>PeleLMeX</cite> is able to reproduce accurately the DNS data obtained with
-a high-order spectral solver, provided sufficient resolution at the wall.</p>
-</section>
-<section id="les-results-at-re-tau-395-934">
-<h3>LES results at <span class="math notranslate nohighlight">\(Re_{\tau}\)</span> = 395, 934<a class="headerlink" href="#les-results-at-re-tau-395-934" title="Link to this heading"></a></h3>
-<p>The channel half width <span class="math notranslate nohighlight">\(\delta\)</span> is set to 0.01 m, and the computational domain extend
-in +/- 0.0101 m in <span class="math notranslate nohighlight">\(y\)</span> with EB intersecting the domain at +/- <span class="math notranslate nohighlight">\(\delta\)</span>. The base grid is coarser
-than the DNS one by a factor of 2. A background pressure gradient in imposed in the <span class="math notranslate nohighlight">\(x\)</span> to compensate
-wall friction. The fluid conditions are similar to that of the DNS case and the flow
-and mesh characteristics are summarized in <a class="reference internal" href="#ebclesflowschar"><span class="std std-numref">Table 6</span></a>:</p>
-<table class="docutils align-center" id="ebclesflowschar">
-<caption><span class="caption-number">Table 6 </span><span class="caption-text">LES Channel flow characteristics</span><a class="headerlink" href="#ebclesflowschar" title="Link to this table"></a></caption>
-<colgroup>
-<col style="width: 14.3%" />
-<col style="width: 14.3%" />
-<col style="width: 14.3%" />
-<col style="width: 14.3%" />
-<col style="width: 14.3%" />
-<col style="width: 14.3%" />
-<col style="width: 14.3%" />
-</colgroup>
-<thead>
-<tr class="row-odd"><th class="head"><p><span class="math notranslate nohighlight">\(Re_{\tau}\)</span></p></th>
-<th class="head"><p><span class="math notranslate nohighlight">\(u_{\tau}\)</span></p></th>
-<th class="head"><p><span class="math notranslate nohighlight">\(\tau_w\)</span></p></th>
-<th class="head"><p><span class="math notranslate nohighlight">\(dp/dx\)</span></p></th>
-<th class="head"><p><span class="math notranslate nohighlight">\(t^* = \delta/u_{\tau}\)</span></p></th>
-<th class="head"><p><span class="math notranslate nohighlight">\(\Delta y^+ L0\)</span></p></th>
-<th class="head"><p><span class="math notranslate nohighlight">\(\Delta y^+ Lmax\)</span></p></th>
-</tr>
-</thead>
-<tbody>
-<tr class="row-even"><td><p>395</p></td>
-<td><p>3.01492</p></td>
-<td><p>4.26121</p></td>
-<td><p>-426.121</p></td>
-<td><p>3.3317e-3</p></td>
-<td><p>12.467</p></td>
-<td><p>6.2336</p></td>
-</tr>
-<tr class="row-odd"><td><p>934</p></td>
-<td><p>7.12895</p></td>
-<td><p>23.8250</p></td>
-<td><p>-2382.50</p></td>
-<td><p>1.4027e-3</p></td>
-<td><p>29.479</p></td>
-<td><p>7.36984</p></td>
-</tr>
-</tbody>
-</table>
-<p>Note that a single level of refinement is employed for the <span class="math notranslate nohighlight">\(Re_{\tau}\)</span> = 395 while two are
-used for <span class="math notranslate nohighlight">\(Re_{\tau}\)</span> = 934 in order to provide sufficient (but still below <span class="math notranslate nohighlight">\(y^+=1\)</span>)
-resolution near the walls.</p>
-<p>Simulations are performed with the WALE LES SGS model. The plots below shows that <cite>PeleLMeX</cite> is
-able to reproduce the normalized velocity profile reasonably well even though the resolution
-requirements for a Wall Resolved LES are not quite attained with the grid employed here.</p>
-<p><a class="reference internal" href="_images/Uplus_Re395_LES_LMeX.png"><img alt="LES395Uplus" src="_images/Uplus_Re395_LES_LMeX.png" style="width: 48%;" /></a> <a class="reference internal" href="_images/VelRMSplus_Re395_LES_LMeX.png"><img alt="LES395Urms" src="_images/VelRMSplus_Re395_LES_LMeX.png" style="width: 48%;" /></a></p>
-<p><a class="reference internal" href="_images/Uplus_Re934_LES_LMeX.png"><img alt="LES934Uplus" src="_images/Uplus_Re934_LES_LMeX.png" style="width: 48%;" /></a> <a class="reference internal" href="_images/VelRMSplus_Re934_LES_LMeX.png"><img alt="LES934Urms" src="_images/VelRMSplus_Re934_LES_LMeX.png" style="width: 48%;" /></a></p>
-<p>The velocity variance in the plot above show distinctive drops around coarse/fine interfaces,
-where the filter size change and a the subgrid-scale contribution increases as depicted on the figure below showing the
-subgrid-scale viscosity for the <span class="math notranslate nohighlight">\(Re_{\tau}\)</span> = 934 case.</p>
-<figure class="align-center" style="width: 48%">
-<img alt="_images/nu_t_Re934_LES_LMeX.png" src="_images/nu_t_Re934_LES_LMeX.png" />
-</figure>
-<p>Further work is ongoing to assess how to better handle large LES filter size changes in the context
-of AMR-LES</p>
-</section>
-</section>
-<section id="laminar-counterflow-diffusion-flame">
-<h2>Laminar counterflow diffusion flame<a class="headerlink" href="#laminar-counterflow-diffusion-flame" title="Link to this heading"></a></h2>
-<p>The laminar counterflow diffusion flame is a fundamental test case for non-premixed reactive flows. A
-laminar counterflow diffusion flame setup is available in <code class="docutils literal notranslate"><span class="pre">Exec/Production/CounterFlow</span></code>.
-In the present configuration, the geometry consists of a 1.5 cm x 1.5 cm domain with inflow at the left
-and right boundaries and outflow at the top and bottom boundaries. The left and right inflow boundaries
-correspond to the oxidizer and fuel inlet sides respectively, with an oxidizer/fuel jet section of
-diameter <span class="math notranslate nohighlight">\(d_{jet} = 0.5 cm\)</span> (<code class="docutils literal notranslate"><span class="pre">prob.jet_radius</span></code> of 0.0025) centered at the boundary. The
-remainder of the inflow boundary consists of inert inflow sections with composition of pure N2.
-The oxidizer jet section composition is that of air, while the fuel jet section composition is pure
-gaseous Dodecane. The inert inflow velocity on the left and right is set equal to the oxidizer and fuel
-jet velocities, respectively, in order to eliminate shear interactions between the inert and jet
-streams. The oxidizer and fuel jet velocities are 15.0 cm/s and 6.17 cm/s, respectively, corresponding
-to a global strain rate of <span class="math notranslate nohighlight">\(40 s^{-1}\)</span>. The initial condition corresponds to air composition
-filling the left half of the domain and gaseous Dodecane composition filling the right half of the
-domain with a hyperbolic tangent smoothly transitioning species mass fractions in the center of the
-domain. Ignition is performed by patching a spherical kernel of elevated temperature (in this case
-1000 K) with radius of 0.3 cm in the center of the domain as to cause autoignition. Grid refinement
-criteria based on the gradient of temperature is used and solution convergence is achieved with
-<code class="docutils literal notranslate"><span class="pre">amr.max_level</span></code> of 2.</p>
-<p>The <cite>PeleLMeX</cite> results obtained using the specified grid refinement criteria are compared to that of
-Cantera in spatial and mixture fraction space in <a class="reference internal" href="#counterflowlmexcantera-spatial"><span class="std std-numref">Fig. 5</span></a> and
-<a class="reference internal" href="#counterflowlmexcantera-mixture"><span class="std std-numref">Fig. 6</span></a>, respectively. Centerline profiles of major species as well as
-temperature across the flame front at steady-state are displayed, with PeleLMeX results indicated by
-solid colored lines and Cantera results indicated by black ticked lines. The results show very good
-agreement between the PeleLMeX and Cantera centerline profiles, with only small differences visible
-when plotting versus spatial coordinate due to differences in geometry (1-D vs. 2-D).</p>
-<figure class="align-center" id="counterflowlmexcantera-spatial" style="width: 50%">
-<img alt="_images/Dodecane_Counterflow_Spatial_Dodecane_Added.png" src="_images/Dodecane_Counterflow_Spatial_Dodecane_Added.png" />
-<figcaption>
-<p><span class="caption-number">Fig. 5 </span><span class="caption-text">: One-dimentional flame spatial profiles with PeleLMeX and Cantera (underlying black dashed lines)</span><a class="headerlink" href="#counterflowlmexcantera-spatial" title="Link to this image"></a></p>
-</figcaption>
-</figure>
-<figure class="align-center" id="counterflowlmexcantera-mixture" style="width: 50%">
-<img alt="_images/Dodecane_Counterflow_Mixture_Dodecane_Added.png" src="_images/Dodecane_Counterflow_Mixture_Dodecane_Added.png" />
-<figcaption>
-<p><span class="caption-number">Fig. 6 </span><span class="caption-text">: One-dimentional flame profiles (mixture fraction space) with PeleLMeX and Cantera (underlying black dashed lines)</span><a class="headerlink" href="#counterflowlmexcantera-mixture" title="Link to this image"></a></p>
+<p><span class="caption-number">Fig. 5 </span><span class="caption-text">Effect of <span class="math notranslate nohighlight">\(\alpha_{P-F}\)</span> on the kinetic (KE), strain (SE) and total (TE) of the axial bar</span><a class="headerlink" href="#fig-axbar-effofalpha-energy" title="Link to this image"></a></p>
 </figcaption>
 </figure>
 </section>
+<section id="effect-of-cfl">
+<h2>Effect of <span class="math notranslate nohighlight">\(CFL\)</span><a class="headerlink" href="#effect-of-cfl" title="Link to this heading"></a></h2>
+<p>It is also interesting to study the effect of <span class="math notranslate nohighlight">\(CFL\)</span> on the solution accuracy. <a class="reference internal" href="#fig-axbar-effofcfl"><span class="std std-numref">Fig. 6</span></a> shows the time evolution of <span class="math notranslate nohighlight">\(v_{cm}\)</span> for values of <span class="math notranslate nohighlight">\(CFL=0.01,0.1\)</span> and <span class="math notranslate nohighlight">\(0.5\)</span>. The results shown are obtained using the cubic spline shape functions and for <span class="math notranslate nohighlight">\(\alpha_{P-F}=0\)</span>. It is observed that the magnitude of <span class="math notranslate nohighlight">\(v_{cm}\)</span> reduces over time for this numerical parameters.  It is also observed that the MPM solution deviates from the exact solution as the <span class="math notranslate nohighlight">\(CFL\)</span> is reduced. The solution is observed to be more dissipative as the CFL number is reduced. Results obtained using the linear hat shape functions also show a similar trend and hence are not shown here.</p>
+<div class="figure-grid" style="display: flex; flex-wrap: wrap; gap: 1em; justify-content: center;">
+  <div style="flex: 0 0 32%;">
+    <img src="../landing/_images/AVB_Effect_of_CFL_Vel_3Order_a=0_CFL_0p01.png" alt="Inlet Flow" style="width: 100%;">
+    <p style="text-align: center;"><strong>(a)</strong> CFL=0.01</p>
+  </div>
+  <div style="flex: 0 0 32%;">
+    <img src="../landing/_images/AVB_Effect_of_CFL_Vel_3Order_a=0_CFL_0p1.png" alt="Outlet Jet" style="width: 100%;">
+    <p style="text-align: center;"><strong>(b)</strong> CFL=0.1</p>
+  </div>
+  <div style="flex: 0 0 32%;">
+    <img src="../landing/_images/AVB_Effect_of_CFL_Vel_3Order_a=0_CFL_0p5.png" alt="Outlet Jet" style="width: 100%;">
+    <p style="text-align: center;"><strong>(b)</strong> CFL=0.5</p>
+  </div>
+</div><figure class="align-center" id="fig-axbar-effofcfl" style="width: 100%">
+<a class="reference internal image-reference" href="_images/none.png"><img alt="Simulation Snapshots Overview" src="_images/none.png" style="width: 0px; height: 0px;" />
+</a>
+<figcaption>
+<p><span class="caption-number">Fig. 6 </span><span class="caption-text">Effect of <span class="math notranslate nohighlight">\(CFL\)</span> on the center of mass velocity of the axial bar (alpha=0)</span><a class="headerlink" href="#fig-axbar-effofcfl" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+<p>On the contrary, very minimal deviations from the exact solution are observed for all <span class="math notranslate nohighlight">\(CFL\)</span> numbers for <span class="math notranslate nohighlight">\(\alpha_{P-F}=1\)</span> as shown
+in <a class="reference internal" href="#fig-axbar-effofcfl-a1"><span class="std std-numref">Fig. 7</span></a>. This again highlights the significance of chosing a high value of <span class="math notranslate nohighlight">\(\alpha_{P-F}\)</span> (0.9-1.0) for accurate simulations. This trend also holds for the solution computed using the linear hat shape functions.</p>
+<div class="figure-grid" style="display: flex; flex-wrap: wrap; gap: 1em; justify-content: center;">
+  <div style="flex: 0 0 32%;">
+    <img src="../landing/_images/AVB_Effect_of_CFL_Vel_3Order_a=1_CFL_0p01.png" alt="Inlet Flow" style="width: 100%;">
+    <p style="text-align: center;"><strong>(a)</strong> CFL=0.01</p>
+  </div>
+  <div style="flex: 0 0 32%;">
+    <img src="../landing/_images/AVB_Effect_of_CFL_Vel_3Order_a=1_CFL_0p1.png" alt="Outlet Jet" style="width: 100%;">
+    <p style="text-align: center;"><strong>(b)</strong> CFL=0.1</p>
+  </div>
+  <div style="flex: 0 0 32%;">
+    <img src="../landing/_images/AVB_Effect_of_CFL_Vel_3Order_a=1_CFL_0p5.png" alt="Outlet Jet" style="width: 100%;">
+    <p style="text-align: center;"><strong>(b)</strong> CFL=0.5</p>
+  </div>
+</div><figure class="align-center" id="fig-axbar-effofcfl-a1" style="width: 100%">
+<a class="reference internal image-reference" href="_images/none.png"><img alt="Simulation Snapshots Overview" src="_images/none.png" style="width: 0px; height: 0px;" />
+</a>
+<figcaption>
+<p><span class="caption-number">Fig. 7 </span><span class="caption-text">Effect of <span class="math notranslate nohighlight">\(CFL\)</span> on the center of mass velocity of the axial bar (alpha=1)</span><a class="headerlink" href="#fig-axbar-effofcfl-a1" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+<p>Hence, it is concluded that lower values of <span class="math notranslate nohighlight">\(\alpha_{P-F}\)</span> lead to dissipative solution. The dissipative nature further worsens with smaller
+values of CFL number. Hence, for all MPM simulations a typical value of <span class="math notranslate nohighlight">\(\alpha_{P-F}=0.95-1.0\)</span> is suggested.</p>
+</section>
+</section>
+<section id="collision-of-two-dimensional-elastic-disks">
+<h1>Collision of two-dimensional elastic disks<a class="headerlink" href="#collision-of-two-dimensional-elastic-disks" title="Link to this heading"></a></h1>
+<div class="figure-grid" style="display: flex; flex-wrap: wrap; gap: 1em; justify-content: center;">
+  <div style="flex: 0 0 32%;">
+    <img src="../landing/_images/EDC_PDT.png" alt="Inlet Flow" style="width: 100%;">
+    <p style="text-align: center;"><strong>(a)</strong> </p>
+  </div>
+  <div style="flex: 0 0 32%;">
+    <img src="../landing/_images/EDC_PDMPM.png" alt="Outlet Jet" style="width: 100%;">
+    <p style="text-align: center;"><strong>(b)</strong></p>
+  </div>
+</div><figure class="align-center" id="f-edc" style="width: 100%">
+<a class="reference internal image-reference" href="_images/none.png"><img alt="Simulation Snapshots Overview" src="_images/none.png" style="width: 0px; height: 0px;" />
+</a>
+<figcaption>
+<p><span class="caption-number">Fig. 8 </span><span class="caption-text">Elastic collision of two circular disks. (a) Problem definition (b) ExaGOOP models</span><a class="headerlink" href="#f-edc" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+<p>This test case is used to verify ExaGOOP’s capability to simulate problems involving contact detection. The two-dimensional test case configuration is
+shown in <a class="reference internal" href="#f-edc"><span class="std std-numref">Fig. 8</span></a> (a) and consists of two elastic disks, each of radius <span class="math notranslate nohighlight">\(r\)</span> and separated by a distance <span class="math notranslate nohighlight">\(d\)</span>. At time <span class="math notranslate nohighlight">\(t=0\)</span>, both the disks have a velocity <span class="math notranslate nohighlight">\(v\)</span> and are directed towards each other. As time progresses, both disks approach each other at constant velocity and collide. After collision, the disks rebound and move away from each other. Since the collision is elastic, the total energy of the disks remains constant in time.</p>
+<p>For simulating this test case in ExaGOOP, the value of Young’s modulus <span class="math notranslate nohighlight">\(E\)</span> and density <span class="math notranslate nohighlight">\(\rho\)</span> is chosen as <span class="math notranslate nohighlight">\(1000\)</span>. The
+Poisson’s ratio is set as 0.3. The radius of the disks is set to 0.2 m each and the disks are separated by a distance of <span class="math notranslate nohighlight">\(d=0.6\sqrt{2}\)</span> m.
+The background grid is a square of side <span class="math notranslate nohighlight">\(L=2\)</span>m and consists of 20 cells each in the x and y directions. The two disks are modeled
+using linear elastic material points with four material points located inside each cell. Simulations are carried out using both the linear hat and the
+cubic B-spline shape functions. Based on the conclusions from the previous test case, the value of CFL and <span class="math notranslate nohighlight">\(\alpha_{P-F}\)</span> are chosen as 0.1
+and 0.95, respectively.</p>
+<div class="figure-grid" style="display: flex; flex-wrap: wrap; gap: 1em; justify-content: center;">
+  <div style="flex: 0 0 45%;">
+    <img src="../landing/_images/EDC1.png" alt="Inlet Flow" style="width: 100%;">
+    <p style="text-align: center;"><strong>(a)</strong> </p>
+  </div>
+  <div style="flex: 0 0 45%;">
+    <img src="../landing/_images/EDC2.png" alt="Outlet Jet" style="width: 100%;">
+    <p style="text-align: center;"><strong>(b)</strong></p>
+  </div>
+  <div style="flex: 0 0 45%;">
+    <img src="../landing/_images/EDC3.png" alt="Outlet Jet" style="width: 100%;">
+    <p style="text-align: center;"><strong>(b)</strong></p>
+  </div>
+  <div style="flex: 0 0 45%;">
+    <img src="../landing/_images/EDC4.png" alt="Outlet Jet" style="width: 100%;">
+    <p style="text-align: center;"><strong>(b)</strong></p>
+  </div>
+</div><figure class="align-center" id="f-edc-coll" style="width: 100%">
+<a class="reference internal image-reference" href="_images/none.png"><img alt="Simulation Snapshots Overview" src="_images/none.png" style="width: 0px; height: 0px;" />
+</a>
+<figcaption>
+<p><span class="caption-number">Fig. 9 </span><span class="caption-text">Various stages of disks motion and collision simulated using ExaGOOP</span><a class="headerlink" href="#f-edc-coll" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+<p><a class="reference internal" href="#f-edc-coll"><span class="std std-numref">Fig. 9</span></a> (a) and (b) show the approach of the disks towards each other. <a class="reference internal" href="#f-edc-coll"><span class="std std-numref">Fig. 9</span></a> (c) shows the instant at which the disks collide and <a class="reference internal" href="#f-edc-coll"><span class="std std-numref">Fig. 9</span></a> (d) shows the disks rebounding after collision.</p>
+<p><a class="reference internal" href="#f-edc-energy"><span class="std std-numref">Fig. 10</span></a> (a) and (b) show the time evolution of the energies of both disks simulated using linear hat and cubic B-spline shape functions. From the initial time until the moment of collision, only kinetic energy exists for both disks due to their initial velocities.</p>
+<div class="figure-grid" style="display: flex; flex-wrap: wrap; gap: 1em; justify-content: center;">
+  <div style="flex: 0 0 45%;">
+    <img src="../landing/_images/EDC_Energy_LH.png" alt="Inlet Flow" style="width: 100%;">
+    <p style="text-align: center;"><strong>(a)</strong> </p>
+  </div>
+  <div style="flex: 0 0 45%;">
+    <img src="../landing/_images/EDC_Energy_CS.png" alt="Outlet Jet" style="width: 100%;">
+    <p style="text-align: center;"><strong>(b)</strong></p>
+  </div>
+</div><figure class="align-center" id="f-edc-energy" style="width: 100%">
+<a class="reference internal image-reference" href="_images/none.png"><img alt="Simulation Snapshots Overview" src="_images/none.png" style="width: 0px; height: 0px;" />
+</a>
+<figcaption>
+<p><span class="caption-number">Fig. 10 </span><span class="caption-text">Time evolution of kinetic, strain and total energies of both the disks</span><a class="headerlink" href="#f-edc-energy" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+<p>Once the disks collide, a portion of the total energy is converted to strain energy. Since there are no dissipative mechanisms modeled in this
+problem, the total energy of the disks should be conserved. Both the linear hat and the cubic spline shape function are able to recover the
+total energy completely. A temporary loss of total energy is observed during the time of collision. This is due to the mass lumping algorithm
+adopted which tend to make the solution slightly dissipative. The exact time of contact happens at time <span class="math notranslate nohighlight">\(t=1.58\)</span>sec while the numerical
+simulations tend to predict the contact much early. This is because, the contact in MPM occurs through the background grid nodes and not through
+material points. This inaccuracy can be reduced by refining the background grid further.</p>
+</section>
+<section id="dam-break-simulation">
+<h1>Dam break simulation<a class="headerlink" href="#dam-break-simulation" title="Link to this heading"></a></h1>
+<p>ExaGOOP’s capability in simulating fluids is demonstrated using the 2-D dam break test case. The test case consists of an initial column of
+water of height <span class="math notranslate nohighlight">\(H_0\)</span> and width <span class="math notranslate nohighlight">\(L_0\)</span> located inside a square domain, as shown in <a class="reference internal" href="#f-dambreak-compdom"><span class="std std-numref">Fig. 11</span></a> (a). When <span class="math notranslate nohighlight">\(t=0\)</span>, the water column is released, allowing it to flow downward due to gravity. Over time, the water gradually fills the entire domain. Experimental measurements of the water front are available <span id="id1">[<a class="reference internal" href="zreferences.html#id2" title="J. C. Martin, W. J. Moyce, J. C. Martin, W. J. Moyce, William George Penney, A. T. Price, and C. K. Thornhill. Part iv. an experimental study of the collapse of liquid columns on a rigid horizontal plane. Philosophical Transactions of the Royal Society of London. Series A, Mathematical and Physical Sciences, 244(882):312-324, 1952. doi:10.1098/rsta.1952.0006.">3</a>]</span> for comparison with MPM results.</p>
+<p>For the MPM simulations, the domain is structured as shown in <a class="reference internal" href="#f-dambreak-compdom"><span class="std std-numref">Fig. 11</span></a> (b). A square domain with a side length of 0.4m is selected to create the background grid, which is discretized into 100 cells in each direction. The height of the water column is set at 0.2 m, and the width is 0.1 m. Unlike previous test cases discussed, water is treated as a fluid, necessitating the specification of an appropriate equation of state. In this study, water is modelled using a barotopic equation of state that relates pressure to the density of water as,</p>
+<div class="math notranslate nohighlight">
+\[\begin{aligned}
+p=\kappa\left[\left(\frac{\rho}{\rho_0}\right)^\gamma-1\right]
+\end{aligned}\]</div>
+<p>The value of <span class="math notranslate nohighlight">\(\kappa\)</span> and <span class="math notranslate nohighlight">\(\gamma\)</span> is set as 20000 and 7.0 respectively. The density of water is initialised as 1000 kg/m3.
+Simulation is performed using <span class="math notranslate nohighlight">\(CFL=0.1\)</span> and <span class="math notranslate nohighlight">\(\alpha_{P-F}=0.95\)</span>. The spatial discretization scheme employed is cubic B-spline. The simulation snapshots at various time intervals are shown in <a class="reference internal" href="#f-dambreak-sim"><span class="std std-numref">Fig. 12</span></a>.</p>
+<div class="figure-grid" style="display: flex; flex-wrap: wrap; gap: 1em; justify-content: center;">
+  <div style="flex: 0 0 45%;">
+    <img src="../landing/_images/DB_PDT.png" alt="Inlet Flow" style="width: 100%;">
+    <p style="text-align: center;"><strong>(a)</strong> </p>
+  </div>
+  <div style="flex: 0 0 45%;">
+    <img src="../landing/_images/DB1.png" alt="Outlet Jet" style="width: 100%;">
+    <p style="text-align: center;"><strong>(b)</strong></p>
+  </div>
+</div><figure class="align-center" id="f-dambreak-compdom" style="width: 100%">
+<a class="reference internal image-reference" href="_images/none.png"><img alt="Simulation Snapshots Overview" src="_images/none.png" style="width: 0px; height: 0px;" />
+</a>
+<figcaption>
+<p><span class="caption-number">Fig. 11 </span><span class="caption-text">Two-dimensional dam break test case (a) the physical problem definition and (b) the corresponding MPM model</span><a class="headerlink" href="#f-dambreak-compdom" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+<p><a class="reference internal" href="#f-dambreak-mpm-exp"><span class="std std-numref">Fig. 13</span></a> presents a comparison of the water front calculated using ExaGOOP and the experimentally obtained water front values
+<span id="id2">[<a class="reference internal" href="zreferences.html#id2" title="J. C. Martin, W. J. Moyce, J. C. Martin, W. J. Moyce, William George Penney, A. T. Price, and C. K. Thornhill. Part iv. an experimental study of the collapse of liquid columns on a rigid horizontal plane. Philosophical Transactions of the Royal Society of London. Series A, Mathematical and Physical Sciences, 244(882):312-324, 1952. doi:10.1098/rsta.1952.0006.">3</a>]</span> at various times. The solid line indicates the ExaGOOP solution and the red circles denote the experimental data from <span id="id3">[<a class="reference internal" href="zreferences.html#id2" title="J. C. Martin, W. J. Moyce, J. C. Martin, W. J. Moyce, William George Penney, A. T. Price, and C. K. Thornhill. Part iv. an experimental study of the collapse of liquid columns on a rigid horizontal plane. Philosophical Transactions of the Royal Society of London. Series A, Mathematical and Physical Sciences, 244(882):312-324, 1952. doi:10.1098/rsta.1952.0006.">3</a>]</span>. A strong correlation is observed between the numerical and experimental values, thereby validating the solver.</p>
+<div class="figure-grid" style="display: flex; flex-wrap: wrap; gap: 1em; justify-content: center;">
+  <div style="flex: 0 0 23%;">
+    <img src="../landing/_images/DB1.png" alt="Inlet Flow" style="width: 100%;">
+    <p style="text-align: center;"><strong>(a) t = 0.0 s</strong> </p>
+  </div>
+  <div style="flex: 0 0 23%;">
+    <img src="../landing/_images/DB2.png" alt="Outlet Jet" style="width: 100%;">
+    <p style="text-align: center;"><strong>(b) t = 0.15 s</strong></p>
+  </div>
+  <div style="flex: 0 0 23%;">
+    <img src="../landing/_images/DB3.png" alt="Inlet Flow" style="width: 100%;">
+    <p style="text-align: center;"><strong>(c) t = 0.22 s</strong> </p>
+  </div>
+  <div style="flex: 0 0 23%;">
+    <img src="../landing/_images/DB4.png" alt="Inlet Flow" style="width: 100%;">
+    <p style="text-align: center;"><strong>(d) t = 0.29 s</strong> </p>
+  </div>
+</div><figure class="align-center" id="f-dambreak-sim" style="width: 100%">
+<a class="reference internal image-reference" href="_images/none.png"><img alt="Simulation Snapshots Overview" src="_images/none.png" style="width: 0px; height: 0px;" />
+</a>
+<figcaption>
+<p><span class="caption-number">Fig. 12 </span><span class="caption-text">Evolution of water front in the 2-D dam break test case</span><a class="headerlink" href="#f-dambreak-sim" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+<div class="figure-grid" style="display: flex; flex-wrap: wrap; gap: 1em; justify-content: center;">
+  <div style="flex: 0 0 50%;">
+    <img src="../landing/_images/DB_Res2.png" alt="Inlet Flow" style="width: 100%;">
+    <p style="text-align: center;"><strong>(a)</strong> </p>
+  </div>
+</div><figure class="align-center" id="f-dambreak-mpm-exp" style="width: 100%">
+<a class="reference internal image-reference" href="_images/none.png"><img alt="Simulation Snapshots Overview" src="_images/none.png" style="width: 0px; height: 0px;" />
+</a>
+<figcaption>
+<p><span class="caption-number">Fig. 13 </span><span class="caption-text">Comparison of the water front location with time. Solid line shows ExaGOOP solution and red circles indicate experimental data from <span id="id4">[<a class="reference internal" href="zreferences.html#id2" title="J. C. Martin, W. J. Moyce, J. C. Martin, W. J. Moyce, William George Penney, A. T. Price, and C. K. Thornhill. Part iv. an experimental study of the collapse of liquid columns on a rigid horizontal plane. Philosophical Transactions of the Royal Society of London. Series A, Mathematical and Physical Sciences, 244(882):312-324, 1952. doi:10.1098/rsta.1952.0006.">3</a>]</span></span><a class="headerlink" href="#f-dambreak-mpm-exp" title="Link to this image"></a></p>
+</figcaption>
+</figure>
 </section>
 
 
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="Implementation.html" class="btn btn-neutral float-left" title="Source code" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="Performances.html" class="btn btn-neutral float-right" title="Performances" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="mpm_equations.html" class="btn btn-neutral float-left" title="Governing Equations of MPM" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="zreferences.html" class="btn btn-neutral float-right" title="References" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2021-2022, PeleTeam.</p>
+    <p>&#169; Copyright 2021-2022, ExaGOOPTeam.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
