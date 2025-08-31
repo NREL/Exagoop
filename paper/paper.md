@@ -29,7 +29,8 @@ affiliations:
 date: 30 August 2025
 bibliography: paper.bib
 ---
-#Summary
+
+# Summary
 
 ExaGOOP is a versatile continuum mechanics solver based on the material point method (MPM). Traditional numerical solvers typically employ methods such as the finite volume method, finite element method, or finite difference method. These approaches require the entire computational domain to be divided into a large number of computational units called cells, where the governing equations are solved in integral, variational, or differential forms. The necessity of a computational grid makes it challenging to solve problems involving highly deformable and history-dependent materials. In contrast, MPM, like many particle-based methods, is based on the Lagrangian framework of the governing equations. Unlike conventional solvers that rely on grids, MPM stores the material's properties on a collection of particles (also called as material points). While MPM does require a background grid, it is used only as a temporary tool for calculating gradients and can be reset after each time integration step. This approach effectively eliminates issues associated with grid element deformations. As a result, MPM methods are particularly well-suited for a wide range of continuum mechanics problems, especially those that involve significant material deformations.
 
@@ -39,12 +40,17 @@ ExaGOOP has undergone extensive validation and verification using 1D, 2D, and 3D
 
 ExaGOOP is developed in C++ and utilizes parallelization subroutines from the AMReX library. It employs an MPI+X approach, where MPI is used to distribute adaptive mesh refinement (AMR) grid patches across different CPU ranks. Each grid can be further divided into logical tiles, which can be distributed among threads using OpenMP on multi-core CPU machines or among GPU threads using CUDA, HIP, or SYCL on GPU-accelerated systems.
 
-#Statement of Need
-Other MPM solvers can be found online such as Karamelo [@devaucorbeil2021karamelo], Matter [@blatny2025matter], [@kumar2019geosmpm] and [@hu2018taichimpm]. The unique feature of ExaGOOP is its reliance on the AMReX framework for execution on CPU, GPU and heterogenous architectures. Exagoop’s integration with AMReX gives it access to advanced memory management, parallelism, and embedded boundary support. The demonstrated exascale performance of the AMReX framework on other solvers [cite] suggests the potential of ExaGOOP MPM solver to scale to billions of particles on GPU accelerated and heterogenous computing machines.
+# Statement of Need
 
-ExaGOOP is intended for students, researchers and engineers interested in simulating multi-material dynamics involving severe deformations. Initially developed as a tool to study membrane compaction in high-pressure reverse osmosis application [@nrel2023amrexmpm, @nrel2023exagoop], ExaGOOP is 
+There are numerous MPM solvers available online, such as Karamelo [@devaucorbeil2021karamelo], Matter [@blatny2025matter], GEOS-MPM [@kumar2019geosmpm], and Taichi-MPM [@hu2018taichimpm], but what truly distinguishes ExaGOOP is its efficient utilization of the AMReX framework. This allows ExaGOOP to excel on CPU, GPU, and hybrid architectures, making it exceptionally versatile. The advanced memory management, powerful parallel processing capabilities, and robust embedded boundary support offered by this integration render ExaGOOP as a performance-portable MPM solver. The remarkable exascale performance demonstrated by AMReX in various other solvers highlights ExaGOOP's extraordinary potential to efficiently manage billions of particles on GPU-accelerated and heterogeneous computing systems.
 
+ExaGOOP is intended for students, researchers, and engineers interested in simulating multi-material dynamics involving severe deformations. Originally developed as a tool for studying membrane compaction in high-pressure reverse osmosis applications [@nrel2023amrexmpm, @nrel2023exagoop], ExaGOOP is now ready to be used for simulating a variety of other typical applications.
 
-#Acknowledgements
+# Acknowledgements
+
 The development of this software was supported by the National Alliance for Water Innovation (NAWI), funded by the U.S. Department of Energy, Office of Energy Efficiency and Renewable Energy (EERE), Advanced Manufacturing Office, under Funding Opportunity Announcement Number DE-FOA-0001905. All of the research was performed using computational resources sponsored by the Department of Energy’s Office of Energy Efficiency and Renewable Energy and located at the National Renewable Energy Laboratory. This work was authored in part by the National Renewable Energy Laboratory, operated by Alliance for Sustainable Energy, LLC, for the U.S. Department of Energy (DOE) under Contract No. DE-AC36-08GO28308. The views expressed in the article do not
 necessarily represent the views of the DOE or the U.S. Government. The U.S. Government retains and the publisher, by accepting the article for publication, acknowledges that the U.S. Government retains a nonexclusive, paid-up, irrevocable, worldwide license to publish or reproduce the published form of this work, or allow others to do so, for U.S. Government purposes.
+
+# References
+
+
