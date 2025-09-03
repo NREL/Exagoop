@@ -1,0 +1,30 @@
+name: CIvidyut                                                                                                                                        
+on: 
+   push:
+     branches: [ main, hari/ci ]
+   pull_request:
+     branches: [ main, hari/ci ]
+
+jobs:
+  cputest:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        submodules: true
+    - name: System Dependencies
+      run: | 
+        sudo apt-get update
+        sudo apt-get install -y --no-install-recommends \
+        build-essential g++ gfortran libopenmpi-dev openmpi-bin
+        git clone https://github.com/AMReX-Codes/amrex
+    - name: Build Regression
+      working-directory: ./build
+      run: |
+        make -j 2 COMP=gnu AMREX_HOME=../amrex
+    - name: Run Regression
+      working-directory: ./tests/
+      run: |
+          cd Elastic_disk_collision/
+          cp ../../build/*.ex .
+          mpirun -n 2 ./*.ex inputs_elasticdisk.in
