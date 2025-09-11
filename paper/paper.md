@@ -44,7 +44,7 @@ ExaGOOP is developed in C++ and utilizes parallelization subroutines from the AM
 
 There are numerous MPM solvers available online, such as Karamelo [@devaucorbeil2021karamelo], Matter [@blatny2025matter], GEOS-MPM [@kumar2019geosmpm], and Taichi-MPM [@hu2018taichimpm], but what truly distinguishes ExaGOOP is its efficient utilization of the AMReX framework. This allows ExaGOOP to excel on CPU, GPU, and hybrid architectures, making it exceptionally versatile. The advanced memory management, powerful parallel processing capabilities, and robust embedded boundary support offered by this integration render ExaGOOP as a performance-portable MPM solver. The remarkable exascale performance demonstrated by AMReX in various other solvers highlights ExaGOOP's extraordinary potential to efficiently manage billions of particles on GPU-accelerated and heterogeneous computing systems.
 
-ExaGOOP is intended for students, researchers, and engineers interested in simulating multi-material dynamics involving severe deformations. Originally developed as a tool for studying membrane compaction in high-pressure reverse osmosis applications [@nrel2023amrexmpm, @nrel2023exagoop], ExaGOOP is now ready to be used for simulating a variety of other typical applications.
+ExaGOOP is intended for students, researchers, and engineers interested in simulating multi-material dynamics involving severe deformations. Originally developed as a tool for studying membrane compaction in high-pressure reverse osmosis applications [@osti_2000945, @osti_2000743, @osti_2406179], ExaGOOP is now ready to be used for simulating a variety of other typical applications.
 
 # Acknowledgements
 
