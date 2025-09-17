@@ -1,0 +1,36 @@
+# Enforce LF line endings for source code
+*.cpp     text eol=lf
+*.hpp     text eol=lf
+*.c       text eol=lf
+*.h       text eol=lf
+*.py      text eol=lf
+*.cu      text eol=lf
+*.f90     text eol=lf
+*.tex     text eol=lf
+*.dat     text eol=lf
+*input*     text eol=lf
+
+# Treat shell scripts and config files as LF
+*.sh      text eol=lf
+*.bashrc  text eol=lf
+*.zshrc   text eol=lf
+*.yml     text eol=lf
+*.yaml    text eol=lf
+*.toml    text eol=lf
+
+# Normalize documentation and markup
+*.md      text eol=lf
+*.rst     text eol=lf
+*.txt     text eol=lf
+
+# Preserve binary files
+*.png     binary
+*.jpg     binary
+*.pdf     binary
+*.so      binary
+*.a       binary
+
+# Optional: mark generated files to avoid accidental edits
+*.log     -text
+*.out     -text
+*.aux     -text

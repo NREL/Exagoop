@@ -183,7 +183,7 @@ outfile.write("\nmpm.bc_upper=2 0 0")
 
 outfile.close()
 
-os.system('./mpm3d.gnu.ex inputs_test')
+os.system('./mpm3d.gnu.MPI.CUDA.ex inputs_test')
 os.system('python3 plot_energy.py '+argv[9])
 os.system('python3 plot_vel.py '+argv[10])
 
