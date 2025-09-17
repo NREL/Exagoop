@@ -41,7 +41,7 @@ The various steps in an MPM time update include particle-to-grid (P2G), nodal ve
 
 ExaGOOP has undergone extensive validation and verification using 1D, 2D, and 3D test cases, all of which are available in the GitHub repository. Preprocessing scripts in the repository enable users to generate initial material point distribution with the desired number of material points per cell for either for user-defined simple geometries or based on user-provided images of complex bodies. Users can specify the constitutive model for each material point, facilitating multi-body and multi-phase simulations with ease.
 
-ExaGOOP is developed in C++ and utilizes parallelization subroutines from the AMReX library. It employs an MPI+X approach, where Message Passing Interface (MPI) is used to distribute Cartesian grid patches and co-located particles across different distributed memory ranks. Each grid can be further divided into logical tiles, which can be distributed among threads using shared-memory OpenMP on multi-core Central-processing-units (CPU) based machines or among Graphics-processing-units (GPU) threads on NVIDIA/AMD/Intel based GPU-accelerated systems.
+ExaGOOP was developed and is actively maintained in C++ and utilizes parallelization subroutines from the AMReX library. It employs an MPI+X approach, where Message Passing Interface (MPI) is used to distribute Cartesian grid patches and co-located particles across different distributed memory ranks. Each grid can be further divided into logical tiles, which can be distributed among threads using shared-memory OpenMP on multi-core Central-processing-units (CPU) based machines or among Graphics-processing-units (GPU) threads on NVIDIA/AMD/Intel based GPU-accelerated systems.
 
 # Statement of Need
 
