@@ -8,6 +8,26 @@
   publisher={Elsevier}
 }
 
+@article{deak2025high,
+  title={A high-performance discrete-element framework for simulating flow and jamming of moisture bearing biomass feedstocks},
+  author={Deak, Nicholas and Sitaraman, Hariswaran and Lu, Yimin and Saha, Nepu and Klinger, Jordan and Xia, Yidong},
+  journal={Powder Technology},
+  volume={452},
+  pages={120548},
+  year={2025},
+  publisher={Elsevier}
+}
+
+@article{zhang2019amrex,
+  title={AMReX: a framework for block-structured adaptive mesh refinement},
+  author={Zhang, Weiqun and Almgren, Ann and Beckner, Vince and Bell, John and Blaschke, Johannes and Chan, Cy and Day, Marcus and Friesen, Brian and Gott, Kevin and Graves, Daniel and others},
+  journal={The Journal of Open Source Software},
+  volume={4},
+  number={37},
+  pages={1370},
+  year={2019}
+}
+
 @article{martin1952,
 author = {Martin, J. C.  and Moyce, W. J.  and Martin, J. C.  and Moyce, W. J.  and Penney, William George  and Price, A. T.  and Thornhill, C. K. },
 title = {Part IV. An experimental study of the collapse of liquid columns on a rigid horizontal plane},
@@ -325,26 +345,8 @@ abstract = {Herein, we describe the performance (i.e., flux and rejection) of co
   url       = {https://github.com/yuanming-hu/taichi_mpm}
 }
 
-@techreport{nrel2023exagoop,
-  author      = {Sreejith Nair and David M. Warsinger and Nathaniel R. Moody and Daniel A. Ibanez and Nicholas R. Lubbers and David A. Kline and Michael R. Womble and Michael J. Martinez and Daniel R. Martin},
-  title       = {Exagoop: A Material Point Method Solver for Multi-Phase Continuum Simulation},
-  institution = {National Renewable Energy Laboratory},
-  year        = {2023},
-  number      = {NREL/TP-2C00-85460},
-  url         = {https://docs.nrel.gov/docs/fy23osti/85460.pdf}
-}
-
-@techreport{nrel2023amrexmpm,
-  author      = {Daniel A. Ibanez and Sreejith Nair and Nathaniel R. Moody and Nicholas R. Lubbers and David A. Kline and Michael R. Womble and Michael J. Martinez and Daniel R. Martin},
-  title       = {Spectral Analysis of Regular Material Point Method and its Application to Study High Pressure Reverse Osmosis Membrane Compaction and Embossing},
-  institution = {National Renewable Energy Laboratory},
-  year        = {2024},
-  number      = {NREL/PR-2C00-91212},
-  url         = {https://docs.nrel.gov/docs/fy23osti/85437.pdf}
-}
-
 #MPM workshop 2024
-@conference{osti_2447832,
+@conference{nrel2023amrexmpm,
   author       = {N. A., Sreejith and Sitaraman, Hariswaran and Deak, Nicholas and Day, Marc},
   title        = {Spectral Analysis of Regular Material Point Method and its Application to Study High Pressure Reverse Osmosis Membrane Compaction and Embossing},
   annote       = {Material Point Method (MPM) is gaining widespread interest in applied continuum mechanics. The fact that all the continuum properties are stored on the particles (or material points) and the governing equations are solved on these material points makes MPM extremely suited to problems involving severe material deformations, such as crack propagation, soil movement, and fluid flows. Despite its popularity, only a few studies have focused on the numerical properties of MPM. This presentation introduces a global spectral analysis of the regular material point method. Contrary to previous studies, the analysis focuses on the numerical properties of the method in the spectral space. The amplification factor is derived as a function of the non- dimensional wave numbers. It provides insights into the stability and dissipative properties of the method for various CFL and Fourier numbers. The effect of the grid shape functions, number of particles per cell and their locations inside the grid cell are also analyzed. The EXAGOOP MPM solver (https://github.com/NREL/Exagoop.git) is developed at the National Renewable Energy Laboratory as a part of the NAWI UHPRO project and is based on the AMReX framework. A single-level, uniform cartesian grid is used as the background mesh, while the particle class in AMReX is used to manage the material point operations. Linear hat and B-splines are used as grid shape functions, while the time integration is performed using explicit Euler time integration. EXAGOOP is both CPU and GPU compatible and has been demonstrated to work well on multiple compute architectures. The performance of EXAGOOP on various computing architectures is presented along with its application to study compaction and embossing of high-pressure reverse osmosis membranes. The MPM solution accurately reproduces the membrane deformation. The deformed pore size and structure simulated using MPM also agree well with experimental SEM images.},
@@ -376,7 +378,12 @@ abstract = {Herein, we describe the performance (i.e., flux and rejection) of co
   year         = {2023},
   month        = {09}}
 
-
-
-
-
+@conference{osti_2406179,
+  author       = {Sitaraman, Hari and Deak, Nicholas and Appukuttan, Sreejith and Young, Ethan and Allen, Jeffrey and Usseglio-Viretta, Francois},
+  title        = {Discrete-Element and Material-Point Method (DEM and MPM) Based Solvers for Sustainable Technologies},
+  annote       = {We present the use of discrete element method (DEM) and material point method (MPM) in three relevant green technology applications that include biomass feedstock handling, lithium-ion battery manufacturing, and high-pressure reverse osmosis. Our open-source DEM and MPM solvers are developed using performance portable grid and particle management library, AMReX, thus enabling superior performance on NVIDIA and AMD GPUs with > 100 million particles. Our DEM solver resolves the motion of individual particles in a granular system and includes a bonded sphere method for modeling non-spherical particles along with Hertzian and liquid bridge-based contact models. We simulate highly variable biomass feedstock flows in large-scale hoppers for biofuel production and electrode calendering in battery manufacturing using DEM. Our simulations predict flow blockage in large scale biomass hoppers and electrode microstructure variations, thus providing valuable information for biofuel and battery manufacturers, respectively. The second half of the talk will be on MPM and its application towards pore resolved simulations of reverse osmosis membranes under compressive loads. We present a validation study of our MPM simulations with membrane microscopy imaging thus providing useful insights on membrane stability under high pressure conditions. We also present a spectral stability analysis of using linear hat, quadratic and cubic spline basis in MPM indicating regions of numerical stability.},
+  url          = {https://www.osti.gov/biblio/2406179},
+  place        = {United States},
+  organization = {National Renewable Energy Laboratory (NREL), Golden, CO (United States)},
+  year         = {2024},
+  month        = {07}}
