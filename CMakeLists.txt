@@ -1,23 +1,27 @@
 cmake_minimum_required(VERSION 3.20 FATAL_ERROR)
 project(ExaGOOP LANGUAGES CXX)
 
+#Setting CMAKE basics
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_EXTENSIONS OFF)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
-set(EXAGOOP_DIM "3" CACHE STRING "Number of physical dimensions")
+
+#Setting ExaGOOP permanent settings. Do NOT change them
+set(EXAGOOP_DIM "3" CACHE STRING "Number of spatial dimensions")
 set(EXAGOOP_PRECISION DOUBLE)
+set(EXAGOOP_ENABLE_EB ON)
+set(EXAGOOP_ENABLE_PARTICLES ON)
 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/CMake")
 
 # HPC options
 option(EXAGOOP_ENABLE_MPI "Enable MPI" ON)
 option(EXAGOOP_ENABLE_OPENMP "Enable OpenMP" ON)
-option(EXAGOOP_ENABLE_CUDA "Enable CUDA" ON)
-option(EXAGOOP_ENABLE_HIP "Enable HIP" OFF)
+option(EXAGOOP_ENABLE_CUDA "Enable CUDA" OFF)
+option(EXAGOOP_ENABLE_HIP "Enable HIP" ON)
 option(EXAGOOP_ENABLE_SYCL "Enable SyCL" OFF)
-option(EXAGOOP_ENABLE_EB "Enable" ON)
-option(EXAGOOP_ENABLE_PARTICLES "Enable" ON)
 
+# Setting CUDA
 if(EXAGOOP_ENABLE_CUDA)
   enable_language(CUDA)
   if(CMAKE_CUDA_COMPILER_VERSION VERSION_LESS "10.0")
@@ -29,16 +33,18 @@ if(EXAGOOP_ENABLE_CUDA)
   endif()
 endif()
 
+# Setting HIP
 if(EXAGOOP_ENABLE_HIP)
    enable_language(HIP)
 endif ()
 
-#MPI Flags
+# Setting MPI Flags
 if(EXAGOOP_ENABLE_MPI)
   message(STATUS "MPI Configure Section")
   find_package(MPI REQUIRED CXX)
 endif()
 
+# Setting AMReX Configuration
 message(STATUS "AMReX Configure Section")
 set(AMREX_SUBMOD_LOCATION "${CMAKE_SOURCE_DIR}/Submodules/amrex")
 include(SetAmrexOptions)
@@ -52,6 +58,6 @@ message(STATUS "CMAKE_SYSTEM_NAME = ${CMAKE_SYSTEM_NAME}")
 message(STATUS "CMAKE_CXX_COMPILER_ID = ${CMAKE_CXX_COMPILER_ID}")
 message(STATUS "CMAKE_CXX_COMPILER_VERSION = ${CMAKE_CXX_COMPILER_VERSION}")
 message(STATUS "CMAKE_BUILD_TYPE = ${CMAKE_BUILD_TYPE}")
-message(STATUS "PELE_PRECISION = ${PELE_PRECISION}")
+message(STATUS "EXAGOOP_PRECISION = ${EXAGOOP_PRECISION}")
 
 include(BuildExeAndLib)
