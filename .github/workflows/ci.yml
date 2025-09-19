@@ -3,9 +3,9 @@ name: PeleLMeX-CI
 on:
   workflow_dispatch:
   push:
-    branches: [development]
+    branches: [main]
   pull_request:
-    branches: [development]
+    branches: [main]
 
 concurrency:
   group: ${{github.ref}}-${{github.head_ref}}-ci
