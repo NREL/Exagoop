@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.23 FATAL_ERROR)
+cmake_minimum_required(VERSION 3.20 FATAL_ERROR)
 project(ExaGOOP LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 17)
@@ -11,10 +11,12 @@ list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/CMake")
 
 # HPC options
 option(EXAGOOP_ENABLE_MPI "Enable MPI" ON)
-option(EXAGOOP_ENABLE_OPENMP "Enable OpenMP" OFF)
+option(EXAGOOP_ENABLE_OPENMP "Enable OpenMP" ON)
 option(EXAGOOP_ENABLE_CUDA "Enable CUDA" ON)
 option(EXAGOOP_ENABLE_HIP "Enable HIP" OFF)
 option(EXAGOOP_ENABLE_SYCL "Enable SyCL" OFF)
+option(EXAGOOP_ENABLE_EB "Enable" ON)
+option(EXAGOOP_ENABLE_PARTICLES "Enable" ON)
 
 if(EXAGOOP_ENABLE_CUDA)
   enable_language(CUDA)
@@ -23,7 +25,7 @@ if(EXAGOOP_ENABLE_CUDA)
       "Please use CUDA toolkit version 10.0 or newer.")
   endif()
   if(NOT DEFINED CMAKE_CUDA_ARCHITECTURES)
-    set(CMAKE_CUDA_ARCHITECTURES 86)
+    set(CMAKE_CUDA_ARCHITECTURES 90)
   endif()
 endif()
 
@@ -44,15 +46,6 @@ list(APPEND CMAKE_MODULE_PATH "${AMREX_SUBMOD_LOCATION}/Tools/CMake")
 add_subdirectory(${AMREX_SUBMOD_LOCATION})
 include(SetAmrexCompileFlags)
 
-# Include your MPM source
-include_directories(${PROJECT_SOURCE_DIR}/Source)
-
-# Collect source files
-file(GLOB_RECURSE SOURCES ${PROJECT_SOURCE_DIR}/Source/*.cpp)
-
-# Create executable
-add_executable(ExaGOOP ${SOURCES})
-
 # General information about machine, compiler, and build type
 message(STATUS "${PROJECT_NAME} Information:")
 message(STATUS "CMAKE_SYSTEM_NAME = ${CMAKE_SYSTEM_NAME}")
@@ -61,8 +54,4 @@ message(STATUS "CMAKE_CXX_COMPILER_VERSION = ${CMAKE_CXX_COMPILER_VERSION}")
 message(STATUS "CMAKE_BUILD_TYPE = ${CMAKE_BUILD_TYPE}")
 message(STATUS "PELE_PRECISION = ${PELE_PRECISION}")
 
-#if(DEFINED ENV{CONDA_PREFIX})
-#    link_directories($ENV{CONDA_PREFIX}/lib)
-#    target_link_libraries(ExaGOOP PRIVATE amrex $<$<BOOL:${EXAGOOP_ENABLE_CUDA}>:CUDAToolkit::cudart)
-#endif()
-target_link_libraries(ExaGOOP PRIVATE amrex)
+include(BuildExeAndLib)
