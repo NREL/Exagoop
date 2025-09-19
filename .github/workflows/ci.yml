@@ -1,11 +1,11 @@
-name: ExaGOOP-CI
+name: PeleLMeX-CI
 
 on:
   workflow_dispatch:
   push:
-    branches: [main]
+    branches: [development]
   pull_request:
-    branches: [main]
+    branches: [development]
 
 concurrency:
   group: ${{github.ref}}-${{github.head_ref}}-ci
@@ -20,7 +20,7 @@ jobs:
     - name: Check formatting
       uses: DoozyX/clang-format-lint-action@v0.20
       with:
-        source: './Source ./tests'
+        source: './Source ./Exec'
         exclude: '.'
         extensions: 'H,h,cpp'
         clangFormatVersion: 20
@@ -33,7 +33,7 @@ jobs:
         with:
           submodules: recursive
       - name: Setup
-        working-directory: ./tests/AxialVibrationofBar/
+        working-directory: ./Exec/RegTests/FlameSheet
         run: |
           echo "NPROCS=$(nproc)" >> $GITHUB_ENV
           echo "CCACHE_COMPRESS=1" >> $GITHUB_ENV
@@ -55,22 +55,22 @@ jobs:
           restore-keys: |
                ccache-${{github.workflow}}-${{github.job}}-git-
       - name: FlameSheet debug make
-        working-directory: ./tests/AxialVibrationofBar
+        working-directory: ./Exec/RegTests/FlameSheet
         run: |
           echo "::add-matcher::.github/problem-matchers/gcc.json"
           set -eu -o pipefail
           ccache -z
           make -j ${{env.NPROCS}} DIM=2 KEEP_BUILDINFO_CPP=TRUE USE_CCACHE=TRUE COMP=gnu USE_MPI=FALSE DEBUG=TRUE 2>&1 | tee -a build-output.txt
       - name: FlameSheet ccache report
-        working-directory: ./tests/AxialVibrationofBar
+        working-directory: ./Exec/RegTests/FlameSheet
         run: |
           ccache -s
           du -hs ~/.cache/ccache
       - name: FlameSheet debug test
-        working-directory: ./tests/AxialVibrationofBar
-        run: ./ExaGOOP2d.gnu.DEBUG.ex flamesheet-drm19-2d.inp amr.max_step=1 amr.plot_int=-1 amr.check_int=-1
+        working-directory: ./Exec/RegTests/FlameSheet
+        run: ./PeleLMeX2d.gnu.DEBUG.ex flamesheet-drm19-2d.inp amr.max_step=1 amr.plot_int=-1 amr.check_int=-1
       - name: FlameSheet debug report
-        working-directory: ./tests/AxialVibrationofBar
+        working-directory: ./Exec/RegTests/FlameSheet
         run: |
           egrep "Warning:|Error:|warning:|error:" build-output.txt \
             | egrep -v "Submodules/amrex|Submodules/sundials|Submodules/AMReX-Hydro|GNUmakefile|ThirdParty" \
