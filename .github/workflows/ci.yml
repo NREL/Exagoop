@@ -24,22 +24,48 @@ jobs:
         exclude: '.'
         extensions: 'H,h,cpp'
         clangFormatVersion: 20
-  Lint-codespell:
+Lint-codeql:
     needs: Formatting
     runs-on: ubuntu-24.04
     steps:
       - name: Clone
         uses: actions/checkout@v4
         with:
-          submodules: false
-      - name: Python
-        uses: actions/setup-python@v5
+          submodules: recursive
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v3
         with:
-          python-version: '3.10'
-      - name: Dependencies
+          languages: cpp
+          queries: +security-and-quality
+          config-file: ./.github/codeql/codeql-config.yml
+      - name: Configure
         run: |
-          # Install Python packages
-          python -m pip install --upgrade pip
-          pip install codespell
-      - name: Run codespell
-        run: codespell --skip=".git,build"
+          echo "NPROCS=$(nproc)" >> $GITHUB_ENV
+          cmake -B${{runner.workspace}}/build-codeql \
+          -DCMAKE_BUILD_TYPE:STRING=Debug \
+          -DCMAKE_CXX_COMPILER:STRING=clang++ \
+          -DCMAKE_C_COMPILER:STRING=clang \
+          -DEXAGOOP_ENABLE_MPI:BOOL=OFF \
+          -DEXAGOOP_ENABLE_FCOMPARE_FOR_TESTS:BOOL=OFF \
+          -DEXAGOOP_ENABLE_CLANG_TIDY:BOOL=OFF \
+          ${{github.workspace}}
+      - name: Build
+        run: |
+          cmake --build ${{runner.workspace}}/build-codeql --parallel ${{env.NPROCS}}
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v3
+        with:
+          category: "/language:cpp"
+          upload: False
+          output: sarif-results
+      - name: Filter CodeQL sarif
+        uses: advanced-security/filter-sarif@v1
+        with:
+          patterns: |
+            -**/Submodules/amrex/**            
+          input: sarif-results/cpp.sarif
+          output: sarif-results/cpp.sarif
+      - name: Upload CodeQL sarif
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: sarif-results/cpp.sarif
