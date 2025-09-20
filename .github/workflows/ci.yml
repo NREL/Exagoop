@@ -24,6 +24,61 @@ jobs:
         exclude: '.'
         extensions: 'H,h,cpp'
         clangFormatVersion: 20
+CPU-GNUmake:
+    needs: Formatting
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Clone
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+      - name: Setup
+        working-directory: ./tests/Dam_Break
+        run: |
+          echo "NPROCS=$(nproc)" >> $GITHUB_ENV
+          echo "CCACHE_COMPRESS=1" >> $GITHUB_ENV
+          echo "CCACHE_COMPRESSLEVEL=10" >> $GITHUB_ENV
+          echo "CCACHE_LOGFILE=${{github.workspace}}/ccache.log.txt" >> $GITHUB_ENV
+          echo "CCACHE_MAXSIZE=100M" >> $GITHUB_ENV
+          make COMP=gnu USE_MPI=FALSE DEBUG=TRUE TPL
+          make COMP=llvm USE_MPI=FALSE DEBUG=TRUE PRECISION=FLOAT TPL
+      - name: Install Ccache
+        run: |
+          wget https://github.com/ccache/ccache/releases/download/v4.8/ccache-4.8-linux-x86_64.tar.xz
+          tar xvf ccache-4.8-linux-x86_64.tar.xz
+          sudo cp -f ccache-4.8-linux-x86_64/ccache /usr/local/bin/
+      - name: Set Up Ccache
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ccache
+          key: ccache-${{github.workflow}}-${{github.job}}-git-${{github.sha}}
+          restore-keys: |
+               ccache-${{github.workflow}}-${{github.job}}-git-
+      - name: FlameSheet debug make
+        working-directory: ./tests/Dam_Break
+        run: |
+          echo "::add-matcher::.github/problem-matchers/gcc.json"
+          set -eu -o pipefail
+          ccache -z
+          make -j ${{env.NPROCS}} DIM=2 KEEP_BUILDINFO_CPP=TRUE USE_CCACHE=TRUE COMP=gnu USE_MPI=FALSE DEBUG=TRUE 2>&1 | tee -a build-output.txt
+      - name: DamBreak ccache report
+        working-directory: ./tests/Dam_Break
+        run: |
+          ccache -s
+          du -hs ~/.cache/ccache
+      - name: DamBreak debug test
+        working-directory: ./tests/Dam_Break
+        run: ./mpm3d.gnu.DEBUG.ex inputs_dambreak.in amr.max_step=1 amr.plot_int=-1 amr.check_int=-1
+      - name: DamBreak debug report
+        working-directory: ./tests/Dam_Break
+        run: |
+          egrep "Warning:|Error:|warning:|error:" build-output.txt \
+            | egrep -v "Submodules/amrex|GNUmakefile" \
+            | egrep -v "ld: warning:" | sort | uniq \
+            | awk 'BEGIN{i=0}{print $0}{i++}END{print "Warnings: "i}' > warnings.txt
+          cat warnings.txt
+          export return=$(tail -n 1 warnings.txt | awk '{print $2}')
+          exit ${return}
   Lint-codeql:
     needs: Formatting
     runs-on: ubuntu-24.04
