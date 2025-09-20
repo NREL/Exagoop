@@ -53,5 +53,5 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           branch: gh-pages
-          folder: ${{runner.workspace}}/build-docs/html
+          folder: ${{runner.workspace}}/build-docs/html/manual/html/
           single-commit: true

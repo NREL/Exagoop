@@ -4,34 +4,34 @@ list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
 
 find_package(Sphinx REQUIRED)
 
-add_custom_target(sphinx ALL
+#add_custom_target(sphinx ALL
   # Create the output directory
-  COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_CURRENT_BINARY_DIR}/html
+#  COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_CURRENT_BINARY_DIR}/html
 
   # Copy static landing page content
-  COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_SOURCE_DIR}/sphinx/landing
-                                             ${CMAKE_CURRENT_BINARY_DIR}/html
-
-  # Copy referenced images into manual output folder
-  COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_CURRENT_BINARY_DIR}/html/manual/_images
-  COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_SOURCE_DIR}/sphinx/landing/_images
-                                             ${CMAKE_CURRENT_BINARY_DIR}/html/manual/_images
-
-  # Run Sphinx to build the manual
-  COMMAND ${SPHINX_EXECUTABLE} -M html "${CMAKE_CURRENT_SOURCE_DIR}/sphinx/manual"
-                                       "${CMAKE_CURRENT_BINARY_DIR}/html/manual"
-                                       -c ${CMAKE_CURRENT_SOURCE_DIR}/sphinx/manual
-                                       -W --keep-going -n
-)
-
-
-
-#add_custom_target(sphinx ALL
-#  COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_CURRENT_BINARY_DIR}/html
 #  COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_SOURCE_DIR}/sphinx/landing
 #                                             ${CMAKE_CURRENT_BINARY_DIR}/html
+
+  # Copy referenced images into manual output folder
+#  COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_CURRENT_BINARY_DIR}/html/manual/_images
+#  COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_SOURCE_DIR}/sphinx/landing/_images
+#                                             ${CMAKE_CURRENT_BINARY_DIR}/html/manual/_images
+
+  # Run Sphinx to build the manual
 #  COMMAND ${SPHINX_EXECUTABLE} -M html "${CMAKE_CURRENT_SOURCE_DIR}/sphinx/manual"
 #                                       "${CMAKE_CURRENT_BINARY_DIR}/html/manual"
 #                                       -c ${CMAKE_CURRENT_SOURCE_DIR}/sphinx/manual
 #                                       -W --keep-going -n
-#  )
+#)
+
+
+
+add_custom_target(sphinx ALL
+  COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_CURRENT_BINARY_DIR}/html
+  COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_SOURCE_DIR}/sphinx/landing
+                                             ${CMAKE_CURRENT_BINARY_DIR}/html
+  COMMAND ${SPHINX_EXECUTABLE} -M html "${CMAKE_CURRENT_SOURCE_DIR}/sphinx/manual"
+                                       "${CMAKE_CURRENT_BINARY_DIR}/html/manual"
+                                       -c ${CMAKE_CURRENT_SOURCE_DIR}/sphinx/manual
+                                       -W --keep-going -n
+  )
