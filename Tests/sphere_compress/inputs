@@ -1,0 +1,27 @@
+#geometry parameters
+mpm.prob_lo        = 0.0         0.0     0.0  
+mpm.prob_hi        = 100.0e-6    100e-6  100e-6
+mpm.ncells         = 32 32 32
+mpm.max_grid_size  = 8
+mpm.is_it_periodic = 1  0  1
+ 
+#timestepping
+mpm.final_time=1e-6
+mpm.max_steps=100000000
+mpm.write_output_time=1e-8
+mpm.num_redist = 1
+mpm.timestep = 1e-10
+
+mpm.gravity = 0.0 0.0 0.0
+mpm.Youngs_modulus=2.5e7
+mpm.Poissons_ratio=0.1
+mpm.gravity = 0.0 0.0 0.0
+
+mpm.external_loads=1
+mpm.force_slab_lo = -10e-6   30e-6   -10e-6
+mpm.force_slab_hi =  110e-6 100e-6   110e-6
+
+mpm.extforce = 0.0 -1e-4 0.0
+
+#mpm.dens_field_output=1
+#mpm.dens_field_gridratio=4
