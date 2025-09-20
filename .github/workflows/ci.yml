@@ -1,4 +1,4 @@
-name: PeleLMeX-CI
+name: ExaGOOP-CI
 
 on:
   workflow_dispatch:
