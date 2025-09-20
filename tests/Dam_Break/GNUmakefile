@@ -1,5 +1,5 @@
 AMREX_HOME ?= ../../Submodules/amrex/
-MPM_HOME = ../
+MPM_HOME = ../../
 
 EBASE = mpm
 
@@ -33,3 +33,4 @@ INCLUDE_LOCATIONS += $(MPM_HOME)/Source
 VPATH_LOCATIONS   += $(MPM_HOME)/Source
 
 include $(AMREX_HOME)/Tools/GNUMake/Make.rules
+
