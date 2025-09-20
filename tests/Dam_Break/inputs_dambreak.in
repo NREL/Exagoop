@@ -32,7 +32,7 @@ mpm.num_of_digits_in_filenames=6		#Number of digits in the filename
 
 #Simulation run parameters
 mpm.final_time=0.3			#Maximum simulation time 
-mpm.max_steps=250000				#Maximum number of iterations for the simulation
+mpm.max_steps=10				#Maximum number of iterations for the simulation
 mpm.screen_output_time = 0.001			#How frequently to output iteration msgs
 mpm.write_output_time=0.01			#How frequently to write output files
 mpm.num_redist = 1				#How frequently to redistribute
