@@ -63,7 +63,7 @@ jobs:
         uses: advanced-security/filter-sarif@v1
         with:
           patterns: |
-            -**/Submodules/amrex/**            
+            - **/Submodules/amrex/**
           input: sarif-results/cpp.sarif
           output: sarif-results/cpp.sarif
       - name: Upload CodeQL sarif
