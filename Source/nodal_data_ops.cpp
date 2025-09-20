@@ -149,9 +149,6 @@ void nodal_detect_contact(
     amrex::GpuArray<amrex::GpuArray<amrex::Real, AMREX_SPACEDIM>,
                     numrigidbodies>
         velocity) {
-  const auto plo = geom.ProbLoArray();
-  const auto phi = geom.ProbHiArray();
-  const auto dx = geom.CellSizeArray();
 
   for (MFIter mfi(nodaldata); mfi.isValid(); ++mfi) {
     const Box &bx = mfi.validbox();
@@ -385,11 +382,6 @@ void CalculateSurfaceIntegralOnBG(const amrex::Geometry geom,
                                   amrex::Real &integral_value) {
   // For the time being, calculate the surface integral of y-velocity on the
   // bottom surface ie y=0 and validate the code
-  const int *domloarr = geom.Domain().loVect();
-  const int *domhiarr = geom.Domain().hiVect();
-  const auto plo = geom.ProbLoArray();
-  const auto phi = geom.ProbHiArray();
-  const auto dx = geom.CellSizeArray();
   integral_value = 0.0;
 
   for (MFIter mfi(nodaldata); mfi.isValid(); ++mfi) {

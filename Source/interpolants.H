@@ -369,7 +369,7 @@ basisvalder(int dir, int l, int m, int n, int i, int j, int k,
             GpuArray<int, AMREX_SPACEDIM> order_scheme_directional,
             GpuArray<int, AMREX_SPACEDIM> periodic, const int *lo,
             const int *hi) {
-  amrex::Real lval, mval, nval;
+  amrex::Real lval = 0.0, mval = 0.0, nval = 0.0;
   amrex::Real rx, ry, rz;
   amrex::Real dxinv[AMREX_SPACEDIM];
 

@@ -17,7 +17,7 @@ amrex::Real MPMParticleContainer::Calculate_time_step(amrex::Real CFL,
   using PType = typename MPMParticleContainer::SuperParticleType;
   dt = amrex::ReduceMin(
       *this, [=] AMREX_GPU_HOST_DEVICE(const PType &p) -> Real {
-        amrex::Real Cs;
+        amrex::Real Cs = 0.0;
         if (p.idata(intData::phase) == 0) {
           if (p.idata(intData::constitutive_model) == 1) {
             Cs = sqrt(p.rdata(realData::Bulk_modulus) /

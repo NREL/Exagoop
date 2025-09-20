@@ -5,11 +5,9 @@
 
 int MPMParticleContainer::checkifrigidnodespresent() {
   int rigidnodespresent = 0;
-  const int lev = 0;
-  auto &plev = GetParticles(lev);
 
   using PType = typename MPMParticleContainer::SuperParticleType;
-  rigidnodespresent = amrex::ReduceMax(
+  rigidnodespresent = static_cast<int>(amrex::ReduceMax(
       *this, [=] AMREX_GPU_HOST_DEVICE(const PType &p) -> Real {
         if (p.idata(intData::phase) == 1) {
           int rigidnodespresenttmp = 1;
@@ -18,7 +16,7 @@ int MPMParticleContainer::checkifrigidnodespresent() {
           int rigidnodespresenttmp = 0;
           return (rigidnodespresenttmp);
         }
-      });
+      }));
 
 #ifdef BL_USE_MPI
   ParallelDescriptor::ReduceIntMax(rigidnodespresent);
@@ -28,18 +26,10 @@ int MPMParticleContainer::checkifrigidnodespresent() {
 
 void MPMParticleContainer::Calculate_Total_Number_of_rigid_particles(
     int body_id, int &total_num) {
-  const int lev = 0;
-  const Geometry &geom = Geom(lev);
-  auto &plev = GetParticles(lev);
-  const auto dxi = geom.InvCellSizeArray();
-  const auto dx = geom.CellSizeArray();
-  const auto plo = geom.ProbLoArray();
-  const auto domain = geom.Domain();
-
   total_num = 0;
 
   using PType = typename MPMParticleContainer::SuperParticleType;
-  total_num = amrex::ReduceSum(
+  total_num = static_cast<int>(amrex::ReduceSum(
       *this, [=] AMREX_GPU_HOST_DEVICE(const PType &p) -> Real {
         if (p.idata(intData::phase) == 1 and
             p.idata(intData::rigid_body_id) == body_id) {
@@ -47,7 +37,7 @@ void MPMParticleContainer::Calculate_Total_Number_of_rigid_particles(
         } else {
           return (0);
         }
-      });
+      }));
 
 #ifdef BL_USE_MPI
   ParallelDescriptor::ReduceIntSum(total_num);
@@ -56,25 +46,17 @@ void MPMParticleContainer::Calculate_Total_Number_of_rigid_particles(
 
 void MPMParticleContainer::Calculate_Total_Number_of_MaterialParticles(
     int &total_num) {
-  const int lev = 0;
-  const Geometry &geom = Geom(lev);
-  auto &plev = GetParticles(lev);
-  const auto dxi = geom.InvCellSizeArray();
-  const auto dx = geom.CellSizeArray();
-  const auto plo = geom.ProbLoArray();
-  const auto domain = geom.Domain();
-
   total_num = 0;
 
   using PType = typename MPMParticleContainer::SuperParticleType;
-  total_num = amrex::ReduceSum(
+  total_num = static_cast<int>(amrex::ReduceSum(
       *this, [=] AMREX_GPU_HOST_DEVICE(const PType &p) -> Real {
         if (p.idata(intData::phase) == 0) {
           return (1);
         } else {
           return (0);
         }
-      });
+      }));
 
 #ifdef BL_USE_MPI
   ParallelDescriptor::ReduceIntSum(total_num);
@@ -83,14 +65,6 @@ void MPMParticleContainer::Calculate_Total_Number_of_MaterialParticles(
 
 void MPMParticleContainer::Calculate_Total_Mass_RigidParticles(
     int body_id, Real &total_mass) {
-  const int lev = 0;
-  const Geometry &geom = Geom(lev);
-  auto &plev = GetParticles(lev);
-  const auto dxi = geom.InvCellSizeArray();
-  const auto dx = geom.CellSizeArray();
-  const auto plo = geom.ProbLoArray();
-  const auto domain = geom.Domain();
-
   total_mass = 0.0;
 
   using PType = typename MPMParticleContainer::SuperParticleType;
@@ -111,13 +85,6 @@ void MPMParticleContainer::Calculate_Total_Mass_RigidParticles(
 
 void MPMParticleContainer::Calculate_Total_Mass_MaterialPoints(
     Real &total_mass) {
-  const int lev = 0;
-  const Geometry &geom = Geom(lev);
-  auto &plev = GetParticles(lev);
-  const auto dxi = geom.InvCellSizeArray();
-  const auto dx = geom.CellSizeArray();
-  const auto plo = geom.ProbLoArray();
-  const auto domain = geom.Domain();
 
   total_mass = 0.0;
 
@@ -137,13 +104,6 @@ void MPMParticleContainer::Calculate_Total_Mass_MaterialPoints(
 }
 
 void MPMParticleContainer::Calculate_Total_Vol_MaterialPoints(Real &total_vol) {
-  const int lev = 0;
-  const Geometry &geom = Geom(lev);
-  auto &plev = GetParticles(lev);
-  const auto dxi = geom.InvCellSizeArray();
-  const auto dx = geom.CellSizeArray();
-  const auto plo = geom.ProbLoArray();
-  const auto domain = geom.Domain();
 
   total_vol = 0.0;
 
@@ -166,8 +126,6 @@ amrex::Real
 MPMParticleContainer::Calculate_Total_Vol_RigidParticles(int body_id) {
 
   amrex::Real total_vol = 0.0;
-  const int lev = 0;
-  auto &plev = GetParticles(lev);
 
   using PType = typename MPMParticleContainer::SuperParticleType;
   total_vol = amrex::ReduceSum(
@@ -204,10 +162,6 @@ void MPMParticleContainer::deposit_onto_grid(
   int extloads = external_loads_present;
 
   Real grav[] = {AMREX_D_DECL(gravity[XDIR], gravity[YDIR], gravity[ZDIR])};
-  Real slab_lo[] = {AMREX_D_DECL(force_slab_lo[XDIR], force_slab_lo[YDIR],
-                                 force_slab_lo[ZDIR])};
-  Real slab_hi[] = {AMREX_D_DECL(force_slab_hi[XDIR], force_slab_hi[YDIR],
-                                 force_slab_hi[ZDIR])};
   Real extpforce[] = {
       AMREX_D_DECL(extforce[XDIR], extforce[YDIR], extforce[ZDIR])};
 
@@ -268,7 +222,6 @@ void MPMParticleContainer::deposit_onto_grid(
       if (p.idata(intData::phase) == 0) // Compute only for standard particles
                                         // and not rigid particles with phase=1
       {
-
         amrex::Real xp[AMREX_SPACEDIM];
 
         xp[XDIR] = p.pos(XDIR);
@@ -434,12 +387,6 @@ void MPMParticleContainer::deposit_onto_grid(
     int tid = mfi.LocalTileIndex();
     auto index = std::make_pair(gid, tid);
 
-    auto &ptile = plev[index];
-    auto &aos = ptile.GetArrayOfStructs();
-    int np = aos.numRealParticles();
-    int ng = aos.numNeighborParticles();
-    int nt = np + ng;
-
     Array4<Real> nodal_data_arr = nodaldata.array(mfi);
 
     amrex::ParallelFor(
@@ -473,11 +420,12 @@ void MPMParticleContainer::deposit_onto_grid(
 }
 
 void MPMParticleContainer::deposit_onto_grid_rigidnodesonly(
-    MultiFab &nodaldata, Array<Real, AMREX_SPACEDIM> gravity,
-    int external_loads_present, Array<Real, AMREX_SPACEDIM> force_slab_lo,
-    Array<Real, AMREX_SPACEDIM> force_slab_hi,
-    Array<Real, AMREX_SPACEDIM> extforce, int update_massvel, int update_forces,
-    amrex::Real mass_tolerance,
+    MultiFab &nodaldata, Array<Real, AMREX_SPACEDIM> /*gravity*/,
+    int /*external_loads_present*/,
+    Array<Real, AMREX_SPACEDIM> /*force_slab_lo*/,
+    Array<Real, AMREX_SPACEDIM> /*force_slab_hi*/,
+    Array<Real, AMREX_SPACEDIM> /*extforce*/, int update_massvel,
+    int /*update_forces*/, amrex::Real mass_tolerance,
     GpuArray<int, AMREX_SPACEDIM> order_scheme_directional,
     GpuArray<int, AMREX_SPACEDIM> periodic) {
   const int lev = 0;
@@ -487,15 +435,6 @@ void MPMParticleContainer::deposit_onto_grid_rigidnodesonly(
   const auto dx = geom.CellSizeArray();
   const auto plo = geom.ProbLoArray();
   const auto domain = geom.Domain();
-  int extloads = external_loads_present;
-
-  Real grav[] = {AMREX_D_DECL(gravity[XDIR], gravity[YDIR], gravity[ZDIR])};
-  Real slab_lo[] = {AMREX_D_DECL(force_slab_lo[XDIR], force_slab_lo[YDIR],
-                                 force_slab_lo[ZDIR])};
-  Real slab_hi[] = {AMREX_D_DECL(force_slab_hi[XDIR], force_slab_hi[YDIR],
-                                 force_slab_hi[ZDIR])};
-  Real extpforce[] = {
-      AMREX_D_DECL(extforce[XDIR], extforce[YDIR], extforce[ZDIR])};
 
   const int *loarr = domain.loVect();
   const int *hiarr = domain.hiVect();
@@ -647,12 +586,6 @@ void MPMParticleContainer::deposit_onto_grid_rigidnodesonly(
     int tid = mfi.LocalTileIndex();
     auto index = std::make_pair(gid, tid);
 
-    auto &ptile = plev[index];
-    auto &aos = ptile.GetArrayOfStructs();
-    int np = aos.numRealParticles();
-    int ng = aos.numNeighborParticles();
-    int nt = np + ng;
-
     Array4<Real> nodal_data_arr = nodaldata.array(mfi);
 
     amrex::ParallelFor(nodalbox, [=] AMREX_GPU_DEVICE(int i, int j,
@@ -688,13 +621,11 @@ void MPMParticleContainer::interpolate_from_grid(
   const auto plo = geom.ProbLoArray();
   const auto domain = geom.Domain();
 
-  int ncomp = nodaldata.nComp();
   const int *loarr = domain.loVect();
   const int *hiarr = domain.hiVect();
 
   int lo[] = {loarr[0], loarr[1], loarr[2]};
   int hi[] = {hiarr[0], hiarr[1], hiarr[2]};
-  const double pi = 3.141592654;
 
   nodaldata.FillBoundary(geom.periodicity());
 
@@ -1078,7 +1009,6 @@ void MPMParticleContainer::calculate_nodal_normal(
     auto &aos = ptile.GetArrayOfStructs();
     int np = aos.numRealParticles();
     int ng = aos.numNeighborParticles();
-    int nt = np + ng;
 
     Array4<Real> nodal_data_arr = nodaldata.array(mfi);
 
