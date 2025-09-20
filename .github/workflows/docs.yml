@@ -32,7 +32,7 @@ jobs:
           pip install sphinx sphinx_rtd_theme
           pip install sphinxcontrib-bibtex
       - name: Configure
-        run: cmake -B${{runner.workspace}}/build-docs ${{github.workspace}}/docs
+        run: cmake -B${{runner.workspace}}/build-docs ${{github.workspace}}/Docs
       - name: Build
         working-directory: ${{runner.workspace}}/build-docs
         run:  |
