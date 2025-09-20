@@ -46,6 +46,7 @@ jobs:
           -DCMAKE_CXX_COMPILER:STRING=clang++ \
           -DCMAKE_C_COMPILER:STRING=clang \
           -DEXAGOOP_ENABLE_MPI:BOOL=OFF \
+          -DEXAGOOP_ENABLE_OPENMP:BOOL=OFF \
           -DEXAGOOP_ENABLE_FCOMPARE_FOR_TESTS:BOOL=OFF \
           -DEXAGOOP_ENABLE_CLANG_TIDY:BOOL=OFF \
           ${{github.workspace}}
