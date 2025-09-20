@@ -1,4 +1,4 @@
-AMREX_HOME ?= ../../amrex
+AMREX_HOME ?= ../../Submodules/amrex/
 MPM_HOME = ../
 
 EBASE = mpm
@@ -9,10 +9,11 @@ DIM	= 3
 
 COMP    = gnu
 
-USE_MPI   = TRUE 
-USE_OMP   = TRUE
-USE_CUDA  = TRUE
+USE_MPI   = FALSE 
+USE_OMP   = FALSE
+USE_CUDA  = FALSE
 USE_EB    = TRUE
+
 
 TINY_PROFILE = FALSE
 USE_PARTICLES = TRUE
