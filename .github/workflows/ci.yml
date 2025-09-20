@@ -24,7 +24,7 @@ jobs:
         exclude: '.'
         extensions: 'H,h,cpp'
         clangFormatVersion: 20
-CPU-GNUmake:
+  CPU-GNUmake:
     needs: Formatting
     runs-on: ubuntu-24.04
     steps:
@@ -78,7 +78,7 @@ CPU-GNUmake:
             | awk 'BEGIN{i=0}{print $0}{i++}END{print "Warnings: "i}' > warnings.txt
           cat warnings.txt
           export return=$(tail -n 1 warnings.txt | awk '{print $2}')
-          exit ${return}
+          exit ${return}          
   Lint-codeql:
     needs: Formatting
     runs-on: ubuntu-24.04
