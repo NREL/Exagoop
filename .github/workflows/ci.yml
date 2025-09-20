@@ -43,3 +43,5 @@ jobs:
           pip install codespell
       - name: Run codespell
         run: codespell
+        with:
+           skip: .git,build,docs/searchindex.js,docs/sphinx/landing/searchindex.js,docs/**/*.html
