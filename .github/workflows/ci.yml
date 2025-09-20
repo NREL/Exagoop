@@ -47,7 +47,7 @@ jobs:
       - name: DamBreak debug make
         working-directory: ./tests/Dam_Break
         run: |
-          echo "::add-matcher::.github/problem-matchers/gcc.json"
+          # echo "::add-matcher::.github/problem-matchers/gcc.json"
           set -eu -o pipefail
           ccache -z
           make -j ${{env.NPROCS}} KEEP_BUILDINFO_CPP=TRUE USE_CCACHE=TRUE COMP=gnu USE_MPI=FALSE DEBUG=TRUE 2>&1 | tee -a build-output.txt
