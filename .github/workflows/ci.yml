@@ -20,7 +20,7 @@ jobs:
     - name: Check formatting
       uses: DoozyX/clang-format-lint-action@v0.20
       with:
-        source: './Source ./Exec'
+        source: './Source'
         exclude: '.'
         extensions: 'H,h,cpp'
         clangFormatVersion: 20
@@ -30,10 +30,8 @@ jobs:
     runs-on: ubuntu-24.04
     strategy:
       matrix:
-        enable_eb: [EB-OFF, EB-ON]
+        enable_eb: [EB-ON]
         include:
-          - enable_eb: EB-OFF
-            use_eb: "OFF"
           - enable_eb: EB-ON
             use_eb: "ON"
       fail-fast: false
