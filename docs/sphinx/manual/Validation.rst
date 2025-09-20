@@ -10,11 +10,11 @@ In this test case, the free, axial vibration of a continuum bar made of a linear
 
    <div class="figure-grid" style="display: flex; flex-wrap: wrap; gap: 1em; justify-content: center;">
      <div style="flex: 0 0 100%;">
-       <img src="_images/AxBar_PDT.png" alt="Inlet Flow" style="width: 100%;">
+       <img src="_images/AxBar_PDT.png" alt="axial bar physical domain" style="width: 100%;">
        <p style="text-align: center;"><strong>(a)</strong> The physical domain of the bar</p>
      </div>
      <div style="flex: 0 0 100%;">
-       <img src="_images/AxBar_PDMPM.png" alt="Outlet Jet" style="width: 100%;">
+       <img src="_images/AxBar_PDMPM.png" alt="axial bar comp domain" style="width: 100%;">
        <p style="text-align: center;"><strong>(b)</strong> Modeling of the bar in ExaGOOP</p>
      </div>
    </div>
@@ -69,11 +69,11 @@ Effect of :math:`\alpha_{P-F}`
 
    <div class="figure-grid" style="display: flex; flex-wrap: wrap; gap: 1em; justify-content: center;">
      <div style="flex: 0 0 45%;">
-       <img src="./_images/AVB_Effect_of_alpha_Vel_1Order_a=0.png" alt="Inlet Flow" style="width: 100%;">
+       <img src="./_images/AVB_Effect_of_alpha_Vel_1Order_a=0.png" alt="Vcm alpha=0" style="width: 100%;">
        <p style="text-align: center;"><strong>(a)</strong> alpha=0</p>
      </div>
      <div style="flex: 0 0 45%;">
-       <img src="./_images/AVB_Effect_of_alpha_Vel_1Order_a=1.png" alt="Outlet Jet" style="width: 100%;">
+       <img src="./_images/AVB_Effect_of_alpha_Vel_1Order_a=1.png" alt="Vcm alpha=1" style="width: 100%;">
        <p style="text-align: center;"><strong>(b)</strong> alpha=1</p>
      </div>
    </div>
@@ -99,11 +99,11 @@ to decrease and ultimately reach zero with time for :math:`\alpha_{P-F}=0` while
 
    <div class="figure-grid" style="display: flex; flex-wrap: wrap; gap: 1em; justify-content: center;">
      <div style="flex: 0 0 45%;">
-       <img src="./_images/AVB_Effect_of_alpha_Engy_1Order_a=0.png" alt="Inlet Flow" style="width: 100%;">
+       <img src="./_images/AVB_Effect_of_alpha_Engy_1Order_a=0.png" alt="Energy alpha=0" style="width: 100%;">
        <p style="text-align: center;"><strong>(a)</strong> alpha=0</p>
      </div>
      <div style="flex: 0 0 45%;">
-       <img src="./_images/AVB_Effect_of_alpha_Engy_1Order_a=1.png" alt="Outlet Jet" style="width: 100%;">
+       <img src="./_images/AVB_Effect_of_alpha_Engy_1Order_a=1.png" alt="Energy alpha=1" style="width: 100%;">
        <p style="text-align: center;"><strong>(b)</strong> alpha=1</p>
      </div>
    </div>
@@ -126,15 +126,15 @@ It is also interesting to study the effect of :math:`CFL` on the solution accura
 
    <div class="figure-grid" style="display: flex; flex-wrap: wrap; gap: 1em; justify-content: center;">
      <div style="flex: 0 0 32%;">
-       <img src="./_images/AVB_Effect_of_CFL_Vel_3Order_a=0_CFL_0p01.png" alt="Inlet Flow" style="width: 100%;">
+       <img src="./_images/AVB_Effect_of_CFL_Vel_3Order_a=0_CFL_0p01.png" alt="Vcm CFL=0.01" style="width: 100%;">
        <p style="text-align: center;"><strong>(a)</strong> CFL=0.01</p>
      </div>
      <div style="flex: 0 0 32%;">
-       <img src="./_images/AVB_Effect_of_CFL_Vel_3Order_a=0_CFL_0p1.png" alt="Outlet Jet" style="width: 100%;">
+       <img src="./_images/AVB_Effect_of_CFL_Vel_3Order_a=0_CFL_0p1.png" alt="Vcm CFL=0.1" style="width: 100%;">
        <p style="text-align: center;"><strong>(b)</strong> CFL=0.1</p>
      </div>
      <div style="flex: 0 0 32%;">
-       <img src="./_images/AVB_Effect_of_CFL_Vel_3Order_a=0_CFL_0p5.png" alt="Outlet Jet" style="width: 100%;">
+       <img src="./_images/AVB_Effect_of_CFL_Vel_3Order_a=0_CFL_0p5.png" alt="Vcm CFL=0.5" style="width: 100%;">
        <p style="text-align: center;"><strong>(b)</strong> CFL=0.5</p>
      </div>
    </div>
@@ -155,15 +155,15 @@ in :numref:`fig-axbar-effofcfl_a1`. This again highlights the significance of ch
 
    <div class="figure-grid" style="display: flex; flex-wrap: wrap; gap: 1em; justify-content: center;">
      <div style="flex: 0 0 32%;">
-       <img src="./_images/AVB_Effect_of_CFL_Vel_3Order_a=1_CFL_0p01.png" alt="Inlet Flow" style="width: 100%;">
+       <img src="./_images/AVB_Effect_of_CFL_Vel_3Order_a=1_CFL_0p01.png" alt="Vcm CFL=0.01" style="width: 100%;">
        <p style="text-align: center;"><strong>(a)</strong> CFL=0.01</p>
      </div>
      <div style="flex: 0 0 32%;">
-       <img src="./_images/AVB_Effect_of_CFL_Vel_3Order_a=1_CFL_0p1.png" alt="Outlet Jet" style="width: 100%;">
+       <img src="./_images/AVB_Effect_of_CFL_Vel_3Order_a=1_CFL_0p1.png" alt="Vcm CFL=0.1" style="width: 100%;">
        <p style="text-align: center;"><strong>(b)</strong> CFL=0.1</p>
      </div>
      <div style="flex: 0 0 32%;">
-       <img src="./_images/AVB_Effect_of_CFL_Vel_3Order_a=1_CFL_0p5.png" alt="Outlet Jet" style="width: 100%;">
+       <img src="./_images/AVB_Effect_of_CFL_Vel_3Order_a=1_CFL_0p5.png" alt="Vcm CFL=0.5" style="width: 100%;">
        <p style="text-align: center;"><strong>(b)</strong> CFL=0.5</p>
      </div>
    </div>
@@ -187,11 +187,11 @@ Collision of two-dimensional elastic disks
 
    <div class="figure-grid" style="display: flex; flex-wrap: wrap; gap: 1em; justify-content: center;">
      <div style="flex: 0 0 32%;">
-       <img src="./_images/EDC_PDT.png" alt="Inlet Flow" style="width: 100%;">
+       <img src="./_images/EDC_PDT.png" alt="EDC phys dom" style="width: 100%;">
        <p style="text-align: center;"><strong>(a)</strong> </p>
      </div>
      <div style="flex: 0 0 32%;">
-       <img src="./_images/EDC_PDMPM.png" alt="Outlet Jet" style="width: 100%;">
+       <img src="./_images/EDC_PDMPM.png" alt="EDC comp dom" style="width: 100%;">
        <p style="text-align: center;"><strong>(b)</strong></p>
      </div>     
    </div>
@@ -219,19 +219,19 @@ and 0.95, respectively.
 
    <div class="figure-grid" style="display: flex; flex-wrap: wrap; gap: 1em; justify-content: center;">
      <div style="flex: 0 0 45%;">
-       <img src="./_images/EDC1.png" alt="Inlet Flow" style="width: 100%;">
+       <img src="./_images/EDC1.png" alt="EDC1" style="width: 100%;">
        <p style="text-align: center;"><strong>(a)</strong> </p>
      </div>
      <div style="flex: 0 0 45%;">
-       <img src="./_images/EDC2.png" alt="Outlet Jet" style="width: 100%;">
+       <img src="./_images/EDC2.png" alt="EDC2" style="width: 100%;">
        <p style="text-align: center;"><strong>(b)</strong></p>
      </div>     
      <div style="flex: 0 0 45%;">
-       <img src="./_images/EDC3.png" alt="Outlet Jet" style="width: 100%;">
+       <img src="./_images/EDC3.png" alt="EDC3" style="width: 100%;">
        <p style="text-align: center;"><strong>(b)</strong></p>
      </div>     
      <div style="flex: 0 0 45%;">
-       <img src="./_images/EDC4.png" alt="Outlet Jet" style="width: 100%;">
+       <img src="./_images/EDC4.png" alt="EDC4" style="width: 100%;">
        <p style="text-align: center;"><strong>(b)</strong></p>
      </div>     
    </div>
@@ -253,11 +253,11 @@ and 0.95, respectively.
 
    <div class="figure-grid" style="display: flex; flex-wrap: wrap; gap: 1em; justify-content: center;">
      <div style="flex: 0 0 45%;">
-       <img src="./_images/EDC_Energy_LH.png" alt="Inlet Flow" style="width: 100%;">
+       <img src="./_images/EDC_Energy_LH.png" alt="EDC_Energy_LH" style="width: 100%;">
        <p style="text-align: center;"><strong>(a)</strong> </p>
      </div>
      <div style="flex: 0 0 45%;">
-       <img src="./_images/EDC_Energy_CS.png" alt="Outlet Jet" style="width: 100%;">
+       <img src="./_images/EDC_Energy_CS.png" alt="EDC_Energy_CS" style="width: 100%;">
        <p style="text-align: center;"><strong>(b)</strong></p>
      </div>     
    </div>
@@ -300,11 +300,11 @@ Simulation is performed using :math:`CFL=0.1` and :math:`\alpha_{P-F}=0.95`. The
 
    <div class="figure-grid" style="display: flex; flex-wrap: wrap; gap: 1em; justify-content: center;">
      <div style="flex: 0 0 45%;">
-       <img src="./_images/DB_PDT.png" alt="Inlet Flow" style="width: 100%;">
+       <img src="./_images/DB_PDT.png" alt="DB Phys Dom" style="width: 100%;">
        <p style="text-align: center;"><strong>(a)</strong> </p>
      </div>
      <div style="flex: 0 0 45%;">
-       <img src="./_images/DB1.png" alt="Outlet Jet" style="width: 100%;">
+       <img src="./_images/DB1.png" alt="DB Comp Dom" style="width: 100%;">
        <p style="text-align: center;"><strong>(b)</strong></p>
      </div>     
    </div>
@@ -325,19 +325,19 @@ Simulation is performed using :math:`CFL=0.1` and :math:`\alpha_{P-F}=0.95`. The
 
    <div class="figure-grid" style="display: flex; flex-wrap: wrap; gap: 1em; justify-content: center;">
      <div style="flex: 0 0 23%;">
-       <img src="./_images/DB1.png" alt="Inlet Flow" style="width: 100%;">
+       <img src="./_images/DB1.png" alt="DB1" style="width: 100%;">
        <p style="text-align: center;"><strong>(a) t = 0.0 s</strong> </p>
      </div>
      <div style="flex: 0 0 23%;">
-       <img src="./_images/DB2.png" alt="Outlet Jet" style="width: 100%;">
+       <img src="./_images/DB2.png" alt="DB2" style="width: 100%;">
        <p style="text-align: center;"><strong>(b) t = 0.15 s</strong></p>
      </div>     
      <div style="flex: 0 0 23%;">
-       <img src="./_images/DB3.png" alt="Inlet Flow" style="width: 100%;">
+       <img src="./_images/DB3.png" alt="DB3" style="width: 100%;">
        <p style="text-align: center;"><strong>(c) t = 0.22 s</strong> </p>
      </div>
      <div style="flex: 0 0 23%;">
-       <img src="./_images/DB4.png" alt="Inlet Flow" style="width: 100%;">
+       <img src="./_images/DB4.png" alt="DB4" style="width: 100%;">
        <p style="text-align: center;"><strong>(d) t = 0.29 s</strong> </p>
      </div>
    </div>
@@ -355,7 +355,7 @@ Simulation is performed using :math:`CFL=0.1` and :math:`\alpha_{P-F}=0.95`. The
 
    <div class="figure-grid" style="display: flex; flex-wrap: wrap; gap: 1em; justify-content: center;">
      <div style="flex: 0 0 50%;">
-       <img src="./_images/DB_Res2.png" alt="Inlet Flow" style="width: 100%;">
+       <img src="./_images/DB_Res2.png" alt="DB_Validation" style="width: 100%;">
        <p style="text-align: center;"><strong>(a)</strong> </p>
      </div>   
    </div>

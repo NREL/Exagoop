@@ -63,19 +63,19 @@ The MPM solution procedure in ExaGOOP begins by generating or reading a collecti
 
    <div class="figure-grid" style="display: flex; flex-wrap: wrap; gap: 1em; justify-content: center;">
      <div style="flex: 0 0 45%;">
-       <img src="./_images/MPM_Step1.png" alt="Inlet Flow" style="width: 100%;">
+       <img src="./_images/MPM_Step1.png" alt="step 1" style="width: 100%;">
        <p style="text-align: center;"><strong>(a)</strong> particle to grid (P2G) operation</p>
      </div>
      <div style="flex: 0 0 45%;">
-       <img src="./_images/MPM_Step1.png" alt="Vortex Region" style="width: 100%;">
+       <img src="./_images/MPM_Step2.png" alt="step 2" style="width: 100%;">
        <p style="text-align: center;"><strong>(b)</strong> nodal velocity update </p>
      </div>
      <div style="flex: 0 0 45%;">
-       <img src="../landing/_images/MPM_Step1.png" alt="Outlet Jet" style="width: 100%;">
+       <img src="./_images/MPM_Step3.png" alt="step 3" style="width: 100%;">
        <p style="text-align: center;"><strong>(c)</strong> grid to particle (G2P) operation</p>
      </div>
      <div style="flex: 0 0 45%;">
-       <img src="../landing/_images/MPM_Step1.png" alt="Wake Profile" style="width: 100%;">
+       <img src="./_images/MPM_Step4.png" alt="step 4" style="width: 100%;">
        <p style="text-align: center;"><strong>(d)</strong> particle position update</p>
      </div>
    </div>
