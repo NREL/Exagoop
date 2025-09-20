@@ -68,7 +68,77 @@ jobs:
             | awk 'BEGIN{i=0}{print $0}{i++}END{print "Warnings: "i}' > warnings.txt
           cat warnings.txt
           export return=$(tail -n 1 warnings.txt | awk '{print $2}')
-          exit ${return}          
+          exit ${return}
+  GPU-Nvidia:
+    name: GPU-CUDA
+    needs: [Formatting, CPU-GNUmake]
+    runs-on: ubuntu-24.04
+    strategy:
+      matrix:
+        enable_eb: [EB-ON]
+        include:          
+          - enable_eb: EB-ON
+            use_eb: "ON"
+      fail-fast: false
+    steps:
+      - name: Clone
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+      - name: Setup
+        run: |
+          echo "NPROCS=$(nproc)" >> $GITHUB_ENV
+          echo "CCACHE_COMPRESS=1" >> $GITHUB_ENV
+          echo "CCACHE_COMPRESSLEVEL=10" >> $GITHUB_ENV
+          echo "CCACHE_LOGFILE=${{github.workspace}}/ccache.log.txt" >> $GITHUB_ENV
+          echo "CCACHE_MAXSIZE=300M" >> $GITHUB_ENV
+      - name: Dependencies
+        run: |
+          ${{github.workspace}}/Submodules/PelePhysics/Submodules/amrex/.github/workflows/dependencies/ubuntu_free_disk_space.sh
+          wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2404/x86_64/cuda-keyring_1.1-1_all.deb
+          sudo dpkg -i cuda-keyring_1.1-1_all.deb
+          sudo apt-get update
+          sudo apt-get install -y cuda-command-line-tools-12-6 \
+              cuda-compiler-12-6 cuda-minimal-build-12-6 \
+              cuda-nvml-dev-12-6 cuda-nvtx-12-6 \
+              libcurand-dev-12-6 cuda-cupti-dev-12-6 \
+              libcusolver-dev-12-6 libcusparse-dev-12-6 \
+              libcublas-dev-12-6 libcurand-dev-12-6 libnvjitlink-12-6
+      - name: Install Ccache
+        run: |
+          wget https://github.com/ccache/ccache/releases/download/v4.8/ccache-4.8-linux-x86_64.tar.xz
+          tar xvf ccache-4.8-linux-x86_64.tar.xz
+          sudo cp -f ccache-4.8-linux-x86_64/ccache /usr/local/bin/
+      - name: Set Up Ccache
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ccache
+          key: ccache-${{github.workflow}}-${{github.job}}-git-${{github.sha}}
+          restore-keys: |
+               ccache-${{github.workflow}}-${{github.job}}-git-
+      - name: Configure
+        run: |
+          export PATH=/usr/local/nvidia/bin:/usr/local/cuda-12.6/bin:${PATH}
+          export LD_LIBRARY_PATH=/usr/local/nvidia/lib:/usr/local/nvidia/lib64:/usr/local/cuda-12.6/lib:${LD_LIBRARY_PATH}
+          cmake -Bbuild-cuda \
+            -DCMAKE_BUILD_TYPE:STRING=Release \
+            -DCMAKE_VERBOSE_MAKEFILE:BOOL=ON \
+            -DEXAGOOP_ENABLE_MPI:BOOL=OFF \
+            -DEXAGOOP_ENABLE_CUDA:BOOL=ON \
+            -DEXAGOOP_ENABLE_EB:BOOL=${{matrix.use_eb}} \
+            -DAMReX_CUDA_ERROR_CAPTURE_THIS:BOOL=ON \
+            -DCMAKE_CUDA_ARCHITECTURES:STRING=80 \
+            -DCMAKE_CUDA_COMPILER_LAUNCHER:STRING=ccache \
+            -DCMAKE_CXX_COMPILER_LAUNCHER:STRING=ccache \
+            ${{github.workspace}}
+      - name: Build
+        run: |
+          ccache -z
+          cmake --build build-cuda --parallel ${{env.NPROCS}}
+      - name: Ccache Report
+        run: |
+          ccache -s
+          du -hs ~/.cache/ccache
   Lint-codeql:
     needs: Formatting
     runs-on: ubuntu-24.04
