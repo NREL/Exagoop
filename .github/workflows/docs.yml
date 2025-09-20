@@ -5,12 +5,12 @@ on:
   push:
     branches: [ClangTidy]
     paths:
-       - 'Docs/**'
+       - 'docs/**'
        - '.github/workflows/docs.yml'
   pull_request:
     branches: [ClangTidy]
     paths:
-       - 'Docs/**'
+       - 'docs/**'
        - '.github/workflows/docs.yml'
 
 jobs:
@@ -31,7 +31,7 @@ jobs:
           python -m pip install --upgrade pip
           pip install sphinx sphinx_rtd_theme
       - name: Configure
-        run: cmake -B${{runner.workspace}}/build-docs ${{github.workspace}}/Docs
+        run: cmake -B${{runner.workspace}}/build-docs ${{github.workspace}}/docs
       - name: Build
         working-directory: ${{runner.workspace}}/build-docs
         run:  |
