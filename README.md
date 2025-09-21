@@ -90,6 +90,11 @@ Upon successful completion, the ExaGOOP executable named `ExaGOOP.exe` will be a
 - The simulation output files are in the form of AMReX plotfiles.
 - Paraview can be used to load and view the particle ( __plt__ files) and nodal ( __nplt__ files) solution files.
 
+## Getting help
+
+- To engage with the development team, please use the [GitHub discussions link](https://github.com/NREL/Exagoop/discussions).
+- If you encounter a bug that you would like to report, kindly use the [GitHub issues page](https://github.com/NREL/Exagoop/issues). When reporting, please provide as much detail as possible regarding the major compilation and runtime options you are using.
+
 ## Acknowledgment
 
 The development of this software was supported by the National Alliance for Water Innovation (NAWI), funded by the U.S. Department of Energy, Office of Energy Efficiency and Renewable Energy (EERE), Advanced Manufacturing Office, under Funding Opportunity Announcement Number DE-FOA-0001905. All of the research was performed using computational resources sponsored by the Department of Energy’s Office of Energy Efficiency and Renewable Energy and located at the National Renewable Energy Laboratory. This work was authored in part by the National Renewable Energy Laboratory, operated by Alliance for Sustainable Energy, LLC, for the U.S. Department of Energy (DOE) under Contract No. DE-AC36-08GO28308. The views expressed in the article do not necessarily represent the views of the DOE or the U.S. Government. The U.S. Government retains and the publisher, by accepting the article for publication, acknowledges that the U.S. Government retains a nonexclusive, paid-up, irrevocable, worldwide license to publish or reproduce the published form of this work, or allow others to do so, for U.S. Government purposes.
