@@ -188,11 +188,11 @@ Collision of two-dimensional elastic disks
    <div class="figure-grid" style="display: flex; flex-wrap: wrap; gap: 1em; justify-content: center;">
      <div style="flex: 0 0 32%;">
        <img src="./_images/EDC_PDT.png" alt="EDC phys dom" style="width: 100%;">
-       <p style="text-align: center;"><strong>(a)</strong> </p>
+       <p style="text-align: center;"><strong>(a) Physical problem </strong> </p>
      </div>
      <div style="flex: 0 0 32%;">
        <img src="./_images/EDC_PDMPM.png" alt="EDC comp dom" style="width: 100%;">
-       <p style="text-align: center;"><strong>(b)</strong></p>
+       <p style="text-align: center;"><strong>(b)ExaGOOP model </strong></p>
      </div>     
    </div>
 .. figure:: ../landing/_images/none.png
@@ -203,7 +203,7 @@ Collision of two-dimensional elastic disks
    :align: center   
    :alt: Simulation Snapshots Overview
    
-   Elastic collision of two circular disks. (a) Problem definition (b) ExaGOOP models
+   Elastic collision of two circular disks. (a) Physical problem definition (b) ExaGOOP background grid and material points at time, t=0
 
 This test case is used to verify ExaGOOP's capability to simulate problems involving contact detection. The two-dimensional test case configuration is
 shown in :numref:`f-edc` (a) and consists of two elastic disks, each of radius :math:`r` and separated by a distance :math:`d`. At time :math:`t=0`, both the disks have a velocity :math:`v` and are directed towards each other. As time progresses, both disks approach each other at constant velocity and collide. After collision, the disks rebound and move away from each other. Since the collision is elastic, the total energy of the disks remains constant in time.
@@ -220,19 +220,19 @@ and 0.95, respectively.
    <div class="figure-grid" style="display: flex; flex-wrap: wrap; gap: 1em; justify-content: center;">
      <div style="flex: 0 0 45%;">
        <img src="./_images/EDC1.png" alt="EDC1" style="width: 100%;">
-       <p style="text-align: center;"><strong>(a)</strong> </p>
+       <p style="text-align: center;"><strong>(a) t = 0</strong> </p>
      </div>
      <div style="flex: 0 0 45%;">
        <img src="./_images/EDC2.png" alt="EDC2" style="width: 100%;">
-       <p style="text-align: center;"><strong>(b)</strong></p>
+       <p style="text-align: center;"><strong>(b) t = 0.85</strong></p>
      </div>     
      <div style="flex: 0 0 45%;">
        <img src="./_images/EDC3.png" alt="EDC3" style="width: 100%;">
-       <p style="text-align: center;"><strong>(b)</strong></p>
+       <p style="text-align: center;"><strong>(c) t = 2.25</strong></p>
      </div>     
      <div style="flex: 0 0 45%;">
        <img src="./_images/EDC4.png" alt="EDC4" style="width: 100%;">
-       <p style="text-align: center;"><strong>(b)</strong></p>
+       <p style="text-align: center;"><strong>(d) t = 3.1</strong></p>
      </div>     
    </div>
 .. figure:: ../landing/_images/none.png
@@ -254,11 +254,11 @@ and 0.95, respectively.
    <div class="figure-grid" style="display: flex; flex-wrap: wrap; gap: 1em; justify-content: center;">
      <div style="flex: 0 0 45%;">
        <img src="./_images/EDC_Energy_LH.png" alt="EDC_Energy_LH" style="width: 100%;">
-       <p style="text-align: center;"><strong>(a)</strong> </p>
+       <p style="text-align: center;"><strong>(a) Linear hat shape function</strong> </p>
      </div>
      <div style="flex: 0 0 45%;">
        <img src="./_images/EDC_Energy_CS.png" alt="EDC_Energy_CS" style="width: 100%;">
-       <p style="text-align: center;"><strong>(b)</strong></p>
+       <p style="text-align: center;"><strong>(b) Cubic B-spline shape function</strong></p>
      </div>     
    </div>
 .. figure:: ../landing/_images/none.png

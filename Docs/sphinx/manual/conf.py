@@ -45,17 +45,35 @@ master_doc = 'index'
 # ones.
 extensions = [ 'sphinx.ext.mathjax', 'sphinxcontrib.bibtex']
 
-mathjax3_config = {
-    'tex2jax': {'inlineMath': [['$', '$'], ['\\(', '\\)']],'displayMath': [['$$', '$$'], ['\\[', '\\]']] }}
-
-
 #mathjax3_config = {
-#    'tex': {
-#        'tags': 'all',  # Enables numbering for all equations
-#       'tagSide': 'right',  # Places number on the right
-#        'tagIndent': '0em'
-#    }
-#}
+#    'tex2jax': {'inlineMath': [['$', '$'], ['\\(', '\\)']],'displayMath': [['$$', '$$'], ['\\[', '\\]']] }}
+
+# mathjax3_config = {
+#     'tex2jax': {
+#         'inlineMath': [['$', '$'], ['\\(', '\\)']],
+#         'displayMath': [['$$', '$$'], ['\\[', '\\]']]},
+#     'TeX': {
+#         'equationNumbers': {
+#             'autoNumber': 'all',
+#             'useLabelIds': True
+#         },
+#         #'displayAlign': 'center',  # Ensures equations are centered
+#         #'displayIndent': '0em'     # Prevents top-aligned equation numbers
+#         'tagSide': 'right',  # Places number on the right
+#         'tagIndent': '-20em'
+#     }
+# }
+
+
+
+# mathjax3_config = {
+#      'tex': {
+#          'tags': 'all',  # Enables numbering for all equations
+#          #'useLabelIds': True,  # Enables referencing via :eq:
+#          #'tagSide': 'right',  # Places number on the right
+#          #'tagIndent': '0em'
+#      }
+# }
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']

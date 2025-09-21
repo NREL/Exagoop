@@ -3,9 +3,11 @@ Governing Equations of MPM
 
 The complete set of governing equations for a non-isothermal problem involving non-polar materials, as discussed in the previous section, is summarized as,
 
-.. math:: :label: Eq_mce
-   
-   \rho J-\rho_0=0   
+.. math::
+   :label: Eq_mce
+
+   \rho J - \rho_0 = 0
+ 
    
  
 .. math::
@@ -73,11 +75,11 @@ The MPM solution procedure in ExaGOOP begins by generating or reading a collecti
        <p style="text-align: center;"><strong>(b)</strong> nodal velocity update </p>
      </div>
      <div style="flex: 0 0 45%;">
-       <img src="./_images/MPM_Step3.png" alt="step 3" style="width: 100%;">
+       <img src="./_images/MPM_Step4.png" alt="step 3" style="width: 100%;">
        <p style="text-align: center;"><strong>(c)</strong> grid to particle (G2P) operation</p>
      </div>
      <div style="flex: 0 0 45%;">
-       <img src="./_images/MPM_Step4.png" alt="step 4" style="width: 100%;">
+       <img src="./_images/MPM_Step3.png" alt="step 4" style="width: 100%;">
        <p style="text-align: center;"><strong>(d)</strong> particle position update</p>
      </div>
    </div>

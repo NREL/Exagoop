@@ -6,8 +6,8 @@ EXAGOOP is a Material Point Method (MPM) based solver developed by the Scalable 
 Key features of ExaGOOP MPM solver include:
 
 - Single-level, Cartesian, background grid generation and manipulation using the AMReX library
-- Material point functionalities implemented using AMReX particle library
-- CPU, GPU and CPU+GPU implementation on multiple heterogeneous architectures
+- Material point functionalities implemented using the AMReX particle library
+- CPU, GPU, and CPU+GPU implementation on multiple heterogeneous architectures
 - Explicit time integration scheme
 - Bilinear, Quadratic B-Spline, Cubic B-Spline shape functions
 - Particle in Cell (PIC) & Fluid Implicit Particle (FLIP) methods

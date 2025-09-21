@@ -13,7 +13,7 @@ Hence, the motion of a particle is expressed in the Lagrangian description as,
 	\mathbf{x} = \mathbf{x}(\mathbf{X},t)
 	\end{aligned}
 
-It is to be noted that by definition, the above particle had the coordinates defined by :math:`\mathbf{X}` at time :math:`t=0`. The displacement :math:`\mathbf{u}` of the particle with respect to the initial configuration is then expressed as,
+It is to be noted that by definition, the above particle has the coordinates defined by :math:`\mathbf{X}` at time :math:`t=0`. The displacement :math:`\mathbf{u}` of the particle with respect to the initial configuration is then expressed as,
 
 .. math::
 	
@@ -30,7 +30,7 @@ The definition of the velocity of the particle :math:`\mathbf{v}` then follows a
 	&= \frac{\partial \mathbf{u}(\mathbf{X},t)}{\partial t}
 	\end{aligned}
 
-Similarly, the time rate of change of any property of the particle expressed in the Lagrangian framework is its partial time derivative, and math:`\mathbf{X}` simply serves as a parameter. Similar to the expression of velocity given above, the acceleration of the particle can also be expressed as,
+Similarly, the time rate of change of any property of the particle expressed in the Lagrangian framework is its partial time derivative, and :math:`\mathbf{X}` simply serves as a parameter. Similar to the expression of velocity given above, the acceleration of the particle can also be expressed as,
 
 .. math::
 	
@@ -163,8 +163,7 @@ which leads to the mass conservation equation as,
 Conservation of momentum
 ------------------------
 
-Newton’s second law of motion states that the rate of change of momentum of a body is equal to the sum of the volume and surface forces acting on it. Consider the same body as shown in :numref:`compdom`, with a body force per unit mass :math:`\mathbf{b}` and traction :math:`\mathbf{t}` acting on it’s
-surface. The law of conservation of momentum is expressed as,
+Newton’s second law of motion states that the rate of change of momentum of a body is equal to the sum of the volume and surface forces acting on it. Consider the same body as shown in :numref:`compdom`, with a body force per unit mass :math:`\mathbf{b}` and traction :math:`\mathbf{t}` acting on it’s surface :math:`\Gamma_t`. The law of conservation of momentum is expressed as,
 
 .. math::
 	
