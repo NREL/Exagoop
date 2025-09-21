@@ -1,7 +1,7 @@
 AMREX_HOME ?= ../../amrex
-MPM_HOME = ../
+MPM_HOME ?= ../
 
-EBASE = mpm
+EBASE = ExaGOOP
 
 DEBUG	= FALSE
 
