@@ -19,14 +19,14 @@ For more details on the governing equations, numerical methods, validation tests
 
 ## Installing ExaGOOP
 
-###Requirements:
+### Requirements:
 ExaGOOP is designed to run on macOS and Linux environments and can be executed on various computing devices, including laptops, workstations, and high-performance computing (HPC) systems. Although we do not provide official support for running ExaGOOP on Windows, we recommend that Windows users utilize the Windows Subsystem for Linux (WSL) to build and run ExaGOOP.
 
 ExaGOOP requires a C++17 compatible compiler, specifically GCC version 8 or higher and Clang version 3.6 or higher; Microsoft Visual C++ (MSVC) is not supported. Additionally, it requires CMake version 3.20 or higher, or GNU Make version 3.81 or higher to manage the build process. 
 
 ExaGOOP is developed using the AMReX framework, which provides essential APIs for handling grid and particle functionalities. The built-in capabilities of AMReX enable ExaGOOP to be built on heterogeneous computing architectures that utilize MPI+X, where X refers to GPU architectures such as NVIDIA (CUDA version 11 or higher) and AMD (ROCm version 5.2 or higher) GPUs.
 
-###Downloading ExaGOOP
+### Downloading ExaGOOP
 
 To clone the ExaGOOP source code to your local environment, you can directly access the GitHub repository at this link: https://github.com/NREL/Exagoop. The AMReX framework is included as a submodule within the ExaGOOP repository. Use the following command to clone the complete source code:
 
@@ -42,9 +42,9 @@ Next, set up the necessary environment variables for building ExaGOOP. You can d
 export MPM_HOME=<path_to_ExaGOOP>
 export AMREX_HOME=${MPM_HOME}/Submodules/amrex
 ```
-###Building ExaGOOP
+### Building ExaGOOP
 Once the above steps are completed, you can build ExaGOOP using either CMake or GNU Make.
-####Building using CMake
+#### Building using CMake
 1. Navigate to the `Build_Cmake` directory within `$MPM_HOME`:
 
    ```bash
@@ -63,7 +63,7 @@ Once the above steps are completed, you can build ExaGOOP using either CMake or 
    ```
 Upon successful completion, the ExaGOOP executable named `ExaGOOP.exe` will be available in the `$MPM_HOME/Build_Cmake` directory.
 
-####Building using GNUmake
+#### Building using GNUmake
 1. Navigate to the `Build_Gnumake` directory within `MPM_HOME`:
 
    ```bash
