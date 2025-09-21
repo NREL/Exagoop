@@ -1,0 +1,75 @@
+#Geometry parameters
+mpm.prob_lo = 0.0 0.0 0.0			#Lower corner of physical domain
+mpm.prob_hi = 0.4 0.4 0.012			#Upper corner of physical domain
+mpm.ncells  = 100 100 3				#number of cells in each direction
+mpm.max_grid_size = 101				#Max grid size
+mpm.is_it_periodic = 0  0  1			#Periodicity
+
+#AMR Parameters
+#restart_checkfile = ""				#Name of the restart file
+
+#Input files
+mpm.use_autogen=0				#Use particle autogeneration tool
+mpm.mincoords_autogen=0.0 0.0 0.0
+mpm.maxcoords_autogen=1.0 1.0 1.0	
+mpm.vel_autogen=0.0 0.0 0.0			#Velocity components of particle
+mpm.constmodel_autogen=0			#0->Elastic solid,1->Compressible fluid
+mpm.dens_autogen=1.0				#Density
+mpm.E_autogen=1e6				#Youngs modulous
+mpm.nu_autogen=0.3				#Poisson's ratio
+mpm.bulkmod_autogen=2e6				#Bulk modulous
+mpm.Gama_pres_autogen=7				#Gamma
+mpm.visc_autogen=0.001				#Viscosity
+mpm.multi_part_per_cell_autogen=1		#Number of particles per cell
+mpm.particle_file="mpm_particles.dat"		#Particle filename
+
+#File output parameters
+#mpm.prefix_particlefilename="./Solution/1Order_CFL0.1_Alpha0.99_Buf3_Per_Serial/plt"		#Particle filename prefix
+#mpm.prefix_gridfilename="./Solution/1Order_CFL0.1_Alpha0.99_Buf3_Per_Serial/nplt"			#Background grid filename prefix
+#mpm.prefix_densityfilename="./Solution/1Order_CFL0.1_Alpha0.99_Buf3_Per_Serial/dens"		#Density filename prefix
+#mpm.prefix_checkpointfilename="./Solution/1Order_CFL0.1_Alpha0.99_Buf3_Per_Serial/chk"		#Checkpoint filename prefix
+mpm.num_of_digits_in_filenames=6		#Number of digits in the filename
+
+#Simulation run parameters
+mpm.final_time=0.3			#Maximum simulation time 
+mpm.max_steps=10				#Maximum number of iterations for the simulation
+mpm.screen_output_time = 0.001			#How frequently to output iteration msgs
+mpm.write_output_time=0.01			#How frequently to write output files
+mpm.num_redist = 1				#How frequently to redistribute
+
+#Timestepping parameters
+mpm.fixed_timestep = 0  			#1=> fixed time step, 0=> CFL based adaptive time step
+mpm.timestep = 1.0e-5				#Timestep value in case mpm.fixed_timestep=1
+mpm.CFL=0.1					#CFL number
+mpm.dt_min_limit=1e-12				#The minimum value of timestep. Throw a warning if lower. Continues iteration with dt_min_limit
+mpm.dt_max_limit=1e-0				#The maximum value of timestep. if(dt>dt_max_limit) dt=dt_max_limit
+
+#Numerical schemes
+mpm.order_scheme=1				#1->Linear shape func. 3->Spline shape function
+mpm.alpha_pic_flip = 0.99			#1.0->Pure FLIP scheme. 0.0->Pure PIC scheme. Recommended:(0.95-0.99)
+mpm.stress_update_scheme= 1			#1->MUSL,0->USL
+mpm.mass_tolerance = 1e-18			#Stability parameters to avoid zero mass on nodes. Recommended: 1e-18
+mpm.mpm.calculate_strain_based_on_delta=0	#Stress calculation based on delta epsilon if this flag =1
+
+#Physics parameters
+mpm.gravity = 0.0 -9.81 0.0			#Acceleration due to gravity components in 3 dimensions
+mpm.applied_strainrate_time=0.0			#
+mpm.applied_strainrate=0.0			#
+mpm.external_loads=0				#1->If there are external force 0->No external force
+mpm.force_slab_lo= 0.0 0.0 0.0			#Box lower coordinates in physical space where external force is applied
+mpm.force_slab_hi= 1.0 1.0 1.0			#Box upper coordinates in physical space where external force is applied
+mpm.extforce = 0.0 0.0 0.0			#External force value
+
+#Diagnostics and Test
+mpm.print_diagnostics= 1			#Write diagnostic data
+mpm.is_standard_test= 1				#1->If you are running standard tests given in the folder 'tests'
+mpm.test_number= 2				#1->Axial vibration of continuum bar. 2->Dam break 3->Elastic disk collision 4->Cantilevel deflection
+mpm.axial_bar_E= 100				#Axial bar parameter
+mpm.axial_bar_rho= 1				#Axial bar parameter
+mpm.axial_bar_L= 25.0				#Axial bar parameter
+mpm.axial_bar_modenumber= 1			#Axial bar parameter
+mpm.axial_bar_v0= 0.1				#Axial bar parameter
+
+#Boundary conditions
+mpm.bc_lower=2 2 0				#0->Periodic 1->Noslipwall 2->Slipwall 3->Outflow
+mpm.bc_upper=2 2 0				#0->Periodic 1->Noslipwall 2->Slipwall 3->Outflow
