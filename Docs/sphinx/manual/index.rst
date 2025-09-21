@@ -22,7 +22,7 @@ The Material Point Method (MPM) is a ‘mesh-free’ technique that has garnered
    :maxdepth: 2
    :caption: Validation and Verification:
    
-   Validation.rst  
+   validation.rst  
 
 .. toctree::
    :maxdepth: 2
@@ -34,6 +34,6 @@ The Material Point Method (MPM) is a ‘mesh-free’ technique that has garnered
    :maxdepth: 2
    :caption: References:
    
-   zreferences.rst
+   references.rst
 
 
