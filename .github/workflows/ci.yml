@@ -3,9 +3,9 @@ name: ExaGOOP-CI
 on:
   workflow_dispatch:
   push:
-    branches: [ClangTidy]
+    branches: [main]
   pull_request:
-    branches: [ClangTidy]
+    branches: [main]
 
 concurrency:
   group: ${{github.ref}}-${{github.head_ref}}-ci
@@ -60,7 +60,7 @@ jobs:
         working-directory: ./Tests/Dam_Break
         run: ./mpm3d.gnu.DEBUG.ex inputs_dambreak.in amr.max_step=1 amr.plot_int=-1 amr.check_int=-1
       #- name: DamBreak debug report
-      #  working-directory: ./tests/Dam_Break
+      #  working-directory: ./Tests/Dam_Break
       #  run: |
       #    egrep "Warning:|Error:|warning:|error:" build-output.txt \
       #      | egrep -v "Submodules/amrex|GNUmakefile" \

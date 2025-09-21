@@ -3,12 +3,12 @@ name: ExaGOOP-Docs
 on:
   workflow_dispatch:
   push:
-    branches: [ClangTidy]
+    branches: [main]
     paths:
        - 'docs/**'
        - '.github/workflows/docs.yml'
   pull_request:
-    branches: [ClangTidy]
+    branches: [main]
     paths:
        - 'docs/**'
        - '.github/workflows/docs.yml'
