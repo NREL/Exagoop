@@ -26,6 +26,12 @@ The Material Point Method (MPM) is a ‘mesh-free’ technique that has garnered
 
 .. toctree::
    :maxdepth: 2
+   :caption: Tutorial:
+   
+   tutorial_dambreak
+
+.. toctree::
+   :maxdepth: 2
    :caption: References:
    
    zreferences.rst
