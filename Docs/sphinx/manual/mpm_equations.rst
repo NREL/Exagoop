@@ -59,7 +59,7 @@ above is carried out in four stages, as briefly discussed in the following secti
 
 .. _mpmsect:
 
-MPM descretisation steps
+MPM discretisation steps
 ==========================
 The MPM solution procedure in ExaGOOP begins by generating or reading a collection of material point data from an input file. This material point data includes information on each point's location, velocity, and flags for the constitutive model. Additionally, a background grid is generated based on user-defined inputs, which specify the entire computational domain. The time integration process then advances through each time step, with each step comprising four distinct sub-steps, as outlined in the following subsections.
 
