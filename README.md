@@ -1,82 +1,100 @@
 # EXAGOOP - A material point method (MPM) solver based on AMReX Framework
-## Introduction
+## Overview
 
 ![MPM_Github](https://github.com/NREL/Exagoop/assets/98907926/59a06fe9-56c3-4822-9d57-996e7beebd0f)
 
-The EXAGOOP solver suite is a Material Point Method (MPM) based multi-phase solver developed by the HPACF team at National Renewable Energy Laboratory, Colorado. The solver, which can be broadly defined as a particle-based method, can be used to solve gaseous, liquid, and solid phase continuum, physical problems.
+ExaGOOP is a multi-phase solver based on the Material Point Method (MPM), developed by the Scalable Algorithms, Modeling, and Simulation (SAMS) team at the National Renewable Energy Laboratory in Golden, Colorado. This solver, which can be classified as a particle-based method, is designed to tackle continuum physical problems involving gaseous, liquid, and solid phases, particularly those that experience large deformations.
 
-Most of the fluid and solid dynamics solvers are developed based on the Eulerian framework of the governing equations. These methods solve the governing equations on a collection of structured or unstructured grid elements. However, when materials undergo large deformations, the grid elements also stretch and deform, leading to inaccurate and often unstable computations. On the other hand, MPMs, like many particle-based methods, is based on the Lagrangian framework of the governing equations. The continuum material under study is modeled as a collection of particles (or material points). Unlike the Eulerian solvers, the material's properties are stored on these material points. The Lagrangian form of the governing equations are solved using the material points and a reference background grid. This eliminates the problem posed by grid element deformations. Hence, MPM methods are well suited for all continuum mechanics problems in general and for those involving large material deformations, in particular.
+Key features of ExaGOOP MPM solver include:
 
-The basic components and the terminologies used in EXAGOOP MPM solver is shown in the figure below. A cartesian Eulerian grid (no adaptive mesh refinement) is used along with material points simulated as spherical particles.
-![Basic_Components_MPM](https://github.com/NREL/Exagoop/assets/98907926/d788b923-fe35-499d-98f9-c37e7c4bf06b)
+- Built on the AMReX framework, utilizing a single-level, block-structured Cartesian grid as the background grid. Material points are represented using the particle class in AMReX.
+- Support for MPI and GPU computing through CUDA and HIP.
+- Availability of linearly elastic and compressible fluid material models.
+- Support for linear, quadratic, and cubic B-Spline grid shape functions.
+- Use of explicit time integration for time advancement.
+- Simulation of complex geometries using the embedded boundary method.
+- Rigid material points are available for simulating either stationary or moving rigid walls.
+
+For more details on the governing equations, numerical methods, validation tests, and tutorials, please visit: [ExaGOOP Documentation](https://nrel.github.io/Exagoop/).
+
+## Installing ExaGOOP
+
+### Requirements:
+ExaGOOP is designed to run on macOS and Linux environments and can be executed on various computing devices, including laptops, workstations, and high-performance computing (HPC) systems. Although we do not provide official support for running ExaGOOP on Windows, we recommend that Windows users utilize the Windows Subsystem for Linux (WSL) to build and run ExaGOOP.
+
+ExaGOOP requires a C++17 compatible compiler, specifically GCC version 8 or higher and Clang version 3.6 or higher; Microsoft Visual C++ (MSVC) is not supported. Additionally, it requires CMake version 3.20 or higher, or GNU Make version 3.81 or higher to manage the build process. 
+
+ExaGOOP is developed using the AMReX framework, which provides essential APIs for handling grid and particle functionalities. The built-in capabilities of AMReX enable ExaGOOP to be built on heterogeneous computing architectures that utilize MPI+X, where X refers to GPU architectures such as NVIDIA (CUDA version 11 or higher) and AMD (ROCm version 5.2 or higher) GPUs.
+
+### Downloading ExaGOOP
+
+To clone the ExaGOOP source code to your local environment, you can directly access the GitHub repository at this link: https://github.com/NREL/Exagoop. The AMReX framework is included as a submodule within the ExaGOOP repository. Use the following command to clone the complete source code:
+
+```
+git clone --recurse-submodules https://github.com/NREL/Exagoop.git
+```
+
+This command will create a folder named `Exagoop` containing the full ExaGOOP source code. The AMReX sources can be found in the `Exagoop/Submodules/amrex` directory.
+
+Next, set up the necessary environment variables for building ExaGOOP. You can do this by typing the following commands in your terminal. If you'd like these settings to persist, consider adding them to your `.bashrc` or `.zshrc` file.
+
+```
+export MPM_HOME=<path_to_ExaGOOP>
+export AMREX_HOME=${MPM_HOME}/Submodules/amrex
+```
+### Building ExaGOOP
+Once the above steps are completed, you can build ExaGOOP using either CMake or GNU Make.
+#### Building using CMake
+1. Navigate to the `Build_Cmake` directory within `$MPM_HOME`:
+
+   ```bash
+   cd $MPM_HOME/Build_Cmake
+   ```
+2. Edit the `cmake.sh` file to configure the build environment. Be sure to set the following options as needed:
+   - Set `-DEXAGOOP_ENABLE_MPI:BOOL` to `ON` if you are using MPI.
+   - Set `-DEXAGOOP_ENABLE_CUDA:BOOL` and `-DEXAGOOP_ENABLE_HIP:BOOL` to `ON` or `OFF` based on your GPU usage.
+   - Define `-DAMReX_CUDA_ARCH` and `-DAMReX_AMD_ARCH` according to your GPU architecture. 
+   - Always set `-DAMReX_SPACEDIM` to `3`, as ExaGOOP operates in three spatial dimensions.
+ 
+3. Build the project by executing:
+
+   ```bash
+   sh cmake.sh
+   ```
+Upon successful completion, the ExaGOOP executable named `ExaGOOP.exe` will be available in the `$MPM_HOME/Build_Cmake` directory.
+
+#### Building using GNUmake
+1. Navigate to the `Build_Gnumake` directory within `MPM_HOME`:
+
+   ```bash
+   cd $MPM_HOME/Build_Gnumake
+   ```
+
+2. Adjust the `Gnumake` file according to your build environment:
+   - Set the C++ compiler variable `COMP` to either `gnu` or `Clang`.
+   - If you are using MPI, set `USE_MPI = TRUE`.
+   - Similarly, set `USE_OMP`, `USE_CUDA`, and `USE_HIP` to `TRUE` if you plan to use OpenMP, CUDA, or HIP.
+
+3. Compile and link the project by running:
+
+   ```bash
+   make -j<num_proc>
+   ```
+
+   Replace `<num_proc>` with the number of processors you want to utilize for parallel compilation. After a successful build, the executable will be located in the `$MPM_HOME/Build_Gnumake` directory.
 
 
-The various steps involved in one time integration stage in EXAGOOP is shown in the following figure and are described in the following 4 steps.
-![Steps_in_MPM](https://github.com/NREL/Exagoop/assets/98907926/30811ef6-57ca-4983-89ed-65b27c14f70d)
 
-
-### Steps:
-
-0. In the initialization stage, material point mass, position, velocity and stresses are initialized.
-1. The material point (subscript p) mass and momentum are mapped onto the grid node (subscript I) using grid shape functions $\phi$. Similarly, the forces on the material points (comprising external forces such as gravity and internal forces from stresses) are also mapped to grid nodes. Mathematically, 
-
-$$
-m_I^t = \sum_p \Phi_I (x_p^t) m_p
-$$
-
-$$
-(m\mathbf{v})_I^t = \sum_p \Phi_I (x_p^t) (mv)_p
-$$
-
-$$
-\mathbf{f}_I^{ext,t} = \sum_p \Phi_I (x_p^t) m_p \mathbf{b}(x_p)
-$$
-
-$$
-\mathbf{f}_I^{int,t} = \sum_p V_p^t \mathbf{\sigma}_p^t \nabla \Phi_I (x_p^t)
-$$
-
-where, $\sum_p$ denotes summation over all material points. $m_p$, $\mathbf{v}$, $V_p$, $\mathbf{b}$, $\sigma$ and $\Phi$ denote particle mass, particle velocity vector, particle volume, body force vector, stress and grid shape functions respectively.
-
-2. The updated grid nodal velocity is calculated using explicit Euler time integration. 
-
-$$
-\mathbf{v}_I^{t+\Delta t} = \mathbf{v}_I^{t} + \frac{\mathbf{f}_I^{ext,t}+\mathbf{f}_I^{int,t}}{m_I^t} \Delta t
-$$
-
-3. Particle velocity is updated from new nodal velocity (at time $t+\Delta t$) using a blend of Particle in Cell (PIC) and Fluid Implicit Particle (FLIP) update methods. The blending factor used is $\alpha$.
-
-$$
-\mathbf{v}_p^{t+\Delta t}=\alpha\left(\mathbf{v}_p^t+\sum_I \Phi_I\left[\mathbf{v}_I^{t+\Delta t}-\mathbf{v}_I^t\right]\right)+\left(1-\alpha\right) \sum_I \Phi_I \mathbf{v}_I^{t+\Delta t} \nabla \mathbf{v}_p^{t+\Delta t}=\sum_I^{n g} \nabla \Phi_I \mathbf{v}_I^{t+\Delta t}
-$$
-
-4. Particle positions are updated using Euler time integration.
-
-$$
-x_p^{\{t+\Delta t\}}=x_p^t+\Delta t \sum_I \phi_I\left(x_p^t\right) v_I^{\{t+\Delta t\}}
-$$
-
-## EXAGOOP features
-
-- Based on AMReX framework. Single-level, block-structured, cartesian grid is used as the background grid. Material points are simulated using particle class in AMReX.
-- MPI+GPU support using CUDA and HIP
-- Linearly elastic and compressible fluid material models available
-- Linear, Quadratic, and Cubic B-Spline grid shape functions available
-- Explicit time integration used for time update
-- Complex geometry simulated using embedded boundary method
-- Rigid material points available for simulating stationary/moving rigid walls
-
-## Build Instructions
-
-- Clone AMReX source code to a convenient location and point __AMREX_HOME__ environment variable to this directory
-- Clone EXAGOOP from GitHub to a convenient location and set __MPM_HOME__ enviroment variable to this directory
-- Go to __BUILD__ directory. Modify the GNUmake file according to the problem to be simulated. Set __COMP__ to GNU and __USE_MPI__ to TRUE for MPI support. For GPU support, enable  __USE_CUDA__ variable.
-- Run __make__ to compile and generate the executable (One can test running the executable using the test cases in the __tests__ folder).
-
-
-## Visualization Instructions
+### Visualization Instructions
 
 - The simulation output files are in the form of AMReX plotfiles.
 - Paraview can be used to load and view the particle ( __plt__ files) and nodal ( __nplt__ files) solution files.
 
- 
+## Getting help
+
+- To engage with the development team, please use the [GitHub discussions link](https://github.com/NREL/Exagoop/discussions).
+- If you encounter a bug that you would like to report, kindly use the [GitHub issues page](https://github.com/NREL/Exagoop/issues). When reporting, please provide as much detail as possible regarding the major compilation and runtime options you are using.
+
+## Acknowledgment
+
+The development of this software was supported by the National Alliance for Water Innovation (NAWI), funded by the U.S. Department of Energy, Office of Energy Efficiency and Renewable Energy (EERE), Advanced Manufacturing Office, under Funding Opportunity Announcement Number DE-FOA-0001905. All of the research was performed using computational resources sponsored by the Department of Energy’s Office of Energy Efficiency and Renewable Energy and located at the National Renewable Energy Laboratory. This work was authored in part by the National Renewable Energy Laboratory, operated by Alliance for Sustainable Energy, LLC, for the U.S. Department of Energy (DOE) under Contract No. DE-AC36-08GO28308. The views expressed in the article do not necessarily represent the views of the DOE or the U.S. Government. The U.S. Government retains and the publisher, by accepting the article for publication, acknowledges that the U.S. Government retains a nonexclusive, paid-up, irrevocable, worldwide license to publish or reproduce the published form of this work, or allow others to do so, for U.S. Government purposes.
