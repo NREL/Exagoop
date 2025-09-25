@@ -13,7 +13,7 @@ concurrency:
 
 jobs:
   Formatting:
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-latest
     steps:
     - name: Clone
       uses: actions/checkout@v4
@@ -26,7 +26,7 @@ jobs:
         clangFormatVersion: 20
   CPU-GNUmake:
     needs: Formatting
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-latest
     steps:
       - name: Clone
         uses: actions/checkout@v4
@@ -72,7 +72,7 @@ jobs:
   GPU-Nvidia:
     name: GPU-CUDA
     needs: [Formatting, CPU-GNUmake]
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-latest
     strategy:
       matrix:
         enable_eb: [EB-ON]
@@ -142,7 +142,7 @@ jobs:
   GPU-AMD:
     name: GPU-HIP
     needs: [Formatting, CPU-GNUmake]
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-latest
     steps:
       - name: Clone
         uses: actions/checkout@v4
@@ -213,7 +213,7 @@ jobs:
   GPU-Intel:
     name: GPU-SYCL
     needs: [Formatting, CPU-GNUmake]
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-latest
     steps:
       - name: Clone
         uses: actions/checkout@v4
@@ -276,7 +276,7 @@ jobs:
           du -hs ~/.cache/ccache
   Lint-codeql:
     needs: Formatting
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-latest
     steps:
       - name: Clone
         uses: actions/checkout@v4
