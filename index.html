@@ -1,0 +1,192 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Welcome to ExaGOOP’s documentation! &mdash; ExaGOOP 22.12 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="_static/theme.css?v=df66b05f" />
+      <link rel="stylesheet" type="text/css" href="_static/css/custom.css" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=d09052ea"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Key Features" href="intro.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="#" class="icon icon-home">
+            ExaGOOP
+              <img src="_static/ExaGOOP_Logo.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">The ExaGOOP MPM Solver:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="intro.html">Key Features</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Theory:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="theory.html">Governing equations of continuum mechanics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mpm_equations.html">Governing Equations of MPM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mpm_equations.html#mpm-discretisation-steps">MPM discretisation steps</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Validation and Verification:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="validation.html">Axial vibration of an elastic bar</a></li>
+<li class="toctree-l1"><a class="reference internal" href="validation.html#collision-of-two-dimensional-elastic-disks">Collision of two-dimensional elastic disks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="validation.html#dam-break-simulation">Dam break simulation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorial:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="tutorial_dambreak.html">Setting up the simulation folder</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial_dambreak.html#setting-up-the-input-file">Setting up the input file</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial_dambreak.html#generating-initial-material-point-file">Generating initial material point file</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial_dambreak.html#running-exagoop-and-viewing-output-files">Running ExaGOOP and viewing output files</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">References:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="references.html">References</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="#">ExaGOOP</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="#" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Welcome to ExaGOOP’s documentation!</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/index.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="welcome-to-exagoop-s-documentation">
+<h1>Welcome to ExaGOOP’s documentation!<a class="headerlink" href="#welcome-to-exagoop-s-documentation" title="Link to this heading"></a></h1>
+<p>Numerical simulations have become an essential tool in engineering analysis today. They provide an effective alternative to expensive experiments and are frequently used to selectively identify optimal designs for experimental testing. The traditional numerical methods utilized in continuum mechanics include Finite Volume Methods (FVMs), Finite Element Methods (FEMs), and Finite Difference Methods (FDMs). The first two methods rely on the integral form of the governing equations, while the last method is based on the differential form, approximating derivatives using algebraic expressions. A shared characteristic of these three methods is the requirement of a computational grid to solve the governing equations. This grid consists of a collection of numbered points (or nodes) interconnected by edges (in 2D) or faces (in 3D) to form grid cells. These grid cells together encompass the entire computational domain. In solid mechanics, these methods are usually applied in conjunction with the Lagrangian form of the governing equations. In this context, the grid nodes are attached to the material and move as the material deforms. However, when the material experiences severe deformation, the movement of the mesh nodes can lead to grid entanglement, resulting in numerical instabilities that may cause the solver to halt abruptly. In contrast, Eulerian-based methods do not require grid movement; instead, the material deforms across fixed grid cells, decoupling it from the grid nodes. While this formulation is numerically stable, it is less suited for problems involving moving interfaces and materials with history-dependent properties.</p>
+<p>The Material Point Method (MPM) is a ‘mesh-free’ technique that has garnered significant attention for its ability to simulate problems with considerable deformations. MPM is a Lagrangian, particle-based numerical method inspired by the Particle-In-Cell (PIC) <span id="id1">[<a class="reference internal" href="references.html#id4" title="Francis H Harlow. The particle-in-cell method for numerical solution of problems in fluid dynamics. Technical Report, Los Alamos Scientific Lab., N. Mex., 02 1962. URL: https://www.osti.gov/biblio/4769185, doi:10.2172/4769185.">2</a>]</span> and Fluid-Implicit Particle (FLIP) methods <span id="id2">[<a class="reference internal" href="references.html#id3" title="J.U. Brackbill and H.M. Ruppel. Flip: a method for adaptively zoned, particle-in-cell calculations of fluid flows in two dimensions. Journal of Computational Physics, 65(2):314-343, 1986. URL: https://www.sciencedirect.com/science/article/pii/0021999186902111, doi:https://doi.org/10.1016/0021-9991(86)90211-1.">1</a>]</span>. Although MPM was initially developed for solid mechanics problems, it has since been extended for use in fluid simulations as well. In MPM, the entire material domain is discretized using particles or material points, where all material properties—such as velocity, density, strain rates, and stresses—are stored. This aspect of MPM makes it especially useful for modeling history-dependent constitutive models. The lack of a grid connecting these material points allows MPM to effectively simulate scenarios with significant material deformations, such as solid fractures, foam deformations, and granular flows. Although a background grid is necessary for MPM, it is primarily used as a tool for performing certain numerical operations that are not computationally intensive. These unique features make MPM a promising approach for studying materials with large deformations and history-dependent properties.</p>
+<div class="toctree-wrapper compound">
+<p class="caption" role="heading"><span class="caption-text">The ExaGOOP MPM Solver:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="intro.html">Key Features</a></li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<p class="caption" role="heading"><span class="caption-text">Theory:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="theory.html">Governing equations of continuum mechanics</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="theory.html#deformation-gradient-tensor">Deformation gradient tensor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="theory.html#velocity-gradient-tensor">Velocity gradient tensor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="theory.html#jacobian">Jacobian</a></li>
+<li class="toctree-l2"><a class="reference internal" href="theory.html#stress-tensor-and-constitutive-models">Stress tensor and Constitutive models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="theory.html#equation-of-conservation-of-mass">Equation of conservation of mass</a></li>
+<li class="toctree-l2"><a class="reference internal" href="theory.html#conservation-of-momentum">Conservation of momentum</a></li>
+<li class="toctree-l2"><a class="reference internal" href="theory.html#initial-and-boundary-conditions">Initial and Boundary conditions</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="mpm_equations.html">Governing Equations of MPM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mpm_equations.html#mpm-discretisation-steps">MPM discretisation steps</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="mpm_equations.html#particle-to-grid-interpolation-p2g">Particle to Grid Interpolation (P2G)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mpm_equations.html#temporal-integration-at-grid-nodes">Temporal integration at grid nodes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mpm_equations.html#grid-to-particle-g2p-interpolation">Grid to Particle (G2P) Interpolation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mpm_equations.html#material-point-position-update-and-grid-reset">Material point position update and grid reset</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<p class="caption" role="heading"><span class="caption-text">Validation and Verification:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="validation.html">Axial vibration of an elastic bar</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="validation.html#effect-of-alpha-p-f">Effect of <span class="math notranslate nohighlight">\(\alpha_{P-F}\)</span></a></li>
+<li class="toctree-l2"><a class="reference internal" href="validation.html#effect-of-cfl">Effect of <span class="math notranslate nohighlight">\(CFL\)</span></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="validation.html#collision-of-two-dimensional-elastic-disks">Collision of two-dimensional elastic disks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="validation.html#dam-break-simulation">Dam break simulation</a></li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<p class="caption" role="heading"><span class="caption-text">Tutorial:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="tutorial_dambreak.html">Setting up the simulation folder</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial_dambreak.html#setting-up-the-input-file">Setting up the input file</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial_dambreak.html#generating-initial-material-point-file">Generating initial material point file</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial_dambreak.html#running-exagoop-and-viewing-output-files">Running ExaGOOP and viewing output files</a></li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<p class="caption" role="heading"><span class="caption-text">References:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="references.html">References</a></li>
+</ul>
+</div>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="intro.html" class="btn btn-neutral float-right" title="Key Features" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021-2022, ExaGOOPTeam.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

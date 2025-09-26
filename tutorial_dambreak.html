@@ -1,0 +1,241 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Setting up the simulation folder &mdash; ExaGOOP 22.12 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="_static/theme.css?v=df66b05f" />
+      <link rel="stylesheet" type="text/css" href="_static/css/custom.css" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=d09052ea"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="References" href="references.html" />
+    <link rel="prev" title="Axial vibration of an elastic bar" href="validation.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            ExaGOOP
+              <img src="_static/ExaGOOP_Logo.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">The ExaGOOP MPM Solver:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="intro.html">Key Features</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Theory:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="theory.html">Governing equations of continuum mechanics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mpm_equations.html">Governing Equations of MPM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mpm_equations.html#mpm-discretisation-steps">MPM discretisation steps</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Validation and Verification:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="validation.html">Axial vibration of an elastic bar</a></li>
+<li class="toctree-l1"><a class="reference internal" href="validation.html#collision-of-two-dimensional-elastic-disks">Collision of two-dimensional elastic disks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="validation.html#dam-break-simulation">Dam break simulation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tutorial:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Setting up the simulation folder</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#setting-up-the-input-file">Setting up the input file</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#generating-initial-material-point-file">Generating initial material point file</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#running-exagoop-and-viewing-output-files">Running ExaGOOP and viewing output files</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">References:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="references.html">References</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">ExaGOOP</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Setting up the simulation folder</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/tutorial_dambreak.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <p>This section presents a straightforward tutorial for using ExaGOOP to simulate the 2D dam break problem. While we have selected the dam break scenario for this example, the steps outlined here can be adapted to simulate any continuum mechanics problem.</p>
+<p>To run a simulation with ExaGOOP, you will need an ExaGOOP input file and a particle (or material point) file, in addition to the ExaGOOP executable, which is built as described in the README file found on the <a class="reference external" href="https://github.com/NREL/Exagoop">GitHub repository page</a>. Sample input and particle files can be found in the &lt;ExaGOOP folder&gt;/Tests/Dam_Break directory.</p>
+<section id="setting-up-the-simulation-folder">
+<h1>Setting up the simulation folder<a class="headerlink" href="#setting-up-the-simulation-folder" title="Link to this heading"></a></h1>
+<p>Create a folder (say ‘Sim1_DamBreak’) in your chosen location and navigate into it.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Create a directory &#39;Sim1_DamBreak&#39; for dam break simulation</span>
+mkdir<span class="w"> </span>Sim1_DamBreak
+<span class="nb">cd</span><span class="w"> </span>Sim1_DamBreak
+</pre></div>
+</div>
+<p>Copy the input and particle files from the Tests folder. Ensure the environment variable <code class="docutils literal notranslate"><span class="pre">$MPM_HOME</span></code> is set as detailed in the <a class="reference external" href="https://github.com/NREL/Exagoop">README</a>  file.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Copy input and particle file from Tests/Dam_Break to current folder</span>
+cp<span class="w"> </span><span class="nv">$MPM_HOME</span>/Tests/Dam_Break/inputs_dambreak.in<span class="w"> </span>.
+cp<span class="w"> </span><span class="nv">$MPM_HOME</span>/Tests/Dam_Break/mpm_particles.dat<span class="w"> </span>.
+</pre></div>
+</div>
+<p>Copy the ExaGOOP executable from the build folder (depending on how it was built):</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Copy ExaGOOP executable from Build_Cmake folder</span>
+cp<span class="w"> </span><span class="nv">$MPM_HOME</span>/Build_Cmake/ExaGOOP.exe<span class="w"> </span>.
+</pre></div>
+</div>
+<p>or,</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Copy ExaGOOP executable from Build_Gnumake folder</span>
+cp<span class="w"> </span><span class="nv">$MPM_HOME</span>/Build_Gnumake/ExaGOOP3d&lt;suffix&gt;.ex<span class="w"> </span>.
+</pre></div>
+</div>
+<p>The &lt;suffix&gt; string is automatically decided based on the build environments.</p>
+<p>Now that the simulation folder is prepared, we will discuss how to set up the input file in the next section.</p>
+</section>
+<section id="setting-up-the-input-file">
+<h1>Setting up the input file<a class="headerlink" href="#setting-up-the-input-file" title="Link to this heading"></a></h1>
+<p>As mentioned in the <a class="reference internal" href="mpm_equations.html#mpmsect"><span class="std std-ref">MPM discretisation steps</span></a> section, MPM requires a background grid. ExaGOOP utilizes a single, Adaptive Mesh Refinement (AMR) level Cartesian background grid. The following section provides a detailed description of the necessary inputs required for setting up the background grid. Please note that all input parameter definitions in the input file should begin with the prefix <code class="docutils literal notranslate"><span class="pre">mpm.</span></code> to be read correctly by the solver.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1">#Geometry parameters</span>
+mpm.prob_lo<span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0</span>.0<span class="w"> </span><span class="m">0</span>.0<span class="w"> </span><span class="m">0</span>.0<span class="w">                       </span><span class="c1">#Lower corner of physical domain</span>
+mpm.prob_hi<span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0</span>.4<span class="w"> </span><span class="m">0</span>.4<span class="w"> </span><span class="m">0</span>.012<span class="w">                     </span><span class="c1">#Upper corner of physical domain</span>
+mpm.ncells<span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="m">100</span><span class="w"> </span><span class="m">100</span><span class="w"> </span><span class="m">3</span><span class="w">                         </span><span class="c1">#number of cells in each direction</span>
+mpm.max_grid_size<span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">101</span><span class="w">                         </span><span class="c1">#Max grid size</span>
+mpm.is_it_periodic<span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0</span><span class="w">  </span><span class="m">0</span><span class="w">  </span><span class="m">1</span><span class="w">                    </span><span class="c1">#Periodicity</span>
+</pre></div>
+</div>
+<p>In the input file section above, <code class="docutils literal notranslate"><span class="pre">prob_lo</span></code> specifies the 3-dimensional coordinates of the lower left corner of the background grid. In this case, the x, y, and z coordinates are all set to 0.0. Similarly, <code class="docutils literal notranslate"><span class="pre">prob_hi</span></code> indicates the upper right corner of the computational domain (0.4, 0.4 and 0.012). It is important to note that, although the problem is inherently 2-dimensional, ExaGOOP models it as a 3-dimensional problem by including cells in the z-direction.</p>
+<p>With the background grid domain fully defined, the Cartesian grid parameters are set using <code class="docutils literal notranslate"><span class="pre">mpm.ncells</span></code>, which specifies the number of cells in each of the three directions. Since we will be using a linear hat shape function, it is recommended to set the number of cells in the z-direction to 3. The <code class="docutils literal notranslate"><span class="pre">max_grid_size</span></code> parameter defines the maximum number of cells in an AMReX box and can be used to adjust the number of boxes that are passed to each MPI rank in a parallel simulation. Additionally, because this is a 2-dimensional problem, the z-direction is simulated using a translational periodic boundary by setting <code class="docutils literal notranslate"><span class="pre">mpm.is_it_periodic</span></code> to <code class="docutils literal notranslate"><span class="pre">0</span> <span class="pre">0</span> <span class="pre">1</span></code>, which indicates that the z-boundary is periodic (indicated by 1) while the other two boundaries are not (indicated by 0).</p>
+<p>The next step is to define how the material points, also referred to as particles, will be specified. ExaGOOP offers two options for specifying material points. The first option is ‘autogen’, where ExaGOOP generates the material points internally. The second option allows users to specify their own material point file generated externally. If the user chooses to have ExaGOOP generate the material points during runtime, set the autogen flag to 1 by including <code class="docutils literal notranslate"><span class="pre">mpm.use_autogen=1</span></code> in the input file. After this, the user will need to specify the locations of the material points and their constitutive properties as outlined below.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>mpm.use_autogen<span class="o">=</span><span class="m">1</span><span class="w">                               </span><span class="c1">#Use particle autogeneration tool</span>
+mpm.mincoords_autogen<span class="o">=</span><span class="m">0</span>.0<span class="w"> </span><span class="m">0</span>.0<span class="w"> </span><span class="m">0</span>.0
+mpm.maxcoords_autogen<span class="o">=</span><span class="m">1</span>.0<span class="w"> </span><span class="m">1</span>.0<span class="w"> </span><span class="m">1</span>.0
+mpm.vel_autogen<span class="o">=</span><span class="m">0</span>.0<span class="w"> </span><span class="m">0</span>.0<span class="w"> </span><span class="m">0</span>.0<span class="w">                     </span><span class="c1">#Velocity components of particle</span>
+mpm.constmodel_autogen<span class="o">=</span><span class="m">0</span><span class="w">                        </span><span class="c1">#0-&gt;Elastic solid,1-&gt;Compressible fluid</span>
+mpm.dens_autogen<span class="o">=</span><span class="m">1</span>.0<span class="w">                            </span><span class="c1">#Density</span>
+mpm.E_autogen<span class="o">=</span>1e6<span class="w">                               </span><span class="c1">#Youngs modulous</span>
+mpm.nu_autogen<span class="o">=</span><span class="m">0</span>.3<span class="w">                              </span><span class="c1">#Poisson&#39;s ratio</span>
+mpm.bulkmod_autogen<span class="o">=</span>2e6<span class="w">                         </span><span class="c1">#Bulk modulous</span>
+mpm.Gama_pres_autogen<span class="o">=</span><span class="m">7</span><span class="w">                         </span><span class="c1">#Gamma</span>
+mpm.visc_autogen<span class="o">=</span><span class="m">0</span>.001<span class="w">                          </span><span class="c1">#Viscosity</span>
+mpm.multi_part_per_cell_autogen<span class="o">=</span><span class="m">1</span><span class="w">               </span><span class="c1">#Number of particles per cell</span>
+</pre></div>
+</div>
+<p>In this context, <code class="docutils literal notranslate"><span class="pre">mincoords_autogen</span></code> and <code class="docutils literal notranslate"><span class="pre">maxcoords_autogen</span></code> define the lower and upper corners of a rectangular sub-domain within the background grid where the material points will be embedded. The variable <code class="docutils literal notranslate"><span class="pre">vel_autogen</span></code> represents the initial velocity components of the material points, while <code class="docutils literal notranslate"><span class="pre">constmodel_autogen</span></code> indicates the constitutive model used for these material points.</p>
+<p>Alternatively, if the user opts to use an already existing particle file, the input statement <code class="docutils literal notranslate"><span class="pre">mpm.particle_file=&lt;particle</span> <span class="pre">filename&gt;</span></code> can be utilized to indicate the material point file.</p>
+<p>Next, the numerical parameters for the simulation are defined. ExaGOOP offers three options for specifying the nodal shape function: 1 for linear hat functions, 2 for quadratic B-splines, and 3 for cubic B-splines. These options are set using the command <code class="docutils literal notranslate"><span class="pre">mpm.order_scheme=&lt;shape</span> <span class="pre">function</span> <span class="pre">flag&gt;</span></code>. The PIC-FLIP blending factor, defined previously as <span class="math notranslate nohighlight">\(\alpha_{P-F}\)</span>, can be specified with <code class="docutils literal notranslate"><span class="pre">mpm.alpha_pic_flip</span></code>, while the stress update scheme (either MUSL or USL) can be indicated using the variable <code class="docutils literal notranslate"><span class="pre">mpm.stress_update_scheme=1</span></code>  (for MUSL) or <code class="docutils literal notranslate"><span class="pre">mpm.stress_update_scheme=1</span></code> for USL. ExaGOOP employs an Explicit Euler time integration scheme. The time step size can either be fixed, indicated by <code class="docutils literal notranslate"><span class="pre">mpm.fixed_timestep</span> <span class="pre">=</span> <span class="pre">1</span></code>, or adaptive, with <code class="docutils literal notranslate"><span class="pre">mpm.fixed_timestep</span> <span class="pre">=</span> <span class="pre">0</span></code> followed by the specification of the CFL number using <code class="docutils literal notranslate"><span class="pre">mpm.CFL=&lt;CFL</span> <span class="pre">number&gt;</span></code>.</p>
+<p>To prevent simulations from running into numerical instabilities, the parameters <code class="docutils literal notranslate"><span class="pre">mpm.dt_min_limit</span></code> and <code class="docutils literal notranslate"><span class="pre">mpm.dt_max_limit</span></code> can be set to constrain the time step values. The complete numerical setup block in the input file will appear as shown below:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1">#Timestepping parameters</span>
+mpm.fixed_timestep<span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0</span><span class="w">                          </span><span class="c1">#1=&gt; fixed time step, 0=&gt; CFL based adaptive time step</span>
+mpm.timestep<span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">1</span>.0e-5<span class="w">                           </span><span class="c1">#Timestep value in case mpm.fixed_timestep=1</span>
+mpm.CFL<span class="o">=</span><span class="m">0</span>.1<span class="w">                                     </span><span class="c1">#CFL number</span>
+mpm.dt_min_limit<span class="o">=</span>1e-12<span class="w">                          </span><span class="c1">#The minimum value of timestep. Throw a warning if lower. Continues iteration with dt_min_limit</span>
+mpm.dt_max_limit<span class="o">=</span>1e-0<span class="w">                           </span><span class="c1">#The maximum value of timestep. if(dt&gt;dt_max_limit) dt=dt_max_limit</span>
+
+<span class="c1">#Numerical schemes</span>
+mpm.order_scheme<span class="o">=</span><span class="m">1</span><span class="w">                              </span><span class="c1">#1-&gt;Linear shape func. 3-&gt;Spline shape function</span>
+mpm.alpha_pic_flip<span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0</span>.99<span class="w">                       </span><span class="c1">#1.0-&gt;Pure FLIP scheme. 0.0-&gt;Pure PIC scheme. Recommended:(0.95-0.99)</span>
+mpm.stress_update_scheme<span class="o">=</span><span class="w"> </span><span class="m">1</span><span class="w">                     </span><span class="c1">#1-&gt;MUSL,0-&gt;USL</span>
+mpm.mass_tolerance<span class="w"> </span><span class="o">=</span><span class="w"> </span>1e-18<span class="w">                      </span><span class="c1">#Stability parameters to avoid zero mass on nodes. Recommended: 1e-18</span>
+mpm.mpm.calculate_strain_based_on_delta<span class="o">=</span><span class="m">0</span><span class="w">       </span><span class="c1">#Stress calculation based on delta epsilon if this flag =1</span>
+</pre></div>
+</div>
+<p>Problem-specific parameters are set next. <code class="docutils literal notranslate"><span class="pre">mpm.final_time</span></code> and <code class="docutils literal notranslate"><span class="pre">mpm.max_steps</span></code> specify the maximum duration of the simulation and the maximum number of iterations, with the simulation stopping when either condition is met first. <code class="docutils literal notranslate"><span class="pre">screen_output_time</span></code> indicates how often (in flow-time) the simulation log and diagnostics will be output, where as, <code class="docutils literal notranslate"><span class="pre">write_output_time</span></code> sets the frequency for writing output files.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>mpm.final_time<span class="o">=</span><span class="m">0</span>.3<span class="w">                      </span><span class="c1">#Maximum simulation time</span>
+mpm.max_steps<span class="o">=</span><span class="m">10</span><span class="w">                                </span><span class="c1">#Maximum number of iterations for the simulation</span>
+mpm.screen_output_time<span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0</span>.001<span class="w">                  </span><span class="c1">#How frequently to output iteration msgs</span>
+mpm.write_output_time<span class="o">=</span><span class="m">0</span>.01<span class="w">                      </span><span class="c1">#How frequently to write output files</span>
+mpm.num_redist<span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">1</span><span class="w">                              </span><span class="c1">#How frequently to redistribute</span>
+</pre></div>
+</div>
+<p>Finally, the problems specific boundary conditions are specified using the Boundary conditions block as shown below,</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1">#Boundary conditions</span>
+mpm.bc_lower<span class="o">=</span><span class="w"> </span><span class="m">2</span><span class="w"> </span><span class="m">2</span><span class="w"> </span><span class="m">0</span><span class="w">                      </span><span class="c1">#0-&gt;Periodic 1-&gt;Noslipwall 2-&gt;Slipwall 3-&gt;Outflow</span>
+mpm.bc_upper<span class="o">=</span><span class="w"> </span><span class="m">2</span><span class="w"> </span><span class="m">2</span><span class="w"> </span><span class="m">0</span><span class="w">                      </span><span class="c1">#0-&gt;Periodic 1-&gt;Noslipwall 2-&gt;Slipwall 3-&gt;Outflow</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">bc_lower</span></code> and <code class="docutils literal notranslate"><span class="pre">bc_upper</span></code> refer to the lower and higher three faces of the computational domain. The boundary flags are defined as follows: 0 for periodic, 1 for no-slip wall, 2 for slip wall, and 3 for outflow.</p>
+</section>
+<section id="generating-initial-material-point-file">
+<h1>Generating initial material point file<a class="headerlink" href="#generating-initial-material-point-file" title="Link to this heading"></a></h1>
+<p>When <code class="docutils literal notranslate"><span class="pre">mpm.use_autogen</span></code> is set to 0, the user must specify the initial material point file. ExaGOOP expects this file to be in ASCII format. For a detailed understanding of the required format, the user may refer to the example script found at <code class="docutils literal notranslate"><span class="pre">./Tests/Dam_Break/generate.py</span></code>.</p>
+</section>
+<section id="running-exagoop-and-viewing-output-files">
+<h1>Running ExaGOOP and viewing output files<a class="headerlink" href="#running-exagoop-and-viewing-output-files" title="Link to this heading"></a></h1>
+<p>Once the input file and material point files are correctly set up, the ExaGOOP executable can be run as:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>./ExaGOOP<span class="w"> </span>input.in
+</pre></div>
+</div>
+<p>when run in serial mode or,</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>mpirun<span class="w"> </span>-n<span class="w"> </span>&lt;nproc&gt;<span class="w"> </span>./ExaGOOP<span class="w"> </span>input.in
+</pre></div>
+</div>
+<p>or when run using MPI with <code class="docutils literal notranslate"><span class="pre">&lt;nproc&gt;</span></code> being the number of MPI ranks. ExaGOOP generates two sets of output files. The first is a particle file, which can be named by setting the option <code class="docutils literal notranslate"><span class="pre">mpm.prefix_particlefilename=&lt;output-particle-filename&gt;</span></code>. The second is a grid file, with its name specified using <code class="docutils literal notranslate"><span class="pre">mpm.prefix_gridfilename=&lt;output-grid-filename&gt;</span></code> in the input file. Both files can be opened and visualized using ParaView, utilizing the AMReX grid and particle file readers.</p>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="validation.html" class="btn btn-neutral float-left" title="Axial vibration of an elastic bar" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="references.html" class="btn btn-neutral float-right" title="References" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021-2022, ExaGOOPTeam.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
